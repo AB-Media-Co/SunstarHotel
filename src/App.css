@@ -1,0 +1,142 @@
+.image-container {
+  display: inline-block;
+  overflow: hidden; /* Ensures the image doesn't overflow its container */
+  display: flex;
+
+}
+
+.rotating-image {
+
+  animation: rotateAnimation 15s linear infinite; /* Smooth, continuous rotation */
+  transform-origin: center; /* Ensure rotation is around the center */
+}
+
+
+/* Keyframe to rotate the image */
+@keyframes rotateAnimation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* CardSlider.css */
+.card {
+  transition: transform 0.3s ease-in-out;
+}
+
+.card img {
+  transition: opacity 0.3s ease;
+}
+
+
+.my-masonry-grid {
+  display: flex;
+  width: 100%; /* Full width for responsiveness */
+}
+
+.my-masonry-grid_column {
+  padding-left: 10px; /* Space between columns */
+  background-clip: padding-box;
+}
+
+.my-masonry-grid img {
+  width: 100%; /* Ensuring images don't overflow */
+  height: auto; 
+}
+
+.marquee-content {
+  display: flex;
+  flex-wrap: nowrap; /* Ensures items are in a single line for Marquee */
+}
+
+@media (max-width: 768px) {
+  .my-masonry-grid {
+    display: block; /* Force block layout for mobile */
+  }
+}
+
+
+.masonry-container {
+  column-count: 3;
+  column-gap: 15px;
+ }
+ .masonry-item {
+  display: inline-block;
+  width: 100%;
+ }
+ .masonry-item img {
+  display:block;
+  width: 100%;
+ }
+
+
+ .swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  object-fit: cover;
+}
+
+
+
+@media screen and (max-width: 768px) {
+  .swiper-slide.swiper-slide-active {
+    width: 100%!important;/* Slightly smaller scale for medium screens */
+    margin-right: 123px;
+}
+/* .swiper-wrapper {
+  gap: 100px;
+} */
+  
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .swiper-wrapper {
+   gap: 30px;
+}
+  
+}
+
+.swiper-pagination{
+  position: relative;
+}
+
+
+
+.my-masonry-grid {
+  display: flex;
+  width: 100vw; /* Full viewport width */
+  overflow-x: hidden; /* Allow horizontal scrolling */
+}
+
+.my-masonry-grid_column {
+  background-clip: padding-box;
+}
+
+.marquee-content {
+  display: flex;
+  flex-wrap: nowrap; /* Ensures items are in a single line for Marquee */
+}
+
+
+@media screen and (min-width: 768px) {
+  .testiM .swiper-slide {
+    width: 450px !important;
+  }
+  
+}
+
