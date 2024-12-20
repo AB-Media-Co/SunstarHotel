@@ -6,7 +6,7 @@ import AmenitiesList from "../../Components/AmenitiesList";
 import TestimonialSection from "../../Components/TestimonialSection";
 import PropertyPolicies from "./Components/PropertyPolicies";
 import Location from "./Components/Location";
-import Carousel from "../../Components/CommonCarousel";
+import Carousel from "../../Components/CardsCommonComp/CommonCarousel";
 import BannerSection from "../../Components/BannerSection";
 import ImageGallery from "../../Components/ImageGallery"
 import FAQSection from "./Components/FAQsection";
@@ -14,6 +14,8 @@ const Hotels = () => {
   return (
     <div>
       <Banner businessPlatformFeatures={businessPlatformFeatures} />
+
+
       <HotelCard />
       <RoomLayout rooms={rooms} />
       <AmenitiesList
@@ -46,7 +48,7 @@ const Hotels = () => {
         <ImageGallery breakpointColumnsObj={HotelPageImgGallery.breakpointColumnsObj} items={HotelPageImgGallery.items} />
       </div>
 
-      <FAQSection faqs={faqs}/>
+      <FAQSection faqs={faqs} />
       <img src="/images/HotelsSectionImg/Img.png" alt="" className="h-[130px] w-full" />
 
     </div>

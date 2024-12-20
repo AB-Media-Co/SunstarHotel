@@ -59,7 +59,7 @@ const CommonSwiper = ({
   }, [isMobile]); // React on isMobile state
 
   return (
-    <div className={`swiper-container pb-10 ${className}`}>
+    <div className={`swiper-container  ${className}`}>
       <Swiper
         cssMode={false}
         navigation={{

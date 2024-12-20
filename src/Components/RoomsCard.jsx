@@ -1,8 +1,15 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+import useScrollAnimations from "../hooks/useScrollAnimations";
+import useTextRevealAnimation from "../hooks/useTextRevealAnimation";
 import Icon from "./Icons";
 
 /* eslint-disable react/prop-types */
-const RoomsCard = ({ room }) => (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+
+const RoomsCard = ({ room }) => {
+    useTextRevealAnimation();
+    useScrollAnimations();
+
+    return <div className="bg-white shadow-md  rounded-lg overflow-hidden animation-on-scroll">
         <div className="relative">
             <img src={room.image} alt={room.title} className="w-full h-64 object-cover" />
             {room.tag && (
@@ -56,6 +63,7 @@ const RoomsCard = ({ room }) => (
             </div>
         </div>
     </div>
-);
+}
+
 
 export default RoomsCard;

@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 
 const Navbar = () => {
   const location = useLocation();
@@ -22,8 +25,8 @@ const Navbar = () => {
   const navItems = ['Home', 'About', 'Corporate Booking', 'Hotels', 'Contact'];
 
   return (
-    <nav className="bg-transparent text-white py-4 top-2 absolute w-full z-50">
-      <div className="content flex justify-between items-center">
+    <nav className="bg-transparent nav text-white  py-4 top-2 absolute w-full z-40">
+      <div className="content  flex justify-between items-center">
         {/* Logo */}
         <Link to='/' className="text-2xl font-bold">
           <img src="/images/Logo/logo.svg" alt="Logo" />
@@ -45,43 +48,78 @@ const Navbar = () => {
           </ul>
 
           {/* Book Now Button */}
-          <button className="bg-yellow-500 hover:bg-yellow-600 px-11 py-2 text-black font-bold rounded-full md:ml-4 hidden md:block">
+          <button className="bg-[#F9BF02] px-11 py-2 text-black font-bold rounded-full md:ml-4 hidden md:block">
             Book Now
           </button>
         </div>
 
         {/* Mobile Menu Toggle */}
-        <button
-          className="block md:hidden focus:outline-none"
-          onClick={toggleMobileMenu}
-        >
-          <span className="text-2xl">☰</span>
-        </button>
+        {!isMenuOpen && (
+          <button
+            className="block md:hidden focus:outline-none"
+            onClick={toggleMobileMenu}
+          >
+            <span className="text-2xl">☰</span>
+          </button>
+        )}
 
         {/* Mobile Menu (Slide-in Sidebar) */}
         <div
           id="mobile-menu"
-          className={`fixed top-0 right-0 h-full bg-gray-800 text-white w-64 transform transition-transform ease-in-out duration-500 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+          className={`fixed top-0 md:hidden left-0 h-full bg-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
         >
-          <button
-            className="text-white text-2xl self-end focus:outline-none"
-            onClick={closeMobileMenu}
-          >
-            &times;
-          </button>
-          {navItems.map((item) => (
-            <Link
-              key={item}
-              to={item === 'Home' ? '/' : `/${item.toLowerCase().replace(/ /g, '-')}`}
-              className={`px-3 py-2 rounded-md block transition-colors duration-300 ${active === item ? 'text-[#F9BF02]' : 'hover:text-[#F9BF02]'}`}
+          <div className='flex justify-between p-4'>
+            <Link to='/' className="">
+              <img src="/images/Logo/mobileLogo.svg" alt="Logo" className='h-[26px] w-[100px]' />
+            </Link>
+            <button
+              className="text-black text-2xl  focus:outline-none"
               onClick={closeMobileMenu}
             >
-              {item}
-            </Link>
-          ))}
-          <button className="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded-md mt-4">
-            Book Now
-          </button>
+              &times;
+            </button>
+          </div>
+          <div className='flex flex-col h-[580px] justify-between'>
+            <ul className="flex flex-col mt-4">
+              {navItems.map((item) => (
+                <li key={item} className="mb-2">
+                  <Link
+                    to={item === 'Home' ? '/' : `/${item.toLowerCase().replace(/ /g, '-')}`}
+                    className={`px-4 py-2 block transition-colors duration-300 ${active === item ? 'text-[#F9BF02]' : 'hover:text-[#F9BF02]'}`}
+                    onClick={closeMobileMenu}
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <div className='flex'>
+              <div className='p-4 flex flex-col gap-10'>
+                <div className="flex items-start flex-col space-y-2">
+                  <a href="https://instagram.com" className="flex items-center space-x-2 hover:text-gray-300">
+                    <InstagramIcon style={{ color: '#FDC114' }} />
+                    <span>Instagram</span>
+                  </a>
+                  <a href="https://facebook.com" className="flex items-center space-x-2 hover:text-gray-300">
+                    <FacebookIcon style={{ color: '#FDC114' }} />
+                    <span>Facebook</span>
+                  </a>
+                  <a href="https://youtube.com" className="flex items-center space-x-2 hover:text-gray-300">
+                    <YouTubeIcon style={{ color: '#FDC114' }} />
+                    <span>YouTube</span>
+                  </a>
+                </div>
+
+                <button className="bg-[#F9BF02] text-[#006167] px-4 w-[120px] rounded-full mt-4 py-2">
+                  Book Now
+                </button>
+              </div>
+              <div className='flex items-end justify-end w-full'>
+                <img src="/images/Logo/menuelement.png" alt="" className='h-[180px] w-[180px]' />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </nav>

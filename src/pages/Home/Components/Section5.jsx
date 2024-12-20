@@ -3,7 +3,7 @@ import CommonSwiper from "../../../Components/commonSlider";
 
 const Card = ({ image, title, description }) => {
   return (
-    <div className="rounded-[30px] section overflow-hidden">
+    <div className="rounded-[30px]  overflow-hidden">
       <img
         src={image}
         alt={title}
@@ -30,7 +30,7 @@ const Section5=({cards})=> {
     />
   );
   return (
-    <div className="swiper-container bg-[#BAE9EF] py-20 p-5 lg:ps-[165px]">
+    <div className="swiper-container  bg-[#BAE9EF] md:py-20 py-10 p-5 lg:ps-[165px]">
       <CommonSwiper
         items={cards}
         renderItem={renderCard}

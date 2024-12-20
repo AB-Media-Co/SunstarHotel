@@ -5,7 +5,7 @@ const Sec3CardSlider = ({sec3CardSliderData}) => {
     const { heading, description, features } = sec3CardSliderData;
 
     const renderItem = (item) => (
-        <div className="max-w-lg relative section">
+        <div className="max-w-lg relative ">
             <div
                 className="h-60 bg-cover rounded-lg bg-center"
                 style={{ backgroundImage: `url(${item.image})` }}
@@ -18,9 +18,9 @@ const Sec3CardSlider = ({sec3CardSliderData}) => {
     );
 
     return (
-        <div className="px-6 text-white section">
-            <h2 className="text-3xl font-bold text-left mb-8">{heading}</h2>
-            <p className="text-lg text-left mb-12">
+        <div className="px-6 text-white ">
+            <h2 className="md:text-3xl text-[22px] font-bold text-left mb-4 md:mb-8 text-reveal-animation">{heading}</h2>
+            <p className="text-md md:text-lg text-left mb-4 md:mb-12 animation-on-scroll">
                 {description}
             </p>
             <CommonSwiper

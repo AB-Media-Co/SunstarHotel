@@ -1,6 +1,6 @@
 export const section1Data = {
     words: ["Conferences", "Parties", "Functions"],
-    heading: "Hello. Salut. Hola.",
+    heading: "Hello Salut Hola",
     description: "Nestled in the vibrant heart of Delhi, Hotel Sunstar Grand is a portal to comfort and luxury, beckoning international and business travellers alike. Guests from around the world find a welcoming retreat amidst the bustle of Karol Bagh.",
     buttonLabel: "Book us for",
     buttonIcon: "Search",

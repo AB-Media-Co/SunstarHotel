@@ -1,6 +1,10 @@
+import useScrollAnimations from "../../../hooks/useScrollAnimations";
+import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
+
 /* eslint-disable react/prop-types */
 const HotelsInfo = ({hotels}) => {
-
+  useTextRevealAnimation();
+  useScrollAnimations();
     return (
       <div className="bg-gray-50 py-10">
         <div className="content mx-auto px-4">
@@ -12,9 +16,9 @@ const HotelsInfo = ({hotels}) => {
             Have A Specific Question? Contact The Reception & Ask Away
           </p>
           {/* Hotel Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
             {hotels.map((hotel, index) => (
-              <div key={index} className="group cursor-pointer">
+              <div key={index} className="group cursor-pointer animation-on-scroll">
                 {/* Hotel Image */}
                 <div className="overflow-hidden rounded-lg shadow-lg">
                   <img

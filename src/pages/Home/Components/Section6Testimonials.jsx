@@ -6,7 +6,7 @@ const Section6Testimonials = ({testimonials}) => {
    
 
   const renderTestimonial = (testimonial) => (
-    <div className="py-6 w-full md:w-80  section text-center flex flex-col justify-center items-center md:justify-start md:items-start md:text-left">
+    <div className="py-6 w-full md:w-80   text-center flex flex-col justify-center items-center md:justify-start md:items-start md:text-left">
       <img
         src={testimonial.image}
         alt="Testimonial"
@@ -21,7 +21,7 @@ const Section6Testimonials = ({testimonials}) => {
   );
 
   return (
-    <div className="py-10 bg-gray-50 section lg:ps-[165px]">
+    <div className="py-10 bg-gray-50  lg:ps-[165px]">
       <div>
         <RoatinfImg position="right-[90px] top-[-8rem]" />
       </div>

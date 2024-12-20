@@ -6,7 +6,7 @@ const SunstarEnquiryForm = () => {
         <h1 className="text-center text-white text-[52px] font-bold mb-2">Sunstar Enquiry Form</h1>
         <p className="text-center text-white text-[24px] mb-6">Find out if your fleet meets our criteria</p>
         <form>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
             <input
               type="text"
               placeholder="Company Name"

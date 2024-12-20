@@ -1,28 +1,33 @@
 /* eslint-disable react/prop-types */
 
+import useScrollAnimations from "../../../hooks/useScrollAnimations";
+import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
+
 const HeroSection = ({ title, highlightText, description, imageSrc }) => {
     const words = title.split(" ");
+    useTextRevealAnimation();
+    useScrollAnimations("#section1");
 
     return (
-        <div className="w-full bg-[#6EC4C2] section py-10 px-4 md:px-8 pt-32 lg:px-16">
+        <div className="w-full bg-[#6EC4C2]  py-10 px-4 md:px-8 pt-32 lg:px-16">
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row items-center justify-between">
                     {/* Left Text Section */}
                     <div className="md:w-[750px] mb-8 md:mb-0 ">
-                        <h1 className="text-3xl leading-[55px] md:text-[48px] font-bold text-white mb-4 text-shadow-lg">
+                        <h1 className="text-3xl leading-[55px]   md:text-[48px]  font-bold  mb-4 text-shadow-lg">
                             {words.map((word, index) => {
                                 // console.log(word)
 
                                 const shouldHighlight = highlightText?.includes(word);
                                 // console.log(shouldHighlight)
                                 return (
-                                    <span key={index} className={shouldHighlight ? "text-[#FDC114]" : ""}>
+                                    <span key={index} className={` ${shouldHighlight ? "text-[#FDC114] text-reveal-animation" : " text-white  text-reveal-animation"}`}>
                                         {index > 0 && " "}{word}
                                     </span>
                                 );
                             })}
                         </h1>
-                        <p className="text-white text-[22px] mb-6 text- whitespace-pre-line">{description}</p>
+                        <p className="text-white text-[22px] mb-6 text- whitespace-pre-line  animation-on-scroll-Section1">{description}</p>
                     </div>
                     {/* Right Image Section */}
                     <div className="md:w-1/2 flex justify-center md:justify-end">

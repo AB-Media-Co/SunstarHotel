@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
-import Icon from './Icons';
+import Icon from '../Icons';
 
 function Carousel({ features, height = 'h-[600px]', buttonColor = '#FDC114', iconSize = 'h-6 w-6', className = '', NavClass='', autoPlay = false, autoPlayInterval = 3000 }) {
     const [currentIndex, setCurrentIndex] = useState(0);

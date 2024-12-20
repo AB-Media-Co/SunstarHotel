@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
 import InstagramIcon from '@mui/icons-material/Instagram';
+import useScrollAnimations from '../../../hooks/useScrollAnimations';
+import useTextRevealAnimation from '../../../hooks/useTextRevealAnimation';
 const InstagramGallery = ({images}) => {
 
-
+  useTextRevealAnimation();
+  useScrollAnimations();
   return (
     <div className="bg-white py-10">
       <div className="content mx-auto px-4">
@@ -12,11 +15,11 @@ const InstagramGallery = ({images}) => {
             @sunstarhotel on Instagram
           </h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-4 gap-4">
           {images.map((image) => (
             <div
               key={image.id}
-              className="rounded-md overflow-hidden shadow hover:shadow-lg transition-shadow duration-300"
+              className="rounded-md overflow-hidden  shadow hover:shadow-lg transition-shadow duration-300 animation-on-scroll"
             >
               <img
                 src={image.src}

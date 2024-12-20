@@ -1,14 +1,33 @@
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #F9BF02;
+  border-radius: 100px;
+}
+
+
+
+
 .image-container {
   display: inline-block;
-  overflow: hidden; /* Ensures the image doesn't overflow its container */
+  overflow: hidden;
   display: flex;
 
 }
 
 .rotating-image {
 
-  animation: rotateAnimation 15s linear infinite; /* Smooth, continuous rotation */
-  transform-origin: center; /* Ensure rotation is around the center */
+  animation: rotateAnimation 15s linear infinite;
+  /* Smooth, continuous rotation */
+  transform-origin: center;
+  /* Ensure rotation is around the center */
 }
 
 
@@ -17,6 +36,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -35,27 +55,32 @@
 
 .my-masonry-grid {
   display: flex;
-  width: 100%; /* Full width for responsiveness */
+  width: 100%;
+  /* Full width for responsiveness */
 }
 
 .my-masonry-grid_column {
-  padding-left: 10px; /* Space between columns */
+  padding-left: 10px;
+  /* Space between columns */
   background-clip: padding-box;
 }
 
 .my-masonry-grid img {
-  width: 100%; /* Ensuring images don't overflow */
-  height: auto; 
+  width: 100%;
+  /* Ensuring images don't overflow */
+  height: auto;
 }
 
 .marquee-content {
   display: flex;
-  flex-wrap: nowrap; /* Ensures items are in a single line for Marquee */
+  flex-wrap: nowrap;
+  /* Ensures items are in a single line for Marquee */
 }
 
 @media (max-width: 768px) {
   .my-masonry-grid {
-    display: block; /* Force block layout for mobile */
+    display: block;
+    /* Force block layout for mobile */
   }
 }
 
@@ -63,18 +88,20 @@
 .masonry-container {
   column-count: 3;
   column-gap: 15px;
- }
- .masonry-item {
+}
+
+.masonry-item {
   display: inline-block;
   width: 100%;
- }
- .masonry-item img {
-  display:block;
+}
+
+.masonry-item img {
+  display: block;
   width: 100%;
- }
+}
 
 
- .swiper {
+.swiper {
   width: 100%;
   height: 100%;
 }
@@ -96,22 +123,25 @@
 
 @media screen and (max-width: 768px) {
   .swiper-slide.swiper-slide-active {
-    width: 100%!important;/* Slightly smaller scale for medium screens */
+    width: 100% !important;
+    /* Slightly smaller scale for medium screens */
     margin-right: 123px;
-}
-/* .swiper-wrapper {
+  }
+
+  /* .swiper-wrapper {
   gap: 100px;
 } */
-  
-}
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-  .swiper-wrapper {
-   gap: 30px;
-}
-  
+
 }
 
-.swiper-pagination{
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .swiper-wrapper {
+    gap: 30px;
+  }
+
+}
+
+.swiper-pagination {
   position: relative;
 }
 
@@ -119,8 +149,10 @@
 
 .my-masonry-grid {
   display: flex;
-  width: 100vw; /* Full viewport width */
-  overflow-x: hidden; /* Allow horizontal scrolling */
+  width: 100vw;
+  /* Full viewport width */
+  overflow-x: hidden;
+  /* Allow horizontal scrolling */
 }
 
 .my-masonry-grid_column {
@@ -129,7 +161,8 @@
 
 .marquee-content {
   display: flex;
-  flex-wrap: nowrap; /* Ensures items are in a single line for Marquee */
+  flex-wrap: nowrap;
+  /* Ensures items are in a single line for Marquee */
 }
 
 
@@ -137,6 +170,258 @@
   .testiM .swiper-slide {
     width: 450px !important;
   }
-  
+
+}
+
+
+
+/* Loader.css */
+@keyframes pulse {
+
+  0%,
+  80%,
+  100% {
+    transform: scaleY(0.75);
+    opacity: 0;
+  }
+
+  20% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* calender */
+
+.calendar-container {
+  margin: auto;
+  background-color: #ffcc00;
+  border-radius: 10px;
+  padding-top: 140px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.calendar-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.calendar-month {
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.calendar-header,
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 0;
+  /* Ensures there is no spacing between cells */
+}
+
+.day-name {
+  font-weight: bold;
+  color: #888;
+}
+
+.day-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+/* Highlight Current Month Dates */
+.current-month {
+  color: #333;
+}
+
+/* Non-Clickable Other Month Dates */
+.other-month {
+  background-color: transparent;
+  pointer-events: none;
+}
+
+/* Start of Range: Rounded Left Edge */
+.range-start {
+  background-color: #ffcc00;
+
+  position: relative;
+  z-index: 2;
+}
+
+/* End of Range: Rounded Right Edge */
+.range-end {
+  background-color: #ffcc00;
+  position: relative;
+  z-index: 2;
+  /* Keeps the end circle above other elements */
+}
+
+/* Mid-Range Dates: Seamless Yellow Bar */
+.in-range {
+  background-color: #ffcc00;
+  border-radius: 0;
+  /* Rectangular bar with no rounded corners */
+}
+
+/* Start and End Date Circle */
+.range-start p,
+.range-end p {
+  background-color: white;
+  color: #ffcc00;
+  border: 2px solid #ffcc00;
+  border-radius: 50%;
+  /* Perfect Circle */
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  font-weight: bold;
+  z-index: 3;
+  /* Ensures circle stays on top of the yellow bar */
+}
+
+.in-range p {
+  color: white;
+}
+
+.calendar-days {
+  gap: 20px 0;
+  margin: 0;
+  /* Ensures perfect alignment */
+}
+
+.day-cell.in-range {
+  margin: 0;
+  /* Removes any potential gaps */
+  border-radius: 0;
+  /* Ensures rectangular continuity */
+}
+
+
+
+
+
+
+
+
+
+
+.text-reveal-animation {
+  overflow: hidden;
+}
+
+.text-reveal-animation .letter {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.word {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+
+/* Initial State for animation-on-scroll elements */
+.animation-on-scroll .animation-on-scroll-Section1 {
+  opacity: 0;
+  transform: translateY(-50px);
+  will-change: opacity, transform;
+}
+
+.home header {
+  opacity: 0;
+  transform: translateY(-100px);
+  will-change: opacity, transform;
+}
+
+.home .main h1, 
+.home .main p, 
+.home .main .search {
+  opacity: 0;
+  transform: translateY(100px);
+  will-change: opacity, transform;
+}
+
+.swiper-slide {
+  opacity: 0; 
+  transform: translateY(50px) scale(0.9); 
+  will-change: opacity, transform;
+}
+
+.zoom-in-on-scroll {
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all 0.3s ease-out;
+  will-change: transform, opacity;
+}
+
+.swiper-slide img.zoom-in-on-scroll {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+
+/* Initial state for wave animation */
+.wave-card {
+  opacity: 0;
+  transform: translateY(50px) rotate(5deg);
+  will-change: opacity, transform;
+}
+
+.wave-card img {
+  transition: transform 0.3s ease-in-out;
+}
+
+.wave-card:hover img {
+  transform: scale(1.05);
+}
+
+.wave-card:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+.iconb .css-1umw9bq-MuiSvgIcon-root .icon{
+  height: 50px !important;
+  width: 50px !important;
+}
+
+/* Hide scrollbar  */
+.hotelSelection::-webkit-scrollbar {
+  display: none;
+}
+
+.hotelSelection {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 

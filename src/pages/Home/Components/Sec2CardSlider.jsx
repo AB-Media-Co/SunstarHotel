@@ -14,6 +14,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import LocalCafeIcon from "@mui/icons-material/LocalCafe";
 import CommonButton from "../../../Components/CommonButton";
 import Icon from "../../../Components/Icons";
+import useScrollAnimations from "../../../hooks/useScrollAnimations";
 
 export default function SwiperComponent() {
   const prevRef = useRef(null);
@@ -22,6 +23,8 @@ export default function SwiperComponent() {
   const [isFirstSlide, setIsFirstSlide] = useState(false);
   const [isLastSlide, setIsLastSlide] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useScrollAnimations()
 
   useEffect(() => {
     const handleResize = () => {
@@ -138,10 +141,10 @@ export default function SwiperComponent() {
       >
         {cards.map((card, index) => (
           <SwiperSlide key={index} >
-            <div className="md:max-w-sm border shadow-lg rounded-lg relative">
+            <div className="md:max-w-sm border  shadow-lg rounded-lg relative">
               {/* Image Section */}
               <div
-                className="h-60 bg-cover bg-center rounded-t-lg"
+                className="zoom-in-on-scroll  h-60 bg-cover bg-center rounded-t-lg"
                 style={{
                   backgroundImage: `url(${card.img})`,
                 }}
@@ -170,7 +173,7 @@ export default function SwiperComponent() {
               </div>
 
               {/* Features Section */}
-              <div className="absolute top-[5rem] left-[14rem] md:left-[16rem] w-[91px] shadow-lg gap-[24px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
+              <div className="absolute top-[4rem] left-[12rem] md:left-[16rem] w-[91px] shadow-lg gap-[24px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
                 {features.map((feature, featureIndex) => (
                   <div
                     key={featureIndex}

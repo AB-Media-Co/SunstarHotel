@@ -1,5 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/prop-types */
 
+import useScrollAnimations from "../hooks/useScrollAnimations";
+import useTextRevealAnimation from "../hooks/useTextRevealAnimation";
 import CommonSwiper from "./CommonSlider";
 
 const TestimonialSection = ({
@@ -8,9 +11,11 @@ const TestimonialSection = ({
     backgroundImage // Pass just one background image URL here
 }) => {
     const renderItem = (item) => {
+        useTextRevealAnimation();
+        useScrollAnimations();
         return (
             <div className="bg-white rounded-[32px] p-6 shadow-lg md:text-left flex flex-col h-full">
-                <h3 className="font-bold text-gray-800 mb-4">{item.title}</h3>
+                <h3 className="font-bold text-gray-800 mb-4 ">{item.title}</h3>
                 <p className="text-gray-600 flex-grow">{item.description}</p>
                 <div className="flex items-center justify-between mt-4">
                     <div className="flex">
@@ -60,7 +65,7 @@ const TestimonialSection = ({
             }}
         >
             {/* Section Heading */}
-            <h2 className="text-left text-2xl md:text-3xl font-bold text-gray-900 mb-8">
+            <h2 className="text-left text-2xl  md:text-3xl font-bold text-gray-900 mb-8 text-reveal-animation">
                 {title}
             </h2>
 

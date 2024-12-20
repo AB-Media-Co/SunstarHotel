@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 
 const Icon = ({ name, className = 'w-6 h-6' }) => {
-  console.log(name, className)
   const icons = {
     iwant: '/src/Images/Icons/1.svg',
     ac: '/src/Images/Icons/ac.svg',
@@ -63,7 +62,6 @@ const Icon = ({ name, className = 'w-6 h-6' }) => {
   };
 
   const iconPath = icons[name];
-  console.log(name);
 
   if (!iconPath) {
     return <div>Icon not found</div>;
