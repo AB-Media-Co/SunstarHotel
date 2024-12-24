@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdminLogin } from '../../ApiHooks/useAdminHooks';
+import toast from 'react-hot-toast';
 
 export const AdminLogin = () => {
   const [username, setUsername] = useState('');
@@ -23,13 +24,13 @@ export const AdminLogin = () => {
     // Call the mutation to log in the admin
     mutate(userData, {
       onSuccess: (data) => {
-        console.log('Login successful', data);
-        localStorage.setItem('token', data.token); // Store the token in localStorage
+        localStorage.setItem('token', data.token); 
         navigate('/admin/hotels');
+        toast.success("logged In Successfully")
       },
       onError: (error) => {
         console.error('Login failed', error);
-        alert(error?.response?.data?.message || 'Login failed');
+        toast.error(error?.response?.data?.message || 'Login failed');
       },
     });
   };

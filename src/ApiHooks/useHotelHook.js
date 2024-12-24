@@ -10,7 +10,8 @@ import {
   deleteRoomByIdAPI,
   getAllRoomsAPI,
   getSingleRoomById,
-  getSingleHotelById
+  getSingleHotelById,
+  uploadImagesAPI
 } from '../Api/hotel.js';
 
 // Get Hotels
@@ -65,10 +66,10 @@ export const useAddRoomToHotel = () => {
 };
 
 // Get Room by ID
-export const useGetRoomById = ({ hotelId, roomId }) =>
+export const useGetRoomById = ( roomId ) =>
   useQuery({
-    queryKey: ['room', hotelId, roomId],
-    queryFn: () => getRoomByIdAPI({ hotelId, roomId })
+    queryKey: ['room',  roomId],
+    queryFn: () => getRoomByIdAPI( roomId )
   });
 
 // Update Room by ID
@@ -76,8 +77,12 @@ export const useUpdateRoomById = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateRoomByIdAPI,
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries(['room', variables.roomId]);
       queryClient.invalidateQueries(['rooms']);
+    },
+    onError: (error) => {
+      console.error('Room Update Error:', error);
     }
   });
 };
@@ -108,8 +113,23 @@ export const useGetSingleRoomById = ({roomId }) =>
   });
 
 
-export const useGetSingeHotelById = ({ hotelId }) =>
+export const useGetSingeHotelById = ( hotelId ) =>
   useQuery({
     queryKey: ['hotels', hotelId],
-    queryFn: () => getSingleHotelById({ hotelId })
+    queryFn: () => getSingleHotelById( hotelId )
   });
+
+
+  export const useUploadHotelImages = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: uploadImagesAPI,
+      onSuccess: () => {
+        queryClient.invalidateQueries(['hotels']);
+      },
+      onError: (error) => {
+        console.error('Image Upload Error:', error);
+      },
+    });
+  };
+  

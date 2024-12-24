@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import HotelDropdown from './HotelDroddown';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,6 +18,7 @@ const Layout = () => {
       <Navbar />
       <Outlet />
       <Footer />
+      {/* <HotelDropdown/> */}
     </div>
   );
 };

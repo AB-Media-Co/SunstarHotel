@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import {
   format,
@@ -13,12 +14,10 @@ import {
 } from "date-fns";
 import { ArrowBackIosNew, ArrowForwardIos, ArrowRightAlt, ElectricBolt } from "@mui/icons-material";
 import gsap from "gsap";
-import { useNavigate } from "react-router-dom";
 
-const Calendar = () => {
+const Calendar = ({ setCheckInDate,setCheckOutDate,setOpenCalender}) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const nextMonth = addMonths(currentMonth, 1);
-  const navigate = useNavigate()
 
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
@@ -40,11 +39,11 @@ const Calendar = () => {
     if (!checkIn || !checkOut) {
       gsap.fromTo(".dates", { x: 0 }, { duration: 0.1, x: 10, repeat: 3, yoyo: true });
     } else {
-      const startDate = checkIn;
-      const endDate = checkOut;
-      console.log(startDate, endDate);
-      navigate('/hotels')
-
+      const formattedStartDate = format(checkIn, "yyyy-MM-dd");
+      const formattedEndDate = format(checkOut, "yyyy-MM-dd");
+      setCheckInDate(formattedStartDate);
+      setCheckOutDate(formattedEndDate);
+      setOpenCalender(false)
     }
   };
 

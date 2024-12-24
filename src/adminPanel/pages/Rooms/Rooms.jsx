@@ -4,13 +4,21 @@ import { Section } from "../../Components/Card";
 import { useState } from "react";
 import { DeleteConfirmationModal } from "../../Components/DeletePopup";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const Rooms = () => {
   const { data: rooms, isLoading, isError, error } = useGetAllRooms();
   const { mutate: deleteRoomById, } = useDeleteRoomById();
 
-  const handleEdit = (roomId) => alert(`Edit room with ID: ${roomId}`);
-  const handleAddRoom = () => alert('Add Room Clicked!');
+  const handleEdit = (roomId) =>{
+    navigate(`/admin/editRooms/${roomId}`)
+    // alert(`Edit room with ID: ${roomId}`)
+    };
+  const navigate = useNavigate()
+
+  const handleAddRoom = () => {
+    navigate('/admin/addRooms')
+  }
 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,12 +45,12 @@ export const Rooms = () => {
     if (selectedRoomId) {
       deleteRoomById(selectedRoomId, {
         onSuccess: () => {
-          toast.success(`Hotel Deeleted Successfully`);
+          toast.success(`Room Deeleted Successfully`);
           setIsModalOpen(false);
           setSelectedRoomId(null);
         },
         onError: (error) => {
-          toast.error(`Failed to delete hotel: ${error.message}`);
+          toast.error(`Failed to delete Room: ${error.message}`);
           setIsModalOpen(false);
         }
       });

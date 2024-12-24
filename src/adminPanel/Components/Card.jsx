@@ -35,6 +35,7 @@ const Card = ({ item, type, onEdit, onDelete }) => (
             <h3 className="text-2xl font-extrabold text-gray-800 mb-2">{type === 'hotel' ? item.name : `${item.roomType} - Room ${item.roomNumber}`}</h3>
             <p className="text-sm text-gray-700 mb-2 line-clamp-2">{item.description}</p>
             <div className="flex items-center justify-between mb-2">
+                <span className={`text-gray-500 text-sm ${item?.hotel?.name? 'block': 'hidden'}`}> {item?.hotel?.name ?item?.hotel?.name :''}</span>
                 <span className="text-gray-500 text-sm">📍 {item.location || item.hotel?.location || 'N/A'}</span>
                 <span className="text-yellow-500 text-sm">⭐ {item.rating || 'N/A'}</span>
             </div>
@@ -43,8 +44,8 @@ const Card = ({ item, type, onEdit, onDelete }) => (
                     <div className="text-sm font-medium text-gray-700">Rooms Available: <span className="font-bold text-green-600">{item.rooms?.length || 'No Rooms'}</span></div>
                 )}
                 <div className="flex items-center">
-                    <span className="line-through text-red-500 text-sm">${item.price}</span>
-                    <span className="text-green-600 font-bold text-lg ml-2">${item.discountedPrice || item.price}</span>
+                    <span className="line-through text-red-500 text-sm">₹{item.price}</span>
+                    <span className="text-green-600 font-bold text-lg ml-2">₹{item.discountedPrice || item.price}</span>
                 </div>
             </div>
             <div className="mb-4">

@@ -19,6 +19,9 @@ import { AdminLogin } from './adminPanel/pages/AdminLogin';
 import { Sidebar, SidebarItem } from './adminPanel/Components/Sidebar';
 import EditHotels from './adminPanel/pages/AdminHotels/EditHotels';
 import  { Toaster } from 'react-hot-toast';
+import AddHotels from './adminPanel/pages/AdminHotels/AddHotels';
+import AddRooms from './adminPanel/pages/Rooms/AddRooms';
+import EditRooms from './adminPanel/pages/Rooms/EditRooms';
 
 const queryClient = new QueryClient();
 
@@ -60,7 +63,10 @@ function App() {
           {/* <Route path="/admin/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}
           <Route path="/admin/hotels" element={<PrivateRoute><AdminHotels /></PrivateRoute>} />
           <Route path="/admin/edithotles/:hotelId" element={<PrivateRoute><EditHotels /></PrivateRoute>} />
+          <Route path="/admin/addHotels" element={<PrivateRoute><AddHotels /></PrivateRoute>} />
           <Route path="/admin/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
+          <Route path="/admin/addRooms" element={<PrivateRoute><AddRooms /></PrivateRoute>} />
+          <Route path="/admin/editRooms/:roomId" element={<PrivateRoute><EditRooms /></PrivateRoute>} />
         </Routes>
       </Router>
       <Toaster />

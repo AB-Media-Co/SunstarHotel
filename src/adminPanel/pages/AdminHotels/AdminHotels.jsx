@@ -54,7 +54,7 @@ export const AdminHotels = () => {
     setSelectedHotelId(null);
   };
 
-  const handleAddHotel = () => alert("Add Hotel Clicked!");
+  const handleAddHotel = () => navigate('/admin/addHotels');
 
   const handleEdit = (hotelId) => {
     navigate(`/admin/edithotles/${hotelId}`);

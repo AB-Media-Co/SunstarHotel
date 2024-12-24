@@ -32,7 +32,7 @@ const Tabs = ({ tabNames, tabContent }) => {
   }, [activeTab]);
 
   return (
-    <div className="w-full  mx-auto p-6">
+    <div className="w-full  mx-auto px-6">
       {/* Tab Navigation */}
       <div className="flex border-b border-gray-200">
         {tabNames.map((tab, index) => (
@@ -53,7 +53,7 @@ const Tabs = ({ tabNames, tabContent }) => {
       <div className="mt-6">
         <div 
           ref={contentRef} 
-          className="p-6 bg-white shadow-xl rounded-lg"
+          className="p-6 bg-white shadow-xl rounded-lg capitalize"
         >
           {tabContent[activeTab]}
         </div>
