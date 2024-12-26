@@ -106,7 +106,7 @@ export default function SwiperComponent() {
       </div>
 
       {/* Features Section */}
-      <div className=" absolute left-[77%]  top-[4rem]  md:left-[75%]  w-[91px] shadow-lg gap-[2px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
+      <div className=" absolute left-[77%]  top-[4rem]  md:left-[84%]  w-[91px] shadow-lg gap-[2px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
         {features.map((feature, index) => (
           <div key={index} className="flex flex-col items-center">
             {feature.icon && <feature.icon className="text-white" />}
