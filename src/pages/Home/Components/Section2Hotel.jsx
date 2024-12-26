@@ -15,7 +15,7 @@ const Section2Hotel = ({ section2HotelData }) => {
                 <RoatinfImg position={imagePosition} />
                 {/* Text container */}
                 <div className="relative  content   text-black mt-[-2rem] lg:mt-10"
-                    style={{ maxWidth: "85rem" }}
+                    // style={{ maxWidth: "rem" }}
                 >
                     <h1 className="text-[40px] lg:text-[48px] font-bold leading-tight text-reveal-animation">
                         {heading}
