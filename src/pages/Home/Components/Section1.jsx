@@ -67,18 +67,18 @@ const Section1 = ({ section1Data }) => {
             <img
                 src={images.desktop}
                 alt="Hotel Sunstar Grand Exterior"
-                className="w-full h-[850px] object-cover hidden md:block  "
+                className="w-full h-[775px] object-cover hidden md:block  "
             />
             <img
                 src={images.mobile}
                 alt="Hotel Sunstar Grand Exterior"
-                className="w-full h-[850px] object-cover md:hidden "
+                className="w-full h-[650px] object-cover md:hidden "
             />
 
             <div className="absolute top-0 left-0 w-full h-full bg-black opacity-[0.4]"></div>
 
-            <div className="absolute  top-[50%] left-[5%] sm:top-[53%] sm:left-[53%] md:top-[53%] md:left-[10%] flex flex-col md:gap-4 text-left text-white max-w-[90%] sm:max-w-[80%] md:max-w-[40%]">
-                <h1 className="text-2xl sm:text-5xl md:text-[60px] font-bold leading-tight text-reveal-animation">
+            <div className="absolute  top-[50%] left-[5%] sm:top-[53%] sm:left-[53%] md:top-[48%] md:left-[10%] flex flex-col md:gap-4 text-left text-white max-w-[90%] sm:max-w-[80%] md:max-w-[40%]">
+                <h1 className="text-4xl sm:text-5xl md:text-[60px] font-bold leading-tight text-reveal-animation">
                     {heading}
                 </h1>
                 <p className="text-md sm:text-xl md:text-2xl mt-4 leading-relaxed  animation-on-scroll-Section1">
@@ -86,11 +86,11 @@ const Section1 = ({ section1Data }) => {
                 </p>
 
                 <div onClick={() => SetHotelsOpen(true)} className="mt-6 flex justify-between items-center lg:w-[490px] font-semibold cursor-pointer bg-white rounded-full  py-2 md:py-4 px-7  ">
-                    <div className="flex gap-2">
-                        <p className="text-[16px] sm:text-xl text-[#7A7A7A] md:text-2xl mb-2 animation-on-scroll">
+                    <div className="flex gap-2 animation-on-scroll-Section1">
+                        <p className="text-[16px] sm:text-xl text-[#7A7A7A] md:text-2xl mb-2 ">
                             {buttonLabel}
                         </p>
-                        <p className="text-[16px] sm:text-xl text-[#FDC114] md:text-2xl w-fit animation-on-scroll">
+                        <p className="text-[16px] sm:text-xl text-[#FDC114] md:text-2xl w-fit ">
                             {currentWord}
                         </p>
                     </div>
@@ -100,7 +100,7 @@ const Section1 = ({ section1Data }) => {
                 </div>
                 {hotelOpen && (
                     <div className="fixed  inset-0 bg-[#6EC4C2]  w-full flex justify-center items-center z-50">
-                        <div className="flex hotelSelection flex-col Calender  overflow-auto mt-64     md:w-[1300px]  md:flex-row gap-6">
+                        <div className="flex hotelSelection flex-col Calender  overflow-hidden mt-24 md:mt-52 md:w-[1300px]  md:flex-row gap-6">
                             <div>
                                 <div className="flex justify-between items-center px-4 py-2">
                                     <div className="text-[48px] font-semibold">
@@ -113,8 +113,8 @@ const Section1 = ({ section1Data }) => {
                                         <CloseOutlined className="icon" />
                                     </button>
                                 </div>
-                                <div className="text-center text-lg h-[100vh]   ">
-                                    <div className="grid gap-6 sm:grid-cols-2  rounded-t-[32px] overflow-y-auto bg-white hotelSelection  md:w-[1300px] lg:grid-cols-3 md:py-12 md:pb-[20rem] px-10">
+                                <div className="text-center text-lg h-[100vh] hotelSelection overflow-y-auto  ">
+                                    <div className="grid gap-6 sm:grid-cols-2  rounded-t-[32px] overflow-y-auto bg-white hotelSelection  md:w-[1300px] lg:grid-cols-3 md:py-12  md:pb-[20rem] p-10">
                                         {hotels?.map((hotel, index) => (
                                             <HotelSelctingCards key={index} hotel={hotel} link="/hotels" />
                                         ))}

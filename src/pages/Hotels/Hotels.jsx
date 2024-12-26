@@ -34,7 +34,7 @@ const Hotels = () => {
 
       <Carousel
         features={businessPlatformFeatures}
-        height="h-[700px]"
+        height="h-[600px]"
         buttonColor="#FDC114"
         iconSize="h-6 w-6"
         NavClass='relative left-[0] bottom-[45px]'

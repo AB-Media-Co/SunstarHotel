@@ -36,7 +36,7 @@ export const AdminLogin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-900 via-blue-500 to-blue-300">
+    <div className="flex items-center justify-center h-screen bg-gray-300">
       <div className="bg-white p-10 rounded-xl shadow-2xl w-full max-w-md transform transition-all duration-500 hover:scale-105">
         <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-8 animate-fade-in">Admin Login</h2>
 

@@ -125,7 +125,7 @@ export default function SwiperComponent() {
   );
 
   return (
-    <div className="swiper-container pb-10">
+    <div className="swiper-container pb-5">
       <CommonSwiper
         items={cards}
         renderItem={renderCard}

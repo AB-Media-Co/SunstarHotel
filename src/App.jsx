@@ -53,12 +53,11 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
             <Route path="/calender" element={<CustomDateRangeSelector />} />
-            <Route path="/about" element={<AboutUs />} />
+            <Route path="/why-sunstar" element={<AboutUs />} />
             <Route path="/corporate-booking" element={<Corporatebooking />} />
             <Route path="/hotels" element={<Hotels />} />
             <Route path="/contact" element={<ContactUs />} />
           </Route>
-
           <Route path="/admin/login" element={<AdminLogin />} />
           {/* <Route path="/admin/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}
           <Route path="/admin/hotels" element={<PrivateRoute><AdminHotels /></PrivateRoute>} />

@@ -11,9 +11,6 @@ const Home = () => {
     <div>
       <Section1 section1Data={section1Data} />
       <Section2Hotel section2HotelData={section2HotelData} />
-
-
-
       <Section3 />
       <Section4 />
       <Section5 cards={HomePageSection5cards} />

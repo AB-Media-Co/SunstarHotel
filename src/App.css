@@ -425,3 +425,7 @@
   scrollbar-width: none;  /* Firefox */
 }
 
+
+.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal{
+  padding-top: 20px;
+}

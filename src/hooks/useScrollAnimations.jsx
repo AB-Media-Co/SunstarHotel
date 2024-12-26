@@ -53,7 +53,7 @@ const useScrollAnimations = () => {
         {
           opacity: 0,
           x: 0, 
-          y: 100,
+          y: 65,
           scale: 0.9 
         },
         {
@@ -65,7 +65,7 @@ const useScrollAnimations = () => {
           // ease: "power.out",
           scrollTrigger: {
             trigger: box,
-            start: "top 99%", // Trigger when 75% of element is in view
+            start: "top bottom", // Trigger as soon as the top of the element enters the viewport
             toggleActions: "play none none none", // Play animation when scrolled into view
           }
         }

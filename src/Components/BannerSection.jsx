@@ -18,7 +18,7 @@ const BannerSection = ({ data ,text='text-[75px]',ptext='[24px]', lineh='md:lead
           </div>
   
           {/* Image Section */}
-          <div className="lg:w-1/2 flex justify-center items-center mt-8 lg:mt-0 relative">
+          <div className="lg:w-1/2 flex  animation-on-scroll  justify-center items-center mt-8 lg:mt-0 relative">
             <img
               src={image}
               alt="Corporate Booking Banner"

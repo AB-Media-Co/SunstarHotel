@@ -27,7 +27,7 @@ const useTextRevealAnimation = () => {
                 {
                     y: '0%',
                     opacity: 1,
-                    duration: 0.6,
+                    duration: 0.2,
                     stagger: 0.05,
                     ease: "power2.out",
                     scrollTrigger: {

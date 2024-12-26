@@ -10,7 +10,7 @@ import HotelIcon from '@mui/icons-material/Hotel';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 
 
-const Navbar = () => {
+const   Navbar = () => {
   const location = useLocation();
   const [active, setActive] = useState('Home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,9 +30,9 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Home', icon: <HomeIcon /> },
-    { name: 'About', icon: <InfoIcon /> },
-    { name: 'Corporate Booking', icon: <BusinessIcon /> },
+    { name: 'Why Sunstar', icon: <InfoIcon /> },
     { name: 'Hotels', icon: <HotelIcon /> },
+    { name: 'Corporate Booking', icon: <BusinessIcon /> },
     { name: 'Contact', icon: <ContactMailIcon /> },
   ];
   return (
@@ -40,7 +40,7 @@ const Navbar = () => {
       <div className=" content  flex justify-between items-center">
         {/* Logo */}
         <Link to='/' className="text-2xl font-bold">
-          <img src="/images/Logo/logo.svg" alt="Logo" />
+          <img src="/images/Logo/logo.svg" alt="Logo" className='h-[49px] w-[150px]' />
         </Link>
 
         {/* Desktop Menu */}
@@ -72,7 +72,7 @@ const Navbar = () => {
             className="block md:hidden focus:outline-none"
             onClick={toggleMobileMenu}
           >
-            <span className="text-2xl">☰</span>
+            <span className="text-[34px]">☰</span>
           </button>
         )}
 
