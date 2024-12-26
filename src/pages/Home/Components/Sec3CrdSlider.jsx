@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import CommonSwiper from "../../../Components/commonSlider";
+import CommonSwiper from "../../../Components/CommonSlider";
 
 const Sec3CardSlider = ({sec3CardSliderData}) => {
     const { heading, description, features } = sec3CardSliderData;
