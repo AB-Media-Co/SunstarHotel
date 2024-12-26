@@ -57,18 +57,18 @@ const CommonSwiper = ({
     }
   };
 
-  useEffect(() => {
-    if (swiperRef.current) {
-      swiperRef.current.autoplay.stop(); // Always stop autoplay first
-      if (isMobile) {
-        swiperRef.current.params.autoplay = {
-          delay: 3000,
-          disableOnInteraction: false,
-        };
-        swiperRef.current.autoplay.start(); // Then start if mobile
-      }
-    }
-  }, [isMobile]); // React on isMobile state
+  // useEffect(() => {
+  //   if (swiperRef.current) {
+  //     swiperRef.current.autoplay.stop(); // Always stop autoplay first
+  //     if (isMobile) {
+  //       swiperRef.current.params.autoplay = {
+  //         delay: 3000,
+  //         disableOnInteraction: false,
+  //       };
+  //       swiperRef.current.autoplay.start(); // Then start if mobile
+  //     }
+  //   }
+  // }, [isMobile]); // React on isMobile state
 
   return (
     <div className={`swiper-container ${className}`}>
@@ -86,7 +86,7 @@ const CommonSwiper = ({
         mousewheel={true}
         keyboard={true}
         pagination={isMobile ? { clickable: true } : false}
-        modules={[Navigation, Pagination, Keyboard, Autoplay]}
+        modules={[Navigation, Pagination, Keyboard]}
         slidesPerView={isMobile ? 1 : slidesPerViewDesktop} // Use the new prop
         spaceBetween={spaceBetween}
         loop={loop}

@@ -77,7 +77,7 @@ const Section1 = ({ section1Data }) => {
 
             <div className="absolute top-0 left-0 w-full h-full bg-black opacity-[0.4]"></div>
 
-            <div className="absolute  top-[50%] left-[5%] sm:top-[53%] sm:left-[53%] md:top-[53%] md:left-[10%] flex flex-col gap-4 text-left text-white max-w-[90%] sm:max-w-[80%] md:max-w-[40%]">
+            <div className="absolute  top-[50%] left-[5%] sm:top-[53%] sm:left-[53%] md:top-[53%] md:left-[10%] flex flex-col md:gap-4 text-left text-white max-w-[90%] sm:max-w-[80%] md:max-w-[40%]">
                 <h1 className="text-2xl sm:text-5xl md:text-[60px] font-bold leading-tight text-reveal-animation">
                     {heading}
                 </h1>

@@ -15,7 +15,7 @@ export default function SwiperComponent() {
       setIsMobile(window.innerWidth <= 768);
     };
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize); 
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const cards = [
@@ -75,35 +75,38 @@ export default function SwiperComponent() {
 
   const renderCard = (card) => (
     <div className=" border shadow-lg mr-4 rounded-lg relative w-full">
-      {/* Image Section */}
-      <div
-        className="zoom-in-on-scroll h-60 bg-cover bg-center rounded-t-lg"
-        style={{
-          backgroundImage: `url(${card.img})`,
-        }}
-      ></div>
+      <div>
+        {/* Image Section */}
+        <div
+          className="zoom-in-on-scroll h-60 bg-cover bg-center rounded-t-lg"
+          style={{
+            backgroundImage: `url(${card.img})`,
+          }}
+        ></div>
 
-      {/* Content Section */}
-      <div className="p-4 h-[180px] w-sm text-left flex flex-col justify-between">
-        <h2 className="text-xl font-bold">{card.text}</h2>
-        <div className="flex items-center space-x-1 text-yellow-500">
-          <span>{card.rating}</span>
-          <span className="text-sm text-gray-500">
-            ({card.reviews} Google reviews)
-          </span>
+        {/* Content Section */}
+        <div className="p-4 h-[180px] w-sm text-left flex flex-col justify-between">
+          <h2 className="text-xl font-bold">{card.text}</h2>
+          <div className="flex items-center space-x-1 text-yellow-500">
+            <span>{card.rating}</span>
+            <span className="text-sm text-gray-500">
+              ({card.reviews} Google reviews)
+            </span>
+          </div>
+          <p className="text-sm mt-2 w-[230px] md:w-[250px]">
+            {card.description.split(" ").length > 50
+              ? `${card.description.split(" ").slice(0, 50).join(" ")}...`
+              : card.description}
+          </p>
+          <a href={card.link} className="text-black font-semibold mt-2 inline-block">
+            {card.linkText}
+          </a>
         </div>
-        <p className="text-sm mt-2 w-[230px] md:w-[250px]">
-          {card.description.split(" ").length > 50
-            ? `${card.description.split(" ").slice(0, 50).join(" ")}...`
-            : card.description}
-        </p>
-        <a href={card.link} className="text-black font-semibold mt-2 inline-block">
-          {card.linkText}
-        </a>
+
       </div>
 
       {/* Features Section */}
-      <div className="absolute top-[4rem] left-[12rem] md:left-[18rem] w-[91px] shadow-lg gap-[24px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
+      <div className=" absolute left-[77%]  top-[4rem]  md:left-[75%]  w-[91px] shadow-lg gap-[2px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
         {features.map((feature, index) => (
           <div key={index} className="flex flex-col items-center">
             {feature.icon && <feature.icon className="text-white" />}
@@ -111,12 +114,13 @@ export default function SwiperComponent() {
               <span className="text-xl font-bold text-white">{feature.value}</span>
             )}
             <span className="text-[10px] text-white">{feature.label}</span>
+
+            <hr className="w-[90px] h-[1px] bg-white my-2"/>
           </div>
         ))}
       </div>
 
-      {/* Book Now Button */}
-      {/* <CommonButton /> */}
+
     </div>
   );
 
@@ -125,7 +129,7 @@ export default function SwiperComponent() {
       <CommonSwiper
         items={cards}
         renderItem={renderCard}
-        slidesPerViewDesktop={isMobile ? 1 :3.5}
+        slidesPerViewDesktop={isMobile ? 1 : 3.5}
         spaceBetween={30}
         loop={true}
         className="mySwiper"
