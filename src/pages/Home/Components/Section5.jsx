@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
-import CommonSwiper from "../../../Components/commonSlider";
+
+import CommonSwiper from "../../../Components/CommonSlider";
+
 
 const Card = ({ image, title, description }) => {
   return (
-    <div className="rounded-[30px]  overflow-hidden">
+    <div className="rounded-[30px] overflow-hidden">
       <img
         src={image}
         alt={title}
