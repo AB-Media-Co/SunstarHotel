@@ -33,7 +33,7 @@ const HeroSection = ({ title, highlightText, description, imageSrc }) => {
                     <div className="md:w-1/2 flex justify-center md:justify-end">
                         <div className="relative inline-block">
                             {/* Background Shape */}
-                            <div className="absolute -bottom-8 -right-8 bg-yellow-400 rounded-full h-32 w-32 md:h-48 md:w-48" />
+                            <div className="absolute -bottom-8 right-0 md:-right-8 bg-yellow-400 rounded-full h-32 w-32 md:h-48 md:w-48" />
                             {/* Dynamic image */}
                             <img
                                 src={imageSrc}

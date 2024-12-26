@@ -12,10 +12,10 @@ const Banner = () => {
                     <h1 className="text-white text-[44px] font-bold">Need to get in touch ?</h1>
                     <div className="flex gap-10 flex-wrap">
                         <div className="flex items-center gap-4">
-                            <Icon name='rotatePhone' className="w-10 h-10" /> <span className="text-white text-[22px] font-medium">+915845965840</span>
+                            <Icon name='rotatePhone' className="md:w-10 w-6 h-6 md:h-10" /> <span className="text-white text-[22px] font-medium">+915845965840</span>
                         </div>
                         <div className="flex items-center gap-4">
-                            <Icon name='email' className="w-10 h-10" /> <span className="text-white text-[22px] font-medium">help@sunstar.com</span>
+                            <Icon name='email' className="md:w-10 w-6 h-6 md:h-10" /> <span className="text-white text-[22px] font-medium">help@sunstar.com</span>
                         </div>
                     </div>
                     <p className="text-white pt-10">For assistance with bookings, cancellation, etc. mail us on book@sunstar.com </p>
