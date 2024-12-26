@@ -3,7 +3,7 @@ import useScrollAnimations from "../../../hooks/useScrollAnimations";
 import WifiIcon from "@mui/icons-material/Wifi";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalCafeIcon from "@mui/icons-material/LocalCafe";
-import CommonSwiper from "../../../Components/commonSlider";
+import CommonSwiper from "../../../Components/CommonSlider";
 
 export default function SwiperComponent() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import RoatinfImg from "../../../Components/RoatinfImg";
-import CommonSwiper from "../../../Components/commonSlider";
+import CommonSwiper from "../../../Components/CommonSlider";
 
 const Section6Testimonials = ({testimonials}) => {
   const renderTestimonial = (testimonial) => (
