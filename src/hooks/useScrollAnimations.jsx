@@ -42,7 +42,7 @@ const useScrollAnimations = () => {
           ease: "power4.out",
           scrollTrigger: {
             trigger: box,
-            start: "top 75%", // Trigger when 75% of element is in view
+            start: "top 100%", // Trigger when 75% of element is in view
             toggleActions: "play none none reverse", // Play animation when scrolled into view
           }
         }
@@ -65,7 +65,7 @@ const useScrollAnimations = () => {
           // ease: "power.out",
           scrollTrigger: {
             trigger: box,
-            start: "top 75%", // Trigger when 75% of element is in view
+            start: "top 99%", // Trigger when 75% of element is in view
             toggleActions: "play none none none", // Play animation when scrolled into view
           }
         }
@@ -99,7 +99,7 @@ const useScrollAnimations = () => {
     gsap.utils.toArray(".zoom-in-on-scroll").forEach((image) => {
       gsap.fromTo(image, 
         {
-          scale: 0.8, 
+          scale: 1, 
           opacity: 0 
         }, 
         {
@@ -132,8 +132,7 @@ const useScrollAnimations = () => {
           stagger: 0.2, // Each card will have a 0.2s stagger delay
           scrollTrigger: {
             trigger: card,
-            start: "top 80%", // Animation will start when 80% of the container is in view
-            end: "bottom 20%", // Animation will end when bottom of container is at 20%
+            start: "top 99%", // Animation will start when 80% of the container is in view
             toggleActions: "play none none reverse", // No reverse on scroll back
             markers: false, // Enable to debug
           }

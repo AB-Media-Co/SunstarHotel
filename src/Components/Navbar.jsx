@@ -3,6 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+import BusinessIcon from '@mui/icons-material/Business';
+import HotelIcon from '@mui/icons-material/Hotel';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
+
 
 const Navbar = () => {
   const location = useLocation();
@@ -22,11 +28,16 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
-  const navItems = ['Home', 'About', 'Corporate Booking', 'Hotels', 'Contact'];
-
+  const navItems = [
+    { name: 'Home', icon: <HomeIcon /> },
+    { name: 'About', icon: <InfoIcon /> },
+    { name: 'Corporate Booking', icon: <BusinessIcon /> },
+    { name: 'Hotels', icon: <HotelIcon /> },
+    { name: 'Contact', icon: <ContactMailIcon /> },
+  ];
   return (
     <nav className="bg-transparent nav text-white  py-4 top-2 absolute w-full z-40">
-      <div className="content  flex justify-between items-center">
+      <div className=" content  flex justify-between items-center">
         {/* Logo */}
         <Link to='/' className="text-2xl font-bold">
           <img src="/images/Logo/logo.svg" alt="Logo" />
@@ -35,17 +46,19 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className='flex gap-10 items-center'>
           <ul className="hidden md:flex space-x-6">
-            {navItems.map((item) => (
-              <li key={item}>
+            {navItems.map(({ name, icon }) => (
+              <li key={name}>
                 <Link
-                  to={item === 'Home' ? '/' : `/${item.toLowerCase().replace(/ /g, '-')}`}
-                  className={`px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === item ? 'text-[#F9BF02]' : 'hover:text-[#F9BF02]'}`}
+                  to={name === 'Home' ? '/' : `/${name.toLowerCase().replace(/ /g, '-')}`}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name ? 'text-[#F9BF02]' : 'hover:text-[#F9BF02]'}`}
                 >
-                  {item}
+                  {icon}
+                  <span>{name}</span>
                 </Link>
               </li>
             ))}
           </ul>
+
 
           {/* Book Now Button */}
           <button className="bg-[#F9BF02] px-11 py-2 text-black font-bold rounded-full md:ml-4 hidden md:block">
@@ -81,18 +94,20 @@ const Navbar = () => {
           </div>
           <div className='flex flex-col h-[580px] justify-between'>
             <ul className="flex flex-col mt-4">
-              {navItems.map((item) => (
-                <li key={item} className="mb-2">
+              {navItems.map(({ name, icon }) => (
+                <li key={name} className="mb-2">
                   <Link
-                    to={item === 'Home' ? '/' : `/${item.toLowerCase().replace(/ /g, '-')}`}
-                    className={`px-4 py-2 block transition-colors duration-300 ${active === item ? 'text-[#F9BF02]' : 'hover:text-[#F9BF02]'}`}
+                    to={name === 'Home' ? '/' : `/${name.toLowerCase().replace(/ /g, '-')}`}
+                    className={`flex items-center space-x-2 px-4 py-2  transition-colors duration-300 ${active === name ? 'text-[#F9BF02]' : 'hover:text-[#F9BF02]'}`}
                     onClick={closeMobileMenu}
                   >
-                    {item}
+                    {icon}
+                    <span>{name}</span>
                   </Link>
                 </li>
               ))}
             </ul>
+
 
             <div className='flex'>
               <div className='p-4 flex flex-col gap-10'>

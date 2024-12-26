@@ -2,12 +2,10 @@ import Icon from "../../../Components/Icons";
 
 const Banner = () => {
     return (
-        <div
-            className="bg-contain bg-[#6EC4C3] bg-no-repeat bg-bottom h-[450px] relative"
+        <div className="bg-contain bg-[#6EC4C3] bg-no-repeat bg-bottom h-[450px] relative"
             style={{
                 backgroundImage: "url('/images/ContctUsImg/ContactUsBanner.jpg')", // Correct path if using public folder
-            }}
-        >
+            }} >
             {/* Dark overlay to ensure text visibility */}
             <div className="content h-full flex  items-end ">
                 <div className="flex flex-col gap-5 pb-16" >
@@ -20,9 +18,7 @@ const Banner = () => {
                             <Icon name='email' className="w-10 h-10" /> <span className="text-white text-[22px] font-medium">help@sunstar.com</span>
                         </div>
                     </div>
-                    <p className="text-white pt-10">For assistance with bookings, cancellation, etc. mail us on book@sunstar.com
-                    </p>
-
+                    <p className="text-white pt-10">For assistance with bookings, cancellation, etc. mail us on book@sunstar.com </p>
                 </div>
             </div>
         </div>

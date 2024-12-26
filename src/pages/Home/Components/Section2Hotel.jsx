@@ -9,14 +9,14 @@ const Section2Hotel = ({section2HotelData}) => {
     useTextRevealAnimation();
     useScrollAnimations()
     return (
-        <div className="flex flex-col lg:flex-row  justify-between items-center lg:items-start mt-8 py-10 px-4 lg:px-8 lg:pr-0 z-0">
+        <div className="flex flex-col gap-14 justify-between items-center lg:items-start  px-4 lg:px-8 lg:pr-0 z-0">
             {/* Image and Text Container */}
             <div className="relative flex flex-col  items-center lg:items-start mb-8 lg:mb-0 w-full ">
- 
                 <RoatinfImg position={imagePosition} />
-                
                 {/* Text container */}
-                <div className="relative lg:ps-[164px] lg:w-[600px] text-black mt-[-2rem] lg:mt-40">
+                <div className="relative  content   text-black mt-[-2rem] lg:mt-10" 
+                style={{maxWidth:"85rem"}}
+                >
                     <h1 className="text-[40px] lg:text-[48px] font-bold leading-tight text-reveal-animation">
                         {heading}
                     </h1>
@@ -26,8 +26,8 @@ const Section2Hotel = ({section2HotelData}) => {
                 </div>
             </div>
 
-            {/* Card Slider */}
-            <div className="w-full overflow-hidden">
+            {/* Card Slider */} 
+            <div className="w-full lg:ps-[124px]  overflow-hidden">
                 <CardSlider />
             </div>
         </div>

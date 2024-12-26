@@ -8,7 +8,6 @@ const Section4 = () => {
       <div className="absolute top-0 left-0 z-0 w-full h-full">
       <RoatinfImg position='md:left-0 top-[-60px] md:top-0 left-[-60px] '/>
       </div>
-
       <div className="relative z-10 w-full">
         <ImageGallery breakpointColumnsObj={HomePageImgGallery.breakpointColumnsObj} items={HomePageImgGallery.items}/>
       </div>

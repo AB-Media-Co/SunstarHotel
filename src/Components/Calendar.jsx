@@ -78,7 +78,7 @@ const Calendar = ({ setCheckInDate,setCheckOutDate,setOpenCalender}) => {
             </button>
           )}
         </div>
-        <div className="px-10">
+        <div className="md:px-10">
           <div className="calendar-header grid grid-cols-7 text-xl text-center font-bold text-gray-400">
             {daysInWeek.map((day) => (
               <div key={day}>{day}</div>
@@ -129,14 +129,14 @@ const Calendar = ({ setCheckInDate,setCheckOutDate,setOpenCalender}) => {
 
   return (
     <div className="calendar-container items-center flex flex-col">
-      <div className="flex flex-col Calender overflow-hidden bg-white w-[1300px] rounded-[40px] md:flex-row gap-6">
+      <div className="flex flex-col Calender overflow-hidden bg-white lg:w-[1300px] md:rounded-[40px] lg:flex-row gap-6">
         {renderCalendar(currentMonth, true, false)}
         {renderCalendar(nextMonth, false, true)}
       </div>
 
       <div className="footer -mt-10 border-2 border-gray-200 bg-white w-full py-10">
-        <div className="content flex justify-between items-center">
-          <div className="flex dates gap-8">
+        <div className="content flex flex-wrap gap-10 justify-between items-center">
+          <div className="flex dates flex-wrap  gap-8">
             {/* Check-In Date */}
             <div className={`flex flex-col ${confirmClicked && !checkIn ? 'text-red-500' : 'text-gray-700'}`}>
               <span className="font-semibold text-[18px]">
@@ -163,7 +163,7 @@ const Calendar = ({ setCheckInDate,setCheckOutDate,setOpenCalender}) => {
           </div>
 
           {/* Confirm Button */}
-          <div className="flex items-center gap-10">
+          <div className="flex items-center  flex-wrap gap-6 md:gap-10">
             <span className="text-[#009368] font-bold text-[12px] space-x-4">
               <ElectricBolt className="mr-2" />
               Book Direct for Lowest Prices!

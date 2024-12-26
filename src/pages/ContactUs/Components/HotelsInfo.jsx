@@ -1,7 +1,7 @@
+/* eslint-disable react/prop-types */
 import useScrollAnimations from "../../../hooks/useScrollAnimations";
 import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
 
-/* eslint-disable react/prop-types */
 const HotelsInfo = ({hotels}) => {
   useTextRevealAnimation();
   useScrollAnimations();

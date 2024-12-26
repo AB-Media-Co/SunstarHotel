@@ -156,7 +156,7 @@ const HotelDropdown = () => {
                     {openCalender &&
                         <Calendar setCheckInDate={setCheckIn} setCheckOutDate={setCheckOut} setOpenCalender={setOpenCalender} />
 
-                    }
+                     }
                 </div>
 
                 {hotelData && (

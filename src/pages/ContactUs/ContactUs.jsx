@@ -12,8 +12,6 @@ const ContactUs = () => {
             <hr className="content"/>
             <OtherEnquiries enquiries={enquiries}/>
             <InstagramGallery images={images}/>
-
-        
         </div>
     )
 }

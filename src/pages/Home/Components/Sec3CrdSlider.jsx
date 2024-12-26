@@ -3,7 +3,6 @@ import CommonSwiper from "../../../Components/commonSlider";
 
 const Sec3CardSlider = ({sec3CardSliderData}) => {
     const { heading, description, features } = sec3CardSliderData;
-
     const renderItem = (item) => (
         <div className="max-w-lg relative ">
             <div

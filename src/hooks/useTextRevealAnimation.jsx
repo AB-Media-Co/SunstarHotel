@@ -9,9 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 const useTextRevealAnimation = () => {
     useEffect(() => {
         // Get all elements with the 'text-reveal-animation' class
-
         const textRevealElements = document.querySelectorAll(".text-reveal-animation");
-
         textRevealElements.forEach(textAnimation => {
             textAnimation.innerHTML = textAnimation.textContent
                 .split(' ')

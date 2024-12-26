@@ -8,7 +8,7 @@ const SunstarBrandsSection = ({ hotels }) => {
     useScrollAnimations();
 
     return (
-        <section className="py-12 px-4 sm:px-8 max-w-7xl mx-auto">
+        <section className="py-12 content">
             <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-2 text-reveal-animation">Sunstar Brands</h2>
                 <p className="text-gray-700 mb-10 font-semibold animation-on-scroll">

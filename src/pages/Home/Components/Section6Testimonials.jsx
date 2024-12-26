@@ -3,8 +3,6 @@ import RoatinfImg from "../../../Components/RoatinfImg";
 import CommonSwiper from "../../../Components/commonSlider";
 
 const Section6Testimonials = ({testimonials}) => {
-   
-
   const renderTestimonial = (testimonial) => (
     <div className="py-6 w-full md:w-80   text-center flex flex-col justify-center items-center md:justify-start md:items-start md:text-left">
       <img

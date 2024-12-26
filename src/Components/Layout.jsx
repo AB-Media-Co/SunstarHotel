@@ -10,9 +10,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Layout = () => {
   const pageRef = useRef(null);
-
-
-  
   return (
     <div ref={pageRef} className='home '>
       <Navbar />

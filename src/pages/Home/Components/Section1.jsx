@@ -67,7 +67,7 @@ const Section1 = ({ section1Data }) => {
             <img
                 src={images.desktop}
                 alt="Hotel Sunstar Grand Exterior"
-                className="w-full h-[850px] object-cover hidden md:block zoom-in-on-scroll "
+                className="w-full h-[850px] object-cover hidden md:block  "
             />
             <img
                 src={images.mobile}

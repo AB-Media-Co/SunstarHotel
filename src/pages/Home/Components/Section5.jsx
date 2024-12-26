@@ -18,9 +18,6 @@ const Card = ({ image, title, description }) => {
 };
 
 const Section5=({cards})=> {
-
-
-
   const renderCard = (card, index) => (
     <Card
       key={index}

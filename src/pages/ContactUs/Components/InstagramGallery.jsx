@@ -3,7 +3,6 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import useScrollAnimations from '../../../hooks/useScrollAnimations';
 import useTextRevealAnimation from '../../../hooks/useTextRevealAnimation';
 const InstagramGallery = ({images}) => {
-
   useTextRevealAnimation();
   useScrollAnimations();
   return (

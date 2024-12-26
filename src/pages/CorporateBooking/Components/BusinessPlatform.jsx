@@ -5,7 +5,6 @@ import useScrollAnimations from "../../../hooks/useScrollAnimations";
 import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
 
 const BusinessPlatform = ({ features }) => {
-
   useTextRevealAnimation();
   useScrollAnimations();
   return (

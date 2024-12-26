@@ -9,7 +9,6 @@ const Section3 = () => {
       <div className="md:block hidden">
         <RoatinfImg position="right-0" src="/images/HomepageImages/section3pattern.png" />
       </div>
-
       {/* Content Section */}
       <div className="lg:ps-[165px] pt-5 md:pt-[50px] z-10 relative">
         <Sec3CardSlider sec3CardSliderData={sec3CardSliderData}/>

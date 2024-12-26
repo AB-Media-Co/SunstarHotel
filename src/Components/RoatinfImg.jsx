@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 const RoatinfImg = ({ position, src = "/images/HomepageImages/RoundPatternSection2.svg" }) => {
   return (
     <div className="relative w-full h-full">
