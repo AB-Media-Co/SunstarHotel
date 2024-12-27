@@ -80,61 +80,65 @@ function Banner({ businessPlatformFeatures }) {
             />
 
 
-            <div className="bg-white py-10 animation-on-scroll-Section1 px-6 sm:px-10 lg:px-12 rounded-md shadow-lg content mx-auto -mt-6 relative z-10 flex flex-col sm:flex-row items-center gap-4 border border-gray-200">
-
+            <div className="bg-white py-6 px-4 sm:px-8 lg:px-12 rounded-md shadow-lg content mx-auto -mt-6 relative z-10 flex flex-col items-center gap-6 border border-gray-200">
                 <div className="w-full flex flex-col items-center">
                     {/* Top Section: Dates and Guests */}
-                    <div className="flex justify-center items-center w-full max-w-5xl space-x-4">
+                    <div className="flex flex-wrap justify-center sm:justify-between items-center w-full max-w-5xl space-y-4 sm:space-y-0 space-x-0 sm:space-x-4">
                         {/* Dates Selection */}
-                        <div onClick={() => setOpenCalender(true)} className="flex items-center border border-[#006167] rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm">
+                        <div
+                            onClick={() => setOpenCalender(true)}
+                            className="flex flex-wrap items-center border border-[#006167] rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"
+                        >
                             <Icon name="calendar" className="h-6 w-6 text-[#006167]" />
-
-                            <span className="text-[#006167] font-semibold text-[24px]">
-                                {checkIn ? checkIn : 'Check In'} <span className="text-yellow-500">→</span> {checkOut ? checkOut : 'Check Out'}
+                            <span className="text-[#006167] font-semibold text-base sm:text-lg md:text-[24px]">
+                                {checkIn ? checkIn : "Check In"}{" "}
+                                <span className="text-yellow-500">→</span>{" "}
+                                {checkOut ? checkOut : "Check Out"}
                             </span>
                             {checkIn && checkOut && (
-                                <span className="text-gray-400 text-sm flex">({calculateNights()})</span>
+                                <span className="text-gray-400 text-xs sm:text-sm flex">({calculateNights()})</span>
                             )}
                         </div>
 
                         {/* Guests Selection */}
-
                         <GuestsDropdown />
 
                         {/* Select Button */}
-                        <button onClick={handleBooking} className="bg-[#006167] text-white w-[180px] rounded-full shadow-md px-4 py-3">
+                        <button
+                            onClick={handleBooking}
+                            className="bg-[#006167] text-white w-full sm:w-auto rounded-full shadow-md px-6 py-3"
+                        >
                             Select
                         </button>
                     </div>
 
                     {/* Bottom Section: Tabs */}
-                    <div className="flex justify-between items-center mt-6 space-x-6 w-full">
+                    <div className="flex flex-wrap justify-center items-center mt-6 space-y-4 sm:space-y-0 space-x-0 sm:space-x-6 w-full">
                         {tabs.map((tab, index) => (
-                            <>
-                                <a
-                                    key={index}
-                                    href={tab.link} // Scrolls to the corresponding section
-                                    onClick={() => setActiveTab(index)} // Sets the active tab
-                                    className={`flex gap-2 items-center cursor-pointer ${activeTab === index ? "text-[#FDC114]" : "text-[#006167]"
+                            <a
+                                key={index}
+                                href={tab.link} // Scrolls to the corresponding section
+                                onClick={() => setActiveTab(index)} // Sets the active tab
+                                className={`flex flex-col sm:flex-row gap-2 items-center cursor-pointer ${activeTab === index ? "text-[#FDC114]" : "text-[#006167]"
+                                    }`}
+                            >
+                                <Icon
+                                    name={tab.iconName}
+                                    className={`h-6 w-6 md:h-8 md:w-8 ${activeTab === index ? "text-[#FDC114]" : "text-[#006167]"
+                                        }`}
+                                />
+                                <span
+                                    className={`font-semibold text-sm sm:text-base md:text-[26px] ${activeTab === index ? "text-[#FDC114]" : "text-gray-500"
                                         }`}
                                 >
-                                    <Icon
-                                        name={tab.iconName}
-                                        className={`h-8 w-8 ${activeTab === index ? "text-[#FDC114]" : "text-[#006167]"
-                                            }`}
-                                    />
-                                    <span
-                                        className={`font-semibold text-[26px] ${activeTab === index ? "text-[#FDC114]" : "text-gray-500"
-                                            }`}
-                                    >
-                                        {tab.label}
-                                    </span>
-                                </a>
-                            </>
+                                    {tab.label}
+                                </span>
+                            </a>
                         ))}
                     </div>
                 </div>
             </div>
+
 
 
             {openCalender &&
