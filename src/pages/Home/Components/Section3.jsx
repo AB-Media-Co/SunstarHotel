@@ -4,7 +4,7 @@ import Sec3CardSlider from "./Sec3CrdSlider";
 
 const Section3 = () => {
   return (
-    <div className="relative bg-[#78C9C8] md:h-[750px] overflow-hidden z-10">
+    <div className="relative bg-[#78C9C8]  overflow-hidden z-10">
       {/* Image Container */}
       <div className="md:block hidden">
         <RoatinfImg position="right-0" src="/images/HomepageImages/section3pattern.png" />

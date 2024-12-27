@@ -429,3 +429,7 @@
 .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal{
   padding-top: 20px;
 }
+
+.sec2Swiper .swiper-wrapper{
+  height: 480px !important;
+}

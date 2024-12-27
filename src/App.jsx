@@ -22,6 +22,7 @@ import  { Toaster } from 'react-hot-toast';
 import AddHotels from './adminPanel/pages/AdminHotels/AddHotels';
 import AddRooms from './adminPanel/pages/Rooms/AddRooms';
 import EditRooms from './adminPanel/pages/Rooms/EditRooms';
+import HotelDropdown from './Components/HotelDroddown';
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ function App() {
             <Route path="/corporate-booking" element={<Corporatebooking />} />
             <Route path="/hotels" element={<Hotels />} />
             <Route path="/contact" element={<ContactUs />} />
+            <Route path="/test" element={<HotelDropdown />} />
           </Route>
           <Route path="/admin/login" element={<AdminLogin />} />
           {/* <Route path="/admin/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}

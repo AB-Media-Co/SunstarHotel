@@ -9,10 +9,10 @@ const Card = ({ image, title, description }) => {
       <img
         src={image}
         alt={title}
-        className="h-[304px] w-full object-cover"
+        className="h-[400px] w-full object-cover"
       />
-      <div className="md:px-9 h-36 md:h-64 md:py-10 p-5 text-left shadow-lg bg-white rounded-[30px] top-[-22px] relative">
-        <h3 className="text-[18px] lg:text-[30px] font-semibold text-gray-800">{title}</h3>
+      <div className="md:px-6 h-36 md:h-64 md:py-10 p-2 text-left shadow-lg bg-white rounded-b-[30px] top-[-22px] relative">
+        <h3 className="text-[18px] lg:text-[30px] font-bold text-gray-800">{title}</h3>
         <p className="mt-2  text-[14px] lg:text-[22px] text-gray-600">{description}</p>
       </div>
     </div>

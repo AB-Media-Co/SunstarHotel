@@ -26,7 +26,7 @@ const HotelDropdown = () => {
     const fetchHotelData = async (hotelId, apiKey) => {
         try {
             const response = await axios.get(
-                `https://live.ipms247.com/booking/reservation_api/listing.php`,
+                `https://cors-anywhere.herokuapp.com/https://live.ipms247.com/booking/reservation_api/listing.php`,
                 {
                     params: {
                         request_type: "HotelList",
@@ -45,7 +45,7 @@ const HotelDropdown = () => {
     const fetchRoomData = async (hotelId, apiKey) => {
         try {
             const response = await axios.post(
-                `https://live.ipms247.com/pmsinterface/pms_connectivity.php`,
+                `https://cors-anywhere.herokuapp.com/https://live.ipms247.com/pmsinterface/pms_connectivity.php`,
                 {
                     RES_Request: {
                         Request_Type: "RoomInfo",
@@ -75,7 +75,7 @@ const HotelDropdown = () => {
 
         try {
             const response = await axios.post(
-                `https://live.ipms247.com/index.php/page/service.kioskconnectivity`,
+                `https://cors-anywhere.herokuapp.com/https://live.ipms247.com/index.php/page/service.kioskconnectivity`,
                 {
                     RES_Request: {
                         Request_Type: "RoomAvailability",

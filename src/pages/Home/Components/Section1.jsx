@@ -67,7 +67,7 @@ const Section1 = ({ section1Data }) => {
             <img
                 src={images.desktop}
                 alt="Hotel Sunstar Grand Exterior"
-                className="w-full h-[775px] object-cover hidden md:block  "
+                className="w-full h-[100vh] object-cover hidden md:block  "
             />
             <img
                 src={images.mobile}
@@ -77,11 +77,11 @@ const Section1 = ({ section1Data }) => {
 
             <div className="absolute top-0 left-0 w-full h-full bg-black opacity-[0.4]"></div>
 
-            <div className="absolute  top-[50%] left-[5%] sm:top-[53%] sm:left-[53%] md:top-[48%] md:left-[10%] flex flex-col md:gap-4 text-left text-white max-w-[90%] sm:max-w-[80%] md:max-w-[40%]">
-                <h1 className="text-4xl sm:text-5xl md:text-[60px] font-bold leading-tight text-reveal-animation">
+            <div className="absolute  top-[60%] left-[5%] sm:top-[63%] sm:left-[53%] md:top-[48%] md:left-[10%] flex flex-col md:gap-4 text-left text-white max-w-[90%] sm:max-w-[80%] md:max-w-[40%]">
+                <h1 className="text-3xl sm:text-5xl md:text-[60px] font-bold leading-tight text-reveal-animation">
                     {heading}
                 </h1>
-                <p className="text-md sm:text-xl md:text-2xl mt-4 leading-relaxed  animation-on-scroll-Section1">
+                <p className="text-[12px] sm:text-xl md:text-2xl mt-4 leading-relaxed  animation-on-scroll-Section1">
                     {description}
                 </p>
 

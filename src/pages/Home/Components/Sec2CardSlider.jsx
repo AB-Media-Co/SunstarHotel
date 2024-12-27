@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import useScrollAnimations from "../../../hooks/useScrollAnimations";
 import WifiIcon from "@mui/icons-material/Wifi";
-import PersonIcon from "@mui/icons-material/Person";
-import LocalCafeIcon from "@mui/icons-material/LocalCafe";
 import CommonSwiper from "../../../Components/CommonSlider";
+import { LocationOnSharp, Restaurant, SmokeFreeSharp } from "@mui/icons-material";
+import { CctvIcon } from "lucide-react";
 
 export default function SwiperComponent() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -26,7 +26,9 @@ export default function SwiperComponent() {
       rating: 4.5,
       reviews: 320,
       link: "#",
-      linkText: "View Details >",
+      location: "Gurgaon",
+      price: 5000, // in your currency, e.g., INR
+      originalPrice: 6000
     },
     {
       img: "/images/HomepageImages/cardImg1.png",
@@ -35,7 +37,9 @@ export default function SwiperComponent() {
       rating: 4.8,
       reviews: 200,
       link: "#",
-      linkText: "View Details >",
+      location: "Delhi",
+      price: 8000, // in your currency
+      originalPrice: 10000
     },
     {
       img: "/images/HomepageImages/cardImg1.png",
@@ -44,7 +48,9 @@ export default function SwiperComponent() {
       rating: 4.2,
       reviews: 180,
       link: "#",
-      linkText: "View Details >",
+      location: "Noida",
+      price: 3000, // in your currency
+      originalPrice: 4000
     },
     {
       img: "/images/HomepageImages/cardImg1.png",
@@ -53,7 +59,9 @@ export default function SwiperComponent() {
       rating: 4.5,
       reviews: 320,
       link: "#",
-      linkText: "View Details >",
+      location: "Delhi",
+      price: 5500, // in your currency
+      originalPrice: 6500
     },
     {
       img: "/images/HomepageImages/cardImg1.png",
@@ -62,19 +70,22 @@ export default function SwiperComponent() {
       rating: 4.8,
       reviews: 200,
       link: "#",
-      linkText: "View Details >",
+      location: "Gurgaon",
+      price: 8500, // in your currency
+      originalPrice: 9500
     }
   ];
 
   const features = [
     { label: "Wifi", icon: WifiIcon },
-    { label: "Occupancy", icon: PersonIcon },
-    { label: "Tea / Coffee", icon: LocalCafeIcon },
-    { label: "Rooms Left", icon: null, value: 4 },
+    { label: "No Smoking", icon: SmokeFreeSharp },
+    { label: "CCTV", icon: CctvIcon },
+    { label: "Restaurant", icon: Restaurant },
   ];
 
+
   const renderCard = (card) => (
-    <div className=" border shadow-lg mr-4 rounded-lg relative w-full">
+    <div className=" border shadow-lg mr-4 rounded-xl relative w-full">
       <div>
         {/* Image Section */}
         <div
@@ -85,37 +96,49 @@ export default function SwiperComponent() {
         ></div>
 
         {/* Content Section */}
-        <div className="p-4 h-[180px] w-sm text-left flex flex-col justify-between">
+        <div className="flex absolute left-4 top-[54%] px-4 py-2 rounded-full bg-[#4DB8B6] w-[170px] items-center space-x-1 text-white">
+          <strong>{card.rating}</strong>
+          <span className="text-sm ">
+            ({card.reviews} reviews)
+          </span>
+        </div>
+        <div className="p-4 h-[150px] pt-5 w-sm text-left gap-2 flex flex-col">
           <h2 className="text-xl font-bold">{card.text}</h2>
-          <div className="flex items-center space-x-1 text-yellow-500">
-            <span>{card.rating}</span>
-            <span className="text-sm text-gray-500">
-              ({card.reviews} Google reviews)
+          <div className="text-[16px] flex gap-2">
+            <LocationOnSharp className="text-[#4DB8B6]" />
+            <span className="text-[#707070] font-semibold text-[16px]">
+              {card.location}
             </span>
           </div>
-          <p className="text-sm mt-2 w-[230px] md:w-[250px]">
-            {card.description.split(" ").length > 50
-              ? `${card.description.split(" ").slice(0, 50).join(" ")}...`
-              : card.description}
-          </p>
-          <a href={card.link} className="text-black font-semibold mt-2 inline-block">
-            {card.linkText}
-          </a>
+
+          <div className="mt-4   flex items-center text-[#707070] font-semibold justify-end gap-3">
+            Starting From
+            {card.originalPrice && (
+              <p className="text-sm text-red-500 font-bold line-through">₹{card.originalPrice}</p>
+            )}
+            <p className="text-lg font-bold text-[#4DB8B6]">
+              ₹{card.price}
+
+            </p>
+          </div>
         </div>
 
       </div>
 
       {/* Features Section */}
-      <div className=" absolute left-[77%]  top-[4rem]  md:left-[84%]  w-[91px] shadow-lg gap-[2px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
+      <div className=" absolute left-[77%]  top-[3rem]  md:left-[84%]  w-[80px] shadow-lg gap-[2px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
         {features.map((feature, index) => (
           <div key={index} className="flex flex-col items-center">
             {feature.icon && <feature.icon className="text-white" />}
             {feature.value && (
               <span className="text-xl font-bold text-white">{feature.value}</span>
             )}
-            <span className="text-[10px] text-white">{feature.label}</span>
+            {/* <img src="/src/Images/Icons/wifianimated.gif" alt="" /> */}
+            <span className="text-[12px] text-white">{feature.label}</span>
 
-            <hr className="w-[90px] h-[1px] bg-white my-2"/>
+            {index !== features.length - 1 && (
+              <hr className="w-[80px] h-[1px] bg-white my-2" />
+            )}
           </div>
         ))}
       </div>
@@ -125,7 +148,7 @@ export default function SwiperComponent() {
   );
 
   return (
-    <div className="swiper-container pb-5">
+    <div className="swiper-container sec2Swiper pb-5">
       <CommonSwiper
         items={cards}
         renderItem={renderCard}

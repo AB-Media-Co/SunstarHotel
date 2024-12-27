@@ -13,7 +13,7 @@ const CommonSwiper = ({
   spaceBetween = 30,
   loop = true,
   className = "",
-  slidesPerViewDesktop = 3 // new prop with default value
+  slidesPerViewDesktop = 3,
 }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
@@ -21,6 +21,7 @@ const CommonSwiper = ({
   const [isFirstSlide, setIsFirstSlide] = useState(false);
   const [isLastSlide, setIsLastSlide] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,17 +46,44 @@ const CommonSwiper = ({
     setIsLastSlide(swiper.isEnd);
   };
 
-  const goToFirstSlide = () => {
+  const handleNavigationClick = (direction) => {
+    if (isNavigating) return;
+
+    setIsNavigating(true);
+
     if (swiperRef.current) {
-      swiperRef.current.slideToLoop(0); // Go to the first slide in the loop
+      if (direction === "prev") {
+        if (isFirstSlide) {
+          swiperRef.current.slideToLoop(items.length - 1);
+        } else {
+          swiperRef.current.slidePrev();
+        }
+      } else if (direction === "next") {
+        if (isLastSlide) {
+          swiperRef.current.slideToLoop(0);
+        } else {
+          swiperRef.current.slideNext();
+        }
+      }
     }
   };
 
-  const goToLastSlide = () => {
+  useEffect(() => {
     if (swiperRef.current) {
-      swiperRef.current.slideToLoop(items.length - 1); // Go to the last slide in the loop
+      const swiper = swiperRef.current;
+
+      const handleTransitionStart = () => setIsNavigating(true);
+      const handleTransitionEnd = () => setIsNavigating(false);
+
+      swiper.on("transitionStart", handleTransitionStart);
+      swiper.on("transitionEnd", handleTransitionEnd);
+
+      return () => {
+        swiper.off("transitionStart", handleTransitionStart);
+        swiper.off("transitionEnd", handleTransitionEnd);
+      };
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (swiperRef.current) {
@@ -68,7 +96,7 @@ const CommonSwiper = ({
         swiperRef.current.autoplay.start(); // Then start if mobile
       }
     }
-  }, [isMobile]); // React on isMobile state
+  }, [isMobile]);
 
   return (
     <div className={`swiper-container ${className}`}>
@@ -86,8 +114,8 @@ const CommonSwiper = ({
         mousewheel={true}
         keyboard={true}
         pagination={isMobile ? { clickable: true } : false}
-        modules={[Navigation, Pagination, Keyboard,Autoplay]}
-        slidesPerView={isMobile ? 1 : slidesPerViewDesktop} // Use the new prop
+        modules={[Navigation, Pagination, Keyboard, Autoplay]}
+        slidesPerView={isMobile ? 1 : slidesPerViewDesktop}
         spaceBetween={spaceBetween}
         loop={loop}
         className="mySwiper"
@@ -107,8 +135,8 @@ const CommonSwiper = ({
           className={`p-4 rounded-full custom-prev-button flex ${
             isFirstSlide ? "bg-gray-300 disabled" : "bg-[#FDC114]"
           }`}
-          onClick={isFirstSlide ? goToLastSlide : undefined}
-          disabled={false}
+          onClick={() => handleNavigationClick("prev")}
+          disabled={isNavigating}
         >
           <Icon name="leftIcon" className="h-6 w-6" />
         </button>
@@ -117,8 +145,8 @@ const CommonSwiper = ({
           className={`p-4 rounded-full custom-next-button flex ${
             isLastSlide ? "bg-gray-300 disabled" : "bg-[#FDC114]"
           }`}
-          onClick={isLastSlide ? goToFirstSlide : undefined}
-          disabled={false}
+          onClick={() => handleNavigationClick("next")}
+          disabled={isNavigating}
         >
           <Icon name="rightIcon" className="h-6 w-6" />
         </button>
