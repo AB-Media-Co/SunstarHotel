@@ -1,8 +1,11 @@
 import HeroSection from './Components/HeroSection'
 import ValuesSection from './Components/ValuesSection'
-import { heroData, valuesData,testimonialData,hotels } from '../../Data/AboutSectionData';
+import { heroData, valuesData, testimonialData, hotels } from '../../Data/AboutSectionData';
 import TestimonialSection from '../../Components/TestimonialSection';
 import SunstarBrandsSection from './Components/SunstarBrandsSection';
+import ShineSection from './Components/ShineSection';
+import CompnayCards from './Components/CompnayCards';
+import { HomePageSection5cards } from '../../Data/HomePageData';
 
 const AboutUs = () => {
   return (
@@ -19,12 +22,14 @@ const AboutUs = () => {
         title="Our Values Make Us Loved By Our Guests"
         values={valuesData}
       />
-       <TestimonialSection
+      <ShineSection />
+      <CompnayCards cards={HomePageSection5cards}/>
+      <TestimonialSection
         title={testimonialData.title}
         testimonials={testimonialData.testimonials}
         backgroundImage={testimonialData.backgroundImage}
       />
-      <SunstarBrandsSection hotels={hotels}/>
+      <SunstarBrandsSection hotels={hotels} />
     </div>
   )
 }

@@ -6,3 +6,7 @@
   @apply mx-auto max-w-7xl w-full md:w-11/12 px-2;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+

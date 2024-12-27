@@ -12,7 +12,7 @@ const FAQSection = ({ faqs }) => {
     };
 
     return (
-        <div className="bg-gray-50 py-10">
+        <div id="faqs" className="bg-gray-50 py-10">
             <div className="content mx-auto px-4">
                 <h2 className="text-center md:text-left text-[36px] font-bold text-gray-800 mb-2">
                     Frequently Asked Questions

@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
 import useScrollAnimations from "../../../hooks/useScrollAnimations";
-import { hotels } from "../../../Data/AboutSectionData";
-import { CloseOutlined } from "@mui/icons-material";
-import HotelSelctingCards from "../../../Components/CardsCommonComp/HotelSelectingCards";
+import AllHotelCard from "../../../Components/AllHotelCard";
 // import "./Section1.css"; 
 
 const Section1 = ({ section1Data }) => {
@@ -50,16 +48,7 @@ const Section1 = ({ section1Data }) => {
     }, [currentWord, isDeleting, index, words, delay]);
 
     // Disable scroll when hotel popup is open
-    useEffect(() => {
-        if (hotelOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, [hotelOpen]);
+
 
     return (
         <div className="relative z-10 ">
@@ -99,30 +88,7 @@ const Section1 = ({ section1Data }) => {
                     </div>
                 </div>
                 {hotelOpen && (
-                    <div className="fixed  inset-0 bg-[#6EC4C2]  w-full flex justify-center items-center z-50">
-                        <div className="flex hotelSelection flex-col Calender  overflow-hidden mt-24 md:mt-52 md:w-[1300px]  md:flex-row gap-6">
-                            <div>
-                                <div className="flex justify-between items-center px-4 py-2">
-                                    <div className="text-[48px] font-semibold">
-                                        Hotels
-                                    </div>
-                                    <button
-                                        className=" text-black iconb text-xl  font-bold cursor-pointer"
-                                        onClick={() => SetHotelsOpen(false)}
-                                    >
-                                        <CloseOutlined className="icon" />
-                                    </button>
-                                </div>
-                                <div className="text-center text-lg h-[100vh] hotelSelection overflow-y-auto  ">
-                                    <div className="grid gap-6 sm:grid-cols-2  rounded-t-[32px] overflow-y-auto bg-white hotelSelection  md:w-[1300px] lg:grid-cols-3 md:py-12  md:pb-[20rem] p-10">
-                                        {hotels?.map((hotel, index) => (
-                                            <HotelSelctingCards key={index} hotel={hotel} link="/hotels" />
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                   <AllHotelCard SetHotelsOpen={SetHotelsOpen} hotelOpen={hotelOpen}/>
                 )}
             </div>
         </div>

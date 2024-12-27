@@ -14,7 +14,7 @@ const TestimonialSection = ({
         useTextRevealAnimation();
         useScrollAnimations();
         return (
-            <div className="bg-white rounded-[32px] p-6 shadow-lg md:text-left flex flex-col h-full">
+            <div id="reviews" className="bg-white rounded-[32px] p-6 shadow-lg md:text-left flex flex-col h-full">
                 <h3 className="font-bold text-gray-800 mb-4 ">{item.title}</h3>
                 <p className="text-gray-600 flex-grow">{item.description}</p>
                 <div className="flex items-center justify-between mt-4">
@@ -56,7 +56,7 @@ const TestimonialSection = ({
 
     return (
         <div
-            className="w-full bg-[#BAE9EF] flex flex-col gap-6 py-12 px-4 md:px-0  md:ps-8 lg:ps-[140px] relative overflow-hidden mt-8"
+            className="w-full bg-[#BAE9EF] flex flex-col gap-6 py-12 px-4 md:px-0  md:ps-8 lg:ps-[140px] relative overflow-hidden"
             style={{
                 backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
                 backgroundPosition: 'center',

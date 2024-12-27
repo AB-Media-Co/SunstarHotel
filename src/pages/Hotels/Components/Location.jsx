@@ -8,7 +8,7 @@ const Location = ({ locationData }) => {
     const { name, address, mapCoordinates, nearby } = locationData;
 
     return (
-        <div className="content mx-auto p-6 pb-20">
+        <div id="location"  className="content mx-auto p-6 pb-20">
             <h2 className="text-xl font-semibold mb-4">Location Of {name}</h2>
             <p className="text-gray-600 mb-4">{address}</p>
 

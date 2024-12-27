@@ -79,7 +79,7 @@ const   Navbar = () => {
         {/* Mobile Menu (Slide-in Sidebar) */}
         <div
           id="mobile-menu"
-          className={`fixed top-0 md:hidden left-0 h-full bg-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          className={`fixed top-0 md:hidden left-0 h-[100vh] bg-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
         >
           <div className='flex justify-between p-4'>
             <Link to='/' className="">

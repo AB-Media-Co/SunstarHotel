@@ -5,13 +5,13 @@ import CommonSwiper from "../../../Components/CommonSlider";
 
 const Card = ({ image, title, description }) => {
   return (
-    <div className="rounded-[30px] overflow-hidden">
+    <div className="rounded-[10px] overflow-hidden">
       <img
         src={image}
         alt={title}
         className="h-[400px] w-full object-cover"
       />
-      <div className="md:px-6 h-36 md:h-64 md:py-10 p-2 text-left shadow-lg bg-white rounded-b-[30px] top-[-22px] relative">
+      <div className="md:px-6 h-36 md:h-64 md:py-10 py-3 px-4 text-left shadow-lg bg-white rounded-b-[20px] top-[-22px] relative">
         <h3 className="text-[18px] lg:text-[30px] font-bold text-gray-800">{title}</h3>
         <p className="mt-2  text-[14px] lg:text-[22px] text-gray-600">{description}</p>
       </div>

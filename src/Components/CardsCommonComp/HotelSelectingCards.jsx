@@ -1,11 +1,15 @@
 // Import necessary components and hooks
-
-import CommonButton from "../CommonButton";
-
 /* eslint-disable react/prop-types */
 
-// Common component for individual hotel cards
-const HotelSelctingCards = ({ link , hotel, btnClass = 'bg-white hover:bg-yellow-400 w-[150px] m-2 hover:shadow-2xl hover:rounded-lg rounded-lg transition ease-in-out duration-300 mt-0' }) => {
+import { useNavigate } from "react-router-dom";
+import Icon from "../Icons";
+
+const HotelSelctingCards = ({ OnclickBook, link, hotel, btnClass = 'bg-white hover:bg-yellow-400  m-2 hover:shadow-2xl hover:rounded-lg rounded-lg transition ease-in-out duration-300 mt-0' }) => {
+    const navigate = useNavigate()
+    const OnbuttonClick = () => {
+        navigate(link)
+        OnclickBook()
+    }
     return (
         <div
             className="border border-gray-200   rounded-lg shadow-lg overflow-hidden bg-white hover:shadow-md transition-shadow duration-200"
@@ -17,7 +21,7 @@ const HotelSelctingCards = ({ link , hotel, btnClass = 'bg-white hover:bg-yellow
                     className="w-full h-full object-cover"
                 />
             </div>
-            <div>
+            <div className="flex flex-col w-full">
                 <div className="px-4 py-2">
                     <h3 className="text-lg font-bold text-gray-900">{hotel.name}</h3>
                     <div className="flex justify-center text-sm text-gray-600 ">
@@ -25,10 +29,17 @@ const HotelSelctingCards = ({ link , hotel, btnClass = 'bg-white hover:bg-yellow
                         {hotel.rating} • {hotel.reviews}
                     </div>
                 </div>
-                <CommonButton
-                    link={link}
-                    className={`${btnClass}`}
-                />
+                <div
+                    onClick={OnbuttonClick}
+                    className={`${btnClass} flex gap-2 py-4 justify-center items-center cursor-pointer`}
+                >
+                    <div className="bg-[#058FA2] rounded-full p-[8px]">
+                        <Icon name="upArrow" className=" w-2 h-2" />
+                    </div>
+                    <span className="font-bold text-xl">
+                        Book Now
+                    </span>
+                </div>
             </div>
         </div>
     );
