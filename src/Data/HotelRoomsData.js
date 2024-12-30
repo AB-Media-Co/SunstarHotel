@@ -1,14 +1,14 @@
 // Import your SVG icons
-import wifi from '../Images/Icons/wifi.svg';
-import air from '../Images/Icons/air.svg';
-import tv from '../Images/Icons/tv.svg';
-import shower from '../Images/Icons/shower.svg';
-import fridge from '../Images/Icons/Fridge.svg';
-import noSmoking from '../Images/Icons/Nomoking.svg';
-import carParking from '../Images/Icons/car parking.svg';
-import iron from '../Images/Icons/iron.svg';
-import hairdryer from '../Images/Icons/dryer.svg';
-import security from '../Images/Icons/Security.svg';
+import wifi from '/images/Icons/wifi.svg';
+import air from '/images/Icons/air.svg';
+import tv from '/images/Icons/tv.svg';
+import shower from '/images/Icons/shower.svg';
+import fridge from '/images/Icons/Fridge.svg';
+import noSmoking from '/images/Icons/Nomoking.svg';
+import carParking from '/images/Icons/car parking.svg';
+import iron from '/images/Icons/iron.svg';
+import hairdryer from '/images/Icons/dryer.svg';
+import security from '/images/Icons/Security.svg';
 
 
 export const businessPlatformFeatures = [
