@@ -23,11 +23,11 @@ const Navbar = () => {
       location.pathname === "/"
         ? ""
         : location.pathname.startsWith("/hotels")
-        ? "Hotels"
-        :location.pathname
-          .replace("/", "")
-          .replace(/-/g, " ")
-          .replace(/\b\w/g, (char) => char.toUpperCase());
+          ? "Hotels"
+          : location.pathname
+            .replace("/", "")
+            .replace(/-/g, " ")
+            .replace(/\b\w/g, (char) => char.toUpperCase());
     setActive(currentPath);
   }, [location.pathname]);
 
@@ -40,19 +40,16 @@ const Navbar = () => {
   };
 
   const handleHotelsClick = () => {
-    setHotelOpen(true)
+    closeMobileMenu(); // Close menu when navigating
+    setHotelOpen(true);
   };
 
   const navItems = [
-    { name: "Home", icon: <HomeIcon /> },
-    { name: "Why Sunstar", icon: <InfoIcon /> },
-    {
-      name: "Hotels",
-      icon: <HotelIcon />,
-      action: handleHotelsClick,
-    },
-    { name: "Corporate Booking", icon: <BusinessIcon /> },
-    { name: "Contact", icon: <ContactMailIcon /> },
+    { name: "Home", icon: <HomeIcon />, route: "/" },
+    { name: "Why Sunstar", icon: <InfoIcon />, route: "/why-sunstar" },
+    { name: "Hotels", icon: <HotelIcon />, action: handleHotelsClick },
+    { name: "Corporate Booking", icon: <BusinessIcon />, route: "/corporate-booking" },
+    { name: "Contact", icon: <ContactMailIcon />, route: "/contact" },
   ];
 
   return (
@@ -70,13 +67,17 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="flex gap-10 items-center">
           <ul className="hidden md:flex space-x-6">
-            {navItems.map(({ name, icon, action }, index) => (
+            {navItems.map(({ name, icon, route, action }, index) => (
               <li key={index}>
                 <button
-                  onClick={action || (() => navigate(`/${name.toLowerCase().replace(/ /g, "-")}`))}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name
-                      ? "text-[#F9BF02]"
-                      : "hover:text-[#F9BF02]"
+                  onClick={() => {
+                    if (action) {
+                      action();
+                    } else if (route) {
+                      navigate(route); // Navigate to the specific route
+                    }
+                  }}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name ? "text-[#F9BF02]" : "hover:text-[#F9BF02]"
                     }`}
                 >
                   {icon}
@@ -85,6 +86,7 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
+
 
           {/* Book Now Button */}
           <button className="bg-[#F9BF02] px-11 py-2 text-black font-bold rounded-full md:ml-4 hidden md:block">
@@ -125,16 +127,18 @@ const Navbar = () => {
           </div>
           <div className="flex flex-col h-[580px] justify-between">
             <ul className="flex flex-col mt-4">
-              {navItems.map(({ name, icon, action }, index) => (
+              {navItems.map(({ name, icon,route, action }, index) => (
                 <li key={index} className="mb-2">
                   <button
+
                     onClick={() => {
-                      closeMobileMenu();
-                      action && action();
+                      if (action) {
+                        action();
+                      } else if (route) {
+                        navigate(route); // Navigate to the specific route
+                      }
                     }}
-                    className={`flex items-center space-x-2 px-4 py-2 transition-colors duration-300 ${active === name
-                        ? "text-[#F9BF02]"
-                        : "hover:text-[#F9BF02]"
+                    className={`flex items-center space-x-2 px-4 py-2 transition-colors duration-300 ${active === name ? "text-[#F9BF02]" : "hover:text-[#F9BF02]"
                       }`}
                   >
                     {icon}

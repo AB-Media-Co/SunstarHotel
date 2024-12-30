@@ -15,7 +15,7 @@ const AllHotelCard = ({ hotels, isOpen, onClose }) => {
 
     return (
         <div className="fixed inset-0 bg-[#6EC4C2] flex justify-center items-center z-50">
-            <div className="flex hotelSelection flex-col w-full md:w-[1300px] gap-6  mt-24 md:mt-52">
+            <div className="flex hotelSelection flex-col w-full md:w-[1300px] gap-6  mt-[13rem] md:mt-52">
                 <div className="flex justify-between  items-center px-4 py-2">
                     <h2 className="text-[48px] font-semibold">Hotels</h2>
                     <button
