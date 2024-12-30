@@ -4,11 +4,10 @@
 import { useNavigate } from "react-router-dom";
 import Icon from "../Icons";
 
-const HotelSelctingCards = ({ OnclickBook, link, hotel, btnClass = 'bg-white hover:bg-yellow-400  m-2 hover:shadow-2xl hover:rounded-lg rounded-lg transition ease-in-out duration-300 mt-0' }) => {
+const HotelSelctingCards = ({  link, hotel, btnClass = 'bg-white hover:bg-yellow-400  m-2 hover:shadow-2xl hover:rounded-lg rounded-lg transition ease-in-out duration-300 mt-0' }) => {
     const navigate = useNavigate()
     const OnbuttonClick = () => {
         navigate(link)
-        OnclickBook()
     }
     return (
         <div
@@ -31,7 +30,7 @@ const HotelSelctingCards = ({ OnclickBook, link, hotel, btnClass = 'bg-white hov
                 </div>
                 <div
                     onClick={OnbuttonClick}
-                    className={`${btnClass} flex gap-2 py-4 justify-center items-center cursor-pointer`}
+                    className={`${btnClass} text-[#058FA2] flex gap-2 py-4 justify-center items-center cursor-pointer`}
                 >
                     <div className="bg-[#058FA2] rounded-full p-[8px]">
                         <Icon name="upArrow" className=" w-2 h-2" />

@@ -1,137 +1,109 @@
-import { ArrowRightAlt } from "@mui/icons-material";
-import { useState } from "react";
-import { DateRange } from "react-date-range";
-import "react-date-range/dist/styles.css"; // main style file
-import "react-date-range/dist/theme/default.css"; // theme css file
+import  { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { Observer } from "gsap/Observer";
+import SplitText from "gsap/SplitText";
+
+gsap.registerPlugin(Observer, SplitText);
 
 const Test = () => {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const sectionsRef = useRef([]);
+  const [currentIndex, setCurrentIndex] = useState(-1);
+  const animatingRef = useRef(false);
 
-  const [tempRange, setTempRange] = useState([
-    {
-      startDate: null, // Start as null
-      endDate: null, // Start as null
-      key: "selection",
-    },
-  ]);
+  const wrap = (index, length) => (index + length) % length;
 
-  const [confirmedRange, setConfirmedRange] = useState({
-    startDate: null,
-    endDate: null,
-  });
+  const gotoSection = (index, direction) => {
+    if (animatingRef.current) return;
 
-  const [shake, setShake] = useState(false);
+    animatingRef.current = true;
+    const wrappedIndex = wrap(index, sectionsRef.current.length);
+    const fromTop = direction === -1;
+    const dFactor = fromTop ? -1 : 1;
 
-  const handleSelect = (ranges) => {
-    const { startDate: selectedStartDate, endDate: selectedEndDate } = ranges.selection;
+    const tl = gsap.timeline({
+      defaults: { duration: 1.25, ease: "power1.inOut" },
+      onComplete: () => {
+        animatingRef.current = false;
+        setCurrentIndex(wrappedIndex);
+      },
+    });
 
-    // Handle cases when only startDate is selected
-    if (selectedStartDate && !selectedEndDate) {
-      setTempRange([
-        {
-          startDate: selectedStartDate,
-          endDate: null, // Reset endDate to null until explicitly selected
-          key: "selection",
-        },
-      ]);
-      setStartDate(selectedStartDate);
-      setEndDate(null); // Keep endDate null until explicitly selected
+    if (currentIndex >= 0) {
+      const currentSection = sectionsRef.current[currentIndex];
+      gsap.set(currentSection, { zIndex: 0 });
+      tl.to(currentSection.querySelector(".bg"), { yPercent: -15 * dFactor })
+        .set(currentSection, { autoAlpha: 0 });
     }
 
-    // Handle cases when both startDate and endDate are selected
-    if (selectedStartDate && selectedEndDate) {
-      setTempRange([
-        {
-          startDate: selectedStartDate,
-          endDate: selectedEndDate,
-          key: "selection",
-        },
-      ]);
-      setStartDate(selectedStartDate);
-      setEndDate(selectedEndDate);
-    }
+    const nextSection = sectionsRef.current[wrappedIndex];
+    gsap.set(nextSection, { autoAlpha: 1, zIndex: 1 });
+
+    tl.fromTo(
+      [nextSection.querySelector(".outer"), nextSection.querySelector(".inner")],
+      { yPercent: (i) => (i ? -100 * dFactor : 100 * dFactor) },
+      { yPercent: 0 },
+      0
+    )
+      .fromTo(
+        nextSection.querySelector(".bg"),
+        { yPercent: 15 * dFactor },
+        { yPercent: 0 },
+        0
+      )
+      .fromTo(
+        new SplitText(nextSection.querySelector(".section-heading"), {
+          type: "chars,words,lines",
+          linesClass: "clip-text",
+        }).chars,
+        { autoAlpha: 0, yPercent: 150 * dFactor },
+        { autoAlpha: 1, yPercent: 0, duration: 1, ease: "power2", stagger: { each: 0.02, from: "random" } },
+        0.2
+      );
+
+    setCurrentIndex(wrappedIndex);
   };
 
-  const handleApply = () => {
-    if (!startDate || !endDate) {
-      setShake(true);
-      setTimeout(() => setShake(false), 500);
-    } else {
-      setConfirmedRange({
-        startDate,
-        endDate,
-      });
-      console.log("Start Date:", startDate);
-      console.log("End Date:", endDate);
-    }
-  };
+  useEffect(() => {
+    Observer.create({
+      type: "wheel,touch,pointer",
+      wheelSpeed: -1,
+      onDown: () => gotoSection(currentIndex - 1, -1),
+      onUp: () => gotoSection(currentIndex + 1, 1),
+      tolerance: 10,
+      preventDefault: true,
+    });
+
+    // Initial section load
+    gotoSection(0, 1);
+
+    return () => Observer.getAll().forEach((obs) => obs.kill());
+  }, [currentIndex]);
 
   return (
-    <div className="calendar-container items-center flex flex-col">
-      <h2 className="mb-4 text-lg font-semibold">
-        Selected Range:{" "}
-        {confirmedRange.startDate && confirmedRange.endDate
-          ? `${confirmedRange.startDate.toDateString()} - ${confirmedRange.endDate.toDateString()}`
-          : "None"}
-      </h2>
-      <div className="custom-date-range-container">
-        <DateRange
-          onChange={handleSelect}
-          moveRangeOnFirstSelection={false} // Prevent range from auto-updating
-          ranges={tempRange}
-          months={2} // Show two calendars
-          direction="horizontal" // Arrange calendars side by side
-          showDateDisplay={false} // Hide the left-side date display
-          rangeColors={["#ffcc00"]}
-          className="custom-date-range"
-        />
-      </div>
+    <div>
+      <header className="fixed flex items-center justify-between p-4 w-full z-50 h-16 bg-black text-white text-sm uppercase tracking-widest font-bold">
+        <div>Animated Sections</div>
+        <a href="https://codepen.io/BrianCross/pen/PoWapLP" target="_blank" rel="noopener noreferrer">
+          Original By Brian
+        </a>
+      </header>
 
-      <div className="footer -mt-10 border-2 border-gray-200 bg-[#ffcc00] w-full py-10">
-        <div className="content flex flex-wrap gap-10 justify-between items-center">
-          <div className="flex dates bg-white px-10 py-4 rounded-full flex-wrap gap-8">
-            {/* Start Date */}
-            <div
-              className={`flex flex-col ${
-                shake && !startDate ? "text-red-500 shake" : "text-gray-700"
-              }`}
-            >
-              <span className="font-semibold text-[18px]">
-                {startDate
-                  ? startDate.toDateString()
-                  : "Select Start Date"}
-              </span>
-              <span className="text-gray-400">Start Date</span>
-            </div>
-            <ArrowRightAlt className="text-yellow-400" />
-
-            {/* End Date */}
-            <div
-              className={`flex flex-col ${
-                shake && !endDate ? "text-red-500 shake" : "text-gray-700"
-              }`}
-            >
-              <span className="font-semibold text-[18px]">
-                {endDate
-                  ? endDate.toDateString()
-                  : "Select End Date"}
-              </span>
-              <span className="text-gray-400">End Date</span>
+      {["Scroll down", "Animated with GSAP", "GreenSock", "Animation platform", "Keep scrolling"].map((text, index) => (
+        <section
+          key={index}
+          ref={(el) => (sectionsRef.current[index] = el)}
+          className={`absolute top-0 left-0 h-screen w-screen bg-black text-white flex items-center justify-center overflow-hidden`}
+          style={{ visibility: currentIndex === index ? "visible" : "hidden" }}
+        >
+          <div className="outer h-full w-full overflow-hidden">
+            <div className="inner h-full w-full flex items-center justify-center">
+              <div className={`bg bg-cover bg-center flex items-center justify-center h-full w-full`}>
+                <h2 className="section-heading text-4xl lg:text-6xl tracking-widest">{text}</h2>
+              </div>
             </div>
           </div>
-
-          {/* Confirm Button */}
-          <div className="flex items-center flex-wrap gap-6 md:gap-10">
-            <button
-              onClick={handleApply}
-              className="confirm-btn font-bold bg-yellow-400 text-white px-4 py-2 rounded"
-            >
-              Confirm
-            </button>
-          </div>
-        </div>
-      </div>
+        </section>
+      ))}
     </div>
   );
 };

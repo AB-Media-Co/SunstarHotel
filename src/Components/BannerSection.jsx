@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import useTextRevealAnimation from "../hooks/useTextRevealAnimation"
 import useScrollAnimations from "../hooks/useScrollAnimations"
-const BannerSection = ({ data ,text='text-[75px]',ptext='[24px]', lineh='md:leading-[75px]',bg='bg-[#6EC4C2]',paddTop='md:pt-20 items-center',textC='white',imgClass='h-auto'}) => {
+const BannerSection = ({ data ,text='text-[75px]',ptext='text-[24px]', lineh='md:leading-[75px]',bg='bg-[#6EC4C2]',paddTop='md:pt-20 items-center',textC='white',imgClass='h-auto'}) => {
     const { title, description, image } = data; // Destructure the passed data object
   
     useTextRevealAnimation();
@@ -14,7 +14,7 @@ const BannerSection = ({ data ,text='text-[75px]',ptext='[24px]', lineh='md:lead
             <h1 className={`${'md :',text} text-3xl ${'md :',lineh} text-reveal-animation font-bold text-${textC} mb-4`}>
               {title}
             </h1>
-            <p className={`text-${textC} text-lg md:text-${ptext}  animation-on-scroll leading-relaxed`}>{description}</p>
+            <p className={`text-${textC} text-lg md:${ptext}  animation-on-scroll leading-relaxed`}>{description}</p>
           </div>
   
           {/* Image Section */}

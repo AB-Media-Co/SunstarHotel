@@ -272,7 +272,6 @@
 
 /* Start of Range: Rounded Left Edge */
 .range-start {
-  background-color: #ffcc00;
 
   position: relative;
   z-index: 2;
@@ -280,7 +279,6 @@
 
 /* End of Range: Rounded Right Edge */
 .range-end {
-  background-color: #ffcc00;
   position: relative;
   z-index: 2;
   /* Keeps the end circle above other elements */
@@ -288,21 +286,17 @@
 
 /* Mid-Range Dates: Seamless Yellow Bar */
 .in-range {
-  background-color: #ffcc00;
   border-radius: 0;
-  /* Rectangular bar with no rounded corners */
 }
 
 /* Start and End Date Circle */
 .range-start p,
 .range-end p {
   background-color: white;
-  color: #ffcc00;
-  border: 2px solid #ffcc00;
-  border-radius: 50%;
-  /* Perfect Circle */
-  width: 28px;
-  height: 28px;
+padding-top: 5px;
+  border-radius: 50%; /* Perfect Circle */
+  height: 40px;
+  width: 62%;
   line-height: 28px;
   text-align: center;
   font-weight: bold;
@@ -327,7 +321,16 @@
   /* Ensures rectangular continuity */
 }
 
+  
 
+@media (max-width: 768px) {
+  .range-start p,
+  .range-end p {
+    height: 87%;
+    width: 74%;
+    padding-top: 0px;
+  }
+}
 
 
 
@@ -438,28 +441,5 @@
   height: 480px !important;
 }
 
-
-
-
-
-
-.shake {
-  animation: shake 0.5s;
-}
-
-@keyframes shake {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-5px);
-  }
-  50% {
-    transform: translateX(5px);
-  }
-  75% {
-    transform: translateX(-5px);
-  }
-}
 
 

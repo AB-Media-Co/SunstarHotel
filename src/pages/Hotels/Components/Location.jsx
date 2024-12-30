@@ -8,7 +8,7 @@ const Location = ({ locationData }) => {
     const { name, address, mapCoordinates, nearby } = locationData;
 
     return (
-        <div id="location"  className="content mx-auto p-6 pb-20">
+        <div id="location"  className="content mx-auto p-6 pb-20 ">
             <h2 className="text-xl font-semibold mb-4">Location Of {name}</h2>
             <p className="text-gray-600 mb-4">{address}</p>
 
@@ -24,7 +24,7 @@ const Location = ({ locationData }) => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Map */}
                 <div className="col-span-2">
-                    <div className="relative h-96 w-full">
+                    <div className="relative h-96 w-full z-10">
                         <MapContainer
                             center={[mapCoordinates.lat, mapCoordinates.lng]}
                             zoom={13}

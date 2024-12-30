@@ -5,6 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
 import useScrollAnimations from "../../../hooks/useScrollAnimations";
 import AllHotelCard from "../../../Components/AllHotelCard";
+import { hotels } from "../../../Data/AboutSectionData";
 // import "./Section1.css"; 
 
 const Section1 = ({ section1Data }) => {
@@ -13,7 +14,7 @@ const Section1 = ({ section1Data }) => {
     const [currentWord, setCurrentWord] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     const [delay, setDelay] = useState(false);
-    const [hotelOpen, SetHotelsOpen] = useState(false);
+    const [hotelOpen, setHotelOpen] = useState(false);
 
     useTextRevealAnimation();
     useScrollAnimations("#section1");
@@ -66,7 +67,7 @@ const Section1 = ({ section1Data }) => {
 
             <div className="absolute top-0 left-0 w-full h-full bg-black opacity-[0.4]"></div>
 
-            <div className="absolute  top-[60%] left-[5%] sm:top-[63%] sm:left-[53%] md:top-[48%] md:left-[10%] flex flex-col md:gap-4 text-left text-white max-w-[90%] sm:max-w-[80%] md:max-w-[40%]">
+            <div data-aos="fade-up" className="absolute  top-[60%] left-[5%] sm:top-[63%] sm:left-[53%] md:top-[45%] md:left-[10%] flex flex-col md:gap-4 text-left text-white max-w-[90%] sm:max-w-[80%] md:max-w-[40%]">
                 <h1 className="text-3xl sm:text-5xl md:text-[60px] font-bold leading-tight text-reveal-animation">
                     {heading}
                 </h1>
@@ -74,7 +75,7 @@ const Section1 = ({ section1Data }) => {
                     {description}
                 </p>
 
-                <div onClick={() => SetHotelsOpen(true)} className="mt-6 flex justify-between items-center lg:w-[490px] font-semibold cursor-pointer bg-white rounded-full  py-2 md:py-4 px-7  ">
+                <div onClick={() => setHotelOpen(true)} className="mt-6 flex justify-between items-center lg:w-[490px] font-semibold cursor-pointer bg-white rounded-full  py-2 md:py-4 px-7  ">
                     <div className="flex gap-2 animation-on-scroll-Section1">
                         <p className="text-[16px] sm:text-xl text-[#7A7A7A] md:text-2xl mb-2 ">
                             {buttonLabel}
@@ -87,9 +88,8 @@ const Section1 = ({ section1Data }) => {
                         <SearchIcon style={{ fontSize: '35px' }} />
                     </div>
                 </div>
-                {hotelOpen && (
-                   <AllHotelCard SetHotelsOpen={SetHotelsOpen} hotelOpen={hotelOpen}/>
-                )}
+                <AllHotelCard hotels={hotels} isOpen={hotelOpen} onClose={() => setHotelOpen(false)} />
+
             </div>
         </div>
     );

@@ -10,20 +10,11 @@ import Carousel from "../../Components/CardsCommonComp/CommonCarousel";
 import BannerSection from "../../Components/BannerSection";
 import ImageGallery from "../../Components/ImageGallery"
 import FAQSection from "./Components/FAQsection";
-import { useState } from "react";
-import AllHotelCard from "../../Components/AllHotelCard";
 const Hotels = () => {
-  const [hotelOpen, SetHotelsOpen] = useState(true);
 
   return (
     <div>
-      {hotelOpen && (
-        <AllHotelCard SetHotelsOpen={SetHotelsOpen} hotelOpen={hotelOpen} />
-      )}
-
       <Banner businessPlatformFeatures={businessPlatformFeatures} />
-
-
       <HotelCard />
       <RoomLayout rooms={rooms} />
       <AmenitiesList

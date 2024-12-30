@@ -38,7 +38,7 @@ export const rooms = [
     area: '220 Sq. ft. Area',
     price: '₹9,000',
     originalPrice: '₹9,877',
-    image: 'images/HotelsSectionImg/hote1.png',
+    image: '/images/HotelsSectionImg/hote1.png',
     available: true,
     tag: '2 Left'
   },
@@ -50,7 +50,7 @@ export const rooms = [
     area: '220 Sq. ft. Area',
     price: '₹9,000',
     originalPrice: '₹9,877',
-    image: 'images/HotelsSectionImg/hote1.png',
+    image: '/images/HotelsSectionImg/hote1.png',
     available: true
   },
   {
@@ -61,7 +61,7 @@ export const rooms = [
     area: '220 Sq. ft. Area',
     price: '₹9,000',
     originalPrice: '₹9,877',
-    image: 'images/HotelsSectionImg/hote1.png',
+    image: '/images/HotelsSectionImg/hote1.png',
     available: true
   },
   {
@@ -72,7 +72,7 @@ export const rooms = [
     area: '220 Sq. ft. Area',
     price: '₹9,000',
     originalPrice: '₹9,877',
-    image: 'images/HotelsSectionImg/hote1.png',
+    image: '/images/HotelsSectionImg/hote1.png',
     available: false
   },
   {
@@ -83,7 +83,7 @@ export const rooms = [
     area: '220 Sq. ft. Area',
     price: '₹9,000',
     originalPrice: '₹9,877',
-    image: 'images/HotelsSectionImg/hote1.png',
+    image: '/images/HotelsSectionImg/hote1.png',
     available: true
   },
   {
@@ -94,7 +94,7 @@ export const rooms = [
     area: '220 Sq. ft. Area',
     price: '₹9,000',
     originalPrice: '₹9,877',
-    image: 'images/HotelsSectionImg/hote1.png',
+    image: '/images/HotelsSectionImg/hote1.png',
     available: false
   }
 ];
