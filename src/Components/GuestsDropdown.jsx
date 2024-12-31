@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Icon from './Icons';
 
-const GuestsDropdown = ({ dropdownDirection = "down" }) => {
+const GuestsDropdown = ({ dropdownDirection = "down",classBg='bg-white' }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [guestDetails, setGuestDetails] = useState({
         adults: 2,
@@ -35,7 +35,8 @@ const GuestsDropdown = ({ dropdownDirection = "down" }) => {
         <div>
             <div className="relative">
                 <div
-                    className="flex items-center bg-white border border-[#006167] rounded-full px-1 md:px-6 py-[15px] sm:py-3 space-x-2 cursor-pointer hover:shadow-md shadow-sm"
+                    className={`flex items-center ${classBg} border border-[#006167] rounded-full px-1 md:px-6 py-[15px] 
+                    sm:py-3 space-x-2 cursor-pointer hover:shadow-md shadow-sm`}
                     onClick={() => setShowDropdown((prev) => !prev)}
                 >
                     <Icon name="guestHotel" className="h-5 w-5 sm:h-6 sm:w-6 text-[#006167]" />

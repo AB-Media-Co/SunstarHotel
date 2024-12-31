@@ -22,16 +22,19 @@ const Card = ({ image, title, description, align }) => {
 
 const CompnayCards = (cards) => {
     return (
-        <div className="py-12 h-[700px] ">
-            <Marquee>
-                <div className="flex overflow-x-auto hotelSelection w-full gap-8">
+        <div className="py-12 h-[700px] content">
+            <Marquee
+                gradient={false}
+                // pauseOnHover={true}
+                speed={50}
+            >                <div className="flex overflow-x-auto hotelSelection w-full gap-8">
                     {cards?.cards?.map((card, index) => (
                         <Card
                             key={index}
                             image={card.image}
                             title={card.title}
                             description={card.description}
-                            align={index % 2 === 0 ? "justify-start" : "justify-end"} // Dynamic alignment
+                            align={index % 2 === 0 ? "justify-end" : "justify-start"} // Dynamic alignment
                         />
                     ))}
                 </div>

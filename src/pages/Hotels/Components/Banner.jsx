@@ -19,13 +19,14 @@ function Banner({ businessPlatformFeatures }) {
 
     const [activeTab, setActiveTab] = useState(null); // Tracks the active tab index
 
-
     const handleBooking = () => {
-        console.log("Check-In Date:", checkIn);
-        console.log("Check-Out Date:", checkOut);
-
-        alert("Booking functionality not implemented yet!");
+        if (!checkIn || !checkOut) {
+            setOpenCalender(true); // Open calendar if dates are not selected
+        } else {
+            window.location.href = "#rooms"; // Navigate to "#rooms" if dates are selected
+        }
     };
+
     useTextRevealAnimation();
     useScrollAnimations('#Section1');
 
@@ -88,8 +89,8 @@ function Banner({ businessPlatformFeatures }) {
 
             <div
                 className={`bg-white py-8 px-4 transition-all duration-500 ease-in-out 
-                    ${isItemFixed ? 'fixed top-0 w-full z-50 translate-y-2 ' : 'content relative translate-y-[-20px]'}
-                    sm:px-8 lg:px-12 rounded-md shadow-lg mx-auto -mt-6 
+                    ${isItemFixed ? 'fixed md:left-[8%] top-0  z-50 translate-y-2 ' : ' relative translate-y-[-10px]'}
+                    sm:px-8 lg:px-12 content rounded-md shadow-lg mx-auto -mt-6 
                     z-10 flex flex-col items-center gap-6 border border-gray-200`}
             >
 

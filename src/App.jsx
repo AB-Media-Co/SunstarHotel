@@ -18,7 +18,9 @@ const AboutUs = lazy(() => import('./pages/About/AboutUs'));
 const Corporatebooking = lazy(() => import('./pages/CorporateBooking/Corporatebooking'));
 const Hotels = lazy(() => import('./pages/Hotels/Hotels'));
 const ContactUs = lazy(() => import('./pages/ContactUs/ContactUs'));
-const CustomDateRangeSelector = lazy(() => import('./Components/Calendar'));
+const HotelRooms = lazy(() => import('./pages/Rooms/Rooms'));
+
+
 const HotelDropdown = lazy(() => import('./Components/HotelDroddown'));
 const AdminLogin = lazy(() => import('./adminPanel/pages/AdminLogin'));
 const AdminHotels = lazy(() => import('./adminPanel/pages/AdminHotels/AdminHotels'));
@@ -94,13 +96,13 @@ function App() {
               {/* Public Routes */}
               <Route element={<Layout />}>
                 <Route path="/" element={<Home />} />
-                <Route path="/calender" element={<CustomDateRangeSelector />} />
                 <Route path="/why-sunstar" element={<AboutUs />} />
                 <Route path="/corporate-booking" element={<Corporatebooking />} />
                 <Route path="/hotels/:hotelId" element={<Hotels />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/test" element={<HotelDropdown />} />
               </Route>
+                <Route path="/room/:id" element={<HotelRooms />} />
 
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />

@@ -56,6 +56,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
     const totalDays = 42;
 
     const days = Array.from({ length: totalDays }, (_, i) => addDays(startDate, i));
+    
 
     return (
       <div className="calendar-month  w-full lg:w-[48%] flex flex-col gap-6 relative">

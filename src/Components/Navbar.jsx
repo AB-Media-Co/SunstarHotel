@@ -14,14 +14,14 @@ import { hotels } from "../Data/AboutSectionData";
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate(); // For programmatic navigation
-  const [active, setActive] = useState("Home");
+  const [active, setActive] = useState("/");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hotelOpen, setHotelOpen] = useState(false);
 
   useEffect(() => {
     const currentPath =
       location.pathname === "/"
-        ? ""
+        ? "Home"
         : location.pathname.startsWith("/hotels")
           ? "Hotels"
           : location.pathname

@@ -155,10 +155,5 @@ export const sec3CardSliderData = {
       title: "Bulk Bookings",
       description: "Reference site about Lorem Ipsum, giving information on its origins, as well as a random Lipsum generator.",
     },
-    {
-      image: "/images/HomepageImages/sec5Card.png", // Replace with actual image URL
-      title: "Careers @Sunstar",
-      description: "Lorem ipsum is a placeholder text commonly used to demonstrate the visual of a document or a typeface.",
-    },
-    // Add more cards as needed
+
   ];
