@@ -30,7 +30,7 @@ const RoomPriceSection = () => {
                             Book directly to request Early Check-in / Late Check-out, as per availability.
                         </p>
                     </div>
-                    <div className="flex w-[180px] sm:w-[200px] md:w-[220px] border-2 p-2 justify-center gap-2 text-[20px] sm:text-[24px] md:text-[26px] rounded-xl items-center">
+                    <div className="flex w-[180px]  md:w-[220px] border-2 p-1 md:p-2 justify-center gap-2 text-[20px] sm:text-[24px] md:text-[26px] rounded-xl items-center">
                         <span className="cursor-pointer text-yellow-500" onClick={() => RoomQty > 1 && setRoomQty(RoomQty - 1)}>
                             <Remove />
                         </span>
@@ -41,7 +41,7 @@ const RoomPriceSection = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-wrap items-center mt-6 gap-4 md:gap-12 w-full">
+            <div className="flex flex-wrap justify-between md:justify-start items-center mt-6 gap-4 md:gap-12 w-full">
                 {tabs.map((tab, index) => (
                     <div
                         key={index}

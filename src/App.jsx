@@ -101,8 +101,8 @@ function App() {
                 <Route path="/hotels/:hotelId" element={<Hotels />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/test" element={<HotelDropdown />} />
-              </Route>
                 <Route path="/room/:id" element={<HotelRooms />} />
+              </Route>
 
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
