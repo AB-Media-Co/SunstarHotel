@@ -5,7 +5,7 @@ import CommonSwiper from "../../../Components/CommonSlider";
 
 const Card = ({ image, title, description }) => {
   return (
-    <div className="rounded-[10px] overflow-hidden">
+    <div className="rounded-[10px] pb-10 md:pb-2 overflow-hidden">
       <img
         src={image}
         alt={title}
@@ -19,7 +19,7 @@ const Card = ({ image, title, description }) => {
   );
 };
 
-const Section5=({cards})=> {
+const Section5 = ({ cards }) => {
   const renderCard = (card, index) => (
     <Card
       key={index}
@@ -29,14 +29,17 @@ const Section5=({cards})=> {
     />
   );
   return (
-    <div className="swiper-container  bg-[#BAE9EF] md:py-20 py-10 p-5 lg:ps-[165px]">
-      <CommonSwiper
-        items={cards}
-        renderItem={renderCard}
-        slidesPerView={3.5}
-        spaceBetween={30}
-        loop={true}
-      />
+    <div className="swiper-container  bg-[#BAE9EF] ">
+      <div className="md:py-20 py-10 p-5 content">
+
+        <CommonSwiper
+          items={cards}
+          renderItem={renderCard}
+          slidesPerView={3.5}
+          spaceBetween={30}
+          loop={true}
+        />
+      </div>
     </div>
   );
 }

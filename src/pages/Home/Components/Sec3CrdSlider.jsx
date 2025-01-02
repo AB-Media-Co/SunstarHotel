@@ -53,7 +53,7 @@ const Sec3CardSlider = ({ sec3CardSliderData }) => {
                     1024: 3.5,    // 3.5 slides for desktops
                 }}
                 spaceBetween={16} // Adjust spacing dynamically
-                loop
+                loop={false}
                 className="mySwiper"
             />
         </div>

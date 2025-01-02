@@ -17,9 +17,9 @@ const AmenitiesList = ({ title, subtitle, amenities }) => {
     return (
         <div id="amenities" className="py-8 bg-white content">
             <hr className="bg-[#A4A4A4] h-[2px]" />
-            <h2 className="text-[36px] font-bold my-6 text-reveal-animation">{title}</h2>
+            <h2 className="md:text-[36px] text-[20px] font-bold my-6 text-reveal-animation">{title}</h2>
             <hr className="bg-[#A4A4A4] h-[2px]" />
-            <p className="bg-[#FFC700] text-white text-[18px] px-4 py-2 rounded-lg text-center font-bold w-[200px] my-4">{subtitle}</p>
+            <p className="bg-[#FFC700] text-white text-[18px] md:px-4 md:py-2 py-1 rounded-lg text-center font-bold w-[200px] my-4">{subtitle}</p>
             <div className="grid grid-cols-3 sm:grid-cols-3 mt-8 lg:grid-cols-6 gap-8">
                 {amenities.slice(0, visible ? amenities.length : 12).map((amenity, index) => (
                     <div key={index} className="flex flex-col justify-center items-center space-y-2 animation-on-scroll">
@@ -34,12 +34,12 @@ const AmenitiesList = ({ title, subtitle, amenities }) => {
             >
                 {visible ? (
                     <div className="flex gap-2 items-center">
-                        <span className="text-[22px] font-bold underline"> See Less</span>
+                        <span className="md:text-[22px] font-bold underline"> See Less</span>
                         <KeyboardArrowUpIcon className="mt-2"/>
                     </div>
                 ) : (
                     <div className="flex gap-2 items-center">
-                        <span className="text-[22px] font-bold underline">See More </span>
+                        <span className="md:text-[22px] font-bold underline">See More </span>
                         <ExpandMoreIcon className="mt-2"/>
                     </div>
                 )}

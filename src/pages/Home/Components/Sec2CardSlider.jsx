@@ -85,7 +85,7 @@ export default function SwiperComponent() {
 
 
   const renderCard = (card) => (
-    <div className=" border shadow-lg mr-4 rounded-xl relative w-full">
+    <div className="border shadow-lg mr-4 rounded-xl relative w-full">
       <div>
         {/* Image Section */}
         <div
@@ -96,7 +96,7 @@ export default function SwiperComponent() {
         ></div>
 
         {/* Content Section */}
-        <div className="flex absolute left-4 top-[54%] px-4 py-2 rounded-full bg-[#4DB8B6] w-[170px] items-center space-x-1 text-white">
+        <div className="flex absolute z-40 left-4 top-[54%] px-4 py-2 rounded-full bg-[#4DB8B6] w-[170px] items-center space-x-1 text-white">
           <strong>{card.rating}</strong>
           <span className="text-sm ">
             ({card.reviews} reviews)
@@ -126,7 +126,7 @@ export default function SwiperComponent() {
       </div>
 
       {/* Features Section */}
-      <div className=" absolute left-[77%]  top-[3rem]  md:left-[84%]  w-[80px] shadow-lg gap-[2px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
+      <div className=" absolute left-[77%] z-40 top-[3rem]  md:left-[84%]  w-[80px] shadow-lg gap-[2px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
         {features.map((feature, index) => (
           <div key={index} className="flex flex-col items-center">
             {feature.icon && <feature.icon className="text-white" />}
@@ -154,7 +154,7 @@ export default function SwiperComponent() {
         renderItem={renderCard}
         slidesPerViewDesktop={isMobile ? 1 : 3.5}
         spaceBetween={30}
-        loop={true}
+        loop={false}
         className="mySwiper"
       />
     </div>

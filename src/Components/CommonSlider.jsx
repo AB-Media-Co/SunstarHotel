@@ -54,6 +54,7 @@ const CommonSwiper = ({
     if (swiperRef.current) {
       if (direction === "prev") {
         if (isFirstSlide) {
+          console.log(isFirstSlide)
           swiperRef.current.slideToLoop(items.length - 1);
         } else {
           swiperRef.current.slidePrev();
@@ -132,19 +133,17 @@ const CommonSwiper = ({
       <div className="hidden justify-end gap-8 px-10 pt-8 lg:flex">
         <button
           ref={prevRef}
-          className={`p-4 rounded-full custom-prev-button flex ${
-            isFirstSlide ? "bg-gray-300 disabled" : "bg-[#FDC114]"
-          }`}
+          className={`p-4 rounded-full custom-prev-button flex ${isFirstSlide ? "bg-gray-300 disabled cursor-not-allowed" : "bg-[#FDC114]"
+            }`}
           onClick={() => handleNavigationClick("prev")}
-          disabled={isNavigating}
+          disabled={isFirstSlide || isNavigating} 
         >
           <Icon name="leftIcon" className="h-6 w-6" />
         </button>
+
         <button
           ref={nextRef}
-          className={`p-4 rounded-full custom-next-button flex ${
-            isLastSlide ? "bg-gray-300 disabled" : "bg-[#FDC114]"
-          }`}
+          className={`p-4 rounded-full custom-next-button flex bg-[#FDC114]`}
           onClick={() => handleNavigationClick("next")}
           disabled={isNavigating}
         >

@@ -443,3 +443,23 @@ padding-top: 5px;
 
 
 
+
+@keyframes wipe {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    width: 120px;
+  }
+}
+
+.animate-wipe {
+  display: inline-block;
+  width: 0;
+  animation: wipe 0.5s ease-out forwards;
+}
+

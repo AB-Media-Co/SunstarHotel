@@ -1,47 +1,50 @@
-
 const SunstarEnquiryForm = () => {
   return (
-    <div className="flex justify-center items-center  bg-[#FDC114] ">
-      <div className="w-full max-w-2xl py-10 px-8 ">
-        <h1 className="text-center text-white text-[52px] font-bold mb-2">Sunstar Enquiry Form</h1>
-        <p className="text-center text-white text-[24px] mb-6">Find out if your fleet meets our criteria</p>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-yellow-400 to-yellow-600">
+      <div className="w-full max-w-3xl bg-white shadow-lg md:rounded-lg p-8">
+        <h1 className="text-center text-gray-800 text-3xl font-bold mb-4">
+          Sunstar Enquiry Form
+        </h1>
+        <p className="text-center text-gray-600 text-lg mb-8">
+          Find out if your fleet meets our criteria
+        </p>
         <form>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-6">
             <input
               type="text"
               placeholder="Company Name"
-              className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
             <input
               type="email"
               placeholder="Email*"
-              className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
             <input
               type="text"
               placeholder="Address"
-              className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
             <input
               type="text"
-              placeholder="Travel Head/Decision's name"
-              className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              placeholder="Travel Head/Decision's Name"
+              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
             <input
               type="text"
               placeholder="Phone"
-              className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-300 col-span-2"
+              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 md:col-span-2"
             />
             <textarea
               placeholder="Your Enquiry"
-              className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-300 col-span-2"
+              className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 md:col-span-2"
               rows="4"
             ></textarea>
           </div>
-          <div className="text-center mt-6">
+          <div className="text-center mt-8">
             <button
               type="submit"
-              className="px-6 py-3 bg-teal-500 text-white font-semibold rounded-full hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-300"
+              className="px-8 py-3 bg-yellow-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300"
             >
               Submit
             </button>

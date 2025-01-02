@@ -6,6 +6,7 @@ import Calendar from "../../../Components/Calendar";
 import Icon from "../../../Components/Icons";
 import { differenceInCalendarDays } from "date-fns";
 import GuestsDropdown from "../../../Components/GuestsDropdown";
+import { useNavigate } from "react-router-dom";
 
 
 function RoomsBanner({ businessPlatformFeatures }) {
@@ -14,12 +15,12 @@ function RoomsBanner({ businessPlatformFeatures }) {
     const [openCalender, setOpenCalender] = useState(false);
 
 
-
+    const navigate = useNavigate()
     const handleBooking = () => {
         console.log("Check-In Date:", checkIn);
         console.log("Check-Out Date:", checkOut);
 
-        alert("Booking functionality not implemented yet!");
+        navigate('/room/details')
     };
 
     const calculateNights = () => {
@@ -40,13 +41,13 @@ function RoomsBanner({ businessPlatformFeatures }) {
 
 
             <div
-                className={`bg-white bg-opacity-50 backdrop-blur-sm py-8 px-4  mx-4 lg:left-[10%] transition-all duration-500 ease-in-out 
+                className={`bg-white bg-opacity-50 backdrop-blur-sm py-8 px-4  lg:left-[10%] transition-all duration-500 ease-in-out 
         content absolute top-[55%]
         md:px-8 lg:px-12 rounded-md shadow-lg lg:mx-auto  
         z-10 flex flex-col items-center gap-6 mx-2`}
             >
                 <div className={`flex  justify-center flex-col md:flex-row items-center w-full  space-y-4 md:space-y-0 space-x-0 md:space-x-4`}>
-                    
+
                     <div
                         onClick={() => setOpenCalender(true)}
                         className="flex flex-wrap w-full justify-center items-center border border-[#006167] rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"

@@ -34,7 +34,7 @@ const RoomPriceSection = () => {
                         <span className="cursor-pointer text-yellow-500" onClick={() => RoomQty > 1 && setRoomQty(RoomQty - 1)}>
                             <Remove />
                         </span>
-                        {RoomQty} Room
+                        {RoomQty} {RoomQty>1 ?'Rooms':'Room'} 
                         <span className="cursor-pointer text-yellow-500" onClick={() => setRoomQty(RoomQty + 1)}>
                             <Add />
                         </span>

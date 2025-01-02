@@ -19,9 +19,11 @@ const Corporatebooking = lazy(() => import('./pages/CorporateBooking/Corporatebo
 const Hotels = lazy(() => import('./pages/Hotels/Hotels'));
 const ContactUs = lazy(() => import('./pages/ContactUs/ContactUs'));
 const HotelRooms = lazy(() => import('./pages/Rooms/Rooms'));
-
-
 const HotelDropdown = lazy(() => import('./Components/HotelDroddown'));
+const RoomsDetails = lazy(() => import('./pages/Rooms/Components/BookingDetailsPage'));
+
+
+
 const AdminLogin = lazy(() => import('./adminPanel/pages/AdminLogin'));
 const AdminHotels = lazy(() => import('./adminPanel/pages/AdminHotels/AdminHotels'));
 const EditHotels = lazy(() => import('./adminPanel/pages/AdminHotels/EditHotels'));
@@ -53,7 +55,6 @@ function PrivateRoute({ children }) {
   );
 }
 
-// Loader-triggering wrapper for routes
 // Loader-triggering wrapper for routes
 function LoaderWrapper({ children }) {
   const location = useLocation();
@@ -103,6 +104,7 @@ function App() {
                 <Route path="/test" element={<HotelDropdown />} />
                 <Route path="/room/:id" element={<HotelRooms />} />
               </Route>
+                <Route path="/room/details" element={<RoomsDetails />} />
 
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />

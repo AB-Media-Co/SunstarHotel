@@ -10,7 +10,7 @@ const BannerSection = ({ data ,text='text-[75px]',ptext='text-[24px]', lineh='md
       <div className={`w-full ${bg}  py-20 px-4 md:px-8 lg:px-16`}>
         <div className={`content flex section flex-col  lg:flex-row justify-between  ${paddTop} `}>
           {/* Text Section */}
-          <div className="lg:w-1/2 text-center lg:text-left">
+          <div className="lg:w-1/2 md:text-center lg:text-left">
             <h1 className={`${'md :',text} text-3xl ${'md :',lineh} text-reveal-animation font-bold text-${textC} mb-4`}>
               {title}
             </h1>

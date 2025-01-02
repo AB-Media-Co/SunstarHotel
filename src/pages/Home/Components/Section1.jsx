@@ -52,7 +52,7 @@ const Section1 = ({ section1Data }) => {
 
 
     return (
-        <div className="relative z-10 ">
+        <div className="relative  ">
             {/* Background Image */}
             <img
                 src={images.desktop}
