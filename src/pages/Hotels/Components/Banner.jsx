@@ -81,28 +81,38 @@ function Banner({ businessPlatformFeatures }) {
       >
         <div className="w-full flex flex-col items-center">
           {/* Top Section: Dates and Guests */}
-          <div className="flex flex-wrap justify-center items-center w-full max-w-5xl space-y-4 md:space-y-0 space-x-0 md:space-x-4">
-            <div
-              onClick={() => setOpenCalender(true)}
-              className="flex flex-wrap items-center border border-[#006167] rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"
-            >
-              <Icon name="calendar" className="h-6 w-6 text-[#006167]" />
-              <span className="text-mobile/body/2 md:text-desktop/body/1 text-[#006167] font-semibold">
-                {checkIn ? checkIn : "Check In"}{" "}
-                <span className="text-yellow-500">→</span>{" "}
-                {checkOut ? checkOut : "Check Out"}
-              </span>
-              {checkIn && checkOut && (
-                <span className="text-gray-400 text-xs sm:text-sm flex">
-                  ({calculateNights()})
+          <div className="flex flex-wrap justify-center md:px-4 md:space-x-6 lg:justify-between items-center w-full  space-y-4 md:space-y-0 space-x-0 ">
+            <div className="flex gap-4">
+              <div
+                onClick={() => setOpenCalender(true)}
+                className="flex flex-wrap items-center border border-[#006167] rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"
+              >
+                <Icon name="calendar" className="h-6 w-6 text-[#006167]" />
+                <span className="text-mobile/body/2 md:text-desktop/body/1 text-[#006167] font-semibold">
+                  {checkIn ? checkIn : "Check In"}{" "}
+                  <span className="text-yellow-500">→</span>{" "}
+                  {checkOut ? checkOut : "Check Out"}
                 </span>
-              )}
+                {checkIn && checkOut && (
+                  <span className="text-gray-400 text-xs sm:text-sm flex">
+                    ({calculateNights()})
+                  </span>
+                )}
+              </div>
+              <div className="lg:block hidden">
+                <GuestsDropdown />
+
+              </div>
+
             </div>
+
             <div className="flex gap-6">
-              <GuestsDropdown />
+              <div className="lg:hidden">
+                <GuestsDropdown />
+              </div>
               <button
                 onClick={handleBooking}
-                className="bg-[#006167] text-white text-mobile/button md:text-desktop/button rounded-full shadow-md px-6 md:px-6 md:py-3"
+                className="bg-[#006167] text-white lg:w-[180px] text-mobile/button md:text-desktop/h4 rounded-full shadow-md px-6 md:px-6 md:py-3"
               >
                 Select
               </button>
@@ -116,20 +126,17 @@ function Banner({ businessPlatformFeatures }) {
                 key={index}
                 href={tab.link}
                 onClick={() => setActiveTab(index)}
-                className={`flex flex-col sm:flex-row gap-2 items-center cursor-pointer ${
-                  activeTab === index ? "text-[#FDC114]" : "text-[#006167]"
-                }`}
+                className={`flex flex-col sm:flex-row gap-2 items-center cursor-pointer ${activeTab === index ? "text-[#FDC114]" : "text-[#006167]"
+                  }`}
               >
                 <Icon
                   name={tab.iconName}
-                  className={`h-6 w-6 md:h-8 md:w-8 ${
-                    activeTab === index ? "text-[#FDC114]" : "text-[#006167]"
-                  }`}
+                  className={`h-6 w-6 md:h-8 md:w-8 ${activeTab === index ? "text-[#FDC114]" : "text-[#006167]"
+                    }`}
                 />
                 <span
-                  className={`text-mobile/body/2 md:text-desktop/body/1 font-semibold ${
-                    activeTab === index ? "text-[#FDC114]" : "text-gray-500"
-                  }`}
+                  className={`text-mobile/body/2 md:text-desktop/body/1 font-semibold ${activeTab === index ? "text-[#FDC114]" : "text-gray-500"
+                    }`}
                 >
                   {tab.label}
                 </span>
