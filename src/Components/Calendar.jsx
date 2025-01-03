@@ -177,11 +177,11 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
       </div>
 
       <button onClick={() => setOpenCalender(false)} className="absolute right-5 top-4 text-[36px]">
-        <Close />
+        <Close /> 
       </button>
 
-      <div className="footer md:-mt-10 border-2 border-gray-200 bg-[#ffcc00] w-full py-6 md:py-10">
-        <div className="content flex flex-col md:flex-row  gap-6 justify-between items-center px-4">
+      <div className="footer md:-mt-10 border-2 border-gray-200  bg-[#ffcc00] w-full py-6 mb- md:mb-0 md:py-10">
+        <div className="content flex flex-col h-[150px] md:h-auto md:flex-row  gap-6 justify- items-center px-4">
           <div className="flex items-center  max-w-full lg:w-[600px] bg-white px-4 py-2 md:px-10 md:py-4 rounded-full gap-4 md:gap-8">
             {/* Check-In Date */}
             <Icon name="calendar" className="md:h-6 md:w-6 w-4 text-[#006167]" />
@@ -203,17 +203,15 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
             {/* Nights Display */}
             {checkIn && checkOut && (
               <span className="flex justify-center text-[10px] md:text-[18px] items-center rounded-full border-2 px-4">
-                {calculateNights()}
+                {calculateNights()} 
               </span>
             )}
           </div>
           <div className="flex justify-between w-full">
             <GuestsDropdown dropdownDirection="up" />
-
-
             {/* Confirm Button */}
               <button onClick={handleConfirmClick} className="confirm-btn w-[150px] font-bold bg-[#006167] text-white px-4 py-2 rounded-full">
-                Confirm
+                Confirm 
               </button>
          
 

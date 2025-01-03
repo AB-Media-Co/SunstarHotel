@@ -13,7 +13,6 @@ export const section1Data = {
   export const section2HotelData = {
     heading: "Sunstar Hotels",
     description: "While booking a property, what is probably running at the back of our mind is that the room and washroom should be clean. When you book with us @ Sunstar, you can leave your worries about getting a clean stay to us. We firmly believe in upholding the highest standards of cleanliness and hygiene. Our dedicated team works diligently to ensure that every inch of our property is immaculate.",
-    imagePosition: "md:left-0 top-[-8rem] md:top-0 left-[-6rem]",
   };
 
 

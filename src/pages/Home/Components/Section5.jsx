@@ -2,7 +2,6 @@
 
 import CommonSwiper from "../../../Components/CommonSlider";
 
-
 const Card = ({ image, title, description }) => {
   return (
     <div className="rounded-[10px] pb-10 md:pb-2 overflow-hidden">
@@ -12,8 +11,12 @@ const Card = ({ image, title, description }) => {
         className="h-[400px] w-full object-cover"
       />
       <div className="md:px-6 h-36 md:h-64 md:py-10 py-3 px-4 text-left shadow-lg bg-white rounded-b-[20px] top-[-22px] relative">
-        <h3 className="text-[18px] lg:text-[30px] font-bold text-gray-800">{title}</h3>
-        <p className="mt-2  text-[14px] lg:text-[22px] text-gray-600">{description}</p>
+        <h3 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-800">
+          {title}
+        </h3>
+        <p className="mt-2 text-mobile/body/2 md:text-desktop/body/large text-gray-600">
+          {description}
+        </p>
       </div>
     </div>
   );
@@ -28,10 +31,10 @@ const Section5 = ({ cards }) => {
       description={card.description}
     />
   );
-  return (
-    <div className="swiper-container  bg-[#BAE9EF] ">
-      <div className="md:py-20 py-10 p-5 content">
 
+  return (
+    <div className="swiper-container bg-[#BAE9EF]">
+      <div className="md:py-20 py-10 p-5 content">
         <CommonSwiper
           items={cards}
           renderItem={renderCard}
@@ -42,6 +45,6 @@ const Section5 = ({ cards }) => {
       </div>
     </div>
   );
-}
+};
 
-export default Section5
+export default Section5;

@@ -14,9 +14,13 @@ const TestimonialSection = ({
         useTextRevealAnimation();
         useScrollAnimations();
         return (
-            <div id="reviews" className="bg-white rounded-[32px] p-6 shadow-lg md:text-left flex flex-col h-full">
-                <h3 className="font-bold text-gray-800 mb-4 ">{item.title}</h3>
-                <p className="text-gray-600 flex-grow">{item.description}</p>
+            <div id="reviews" className="bg-white pb-10 rounded-[32px] p-6 shadow-lg md:text-left flex flex-col h-full">
+                <h3 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-800 mb-4">
+                    {item.title}
+                </h3>
+                <p className="text-mobile/body/2 md:text-desktop/body/1 text-gray-600 flex-grow">
+                    {item.description}
+                </p>
                 <div className="flex items-center justify-between mt-4">
                     <div className="flex">
                         <img
@@ -25,8 +29,12 @@ const TestimonialSection = ({
                             className="h-10 w-10 rounded-full mr-3 object-cover"
                         />
                         <div className="text-left">
-                            <p className="font-semibold text-gray-800">{item.name}</p>
-                            <p className="text-sm text-gray-500">{item.location}</p>
+                            <p className="text-mobile/body/2 md:text-desktop/body/2 font-semibold text-gray-800">
+                                {item.name}
+                            </p>
+                            <p className="text-mobile/caption md:text-desktop/caption text-gray-500">
+                                {item.location}
+                            </p>
                         </div>
                     </div>
                     <div className="flex mt-6">
@@ -52,20 +60,19 @@ const TestimonialSection = ({
             </div>
         );
     };
-    console.log(backgroundImage)
 
     return (
         <div
-            className="w-full bg-[#BAE9EF] flex flex-col gap-6 py-12 px-4 md:px-0  md:ps-8 lg:ps-[140px] relative overflow-hidden"
+            className="w-full bg-[#BAE9EF] flex flex-col gap-6 py-12 px-4 md:px-0 md:ps-8 lg:ps-[140px] relative overflow-hidden"
             style={{
                 backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover'
+                backgroundSize: 'cover',
             }}
         >
             {/* Section Heading */}
-            <h2 className="text-left text-2xl  md:text-3xl font-bold text-gray-900 mb-8 text-reveal-animation">
+            <h2 className="text-mobile/h4 md:text-desktop/h3 font-bold text-gray-900 mb-8 text-reveal-animation">
                 {title}
             </h2>
 

@@ -10,8 +10,10 @@ const SunstarBrandsSection = ({ hotels }) => {
     return (
         <section className="py-12 content">
             <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2 text-reveal-animation">Sunstar Brands</h2>
-                <p className="text-gray-700 mb-10 font-semibold animation-on-scroll">
+                <h2 className="text-mobile/h3 md:text-desktop/h2 font-bold text-gray-900 mb-2 text-reveal-animation">
+                    Sunstar Brands
+                </h2>
+                <p className="text-mobile/body/2 md:text-desktop/body/1 text-gray-700 mb-10 font-semibold animation-on-scroll">
                     Revolutionizing the mid-market hotel space, one hotel at a time.
                 </p>
             </div>

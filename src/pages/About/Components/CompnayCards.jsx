@@ -4,7 +4,7 @@ import Marquee from "react-fast-marquee";
 const Card = ({ image, title, description, align }) => {
     return (
 
-        <div className={`max-w-[300px] h-[600px] flex flex-col overflow-hidden flex-shrink-0  ${align}`}>
+        <div className={`max-w-[300px] h-[600px] flex flex-col overflow-hidden flex-shrink-0 ${align}`}>
             <div className={`shadow-md flex flex-col border rounded-lg bg-white`}>
                 <img
                     src={image}
@@ -12,11 +12,16 @@ const Card = ({ image, title, description, align }) => {
                     className="h-[300px] w-full rounded-t-lg object-cover"
                 />
                 <div className={`p-4 py-6 text-left flex flex-col`}>
-                    <h3 className="text-lg font-bold text-gray-800">{title}</h3>
-                    <p className="mt-2 text-sm text-gray-600">{description}</p>
+                    <h3 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-800">
+                        {title}
+                    </h3>
+                    <p className="mt-2 text-mobile/body/2 md:text-desktop/body/1 text-gray-600">
+                        {description}
+                    </p>
                 </div>
             </div>
         </div>
+
     );
 };
 

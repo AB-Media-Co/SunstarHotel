@@ -40,7 +40,7 @@ const Hotels = () => {
         className='hidden'
         autoPlay={true}
       />
-      <BannerSection data={AbouSunstartGrand} text='[45px]' imgClass="rounded-[20px] h-[350px]" textC="black"
+      <BannerSection data={AbouSunstartGrand} text='text-desktop/h2' imgClass="rounded-[20px] h-[350px]" textC="black"
         ptext='[26px]' lineh='[60px]' bg='bg-white' paddTop='0 items-start gap-10' />
 
       <div className="relative z-10 w-full">

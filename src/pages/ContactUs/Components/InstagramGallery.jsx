@@ -10,7 +10,8 @@ const InstagramGallery = ({images}) => {
       <div className="content mx-auto px-4">
         <div className="flex items-center space-x-2 mb-6">
           <InstagramIcon className='text-[#43AFAD]'/>
-          <h2 className="text-lg md:text-2xl font-bold text-gray-800">
+        
+          <h2 className="text-mobile/h4 md:text-desktop/h3 font-bold text-gray-800">
             @sunstarhotel on Instagram
           </h2>
         </div>

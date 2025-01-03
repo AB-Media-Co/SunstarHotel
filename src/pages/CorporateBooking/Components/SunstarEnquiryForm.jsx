@@ -2,10 +2,10 @@ const SunstarEnquiryForm = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-yellow-400 to-yellow-600">
       <div className="w-full max-w-3xl bg-white shadow-lg md:rounded-lg p-8">
-        <h1 className="text-center text-gray-800 text-3xl font-bold mb-4">
+        <h1 className="text-center text-gray-800 text-mobile/h3 md:text-desktop/h3 font-bold mb-4">
           Sunstar Enquiry Form
         </h1>
-        <p className="text-center text-gray-600 text-lg mb-8">
+        <p className="text-center text-gray-600 text-mobile/body/2 md:text-desktop/body/1 mb-8">
           Find out if your fleet meets our criteria
         </p>
         <form>
@@ -44,7 +44,7 @@ const SunstarEnquiryForm = () => {
           <div className="text-center mt-8">
             <button
               type="submit"
-              className="px-8 py-3 bg-yellow-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+              className="px-8 py-3 bg-yellow-500 text-white text-mobile/button md:text-desktop/button font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300"
             >
               Submit
             </button>

@@ -28,7 +28,7 @@ export default function SwiperComponent() {
       link: "#",
       location: "Gurgaon",
       price: 5000, // in your currency, e.g., INR
-      originalPrice: 6000
+      originalPrice: 6000,
     },
     {
       img: "/images/HomepageImages/cardImg1.png",
@@ -39,7 +39,7 @@ export default function SwiperComponent() {
       link: "#",
       location: "Delhi",
       price: 8000, // in your currency
-      originalPrice: 10000
+      originalPrice: 10000,
     },
     {
       img: "/images/HomepageImages/cardImg1.png",
@@ -50,7 +50,7 @@ export default function SwiperComponent() {
       link: "#",
       location: "Noida",
       price: 3000, // in your currency
-      originalPrice: 4000
+      originalPrice: 4000,
     },
     {
       img: "/images/HomepageImages/cardImg1.png",
@@ -61,7 +61,7 @@ export default function SwiperComponent() {
       link: "#",
       location: "Delhi",
       price: 5500, // in your currency
-      originalPrice: 6500
+      originalPrice: 6500,
     },
     {
       img: "/images/HomepageImages/cardImg1.png",
@@ -72,8 +72,8 @@ export default function SwiperComponent() {
       link: "#",
       location: "Gurgaon",
       price: 8500, // in your currency
-      originalPrice: 9500
-    }
+      originalPrice: 9500,
+    },
   ];
 
   const features = [
@@ -82,7 +82,6 @@ export default function SwiperComponent() {
     { label: "CCTV", icon: CctvIcon },
     { label: "Restaurant", icon: Restaurant },
   ];
-
 
   const renderCard = (card) => (
     <div className="border shadow-lg mr-4 rounded-xl relative w-full">
@@ -97,44 +96,36 @@ export default function SwiperComponent() {
 
         {/* Content Section */}
         <div className="flex absolute z-40 left-4 top-[54%] px-4 py-2 rounded-full bg-[#4DB8B6] w-[170px] items-center space-x-1 text-white">
-          <strong>{card.rating}</strong>
-          <span className="text-sm ">
+          <strong className="text-desktop/body/2">{card.rating}</strong>
+          <span className="text-mobile/body/2">
             ({card.reviews} reviews)
           </span>
         </div>
         <div className="p-4 h-[150px] pt-5 w-sm text-left gap-2 flex flex-col">
-          <h2 className="text-xl font-bold">{card.text}</h2>
-          <div className="text-[16px] flex gap-2">
+          <h2 className="text-mobile/h5 md:text-desktop/h5 font-bold">{card.text}</h2>
+          <div className="text-mobile/body/2 flex gap-2">
             <LocationOnSharp className="text-[#4DB8B6]" />
-            <span className="text-[#707070] font-semibold text-[16px]">
+            <span className="text-[#707070] font-semibold text-mobile/body/2">
               {card.location}
             </span>
           </div>
 
-          <div className="mt-4   flex items-center text-[#707070] font-semibold justify-end gap-3">
-            Starting From
+          <div className="mt-4 flex items-center text-[#707070] font-semibold justify-end gap-3">
+            <span className="text-mobile/body/2">Starting From</span>
             {card.originalPrice && (
-              <p className="text-sm text-red-500 font-bold line-through">₹{card.originalPrice}</p>
+              <p className="text-mobile/body/2 text-red-500 font-bold line-through">₹{card.originalPrice}</p>
             )}
-            <p className="text-lg font-bold text-[#4DB8B6]">
-              ₹{card.price}
-
-            </p>
+            <p className="text-desktop/body/1 font-bold text-[#4DB8B6]">₹{card.price}</p>
           </div>
         </div>
-
       </div>
 
       {/* Features Section */}
-      <div className=" absolute left-[77%] z-40 top-[3rem]  md:left-[84%]  w-[80px] shadow-lg gap-[2px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
+      <div className="absolute left-[77%] z-40 top-[3rem] md:left-[84%] w-[80px] shadow-lg gap-[2px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
         {features.map((feature, index) => (
           <div key={index} className="flex flex-col items-center">
             {feature.icon && <feature.icon className="text-white" />}
-            {feature.value && (
-              <span className="text-xl font-bold text-white">{feature.value}</span>
-            )}
-            {/* <img src="/src/Images/Icons/wifianimated.gif" alt="" /> */}
-            <span className="text-[12px] text-white">{feature.label}</span>
+            <span className="text-mobile/body/2 text-white">{feature.label}</span>
 
             {index !== features.length - 1 && (
               <hr className="w-[80px] h-[1px] bg-white my-2" />
@@ -142,8 +133,6 @@ export default function SwiperComponent() {
           </div>
         ))}
       </div>
-
-
     </div>
   );
 

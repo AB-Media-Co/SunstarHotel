@@ -35,10 +35,10 @@ const ShineSection = () => {
     return (
         <div className="bg-[#6EC4C2] py-12  text-white">
             <div className="content">
-                <h2 className="text-3xl md:text-[40px] font-bold mb-6 text-reveal-animation">
+                <h2 className="text-mobile/h3 md:text-desktop/h2 font-bold mb-6 text-reveal-animation">
                     What Makes Us Shine?
                 </h2>
-                <p className=" mb-12 animation-on-scroll">
+                <p className="text-mobile/body/2 md:text-desktop/body/large mb-12 animation-on-scroll">
                     The journey of a hassle-free experience starts from the time you book
                     Sunstar to check out.
                 </p>
