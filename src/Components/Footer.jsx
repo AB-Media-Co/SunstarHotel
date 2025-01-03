@@ -15,7 +15,7 @@ const Footer = () => {
                     </Link>
 
                     {/* Navigation Links */}
-                    <div className='flex justify-between md:justify-evenly w-full'>
+                    <div className='flex justify-between md:justify-around w-full'>
                         <div className="flex flex-col space-y-2">
                             <a href="#" className="cursor-pointer hover:underline">Contact</a>
                             <a href="#" className="cursor-pointer hover:underline">Careers</a>
@@ -32,7 +32,7 @@ const Footer = () => {
 
 
                     {/* Social Media Links */}
-                    <div className="flex flex-col space-y-4">
+                    <div className="flex flex-col space-y-4 lg:w-[300px]">
                         <a href="https://instagram.com" className="flex items-center gap-3 hover:text-gray-200">
                             <InstagramIcon className='border border-yellow-500 rounded-lg p-1' />
                             <span>Instagram</span>

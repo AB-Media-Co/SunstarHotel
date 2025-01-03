@@ -82,7 +82,7 @@ function Banner({ businessPlatformFeatures }) {
         <div className="w-full flex flex-col items-center">
           {/* Top Section: Dates and Guests */}
           <div className="flex flex-wrap justify-center md:px-4 md:space-x-6 lg:justify-between items-center w-full  space-y-4 md:space-y-0 space-x-0 ">
-            <div className="flex gap-4">
+            <div className="flex gap-8">
               <div
                 onClick={() => setOpenCalender(true)}
                 className="flex flex-wrap items-center border border-[#006167] rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"
@@ -101,7 +101,6 @@ function Banner({ businessPlatformFeatures }) {
               </div>
               <div className="lg:block hidden">
                 <GuestsDropdown />
-
               </div>
 
             </div>

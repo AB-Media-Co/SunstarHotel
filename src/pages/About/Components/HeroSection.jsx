@@ -8,13 +8,16 @@ const HeroSection = ({ title, highlightText, description, imageSrc }) => {
     useTextRevealAnimation();
     useScrollAnimations("#section1");
 
+
+    
+
     return (
         <div className="w-full bg-[#6EC4C2] py-10 px-4 md:px-8 pt-32 lg:px-16">
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row items-center justify-between">
                     {/* Left Text Section */}
                     <div className="md:w-[750px] mb-8 md:mb-0">
-                        <h1 className="text-mobile/h2 md:text-desktop/h2 font-bold mb-4 text-shadow-lg">
+                        <h1 className="text-mobile/h2 md:text-desktop/h2 font-bold mb-4 text-shadow-lg ">
                             {words.map((word, index) => {
                                 const shouldHighlight = highlightText?.includes(word);
                                 return (

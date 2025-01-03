@@ -9,13 +9,14 @@ const AllHotelCard = ({ hotels, isOpen, onClose }) => {
         return () => {
             document.body.style.overflow = 'auto';
         };
-    }, [isOpen]);
+    }, [isOpen]); 
 
     if (!isOpen) return null;
+      
 
     return (
-        <div className="fixed inset-0 bg-[#6EC4C2] flex justify-center items-center z-50">
-            <div className="flex hotelSelection flex-col w-full md:w-[1300px] gap-6  mt-[13rem] md:mt-52">
+        <div className="fixed inset-0 bg-[#6EC4C2] flex justify-center items-center z-50" >
+            <div className="flex hotelSelection flex-col w-full md:w-[1300px] gap-6  mt-[13rem] md:mt-52" >
                 <div className="flex justify-between  items-center px-4 py-2">
                     <h2 className="text-[48px] font-semibold">Hotels</h2>
                     <button
@@ -27,7 +28,7 @@ const AllHotelCard = ({ hotels, isOpen, onClose }) => {
                 </div>
                 <div className="text-center pb-[13rem] text-lg h-[110vh] hotelSelection overflow-y-auto  ">
 
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3  rounded-t-[32px]  bg-white p-10 md:py-12">
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3  rounded-t-[32px]  bg-white p-10 md:py-12 ">
                         {hotels.map((hotel, index) => (
                             <HotelSelectingCards key={index} hotel={hotel} link={`hotels/${hotel.hotelId}`}  />
                         ))}

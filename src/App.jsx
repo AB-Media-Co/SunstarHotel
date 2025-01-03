@@ -83,11 +83,11 @@ function LoaderWrapper({ children }) {
 
 function App() {
   // useEffect(() => {
-	// 	Aos.init({
-	// 		duration: 1000,
-	// 		once: true
-	// 	})
-	// }, [])
+  // 	Aos.init({
+  // 		duration: 1000,
+  // 		once: true
+  // 	})
+  // }, [])
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
@@ -104,7 +104,7 @@ function App() {
                 <Route path="/test" element={<HotelDropdown />} />
                 <Route path="/room/:id" element={<HotelRooms />} />
               </Route>
-                <Route path="/room/details" element={<RoomsDetails />} />
+              <Route path="/room/details" element={<RoomsDetails />} />
 
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />

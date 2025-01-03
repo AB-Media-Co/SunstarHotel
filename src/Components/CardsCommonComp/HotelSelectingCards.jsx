@@ -3,15 +3,17 @@
 
 import { useNavigate } from "react-router-dom";
 import Icon from "../Icons";
+import useScrollAnimations from "../../hooks/useScrollAnimations";
 
-const HotelSelctingCards = ({  link, hotel, btnClass = 'bg-white hover:bg-yellow-400  m-2 hover:shadow-2xl hover:rounded-lg rounded-lg transition ease-in-out duration-300 mt-0' }) => {
+const HotelSelctingCards = ({ link, hotel, btnClass = 'bg-white hover:bg-yellow-400  m-2 hover:shadow-2xl hover:rounded-lg rounded-lg transition ease-in-out duration-300 mt-0' }) => {
     const navigate = useNavigate()
     const OnbuttonClick = () => {
         navigate(link)
     }
+    useScrollAnimations();
+
     return (
-        <div
-            className="border border-gray-200   rounded-lg shadow-lg overflow-hidden bg-white hover:shadow-md transition-shadow duration-200"
+        <div className="border border-gray-200 animation-on-scroll  rounded-lg shadow-lg overflow-hidden bg-white hover:shadow-md transition-shadow duration-200"
         >
             <div className="relative w-full h-64">
                 <img

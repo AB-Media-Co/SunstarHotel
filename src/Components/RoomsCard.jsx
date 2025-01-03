@@ -5,7 +5,7 @@ import useScrollAnimations from "../hooks/useScrollAnimations";
 import useTextRevealAnimation from "../hooks/useTextRevealAnimation";
 import Icon from "./Icons";
 
-const RoomsCard = ({ room }) => {
+const RoomsCard = ({ room }) => { 
     const navigate = useNavigate();
 
     // Initialize animations
