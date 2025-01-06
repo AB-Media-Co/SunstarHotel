@@ -64,10 +64,6 @@ export const Rooms = () => {
   };
 
 
-  if (!rooms?.rooms || !Array.isArray(rooms.rooms)) {
-    console.error("Rooms data is invalid:", rooms?.rooms);
-    return <p>No rooms available</p>;
-  }
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {error.message}</p>;

@@ -2,15 +2,13 @@
 import Marquee from "react-fast-marquee";
 import Masonry from "react-masonry-css";
 
-const ImageGallery = ({breakpointColumnsObj,items}) => {
-  
-
+const ImageGallery = ({ breakpointColumnsObj, items }) => {
     return (
-        <Marquee>
-            <div className="w-full flex overflow-hidden">
+        <Marquee >
+            <div className="w-full flex overflow-hidden px-4">
                 <Masonry
                     breakpointCols={breakpointColumnsObj}
-                    className="my-masonry-grid"
+                    className="my-masonry-grid gap-4"
                     columnClassName="my-masonry-grid_column"
                 >
                     {items.map((item, index) => (
@@ -19,16 +17,30 @@ const ImageGallery = ({breakpointColumnsObj,items}) => {
                                 key={index}
                                 src={item.src}
                                 alt={`Item ${index}`}
-                                className="w-full rounded-lg shadow-lg mb-4 object-cover"
+                                className="rounded-lg shadow-md transition-transform transform hover:shadow-lg mb-4 object-cover"
+                                style={{
+                                    width: "100%",
+                                    height: `${item.height || 200}px`,
+                                    objectFit: "cover",
+                                }}
+                                loading="lazy"
                             />
                         ) : (
                             <div
                                 key={index}
-                                style={{ minWidth: '150px', height: `${item.height}px` }}
-                                className={`flex items-center justify-center rounded-lg shadow-lg mb-4 ${item.bg}`}
+                                style={{
+                                    height: `${item.height || 200}px`,
+                                    backgroundColor: item.bg || "#ccc",
+                                }}
+                                className={`flex items-center justify-center rounded-lg shadow-md mb-4 text-center transition-transform transform  hover:shadow-lg ${item.bg}`}
                             >
-                                <span className="text-white text-lg font-bold text-center px-4">
-                                    {item.content}
+                                <span
+                                    className="text-white text-xl font-semibold px-4"
+                                    style={{
+                                        fontSize: "clamp(1rem, 2.5vw, 1.5rem)",
+                                    }}
+                                >
+                                    {item.content || "Content Unavailable"}
                                 </span>
                             </div>
                         )

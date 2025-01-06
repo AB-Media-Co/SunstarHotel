@@ -11,6 +11,15 @@ import Loader from './Components/Loader'; // Custom Loader component
 // import Aos from 'aos'
 // import "aos/dist/aos.css"
 
+import { Rooms } from './adminPanel/pages/Rooms/Rooms';
+import { AdminHotels } from './adminPanel/pages/AdminHotels/AdminHotels';
+import { AdminLogin } from './adminPanel/pages/AdminLogin';
+import EditHotels from './adminPanel/pages/AdminHotels/EditHotels';
+import AddHotels from './adminPanel/pages/AdminHotels/AddHotels';
+import AddRooms from './adminPanel/pages/Rooms/AddRooms';
+import EditRooms from './adminPanel/pages/Rooms/EditRooms';
+import { CreateUser } from './adminPanel/pages/Users/CreateUser';
+
 // Lazy-loaded components
 const Layout = lazy(() => import('./Components/Layout'));
 const Home = lazy(() => import('./pages/Home/Home'));
@@ -22,15 +31,6 @@ const HotelRooms = lazy(() => import('./pages/Rooms/Rooms'));
 const HotelDropdown = lazy(() => import('./Components/HotelDroddown'));
 const RoomsDetails = lazy(() => import('./pages/Rooms/Components/BookingDetailsPage'));
 
-
-
-const AdminLogin = lazy(() => import('./adminPanel/pages/AdminLogin'));
-const AdminHotels = lazy(() => import('./adminPanel/pages/AdminHotels/AdminHotels'));
-const EditHotels = lazy(() => import('./adminPanel/pages/AdminHotels/EditHotels'));
-const AddHotels = lazy(() => import('./adminPanel/pages/AdminHotels/AddHotels'));
-const Rooms = lazy(() => import('./adminPanel/pages/Rooms/Rooms'));
-const AddRooms = lazy(() => import('./adminPanel/pages/Rooms/AddRooms'));
-const EditRooms = lazy(() => import('./adminPanel/pages/Rooms/EditRooms'));
 
 const queryClient = new QueryClient();
 
@@ -104,58 +104,20 @@ function App() {
                 <Route path="/test" element={<HotelDropdown />} />
                 <Route path="/room/:id" element={<HotelRooms />} />
               </Route>
+              
               <Route path="/room/details" element={<RoomsDetails />} />
 
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
-              <Route
-                path="/admin/hotels"
-                element={
-                  <PrivateRoute>
-                    <AdminHotels />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/admin/edithotles/:hotelId"
-                element={
-                  <PrivateRoute>
-                    <EditHotels />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/admin/addHotels"
-                element={
-                  <PrivateRoute>
-                    <AddHotels />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/admin/rooms"
-                element={
-                  <PrivateRoute>
-                    <Rooms />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/admin/addRooms"
-                element={
-                  <PrivateRoute>
-                    <AddRooms />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/admin/editRooms/:roomId"
-                element={
-                  <PrivateRoute>
-                    <EditRooms />
-                  </PrivateRoute>
-                }
-              />
+              {/* <Route path="/admin/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}
+              <Route path="/admin/hotels" element={<PrivateRoute><AdminHotels /></PrivateRoute>} />
+              <Route path="/admin/edithotles/:hotelId" element={<PrivateRoute><EditHotels /></PrivateRoute>} />
+              <Route path="/admin/addHotels" element={<PrivateRoute><AddHotels /></PrivateRoute>} />
+              <Route path="/admin/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
+              <Route path="/admin/addRooms" element={<PrivateRoute><AddRooms /></PrivateRoute>} />
+              <Route path="/admin/editRooms/:roomId" element={<PrivateRoute><EditRooms /></PrivateRoute>} />
+              <Route path="/admin/create-user" element={<PrivateRoute><CreateUser /></PrivateRoute>} />
+
             </Routes>
           </LoaderWrapper>
         </Suspense>

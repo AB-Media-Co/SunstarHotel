@@ -13,6 +13,9 @@ export default function SwiperComponent() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 100);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -84,56 +87,56 @@ export default function SwiperComponent() {
   ];
 
   const renderCard = (card) => (
-    <div className="border shadow-lg mr-4 rounded-xl relative w-full">
-      <div>
-        {/* Image Section */}
-        <div
-          className="zoom-in-on-scroll h-60 bg-cover z-30 bg-center rounded-t-lg"
-          style={{
-            backgroundImage: `url(${card.img})`,
-          }}
-        ></div>
-
-        {/* Content Section */}
-        <div className="flex absolute z-40 left-4 top-[54%] px-4 py-2 rounded-full bg-[#4DB8B6] w-[170px] items-center space-x-1 text-white">
+    <div className=" relative w-full ">
+      <div
+        className="relative h-60  bg-center rounded-t-lg z-10 "
+        style={{ backgroundImage: `url(${card.img})` }}
+      >
+        {/* Rating Section */}
+        <div className="absolute left-4 top-[90%] flex items-center space-x-1 px-4 py-[6px] bg-[#4DB8B6] text-white rounded-full w-[140px] z-20">
           <strong className="text-desktop/body/2">{card.rating}</strong>
-          <span className="text-mobile/body/2">
-            ({card.reviews} reviews)
-          </span>
+          <span className="text-mobile/body/2">({card.reviews} reviews)</span>
         </div>
-        <div className="p-4 h-[150px] pt-5 w-sm text-left gap-2 flex flex-col">
-          <h2 className="text-mobile/h5 md:text-desktop/h5 font-bold">{card.text}</h2>
-          <div className="text-mobile/body/2 flex gap-2">
-            <LocationOnSharp className="text-[#4DB8B6]" />
-            <span className="text-[#707070] font-semibold text-mobile/body/2">
-              {card.location}
-            </span>
-          </div>
+      </div>
+    
+      <div className="absolute top-[100%] w-full  shadow-lg p-4 pt-8 h-[150px] bg-white border rounded-b-lg flex flex-col gap-2">
+        {/* Title */}
+        <h2 className="text-mobile/h5 md:text-desktop/h5 font-bold text-start">{card.text}</h2>
 
-          <div className="mt-4 flex items-center text-[#707070] font-semibold justify-end gap-3">
-            <span className="text-mobile/body/2">Starting From</span>
-            {card.originalPrice && (
-              <p className="text-mobile/body/2 text-red-500 font-bold line-through">₹{card.originalPrice}</p>
-            )}
-            <p className="text-desktop/body/1 font-bold text-[#4DB8B6]">₹{card.price}</p>
-          </div>
+        {/* Location */}
+        <div className="flex items-end gap-1 text-mobile/body/2 text-[#707070] font-semibold">
+          <LocationOnSharp className="text-[#4DB8B6]" style={{ fontSize: "18px" }} />
+          <span>{card.location}</span>
+        </div>
+
+        {/* Price Section */}
+        <div className="flex items-center justify-end gap-3 mt-2 text-[#707070] font-semibold">
+          <span className="text-mobile/body/2">Starting From</span>
+          {card.originalPrice && (
+            <p className="text-mobile/body/2 text-red-500 font-bold line-through">
+              ₹{card.originalPrice}
+            </p>
+          )}
+          <p className="text-desktop/body/1 font-bold text-[#4DB8B6]">
+            ₹{card.price}
+          </p>
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="absolute left-[77%] z-40 top-[3rem] md:left-[84%] w-[80px] shadow-lg gap-[2px] justify-between items-center bg-[#4DB8B6] p-4 rounded-xl flex flex-col">
+      <div className="absolute left-[77%] md:left-[84%] top-[3rem] z-40 flex flex-col items-center gap-[2px] w-[80px] p-4 bg-[#4DB8B6] rounded-xl shadow-lg">
+      {/* <div className="absolute  bg-[#4DB8B6]  left-[77%] md:left-[84%] top-[3rem] z-50"> */}
         {features.map((feature, index) => (
           <div key={index} className="flex flex-col items-center">
             {feature.icon && <feature.icon className="text-white" />}
             <span className="text-mobile/body/2 text-white">{feature.label}</span>
-
             {index !== features.length - 1 && (
-              <hr className="w-[80px] h-[1px] bg-white my-2" />
+              <hr className="w-full h-[1px] bg-white my-2" />
             )}
           </div>
         ))}
       </div>
     </div>
+
   );
 
   return (
@@ -145,6 +148,8 @@ export default function SwiperComponent() {
         spaceBetween={30}
         loop={false}
         className="mySwiper"
+        cssMode={true} // Add this for Safari
+
       />
     </div>
   );
