@@ -88,7 +88,7 @@ export default function SwiperComponent() {
       <div>
         {/* Image Section */}
         <div
-          className="zoom-in-on-scroll h-60 bg-cover bg-center rounded-t-lg"
+          className="zoom-in-on-scroll h-60 bg-cover z-30 bg-center rounded-t-lg"
           style={{
             backgroundImage: `url(${card.img})`,
           }}

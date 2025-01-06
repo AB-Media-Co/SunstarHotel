@@ -29,7 +29,7 @@ const Section6Testimonials = ({testimonials}) => {
         renderItem={renderTestimonial}
         slidesPerView={3}
         spaceBetween={30}
-        loop={true}
+        loop={false}
       />
     </div>
   );

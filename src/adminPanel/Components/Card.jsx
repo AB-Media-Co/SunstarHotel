@@ -51,7 +51,7 @@ const Card = ({ item, type, onEdit, onDelete }) => (
             <div className="mb-4">
                 <span className="block font-bold text-gray-800">Amenities:</span>
                 <ul className="flex flex-wrap mt-2">
-                    {item.amenities?.length ? item.amenities.map((amenity, index) => (
+                    {item?.amenities?.length ? item?.amenities?.map((amenity, index) => (
                         <li key={index} className="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs px-3 py-1 rounded-full m-1">
                             {amenity}
                         </li>

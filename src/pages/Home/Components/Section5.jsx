@@ -40,7 +40,7 @@ const Section5 = ({ cards }) => {
           renderItem={renderCard}
           slidesPerView={3.5}
           spaceBetween={30}
-          loop={true}
+          loop={false}
         />
       </div>
     </div>

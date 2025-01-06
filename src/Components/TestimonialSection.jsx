@@ -81,7 +81,7 @@ const TestimonialSection = ({
                 items={testimonials}
                 renderItem={renderItem}
                 spaceBetween={30}
-                loop={true}
+                loop={false}
                 className="relative z-10 mt-8 testiM"
                 slidesPerViewDesktop={3.5}
             />
