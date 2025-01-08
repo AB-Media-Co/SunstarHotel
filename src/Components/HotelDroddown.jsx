@@ -215,19 +215,19 @@ const HotelDropdown = () => {
                             <h2 className="text-2xl font-bold text-gray-800 mb-6">Room Information</h2>
 
                             <div className="mb-8 p-6 border border-gray-200 rounded-lg bg-gray-50 shadow-sm hover:shadow-md">
-                                <h5 className="text-xl font-semibold text-gray-800 mb-4">Room Types</h5>
 
                                 <div className="mt-6">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         {roomData.map((plan) => (
                                             <div key={plan.RatePlanID} >
+                                                <h1 className="font-bold text-2xl py-4">Room Type</h1>
                                                 <div className="border p-4 rounded-lg shadow-md bg-white hover:shadow-lg">
                                                     <span>{plan.Name}</span> - Rate Type: {plan.RateType}
                                                 </div>
 
                                                 <h1 className="text-[28px] py-8">Inside Rooms</h1>
                                                 {plan?.Rooms?.map((rooms) => (
-                                                    <div key={rooms.RoomID} className="border p-4 rounded-lg shadow-md bg-white hover:shadow-lg">
+                                                    <div key={rooms.RoomID} className="border p-4 my-4 rounded-lg shadow-md bg-white hover:shadow-lg">
                                                         <span>{rooms.RoomName}</span>
                                                     </div>
                                                 ))}
@@ -240,13 +240,13 @@ const HotelDropdown = () => {
                                     <div className="p-6">
                                         <h2 className="text-2xl font-bold text-gray-800 mb-6">Rate Types and Plans</h2>
                                         {rateTypes.map((rateType) => (
-                                            <div key={rateType.RateTypeID} className="mb-8 p-6 border border-gray-200 rounded-lg bg-gray-50 shadow-sm hover:shadow-md">
+                                            <div key={rateType.RateTypeID} className="mb-8 ">
                                                 <h4 className="text-xl font-semibold text-gray-800 mb-4">{rateType.Name}</h4>
                                                 <div className="">
                                                     {ratePlans
                                                         .filter((ratePlan) => ratePlan.RateType === rateType.Name)
                                                         .map((matchingRatePlan) => (
-                                                            <div key={matchingRatePlan.RatePlanID} className="border p-4 rounded-lg shadow-md bg-white hover:shadow-lg">
+                                                            <div key={matchingRatePlan.RatePlanID} className="border p-4 my-4 rounded-lg shadow-md bg-white hover:shadow-lg">
                                                                 <p><strong>Plan Name:</strong> {matchingRatePlan.Name}</p>
                                                                 <p><strong>Rate Type:</strong> {matchingRatePlan.RateType}</p>
                                                             </div>

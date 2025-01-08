@@ -2,7 +2,8 @@
 import { ChevronLast, ChevronFirst } from "lucide-react";
 import { useState, createContext, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Hotel, NightShelterOutlined } from "@mui/icons-material";
+import { Hotel, LocationCity, NightShelterOutlined, PeopleAlt } from "@mui/icons-material";
+import { useAdminContext } from "../utils/AdminContext";
 
 // Create a Context to manage expanded state
 const SidebarContext = createContext();
@@ -10,16 +11,18 @@ const SidebarContext = createContext();
 // Sidebar component
 export function Sidebar() {
     const [expanded, setExpanded] = useState(true);
+    const { adminProfile } = useAdminContext();
 
-    // Define sidebar items with route paths
     const sidebarItems = [
-        { id: 3, text: 'Hotels', icon: <Hotel />, path: '/admin/hotels' },
+        { id: 1, text: 'Hotels', icon: <Hotel />, path: '/admin/hotels' },
         { id: 2, text: 'Rooms', icon: <NightShelterOutlined />, path: '/admin/rooms' },
+        { id: 4, text: 'Locations', icon: <LocationCity />, path: '/admin/hotel-locations' },
+        { id: 3, text: 'All Users', icon: <PeopleAlt />, path: '/admin/all-users', role: 'admin' }, 
     ];
 
     return (
         <SidebarContext.Provider value={{ expanded }}>
-            <aside className="fixed top-0 left-0 h-full z-10 bg-white border-r shadow-lg transition-all duration-500 ease-in-out">
+            <aside className="fixed top-0 left-0 h-full z-50 bg-white border-r shadow-lg transition-all duration-500 ease-in-out">
                 <nav className="h-full flex flex-col">
                     <div className="p-4 pb-2 flex justify-between items-center transition-all duration-500 ease-in-out">
                         <Link className={`overflow-hidden transition-all duration-500 ease-in-out ${expanded ? "w-32" : "w-0"}`}>
@@ -34,15 +37,19 @@ export function Sidebar() {
                     </div>
 
                     <ul className="flex-1 px-3 space-y-2 overflow-y-auto">
-                        {sidebarItems.map((item) => (
-                            <SidebarItem key={item.id} icon={item.icon} text={item.text} path={item.path} />
-                        ))}
+                        {sidebarItems.map((item) => {
+                            // Render "All Users" only if adminProfile.role is "admin"
+                            if (item?.role && adminProfile?.data?.role !== 'admin') return null;
+                            return (
+                                <SidebarItem key={item.id} icon={item.icon} text={item.text} path={item.path} />
+                            );
+                        })}
                     </ul>
                 </nav>
             </aside>
             {/* This div ensures the content starts after the sidebar */}
             <div className={`transition-all duration-500 ease-in-out ${expanded ? 'ml-64' : 'ml-20'}`}>
-               
+
             </div>
         </SidebarContext.Provider>
     );

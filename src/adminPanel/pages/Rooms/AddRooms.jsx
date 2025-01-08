@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Tabs from '../../Components/Tabs';
-import { Rating } from '../../Components/Rating';
 import MultipleImageUpload from '../../Components/MultipleImageUpload';
 import { useAddRoomToHotel, useGetHotels, useUploadHotelImages } from '../../../ApiHooks/useHotelHook';
 import toast from 'react-hot-toast';
@@ -19,7 +18,6 @@ const AddRooms = () => {
     const [price, setPrice] = useState(0);
     const [discountedPrice, setDiscountedPrice] = useState(0);
     const [selectedRooms, setSelectedRooms] = useState();
-    console.log(selectedRooms)
     const [roomLeft, setRoomLeft] = useState(0);
     const [available, setAvailable] = useState(true);
     const [soldOut, setSoldOut] = useState(false);
@@ -29,7 +27,6 @@ const AddRooms = () => {
     const { mutate: addRooms } = useAddRoomToHotel();
 
     const { data: hotels } = useGetHotels();
-    console.log(hotels);
 
     const hotelOptions = hotels?.hotels?.map((hotel) => ({
         value: hotel._id,
@@ -82,7 +79,6 @@ const AddRooms = () => {
             hotelId: selectedRooms.value, // Pass hotelId as a separate field
             roomDetails: [roomsData],   // Pass the room data as an array
         };
-        console.log('Submitting room Data:', requestData);
 
         addRooms(requestData, {
             onSuccess: () => {
@@ -127,13 +123,7 @@ const AddRooms = () => {
     const tabNames = ['Add Room', 'Gallery', 'Customer Reviews'];
     const tabContent = {
         'Add Room': <div className="space-y-6 p-6 bg-white ">
-            <div className='flex justify-between'>
-                <label className="flex items-center space-x-3">
-                    <span className="text-2xl font-semibold">Rating:</span>
-                    <Rating seiInitialRating={setRating} />
-                </label>
-                Step1
-            </div>
+         
             <div className='flex gap-4'>
 
                 <div className='flex flex-col w-full'>

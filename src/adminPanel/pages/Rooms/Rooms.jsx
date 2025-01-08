@@ -23,7 +23,6 @@ export const Rooms = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
-  console.log(selectedRoomId)
 
   // Disable scrolling when modal is open
   useEffect(() => {

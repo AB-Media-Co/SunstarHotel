@@ -76,7 +76,7 @@ const AddNewCard = ({ onClick }) => (
 );
 
 export const Section = ({ title, data, type, onEdit, onDelete, onAdd }) => (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6 pt-24 bg-gray-100 min-h-screen">
         <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-8">{title}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
             {data?.map(item => (

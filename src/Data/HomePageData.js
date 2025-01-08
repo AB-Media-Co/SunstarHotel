@@ -109,6 +109,7 @@ export const sec3CardSliderData = {
         700: 2,
         500: 2,
     },
+    rowCountMobile: 6
 };
 
 

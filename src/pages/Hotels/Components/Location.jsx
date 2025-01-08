@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { LaunchRounded } from "@mui/icons-material";
+import { LaunchRounded, PinDrop } from "@mui/icons-material";
 
 const Location = ({ locationData }) => {
     const { name, address, mapCoordinates, nearby } = locationData;
@@ -63,7 +63,7 @@ const Location = ({ locationData }) => {
                                     className="flex justify-between text-[24px] w-full items-center px-4 py-2 bg-white"
                                 >
                                     <div className="text-black font-bold">
-                                        📍 {item}
+                                    <PinDrop className="text-red-500"/> {item}
 
                                     </div>
 

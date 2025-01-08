@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDeleteHotelById, useGetHotels } from "../../../ApiHooks/useHotelHook";
 import { Section } from "../../Components/Card";
@@ -10,12 +10,10 @@ export const AdminHotels = () => {
   const { mutate: deleteHotelById, } = useDeleteHotelById();
 
   const navigate = useNavigate();
-  
-  // State for modal visibility and hotelId to be deleted
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedHotelId, setSelectedHotelId] = useState(null);
 
-  // Disable scrolling when modal is open
   useEffect(() => {
     if (isModalOpen) {
       document.body.style.overflow = 'hidden';
@@ -25,13 +23,11 @@ export const AdminHotels = () => {
     return () => document.body.style.overflow = 'auto';
   }, [isModalOpen]);
 
-  // Handle delete button click
   const handleDeleteClick = (hotelId) => {
     setSelectedHotelId(hotelId);
     setIsModalOpen(true);
   };
 
-  // Handle confirm delete
   const handleConfirmDelete = () => {
     if (selectedHotelId) {
       deleteHotelById(selectedHotelId, {
@@ -48,7 +44,6 @@ export const AdminHotels = () => {
     }
   };
 
-  // Handle cancel delete
   const handleCancelDelete = () => {
     setIsModalOpen(false);
     setSelectedHotelId(null);
@@ -57,29 +52,27 @@ export const AdminHotels = () => {
   const handleAddHotel = () => navigate('/admin/addHotels');
 
   const handleEdit = (hotelId) => {
-    navigate(`/admin/edithotles/${hotelId}`);
+    navigate(`/admin/edithotels/${hotelId}`);
   };
-
- 
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {error.message}</p>;
 
   return (
     <>
-      <Section 
-        title="Our Premium Hotels" 
-        data={hotels?.hotels} 
-        type="hotel" 
-        onEdit={handleEdit} 
-        onDelete={handleDeleteClick} 
-        onAdd={handleAddHotel} 
+      <Section
+        title="Our Premium Hotels"
+        data={hotels?.hotels}
+        type="hotel"
+        onEdit={handleEdit}
+        onDelete={handleDeleteClick}
+        onAdd={handleAddHotel}
       />
-      
+
       <DeleteConfirmationModal
-        isOpen={isModalOpen} 
-        onConfirm={handleConfirmDelete} 
-        onCancel={handleCancelDelete} 
+        isOpen={isModalOpen}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
       />
     </>
   );

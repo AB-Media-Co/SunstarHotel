@@ -7,9 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import { Sidebar, SidebarItem } from './adminPanel/Components/Sidebar';
 import { Header } from './adminPanel/Components/Header';
 import { getToken } from './adminPanel/utils/auth';
-import Loader from './Components/Loader'; // Custom Loader component
-// import Aos from 'aos'
-// import "aos/dist/aos.css"
+import Loader from './Components/Loader';
 
 import { Rooms } from './adminPanel/pages/Rooms/Rooms';
 import { AdminHotels } from './adminPanel/pages/AdminHotels/AdminHotels';
@@ -19,18 +17,19 @@ import AddHotels from './adminPanel/pages/AdminHotels/AddHotels';
 import AddRooms from './adminPanel/pages/Rooms/AddRooms';
 import EditRooms from './adminPanel/pages/Rooms/EditRooms';
 import { CreateUser } from './adminPanel/pages/Users/CreateUser';
+import ViewUser from './adminPanel/pages/Users/ViewUser';
+import { AdminProvider } from './adminPanel/utils/AdminContext';
+import AllUsers from './adminPanel/pages/Users/AllUsers';
+import { HotelLocations } from './adminPanel/pages/HotelLocations/HotelLocations';
 
-// Lazy-loaded components
-const Layout = lazy(() => import('./Components/Layout'));
-const Home = lazy(() => import('./pages/Home/Home'));
-const AboutUs = lazy(() => import('./pages/About/AboutUs'));
-const Corporatebooking = lazy(() => import('./pages/CorporateBooking/Corporatebooking'));
-const Hotels = lazy(() => import('./pages/Hotels/Hotels'));
-const ContactUs = lazy(() => import('./pages/ContactUs/ContactUs'));
-const HotelRooms = lazy(() => import('./pages/Rooms/Rooms'));
-const HotelDropdown = lazy(() => import('./Components/HotelDroddown'));
-const RoomsDetails = lazy(() => import('./pages/Rooms/Components/BookingDetailsPage'));
-
+const Layout = lazy(() => import(/* webpackChunkName: "layout" */ './Components/Layout'));
+const Home = lazy(() => import(/* webpackChunkName: "home" */ './pages/Home/Home'));
+const AboutUs = lazy(() => import(/* webpackChunkName: "aboutus" */ './pages/About/AboutUs'));
+const Corporatebooking = lazy(() => import(/* webpackChunkName: "corporatebooking" */ './pages/CorporateBooking/Corporatebooking'));
+const Hotels = lazy(() => import(/* webpackChunkName: "hotels" */ './pages/Hotels/Hotels'));
+const ContactUs = lazy(() => import(/* webpackChunkName: "contactus" */ './pages/ContactUs/ContactUs'));
+const HotelRooms = lazy(() => import(/* webpackChunkName: "hotelrooms" */ './pages/Rooms/Rooms'));
+const RoomsDetails = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/Rooms/Components/BookingDetailsPage'));
 
 const queryClient = new QueryClient();
 
@@ -61,13 +60,11 @@ function LoaderWrapper({ children }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Only show loader if the pathname changes, not for hash navigation
     const currentPath = location.pathname;
     const prevPath = sessionStorage.getItem('currentPath');
-
     if (prevPath !== currentPath) {
       setLoading(true);
-      const timer = setTimeout(() => setLoading(false), 500); // Simulate loading time
+      const timer = setTimeout(() => setLoading(false), 200);
       sessionStorage.setItem('currentPath', currentPath);
       return () => clearTimeout(timer);
     }
@@ -80,14 +77,7 @@ function LoaderWrapper({ children }) {
   return children;
 }
 
-
 function App() {
-  // useEffect(() => {
-  // 	Aos.init({
-  // 		duration: 1000,
-  // 		once: true
-  // 	})
-  // }, [])
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
@@ -101,24 +91,27 @@ function App() {
                 <Route path="/corporate-booking" element={<Corporatebooking />} />
                 <Route path="/hotels/:hotelId" element={<Hotels />} />
                 <Route path="/contact" element={<ContactUs />} />
-                <Route path="/test" element={<HotelDropdown />} />
                 <Route path="/room/:id" element={<HotelRooms />} />
               </Route>
-              
+
               <Route path="/room/details" element={<RoomsDetails />} />
-
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              {/* <Route path="/admin/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}
-              <Route path="/admin/hotels" element={<PrivateRoute><AdminHotels /></PrivateRoute>} />
-              <Route path="/admin/edithotles/:hotelId" element={<PrivateRoute><EditHotels /></PrivateRoute>} />
-              <Route path="/admin/addHotels" element={<PrivateRoute><AddHotels /></PrivateRoute>} />
-              <Route path="/admin/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
-              <Route path="/admin/addRooms" element={<PrivateRoute><AddRooms /></PrivateRoute>} />
-              <Route path="/admin/editRooms/:roomId" element={<PrivateRoute><EditRooms /></PrivateRoute>} />
-              <Route path="/admin/create-user" element={<PrivateRoute><CreateUser /></PrivateRoute>} />
-
             </Routes>
+
+            <AdminProvider>
+              <Routes>
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin/hotels" element={<PrivateRoute><AdminHotels /></PrivateRoute>} />
+                <Route path="/admin/edithotels/:hotelId" element={<PrivateRoute><EditHotels /></PrivateRoute>} />
+                <Route path="/admin/addHotels" element={<PrivateRoute><AddHotels /></PrivateRoute>} />
+                <Route path="/admin/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
+                <Route path="/admin/addRooms" element={<PrivateRoute><AddRooms /></PrivateRoute>} />
+                <Route path="/admin/editRooms/:roomId" element={<PrivateRoute><EditRooms /></PrivateRoute>} />
+                <Route path="/admin/create_user" element={<PrivateRoute><CreateUser /></PrivateRoute>} />
+                <Route path="/admin/view-user" element={<PrivateRoute><ViewUser /></PrivateRoute>} />
+                <Route path="/admin/all-users" element={<PrivateRoute><AllUsers /></PrivateRoute>} />
+                <Route path="/admin/hotel-locations" element={<PrivateRoute><HotelLocations/></PrivateRoute>} />
+              </Routes>
+            </AdminProvider>
           </LoaderWrapper>
         </Suspense>
       </Router>

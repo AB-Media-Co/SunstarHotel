@@ -2,16 +2,19 @@
 import Marquee from "react-fast-marquee";
 import Masonry from "react-masonry-css";
 
-const ImageGallery = ({ breakpointColumnsObj, items }) => {
+const ImageGallery = ({ breakpointColumnsObj, items,rowCountMobile }) => {
+    const isMobile = window.innerWidth <= 500;
+    const rowCount = isMobile ? rowCountMobile : items.length;
+
     return (
-        <Marquee >
+        <Marquee>
             <div className="w-full flex overflow-hidden px-4">
                 <Masonry
                     breakpointCols={breakpointColumnsObj}
                     className="my-masonry-grid gap-4"
                     columnClassName="my-masonry-grid_column"
                 >
-                    {items.map((item, index) => (
+                    {items.slice(0, rowCount).map((item, index) => (
                         item.type === "image" ? (
                             <img
                                 key={index}
@@ -20,7 +23,8 @@ const ImageGallery = ({ breakpointColumnsObj, items }) => {
                                 className="rounded-lg shadow-md transition-transform transform hover:shadow-lg mb-4 object-cover"
                                 style={{
                                     width: "100%",
-                                    height: `${item.height || 200}px`,
+                                    height: `auto`, // Maintain aspect ratio for mobile view
+                                    maxHeight: `${item.height}px`,
                                     objectFit: "cover",
                                 }}
                                 loading="lazy"
@@ -29,10 +33,10 @@ const ImageGallery = ({ breakpointColumnsObj, items }) => {
                             <div
                                 key={index}
                                 style={{
-                                    height: `${item.height || 200}px`,
+                                    height: `${item.height}px`,
                                     backgroundColor: item.bg || "#ccc",
                                 }}
-                                className={`flex items-center justify-center rounded-lg shadow-md mb-4 text-center transition-transform transform  hover:shadow-lg ${item.bg}`}
+                                className={`flex items-center justify-center rounded-lg shadow-md mb-4 text-center transition-transform transform hover:shadow-lg ${item.bg}`}
                             >
                                 <span
                                     className="text-white text-xl font-semibold px-4"
