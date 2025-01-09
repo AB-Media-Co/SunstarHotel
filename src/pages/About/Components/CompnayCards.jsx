@@ -1,9 +1,12 @@
 /* eslint-disable react/prop-types */
 
+import useScrollAnimations from "../../../hooks/useScrollAnimations";
+import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
+
 const Card = ({ image, title, description }) => {
     return (
 
-        <div className={`max-w-[280px] flex flex-col relative overflow-hidden shadow-xl  border rounded-lg bg-white`}>
+        <div className={`max-w-[280px] flex flex-col relative animation-on-scroll overflow-hidden shadow-xl  border rounded-lg bg-white`}>
             <img
                 src={image}
                 alt={title}
@@ -24,10 +27,13 @@ const Card = ({ image, title, description }) => {
 };
 
 const CompnayCards = (cards) => {
+    useTextRevealAnimation();
+    useScrollAnimations();
+
     return (
         <div className="py-12 flex flex-col gap-8  content">
-            <h1 className="text-mobile/h1 text-center md:text-left text-[#6EC4C2]">What We’re Offering </h1>
-            <div className="flex justify-center md:justify-between flex-wrap gap-10 hotelSelection">
+            <h1 className="text-mobile/h1 text-center md:text-left text-[#6EC4C2] text-reveal-animation">What We’re Offering </h1>
+            <div className="flex justify-center md:justify-between  flex-wrap gap-10 hotelSelection">
                 {cards?.cards?.map((card, index) => (
                     <Card
                         key={index}

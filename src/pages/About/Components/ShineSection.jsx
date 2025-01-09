@@ -98,8 +98,8 @@ const ShineSection = () => {
                             className={`flex flex-col-reverse items-center lg:items-start gap-6 lg:gap-16 md:justify-between  lg:flex-row ${index % 2 === 1 ? "lg:flex-row-reverse md:gap-10" : ""
                                 }`}
                         >
-                            <div className="pe-6 w-[293px] md:w-[320px] h-[182px] md:h-[282px] lg:w-[560px] flex flex-col gap-5 justify-center animation-on-scroll">
-                                <h3 className=" lg:w-[580px] text-mobile/h2 md:text-desktop/h3 text-white">{item.title}</h3>
+                            <div className="pe-6 w-[250px] md:w-[320px] h-[182px] md:h-[282px] lg:w-[560px] flex flex-col gap-5 justify-center animation-on-scroll">
+                                <h3 className=" lg:w-[580px] text-mobile/h3 md:text-desktop/h3 text-white">{item.title}</h3>
                                 <p className=" text-justify text-mobile/body/2 md:text-desktop/body/1 text-white lowercase">
                                     {item.description}
                                 </p>
@@ -107,7 +107,7 @@ const ShineSection = () => {
                             <img
                                 src={item.image}
                                 alt={item.title}
-                                className="w-[293px] md:w-[320px]  h-[282px] lg:w-[560px] rounded-2xl  lg:h-[350px] object-cover animation-on-scroll"
+                                className="w-[250px] md:w-[320px]  h-[282px] lg:w-[560px] rounded-2xl  lg:h-[350px] object-cover animation-on-scroll"
                             />
                         </div>
                     ))}
@@ -119,7 +119,7 @@ const ShineSection = () => {
                         {[1, 2, 3, 4].map((_, index) => (
                         <div
                         key={index}
-                        className={`circle-container absolute -ml-[21px] 
+                        className={`circle-container absolute lg:-ml-[21px] 
                             ${index === 0 ? "top-[0px] md:top-[0px] lg:top-[0px]" :
                              index === 1 ? "top-[400px] md:top-[680px] lg:top-[380px]" :
                              index === 2 ? "top-[900px] md:top-[1160px] lg:top-[760px]" :
