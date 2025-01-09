@@ -1,8 +1,8 @@
-import { enquiries, hotels, images } from "../../Data/ContactUsData"
+import { enquiries, hotels } from "../../Data/ContactUsData"
 import Banner from "./Components/Banner"
 import HotelsInfo from "./Components/HotelsInfo"
-import InstagramGallery from "./Components/InstagramGallery"
 import OtherEnquiries from "./Components/OtherEnquiries"
+import StayInTheLoop from "./Components/StayInLoop"
 
 const ContactUs = () => {
     return (
@@ -11,7 +11,7 @@ const ContactUs = () => {
             <HotelsInfo hotels={hotels}/>
             <hr className="content"/>
             <OtherEnquiries enquiries={enquiries}/>
-            <InstagramGallery images={images}/>
+            <StayInTheLoop/>
         </div>
     )
 }

@@ -16,7 +16,8 @@ const ValuesSection = ({ title, values }) => {
           {values.map((value, index) => (
             <div
               key={index}
-              className="flex flex-col animation-on-scroll justify-center h-[160px] p-6 rounded-lg shadow-xl"
+              className="flex flex-col animation-on-scroll justify-center h-[160px] p-6 rounded-lg shadow-xl bg-custom-bg bg-cover bg-bottom"
+         
             >
               <h3 className="text-mobile/h4 md:text-desktop/h4 font-bold text-[#058FA2] mb-2">
                 {value.title}
@@ -27,6 +28,7 @@ const ValuesSection = ({ title, values }) => {
             </div>
           ))}
         </div>
+
       </div>
     </div>
   );

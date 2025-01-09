@@ -1,12 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",  // Scans all JS/TS files in src directory
-  ],
-  theme: {
-    extend: {
-      fontSize: {
+	content: [
+		"./index.html",
+		"./src/**/*.{js,ts,jsx,tsx}",  // Scans all JS/TS files in src directory
+	],
+	theme: {
+		extend: {
+			fontSize: {
 				'desktop/large/h': ['60px', {
 					lineHeight: '100.6px',
 					fontWeight: '700'
@@ -56,7 +56,7 @@ export default {
 					letterSpacing: '-0.28px',
 					fontWeight: '500'
 				}],
-				
+
 				'desktop/body/2/regular': ['14px', {
 					lineHeight: '22.4px',
 					letterSpacing: '-0.14px',
@@ -177,8 +177,11 @@ export default {
 				}],
 
 			},
-    },
-  },
-  plugins: [],
+			backgroundImage: {
+				'custom-bg': "url('/images/Logo/yellowLine.svg')", // Add your image path here
+			},
+		},
+	},
+	plugins: [],
 }
 

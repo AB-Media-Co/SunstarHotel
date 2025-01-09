@@ -1,11 +1,10 @@
 import HeroSection from './Components/HeroSection'
 import ValuesSection from './Components/ValuesSection'
-import { heroData, valuesData, testimonialData, hotels } from '../../Data/AboutSectionData';
+import { heroData, valuesData, testimonialData, hotels, AboutUsSection5cards } from '../../Data/AboutSectionData';
 import TestimonialSection from '../../Components/TestimonialSection';
 import SunstarBrandsSection from './Components/SunstarBrandsSection';
 import ShineSection from './Components/ShineSection';
 import CompnayCards from './Components/CompnayCards';
-import { HomePageSection5cards } from '../../Data/HomePageData';
 
 const AboutUs = () => {
   return (
@@ -25,7 +24,7 @@ const AboutUs = () => {
 
 
       <ShineSection />
-      <CompnayCards cards={HomePageSection5cards} />
+      <CompnayCards cards={AboutUsSection5cards} />
       <TestimonialSection
         title={testimonialData.title}
         testimonials={testimonialData.testimonials}

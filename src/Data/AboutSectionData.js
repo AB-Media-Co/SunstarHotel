@@ -133,3 +133,27 @@ export const hotels = [
 
   },
 ];
+
+
+export const AboutUsSection5cards = [
+  {
+    image: "/images/HomepageImages/sec5Card.png", // Replace with actual image URL
+    title: "Conference & Events",
+    description: "Text commonly used to demonstrate the visual form of a document typeface on .",
+  },
+  {
+    image: "/images/HomepageImages/sec5Card.png", // Replace with actual image URL
+    title: "Bulk Bookings",
+    description: "Reference site about Lorem Ipsum, giving information on its origins, as well as a random Lipsum generator.",
+  },
+  {
+    image: "/images/HomepageImages/sec5Card.png", // Replace with actual image URL
+    title: "Careers @Sunstar",
+    description: "Lorem ipsum is a placeholder text commonly used to demonstrate the visual of a document or a typeface.",
+  },
+  {
+    image: "/images/HomepageImages/sec5Card.png", // Replace with actual image URL
+    title: "Bulk Bookings",
+    description: "Reference site about Lorem Ipsum, giving information on its origins, as well as a random Lipsum generator.",
+  }
+];
