@@ -19,7 +19,7 @@ const ShineSection = () => {
             const timeline = gsap.timeline({
                 scrollTrigger: {
                     trigger: path, // Each circle as trigger
-                    start: "top center", // Start filling at the top of the circle
+                    start: "top bottom", // Start filling at the top of the circle
                     end: "bottom center", // End when leaving the circle
                     scrub: true, // Smooth animation
                 },
