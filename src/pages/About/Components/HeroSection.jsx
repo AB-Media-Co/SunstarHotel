@@ -8,9 +8,6 @@ const HeroSection = ({ title, highlightText, description, imageSrc }) => {
     useTextRevealAnimation();
     useScrollAnimations("#section1");
 
-
-    
-
     return (
         <div className="w-full bg-[#6EC4C2] py-10 px-4 md:px-8 pt-32 lg:px-16">
             <div className="max-w-7xl mx-auto">

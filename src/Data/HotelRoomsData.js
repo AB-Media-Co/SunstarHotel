@@ -197,7 +197,12 @@ export const propertyData = {
 export const locationData = {
   name: "Hotel Sunstar - Grand",
   address: "7A/17, Channa Market Block 7A, WEA Karol Bagh, Delhi - 110 005",
-  mapCoordinates: { lat: 28.6517178, lng: 77.1907484 },
+  mapCoordinates: {
+    lat: 28.646276475671833,
+    lng: 77.18407977144194,
+  },
+  // 28.646276475671833, 77.18407977144194
+  
   nearby: {
     attractions: ["Red Fort", "India Gate", "Jama Masjid"],
     restaurants: ["Karim's", "Haldiram's", "Bukhara"],
@@ -214,7 +219,7 @@ export const AbouSunstartGrand = {
 };
 
 
-export const  HotelPageImgGallery = {
+export const HotelPageImgGallery = {
   items: [
     { id: 2, type: "div", content: "2,16,130+ customers", bg: "bg-yellow-400", height: '229', width: '306' },
     { id: 1, type: "image", src: "/images/HomepageImages/massonaryCards/1.png" },

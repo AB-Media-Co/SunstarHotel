@@ -106,11 +106,11 @@ const Navbar = () => {
         {/* Mobile Menu (Slide-in Sidebar) */}
         <div
           id="mobile-menu"
-          className={`fixed top-0 md:hidden left-0 h-fit overflow-hidden bg-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+          className={`fixed top-0 md:hidden left-0 h-screen overflow-hidden bg-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
             }`}
         >
           {/* Header with Logo and Close Button */}
-          <div className="flex justify-between p-4  border-b border-gray-200">
+          <div className="flex justify-between p-4 border-b border-gray-200">
             <Link to="/" onClick={closeMobileMenu}>
               <img
                 src="/images/Logo/mobileLogo.svg"
@@ -127,8 +127,8 @@ const Navbar = () => {
           </div>
 
           {/* Menu Content */}
-          <div className="flex h-[90vh] flex-col justify-between mt-4 space-y-4  px-4 overflow-hidden">
-            <div className="space-y-4 ">
+          <div className="flex h-[90vh] flex-col justify-between mt-4 space-y-4 px-4 overflow-hidden">
+            <div className="space-y-4">
               {navItems.map(({ name, icon, route, action }, index) => (
                 <div key={index}>
                   <button
@@ -150,14 +150,13 @@ const Navbar = () => {
                   </button>
                 </div>
               ))}
-
             </div>
 
-            <div className="relative px-4 py-6 border-t h-[240px]  border-gray-200">
+            <div className="relative px-4 py-6 border-t h-[300px] border-gray-200">
               <img
                 src="/images/Logo/menuelement.png"
                 alt="Decoration"
-                className="absolute inset-0 opacity-20 w-full  object-cover "
+                className="absolute inset-0 opacity-20 w-full object-cover"
               />
               <div className="flex flex-col space-y-4 relative">
                 <a
@@ -183,17 +182,15 @@ const Navbar = () => {
                 </a>
               </div>
 
+              <button onClick={()=>navigate('/admin/login')} className="mt-6 bg-[#F9BF02] text-[#006167] px-6 py-3 w-full rounded-lg font-bold relative">
+                Switch to admin
+              </button>
               <button className="mt-6 bg-[#F9BF02] text-[#006167] px-6 py-3 w-full rounded-lg font-bold relative">
                 Book Now
               </button>
             </div>
           </div>
-
         </div>
-
-
-
-
         <AllHotelCard hotels={hotels} isOpen={hotelOpen} onClose={() => setHotelOpen(false)} />
       </div>
     </nav>

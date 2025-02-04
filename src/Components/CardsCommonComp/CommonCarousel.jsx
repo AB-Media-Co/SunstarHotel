@@ -116,7 +116,7 @@ function Carousel({
             </div>
 
             <div
-                className={`absolute bottom-[10rem] md:left-1/2 transform md:-translate-x-1/2 flex justify-center ${NavClass}`}
+                className={`absolute bottom-[10rem]  transform md:-translate-x-1/2 flex justify-center ${NavClass}`}
             >
                 {features.map((_, index) => (
                     <button

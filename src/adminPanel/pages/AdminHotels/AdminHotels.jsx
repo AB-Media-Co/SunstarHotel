@@ -51,9 +51,11 @@ export const AdminHotels = () => {
 
   const handleAddHotel = () => navigate('/admin/addHotels');
 
-  const handleEdit = (hotelId) => {
-    navigate(`/admin/edithotels/${hotelId}`);
+  const handleEdit = (item) => {
+    console.log(item);
+    navigate(`/admin/edithotels/${item?.hotelId}`, { state: { hotelData: item } });
   };
+  
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {error.message}</p>;
@@ -67,6 +69,7 @@ export const AdminHotels = () => {
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
         onAdd={handleAddHotel}
+        showAddButton={false}
       />
 
       <DeleteConfirmationModal

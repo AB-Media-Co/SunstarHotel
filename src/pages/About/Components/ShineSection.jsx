@@ -25,13 +25,11 @@ const ShineSection = () => {
                 },
             });
 
-            // Animate the stroke to fill the circle
             timeline.to(path, {
                 strokeDashoffset: 0, // Progressively fill the circle
                 ease: "none",
             });
 
-            // Change the circle color to stay yellow after full fill
             timeline.to(path, {
                 stroke: "#FDC114", // Keep it yellow after filling
                 strokeDashoffset: 0, // Ensure it stays filled

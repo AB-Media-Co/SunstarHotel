@@ -29,16 +29,17 @@ export const useAdminRegister = () => {
 
 export const useViewAdminProfile = () => {
   return useQuery({
-    queryKey: ['adminProfile'], // Query key as an array
-    queryFn: viewProfileApi,    // Function to fetch data
+    queryKey: ['adminProfile'],
+    queryFn: viewProfileApi,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };
 
-// Hook to fetch all users
 export const useFetchAllUsers = () => {
   return useQuery({
-    queryKey: ['allUsers'],     // Query key as an array
-    queryFn: allusersApi,       // Function to fetch data
+    queryKey: ['allUsers'],
+    queryFn: allusersApi,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };
 

@@ -5,13 +5,13 @@ import { rooms, Amenities, OurClientsData, propertyData, locationData, businessP
 import AmenitiesList from "../../Components/AmenitiesList";
 import TestimonialSection from "../../Components/TestimonialSection";
 import PropertyPolicies from "./Components/PropertyPolicies";
-import Location from "./Components/Location";
 import Carousel from "../../Components/CardsCommonComp/CommonCarousel";
 import BannerSection from "../../Components/BannerSection";
 import ImageGallery from "../../Components/ImageGallery"
 import FAQSection from "./Components/FAQsection";
-const Hotels = () => {
+import MapGoogle from "./Components/MapGoogle";
 
+const Hotels = () => {
   return (
     <div>
       <Banner businessPlatformFeatures={businessPlatformFeatures} />
@@ -29,8 +29,8 @@ const Hotels = () => {
         backgroundImage={OurClientsData.backgroundImage}
       />
       <PropertyPolicies propertyData={propertyData} />
-      <Location locationData={locationData} />
-
+      {/* <Location locationData={locationData} /> */}
+      <MapGoogle locationData={locationData}/>
       <Carousel
         features={businessPlatformFeatures}
         height="h-[600px]"

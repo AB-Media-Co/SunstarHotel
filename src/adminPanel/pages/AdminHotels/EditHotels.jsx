@@ -1,20 +1,64 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Tabs from "../../Components/Tabs";
 import { Rating } from "../../Components/Rating";
 import MultipleImageUpload from "../../Components/MultipleImageUpload";
 import Select from "react-select";
 import { TrashIcon } from "lucide-react";
-import { useGetSingeHotelById, useGetAllRooms, useUploadHotelImages, useUpdateHotelById } from "../../../ApiHooks/useHotelHook";
+import { useGetAllRooms, useUploadHotelImages, useUpdateHotelById, useGetSingleHotelByEzee, useUpdateHotelByEzee } from "../../../ApiHooks/useHotelHook";
 import AmentiesData from "../../../Data/AmenitiesData";
 import toast from "react-hot-toast";
 
 const EditHotels = () => {
-    const { hotelId } = useParams();
-    const { data: hotelData, isLoading } = useGetSingeHotelById(hotelId);
-    const { data: roomsData } = useGetAllRooms();
+    const hotelsKey = useLocation();
+    const hotelApiData = hotelsKey.state?.hotelData;
+
+
+    const { data: hotelData, isLoading } = useGetSingleHotelByEzee(
+        hotelApiData?.hotelId,
+        hotelApiData?.authenticationId
+    );
+
+
+
+    useEffect(() => {
+        if (hotelData?.data) {
+            const {
+                HotelName,
+                HotelDescription,
+                Address,
+                Price,
+                DiscountedPrice,
+                Amenities,
+                Rating,
+                Images,
+                Testimonials,
+            } = hotelData.data;
+
+            setHotelName(HotelName || "");
+            setDescription(HotelDescription || "");
+            setLocation(Address || "");
+            setPrice(Price || 0);
+            setDiscountedPrice(DiscountedPrice || 0);
+            setAmmenities(Amenities?.map((amenity) => ({ value: amenity, label: amenity })) || []);
+            setRating(Rating || 0);
+            setImagesUrls(Images || []);
+            setTestimonials(
+                Testimonials.length
+                    ? Testimonials.map((testimonial) => ({
+                        name: testimonial.name || "",
+                        description: testimonial.description || "",
+                        rating: testimonial.rating || 0,
+                    }))
+                    : [{ name: "", description: "", rating: 0 }]
+            );
+        }
+    }, [hotelData]);
+
+
+
+    // const { data: roomsData } = useGetAllRooms();
     const { mutate: uploadImages, isLoading: isUploading } = useUploadHotelImages();
-    const { mutate: updateHotelData } = useUpdateHotelById();
 
 
     const [hotelName, setHotelName] = useState("");
@@ -25,52 +69,16 @@ const EditHotels = () => {
     const [ammenities, setAmmenities] = useState([]);
     const [rating, setRating] = useState(0);
     const [imagesUrls, setImagesUrls] = useState([]);
-    const [selectedRooms, setSelectedRooms] = useState([]);
+    console.log(imagesUrls);
+    // const [selectedRooms, setSelectedRooms] = useState([]);
     const [testimonials, setTestimonials] = useState([{ name: "", description: "", rating: 0 }]);
 
-    const roomOptions = roomsData?.rooms?.map((room) => ({
-        value: room._id,
-        label: `${room.roomType} ${room.roomNumber}`,
-    })) || [];
+    // const roomOptions = roomsData?.rooms?.map((room) => ({
+    //     value: room._id,
+    //     label: `${room.roomType} ${room.roomNumber}`,
+    // })) || [];
 
-    useEffect(() => {
-        if (hotelData?.hotel) {
-            const {
-                name,
-                description,
-                location,
-                price,
-                discountedPrice,
-                amenities,
-                rating,
-                images,
-                rooms,
-                testimonials,
-            } = hotelData.hotel;
-
-            setHotelName(name);
-            setDescription(description);
-            setLocation(location);
-            setPrice(price);
-            setDiscountedPrice(discountedPrice);
-            setAmmenities(amenities.map((amenity) => ({ value: amenity, label: amenity })));
-            setRating(rating);
-            setImagesUrls(images);
-            setSelectedRooms(
-                rooms.map((room) => ({
-                    value: room._id,
-                    label: `${room.roomType} ${room.roomNumber}`,
-                }))
-            );
-            setTestimonials(
-                testimonials.map(({ name, description, rating }) => ({
-                    name,
-                    description,
-                    rating,
-                }))
-            );
-        }
-    }, [hotelData]);
+    const { mutate: updateHotelByEzee } = useUpdateHotelByEzee();
 
     const handleSubmitClick = () => {
         if (!hotelName || !description || !location || price <= 0 || discountedPrice <= 0) {
@@ -78,34 +86,42 @@ const EditHotels = () => {
             return;
         }
 
-        const updatedHotelData = {
-            name: hotelName,
-            description,
-            location,
-            price: Number(price),
-            discountedPrice: Number(discountedPrice),
-            amenities: ammenities.map((amenity) => amenity.value),
-            rating: Number(rating),
-            images: imagesUrls,
-            rooms: selectedRooms.map((room) => room.value),
-            testimonials: testimonials.map((testimonial) => ({
-                ...testimonial,
+        const updateFields = {
+            HotelName: hotelName,
+            HotelDescription: description,
+            Address: location,
+            Price: Number(price),
+            DiscountedPrice: Number(discountedPrice),
+            Amenities: ammenities.map((amenity) => amenity.value),
+            Rating: Number(rating),
+            Images: imagesUrls,
+            Testimonials: testimonials.map((testimonial) => ({
+                name: testimonial.name,
+                description: testimonial.description,
                 rating: Number(testimonial.rating),
             })),
         };
 
-        console.log(hotelId, updatedHotelData);
-        
-        updateHotelData({ id: hotelId, data: updatedHotelData }, {
-            onSuccess: () => {
-                toast.success('Hotel updated successfully');
-            },
-            onError: (error) => {
-                console.error('Update Error:', error);
-                toast.error('Error: ' + (error?.message || 'Failed to update room.'));
-            },
-        });
+        const data = {
+            HotelCode: hotelData?.data?.HotelCode,
+            updateFields,
+        };
+
+        updateHotelByEzee(
+            { data },
+            {
+                onSuccess: () => {
+                    toast.success("Hotel updated successfully!");
+                },
+                onError: (error) => {
+                    console.error("Update Error:", error);
+                    toast.error(`Error: ${error?.message || "Failed to update hotel."}`);
+                },
+            }
+        );
     };
+
+
 
     const handleTestimonialChange = (index, field, value) => {
         const updatedTestimonials = testimonials.map((testimonial, i) =>
@@ -145,9 +161,9 @@ const EditHotels = () => {
         });
     };
 
-    const tabNames = ["Add Hotel", "Gallery", "Customer Reviews"];
+    const tabNames = ["Edit Hotel", "Gallery", "Customer Reviews"];
     const tabContent = {
-        "Add Hotel": (
+        "Edit Hotel": (
             <div className="space-y-6 p-6 bg-white">
 
                 <div className="flex gap-2">
@@ -192,7 +208,7 @@ const EditHotels = () => {
                             classNamePrefix="select"
                         />
                     </div>
-                    <div className="w-full">
+                    {/* <div className="w-full">
                         <label className="block text-2xl font-semibold mb-2">Select Rooms</label>
                         <Select
                             isMulti
@@ -201,7 +217,7 @@ const EditHotels = () => {
                             onChange={setSelectedRooms}
                             classNamePrefix="select"
                         />
-                    </div>
+                    </div> */}
                 </div>
 
 
@@ -296,10 +312,10 @@ const EditHotels = () => {
     if (isLoading) return <div>Loading...</div>;
 
     return (
-        <div className="bg-gray-50 min-h-screen py-4 flex flex-col pb-5">
-            <div className="flex justify-between">
-                <h1 className="text-[32px] font-bold pb-8 px-10">Edit Hotel</h1>
-                <button className="bg-gradient-to-r h-[60px] w-[150px]  from-blue-500 to-indigo-600 text-white px-2 rounded-lg shadow-md hover:shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all" onClick={handleSubmitClick}>Update</button>
+        <div className="bg-gray-50 min-h-screen py-4  pt-24 flex flex-col pb-5">
+            <div className="flex px-10 justify-between">
+                <h1 className="text-[32px] font-bold pb-8 ">Edit Hotel</h1>
+                <button className="bg-gradient-to-r h-[40px] w-[150px]  from-blue-500 to-indigo-600 text-white px-2 rounded-lg shadow-md hover:shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all" onClick={handleSubmitClick}>Update</button>
 
             </div>
             <Tabs tabNames={tabNames} tabContent={tabContent} />

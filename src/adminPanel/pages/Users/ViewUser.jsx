@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const ViewUser = () => {
   const { adminProfile, profileLoading, profileError } = useAdminContext();
+  // console.log(adminProfile,"admin")
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
   const { mutate: editProfile, isLoading: isEditingProfile } = useEditAdminProfile();

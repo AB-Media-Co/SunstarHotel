@@ -11,7 +11,10 @@ import {
   getAllRoomsAPI,
   getSingleRoomById,
   getSingleHotelById,
-  uploadImagesAPI
+  uploadImagesAPI,
+  getSingleHotelByEzee,
+  updateHotelByIdEzee,
+  getAllRoomsEzee
 } from '../Api/hotel.js';
 
 // Get Hotels
@@ -32,16 +35,6 @@ export const useAddHotel = () => {
 };
 
 
-// Update Hotel by ID
-export const useUpdateHotelById = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: updateHotelByIdAPI,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['hotels']);
-    }
-  });
-};
 
 // Delete Hotel by ID
 export const useDeleteHotelById = () => {
@@ -66,10 +59,10 @@ export const useAddRoomToHotel = () => {
 };
 
 // Get Room by ID
-export const useGetRoomById = ( roomId ) =>
+export const useGetRoomById = (roomId) =>
   useQuery({
-    queryKey: ['room',  roomId],
-    queryFn: () => getRoomByIdAPI( roomId )
+    queryKey: ['room', roomId],
+    queryFn: () => getRoomByIdAPI(roomId)
   });
 
 // Update Room by ID
@@ -97,6 +90,16 @@ export const useDeleteRoomById = () => {
     }
   });
 };
+// Update Hotel by ID
+export const useUpdateHotelById = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateHotelByIdAPI,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['hotels']);
+    }
+  });
+};
 
 // Get All Rooms
 export const useGetAllRooms = () =>
@@ -106,30 +109,63 @@ export const useGetAllRooms = () =>
   });
 
 
-export const useGetSingleRoomById = ({roomId }) =>
+export const useGetSingleRoomById = ({ roomId }) =>
   useQuery({
     queryKey: ['room', roomId],
     queryFn: () => getSingleRoomById({ roomId })
   });
 
 
-export const useGetSingeHotelById = ( hotelId ) =>
+export const useGetSingeHotelById = (hotelId) =>
   useQuery({
     queryKey: ['hotels', hotelId],
-    queryFn: () => getSingleHotelById( hotelId )
+    queryFn: () => getSingleHotelById(hotelId)
   });
 
 
-  export const useUploadHotelImages = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-      mutationFn: uploadImagesAPI,
-      onSuccess: () => {
-        queryClient.invalidateQueries(['hotels']);
-      },
-      onError: (error) => {
-        console.error('Image Upload Error:', error);
-      },
-    });
-  };
-  
+
+export const useUploadHotelImages = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: uploadImagesAPI,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['hotels']);
+      queryClient.invalidateQueries(['hotelsEzee']);
+    },
+    onError: (error) => {
+      console.error('Image Upload Error:', error);
+    },
+  });
+};
+
+// ezeee datta
+export const useGetSingleHotelByEzee = (HotelCode, APIKey) =>
+  useQuery({
+    queryKey: ['hotelsEzee', HotelCode],
+    queryFn: () => getSingleHotelByEzee(HotelCode, APIKey),
+    enabled: !!HotelCode && !!APIKey, // Run only when both HotelCode and APIKey are available
+    onError: (error) => {
+      console.error('Error fetching hotel:', error.message); // Handle errors
+    },
+  });
+
+export const useUpdateHotelByEzee = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateHotelByIdEzee,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['hotels']);
+    }
+  });
+};
+
+
+export const useGetRoomDetailsEzee = (HotelCode, AuthCode ) =>
+  useQuery({
+    queryKey: ['RoomsEzee', HotelCode],
+    queryFn: () => getAllRoomsEzee({ HotelCode, AuthCode  }), // Pass as an object
+    enabled: !!HotelCode && !!AuthCode , // Run only when both HotelCode and APIKey are available
+    onError: (error) => {
+      console.error('Error fetching Rooms:', error.message); // Handle errors
+    },
+  });

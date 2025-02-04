@@ -7,6 +7,7 @@ import { useDeleteUserProfileById, useEditUserProfileById } from "../../../ApiHo
 
 const AllUsers = () => {
     const { allUsers, isUsersLoading, usersError } = useAdminContext();
+    // console.log(allUsers,"alll")
     const navigate = useNavigate();
 
     const [editingUser, setEditingUser] = useState(null);

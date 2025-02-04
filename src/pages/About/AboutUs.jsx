@@ -21,8 +21,6 @@ const AboutUs = () => {
         title="Our Values Make Us Loved By Our Guests"
         values={valuesData}
       />
-
-
       <ShineSection />
       <CompnayCards cards={AboutUsSection5cards} />
       <TestimonialSection

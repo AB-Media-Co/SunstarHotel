@@ -1,6 +1,9 @@
 /* eslint-disable react/prop-types */
 import { Delete, Edit } from "@mui/icons-material";
 import Add from "@mui/icons-material/Add";
+import Select from 'react-select';
+
+
 
 const Card = ({ item, type, onEdit, onDelete }) => (
     <div
@@ -9,7 +12,7 @@ const Card = ({ item, type, onEdit, onDelete }) => (
     >
         <div className="absolute top-3 right-3 flex gap-2 z-10">
             <button
-                onClick={() => onEdit(item._id)}
+                onClick={() => onEdit(item)}
                 className="backdrop-blur-md bg-white/30 p-2 rounded-full shadow-lg hover:scale-110 hover:bg-blue-200 transition-all duration-300"
             >
                 <Edit fontSize="small" className="text-blue-500" />
@@ -35,7 +38,7 @@ const Card = ({ item, type, onEdit, onDelete }) => (
             <h3 className="text-2xl font-extrabold text-gray-800 mb-2">{type === 'hotel' ? item.name : `${item.roomType} - Room ${item.roomNumber}`}</h3>
             <p className="text-sm text-gray-700 mb-2 line-clamp-2">{item.description}</p>
             <div className="flex items-center justify-between mb-2">
-                <span className={`text-gray-500 text-sm ${item?.hotel?.name? 'block': 'hidden'}`}> {item?.hotel?.name ?item?.hotel?.name :''}</span>
+                <span className={`text-gray-500 text-sm ${item?.hotel?.name ? 'block' : 'hidden'}`}> {item?.hotel?.name ? item?.hotel?.name : ''}</span>
                 <span className="text-gray-500 text-sm">📍 {item.location || item.hotel?.location || 'N/A'}</span>
                 <span className="text-yellow-500 text-sm">⭐ {item.rating || 'N/A'}</span>
             </div>
@@ -75,14 +78,47 @@ const AddNewCard = ({ onClick }) => (
     </div>
 );
 
-export const Section = ({ title, data, type, onEdit, onDelete, onAdd }) => (
-    <div className="p-6 pt-24 bg-gray-100 min-h-screen">
-        <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-8">{title}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-            {data?.map(item => (
-                <Card key={item._id} item={item} type={type} onEdit={onEdit} onDelete={onDelete} />
-            ))}
-            <AddNewCard onClick={onAdd} />
+export const Section = ({
+    title,
+    data,
+    type,
+    onEdit,
+    onDelete,
+    onAdd,
+    showAddButton = true,
+    isDropdownShow = false,
+    hotels,
+    handleSelectHotel
+}) => {
+    return (
+        <div className="p-6 pt-24 bg-gray-50 min-h-screen">
+            <div className="max-w-6xl mx-auto">
+                <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-8">{title}</h2>
+
+                {/* Dropdown for Hotels */}
+                {isDropdownShow && (
+                    <div className="mb-6 max-w-md mx-auto">
+                        <Select
+                            options={hotels}
+                            onChange={handleSelectHotel}
+                            placeholder="Select a Hotel"
+                            isClearable
+                            // styles={customStyles}
+                            className="text-gray-900"
+                            defaultValue={hotels[0]}
+
+                        />
+                    </div>
+                )}
+
+                {/* Cards Section */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                    {data?.map((item) => (
+                        <Card key={item._id} item={item} type={type} onEdit={onEdit} onDelete={onDelete} />
+                    ))}
+                    {showAddButton && <AddNewCard onClick={onAdd} />}
+                </div>
+            </div>
         </div>
-    </div>
-);
+    );
+};

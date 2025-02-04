@@ -44,5 +44,4 @@ export const OtherRooms = [
       image: '/images/HotelsSectionImg/hote1.png',
       available: false
     },
-
   ];

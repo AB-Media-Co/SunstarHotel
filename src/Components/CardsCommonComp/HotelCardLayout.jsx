@@ -1,10 +1,6 @@
-// Import necessary components and hooks
-
+/* eslint-disable react/prop-types */
 import CommonButton from "../CommonButton";
 
-/* eslint-disable react/prop-types */
-
-// Common component for individual hotel cards
 const HotelCard = ({
     hotel,
     btnClass = 'bg-white hover:bg-yellow-400 w-[150px] hover:shadow-2xl hover:rounded-lg rounded-lg transition ease-in-out duration-300 mt-0',

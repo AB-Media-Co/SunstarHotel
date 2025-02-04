@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { ChevronLast, ChevronFirst } from "lucide-react";
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Hotel, LocationCity, NightShelterOutlined, PeopleAlt } from "@mui/icons-material";
 import { useAdminContext } from "../utils/AdminContext";
@@ -12,7 +12,11 @@ const SidebarContext = createContext();
 export function Sidebar() {
     const [expanded, setExpanded] = useState(true);
     const { adminProfile } = useAdminContext();
+    // console.log(adminProfile,"sidebar")
 
+    // useEffect(() => {
+    //     useAdminContext(); // Call only when this page is loaded
+    //   }, []);
     const sidebarItems = [
         { id: 1, text: 'Hotels', icon: <Hotel />, path: '/admin/hotels' },
         { id: 2, text: 'Rooms', icon: <NightShelterOutlined />, path: '/admin/rooms' },
