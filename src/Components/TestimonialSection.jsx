@@ -1,20 +1,21 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/prop-types */
 
-import useScrollAnimations from "../hooks/useScrollAnimations";
+import { motion } from "framer-motion";
 import useTextRevealAnimation from "../hooks/useTextRevealAnimation";
 import CommonSwiper from "./CommonSlider";
 
-const TestimonialSection = ({
-    title,
-    testimonials,
-    backgroundImage // Pass just one background image URL here
-}) => {
+const TestimonialSection = ({ title, testimonials, backgroundImage }) => {
     const renderItem = (item) => {
-        useTextRevealAnimation();
-        useScrollAnimations();
         return (
-            <div id="reviews" className="bg-white pb-10 rounded-[32px] p-6 shadow-lg md:text-left flex flex-col h-full">
+            <motion.div
+                id="reviews"
+                className="bg-white pb-10 rounded-[32px] p-6 shadow-lg md:text-left flex flex-col h-full"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                viewport={{ once: true }} // Ensures animation happens only once
+            >
                 <h3 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-800 mb-4">
                     {item.title}
                 </h3>
@@ -57,9 +58,11 @@ const TestimonialSection = ({
                         ))}
                     </div>
                 </div>
-            </div>
+            </motion.div>
         );
     };
+
+    useTextRevealAnimation();
 
     return (
         <div
@@ -82,7 +85,7 @@ const TestimonialSection = ({
                 renderItem={renderItem}
                 spaceBetween={30}
                 loop={false}
-                className="relative z-10  testiM"
+                className="relative z-10 testiM mySwiper"
                 slidesPerViewDesktop={3.5}
                 arrow="pt-6"
             />

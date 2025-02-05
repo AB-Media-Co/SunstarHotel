@@ -19,7 +19,7 @@ const BannerSection = ({
     useScrollAnimations();
 
     return (
-        <div className={`w-full ${bg} py-20 px-4 md:px-8 lg:px-16`}>
+        <div className={`w-full ${bg} py-8 md:py-20 px-4 md:px-8 lg:px-16`}>
             <div className={`content flex section flex-col lg:flex-row justify-between ${paddTop}`}>
                 {/* Text Section */}
                 <motion.div
@@ -29,7 +29,7 @@ const BannerSection = ({
                     transition={{ duration: 0.6, ease: "easeOut" }}
                 >
                     <h1
-                        className={`${text} ${lineh} text-reveal-animation font-bold text-${textC} mb-6 leading-snug tracking-tight`}
+                        className={`${text} ${lineh} text-reveal-animation font-bold text-${textC} mb-2 md:mb-6 leading-snug tracking-tight`}
                     >
                         {title}
                     </h1>
@@ -41,18 +41,16 @@ const BannerSection = ({
                 </motion.div>
 
                 {/* Image Section */}
-                <motion.div
+                <div
                     className="lg:w-1/2 flex animation-on-scroll justify-center items-center mt-8 lg:mt-0 relative"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
+                
                 >
                     <img
                         src={image}
                         alt="Corporate Booking Banner"
                         className={`max-w-full ${imgClass} rounded-x`}
                     />
-                </motion.div>
+                </div>
             </div>
         </div>
     );

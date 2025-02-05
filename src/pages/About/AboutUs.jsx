@@ -27,6 +27,7 @@ const AboutUs = () => {
         title={testimonialData.title}
         testimonials={testimonialData.testimonials}
         backgroundImage={testimonialData.backgroundImage}
+        
       />
       <SunstarBrandsSection hotels={hotels} />
     </div> 

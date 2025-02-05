@@ -10,6 +10,7 @@ const CorporateBooking = () => {
         data={bannerData}
         text="text-mobile/h2 md:text-desktop/h2"
         lineh="text-mobile/body/1 md:leading-[50px]"
+        paddTop="pt-[80px]"
       />
       <BannerSection
         data={WhyUsSection}

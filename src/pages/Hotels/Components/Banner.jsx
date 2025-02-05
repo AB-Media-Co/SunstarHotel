@@ -82,11 +82,11 @@ function Banner({ businessPlatformFeatures }) {
       >
         <div className="w-full flex flex-col items-center">
           {/* Top Section: Dates and Guests */}
-          <div className="flex flex-wrap justify-center md:px-4 md:space-x-6 lg:justify-between items-center w-full  space-y-4 md:space-y-0 space-x-0 ">
+          <div className="flex gap-2 justify-center  md:px-4 md:space-x-6 lg:justify-between items-center w-full   md:space-y-0 space-x-0 ">
             <div className="flex gap-8">
               <div
                 onClick={() => setOpenCalender(true)}
-                className="flex flex-wrap items-center border border-[#006167] rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"
+                className="flex px-[10px] py-[4px]  items-center border border-[#006167] rounded-full hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"
               >
                 <Icon name="calendar" className="h-6 w-6 text-[#006167]" />
                 <span className="text-mobile/body/2 md:text-desktop/body/1 text-[#006167] font-semibold">
@@ -106,13 +106,13 @@ function Banner({ businessPlatformFeatures }) {
 
             </div>
 
-            <div className="flex gap-6">
+            <div className="flex gap-2 md:gap-6">
               <div className="lg:hidden">
                 <GuestsDropdown />
               </div>
               <button
                 onClick={handleBooking}
-                className="bg-[#006167] text-white lg:w-[180px] text-mobile/button md:text-desktop/h4 rounded-full shadow-md px-6 md:px-6 md:py-3"
+                className="bg-[#006167]  text-white lg:w-[180px] text-mobile/button md:text-desktop/h4 rounded-full shadow-md px-6 md:px-6 md:py-3"
               >
                 Select
               </button>

@@ -40,14 +40,15 @@ const useScrollAnimations = () => {
           ease: "power4.out",
           scrollTrigger: {
             trigger: box,
-            start: "top 80%", // Trigger when 80% of element is visible
-            toggleActions: "play none none reverse", // Play animation when in view
-            scrub: 1, // Tied to scroll for smoother experience
-            markers: false, // Remove markers in production for clean design
+            start: "top 100%", // Adjusted for mobile
+            toggleActions: "play none none reverse",
+            scrub: 1,
+            markers: false,
           }
         }
       );
     });
+    
 
     // **Card Fade-In Animation with Delay for Each Card**
     gsap.utils.toArray(".swiper-slide").forEach((slide, index) => {

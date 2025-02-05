@@ -40,8 +40,8 @@ const Hotels = () => {
         className='hidden'
         autoPlay={true}
       />
-      <BannerSection data={AbouSunstartGrand} text='text-desktop/h2' imgClass="rounded-[20px] h-[350px]" textC="black"
-        ptext='[26px]' lineh='[60px]' bg='bg-white' paddTop='0 items-start gap-10' />
+      <BannerSection data={AbouSunstartGrand} text='text-[26px] md:text-desktop/h2' imgClass="rounded-[20px] h-[350px]" textC="black"
+        ptext=' text-[14px] md:text-[18px]' lineh='[60px]' bg='bg-white' paddTop='0 items-start gap-10' />
 
       <div className="relative z-10 w-full">
         <ImageGallery breakpointColumnsObj={HotelPageImgGallery.breakpointColumnsObj} items={HotelPageImgGallery.items} />

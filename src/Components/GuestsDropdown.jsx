@@ -55,7 +55,7 @@ const GuestsDropdown = ({ dropdownDirection = "down", classBg = 'bg-white' }) =>
 
             {showDropdown && (
                 <div
-                    className={`absolute z-20 bg-white border border-gray-200 rounded-md shadow-lg p-4 w-full sm:w-64 ${dropdownDirection === "up" ? "bottom-full mb-2" : "top-full mt-2"
+                    className={`absolute z-20 bg-white border border-gray-200 rounded-md shadow-lg px-[5px] py-[10px] md:p-4 w-full sm:w-64 ${dropdownDirection === "up" ? "bottom-full mb-2" : "top-full mt-2"
                         }`}
                 >
                     {/* Dropdown Items */}
