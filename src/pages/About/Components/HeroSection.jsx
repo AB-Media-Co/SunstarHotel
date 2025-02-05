@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-
+import { motion } from "framer-motion";
 import useScrollAnimations from "../../../hooks/useScrollAnimations";
 import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
 
@@ -9,47 +9,63 @@ const HeroSection = ({ title, highlightText, description, imageSrc }) => {
     useScrollAnimations("#section1");
 
     return (
-        <div className="w-full bg-[#6EC4C2] py-10 px-4 md:px-8 pt-32 lg:px-16">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex flex-col lg:flex-row items-center justify-between">
-                    {/* Left Text Section */}
-                    <div className="md:w-[750px] mb-8 md:mb-0">
-                        <h1 className="text-mobile/h2 md:text-desktop/h2 font-bold mb-4 text-shadow-lg ">
-                            {words.map((word, index) => {
-                                const shouldHighlight = highlightText?.includes(word);
-                                return (
-                                    <span
-                                        key={index}
-                                        className={`${
-                                            shouldHighlight
-                                                ? "text-[#FDC114] text-reveal-animation"
-                                                : "text-white text-reveal-animation"
-                                        }`}
-                                    >
-                                        {index > 0 && " "}
-                                        {word}
-                                    </span>
-                                );
-                            })}
-                        </h1>
-                        <p className="text-mobile/body/2 md:text-desktop/body/large text-white mb-6 whitespace-pre-line animation-on-scroll-Section1">
-                            {description}
-                        </p>
-                    </div>
-                    {/* Right Image Section */}
-                    <div className="md:w-1/2 flex justify-center md:justify-end">
-                        <div className="relative animation-on-scroll inline-block">
-                            {/* Background Shape */}
-                            <div className="absolute -bottom-8 right-0 md:-right-8 bg-yellow-400 rounded-full h-32 w-32 md:h-48 md:w-48" />
-                            {/* Dynamic Image */}
-                            <img
-                                src={imageSrc}
-                                alt="Travel representation"
-                                className=""
-                            />
-                        </div>
-                    </div>
-                </div>
+        <div className="w-full bg-[#6EC4C2] py-20 px-6 md:px-12 lg:px-20 relative overflow-hidden">
+            <div className="max-w-7xl mx-auto flex flex-col md:pt-20 lg:flex-row items-center justify-between gap-12">
+                {/* Left Text Section */}
+                <motion.div 
+                    initial={{ opacity: 0, x: -50 }} 
+                    animate={{ opacity: 1, x: 0 }} 
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="lg:w-1/2 text-center lg:text-left"
+                >
+                    <h1 className="text-mobile/h2 md:text-desktop/h2 md:text-[47px]  text-white  mb-6">
+                        {words.map((word, index) => {
+                            const shouldHighlight = highlightText?.includes(word);
+                            return (
+                                <motion.span
+                                    key={index}
+                                    className={`${
+                                        shouldHighlight
+                                            ? "text-[#FDC114] text-reveal-animation"
+                                            : "text-white text-reveal-animation"
+                                    }`}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1, duration: 0.3 }}
+                                >
+                                    {index > 0 && " "}
+                                    {word}
+                                </motion.span>
+                            );
+                        })}
+                    </h1>
+                    <p className="text-mobile/body/2 md:text-desktop/body/large text-white mb-6 whitespace-pre-line animation-on-scroll-Section1 leading-relaxed">
+                        {description}
+                    </p>
+                </motion.div>
+
+                {/* Right Image Section */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }} 
+                    animate={{ opacity: 1, scale: 1 }} 
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    className="lg:w-1/2 flex justify-center lg:justify-end relative"
+                >
+                    {/* Background Shape */}
+                    <motion.div 
+                        initial={{ scale: 0, rotate: 90 }} 
+                        animate={{ scale: 1, rotate: 0 }} 
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="absolute -bottom-8 right-0 md:-right-8 bg-yellow-400 rounded-full h-32 w-32 md:h-48 md:w-48"
+                    />
+                    
+                    {/* Dynamic Image with Styling */}
+                    <motion.img
+                        src={imageSrc}
+                        alt="Travel representation"
+                        className="relative rounded-lg  max-w-full object-cover hover:scale-105 transition-transform duration-300 ease-in-out"
+                    />
+                </motion.div>
             </div>
         </div>
     );

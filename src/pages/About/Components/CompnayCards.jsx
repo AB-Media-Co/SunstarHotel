@@ -13,7 +13,7 @@ const Card = ({ image, title, description }) => {
                 className="h-[240px] w-full rounded-t-lg shadow-xl object-cover"
             />
             <div className={`p-4 py-6 text-left   bg-custom-bg bg-cover bg-left`}>
-                <h3 className="text-mobile/h5 bg-[#6BC0BE] md:text-desktop/h5/medium font-bold text-white rounded-lg p-2 px-4  shadow-2xl absolute top-56 mx-auto">
+                <h3 className="text-mobile/h5 bg-[#6BC0BE] md:text-desktop/h5/medium font-bold text-white rounded-lg p-2 px-4 left-2  shadow-2xl absolute top-56 mx-auto">
                     {title}
                 </h3>
                 <p className="mt-2 text-mobile/body/2 md:text-desktop/body/1 text-[#A4A4A4]">
@@ -31,7 +31,7 @@ const CompnayCards = (cards) => {
 
     return (
         <div className="py-12 flex flex-col gap-8  content">
-            <h1 className="text-mobile/h1 text-center md:text-left text-[#6EC4C2] text-reveal-animation">What We’re Offering </h1>
+            <h1 className="text-mobile/h1 text-center md:text-left text-black text-reveal-animation">What We’re Offering </h1>
             <div className="flex justify-center md:justify-between  flex-wrap gap-10 hotelSelection">
                 {cards?.cards?.map((card, index) => (
                     <Card

@@ -47,7 +47,7 @@ const Section1 = ({ section1Data }) => {
     }, [currentWord, isDeleting, index, words, delay]);
 
     return (
-        <div className="relative z-10">
+        <div className="relative z-10 overflow-hidden md:overflow-visible">
             {/* Background Image */}
             <img
                 src={images.desktop}
@@ -58,6 +58,12 @@ const Section1 = ({ section1Data }) => {
                 src={images.mobile}
                 alt="Hotel Sunstar Grand Exterior"
                 className="w-full h-[650px] object-cover md:hidden"
+            />
+
+            <img
+                src="images/HomepageImages/round.png"
+                alt=""
+                className="md:z-10  absolute right-0 md:right-[4rem] top-[33rem] md:top-[30rem] w-[65%] md:w-[23%] animate-spin-slow"
             />
 
             <div className="absolute top-0 left-0 w-full h-full bg-black opacity-[0.4]"></div>
@@ -85,6 +91,8 @@ const Section1 = ({ section1Data }) => {
                 </div>
                 <AllHotelCard hotels={hotels} isOpen={hotelOpen} onClose={() => setHotelOpen(false)} />
             </div>
+
+
         </div>
     );
 };

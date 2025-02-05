@@ -8,9 +8,9 @@ const Card = ({ image, title, description }) => {
       <img
         src={image}
         alt={title}
-        className="h-[400px] w-full object-cover"
+        className="h-[350px] w-full object-cover"
       />
-      <div className="md:px-6 h-36 md:h-64 md:py-10 py-3 px-4  bg-custom-bg bg-cover bg-left text-left shadow-lg bg-white rounded-b-[20px] top-[-22px] relative">
+      <div className="md:px-6 h-36 md:h-[12rem] md:py-8 py-3 px-4  bg-custom-bg bg-cover bg-left text-left shadow-lg bg-white rounded-b-[20px] top-[-22px] relative">
         <h3 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-800">
           {title}
         </h3>
@@ -34,7 +34,7 @@ const Section5 = ({ cards }) => {
 
   return (
     <div className="swiper-container bg-[#BAE9EF]">
-      <div className="md:py-20 py-10 p-5 content">
+      <div className=" pt-12 p-5 content">
         <CommonSwiper
           items={cards}
           renderItem={renderCard}

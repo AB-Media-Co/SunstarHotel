@@ -8,7 +8,7 @@ const Sec3CardSlider = ({ sec3CardSliderData }) => {
     const renderItem = (item) => (
         <div className="max-w-full sm:max-w-lg relative">
             <div
-                className="h-[300px] md:h-[361px] bg-cover rounded-lg bg-center"
+                className="h-[300px] md:h-[280px] bg-cover rounded-lg bg-center"
                 style={{ backgroundImage: `url(${item.image})` }}
                 role="img"
                 aria-label={item.title || "Feature image"}

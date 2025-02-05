@@ -72,7 +72,7 @@ const TestimonialSection = ({
             }}
         >
             {/* Section Heading */}
-            <h2 className="text-mobile/h4 md:text-desktop/h3 font-bold text-gray-900 mb-8 text-reveal-animation">
+            <h2 className="text-mobile/h4 md:text-desktop/h2 md:text-[40px] text-gray-900 mb-8 text-reveal-animation">
                 {title}
             </h2>
 
@@ -82,8 +82,9 @@ const TestimonialSection = ({
                 renderItem={renderItem}
                 spaceBetween={30}
                 loop={false}
-                className="relative z-10 mt-8 testiM"
+                className="relative z-10  testiM"
                 slidesPerViewDesktop={3.5}
+                arrow="pt-6"
             />
         </div>
     );

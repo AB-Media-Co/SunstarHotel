@@ -14,6 +14,7 @@ const CommonSwiper = ({
   loop = true,
   className = "",
   slidesPerViewDesktop = 3,
+  arrow=''
 }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
@@ -129,7 +130,7 @@ const CommonSwiper = ({
         ))}
       </Swiper>
 
-      <div className="hidden justify-end gap-8 px-10 pt-8 lg:flex">
+      <div className={`hidden justify-end gap-8   lg:flex ${arrow}`}>
         <button
           ref={prevRef}
           className={`p-4 rounded-full custom-prev-button flex ${isFirstSlide ? "bg-gray-300 disabled cursor-not-allowed" : "bg-[#FDC114]"

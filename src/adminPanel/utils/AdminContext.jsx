@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useViewAdminProfile, useFetchAllUsers } from '../../ApiHooks/useAdminHooks.js';
 
 const AdminContext = createContext();
@@ -9,28 +9,33 @@ export const AdminProvider = ({ children }) => {
   const [allUsers, setAllUsers] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchAdminProfile = async () => {
-    setLoading(true);
-    try {
-      const data = await useViewAdminProfile();
-      setAdminProfile(data);
-    } catch (error) {
-      console.error("Error fetching admin profile:", error);
-    } finally {
-      setLoading(false);
+  const { data: adminProfileData, error: adminProfileError } = useViewAdminProfile();
+  const { data: allUsersData, error: allUsersError } = useFetchAllUsers();
+
+  useEffect(() => {
+    if (adminProfileError) {
+      console.error("Error fetching admin profile:", adminProfileError);
+    } else {
+      setAdminProfile(adminProfileData);
     }
+  }, [adminProfileData, adminProfileError]);
+
+  useEffect(() => {
+    if (allUsersError) {
+      console.error("Error fetching users:", allUsersError);
+    } else {
+      setAllUsers(allUsersData);
+    }
+  }, [allUsersData, allUsersError]);
+
+  const fetchAdminProfile = () => {
+    setLoading(true);
+    // Admin profile fetching logic is now handled by the useViewAdminProfile hook
   };
 
-  const fetchAllUsers = async () => {
+  const fetchAllUsers = () => {
     setLoading(true);
-    try {
-      const data = await useFetchAllUsers();
-      setAllUsers(data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    } finally {
-      setLoading(false);
-    }
+    // Fetching users is now handled by useFetchAllUsers hook
   };
 
   return (

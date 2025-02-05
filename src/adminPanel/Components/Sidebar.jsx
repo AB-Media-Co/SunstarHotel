@@ -12,7 +12,7 @@ const SidebarContext = createContext();
 export function Sidebar() {
     const [expanded, setExpanded] = useState(true);
     const { adminProfile } = useAdminContext();
-    // console.log(adminProfile,"sidebar")
+    console.log(adminProfile,"sidebar")
 
     // useEffect(() => {
     //     useAdminContext(); // Call only when this page is loaded

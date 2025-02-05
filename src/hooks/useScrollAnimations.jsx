@@ -7,138 +7,127 @@ gsap.registerPlugin(ScrollTrigger);
 
 const useScrollAnimations = () => {
   useEffect(() => {
-    // **Header Animation**
+    // **Header Animation: Fade In Smoothly**
     gsap.from(".home header", {
       opacity: 0,
       y: -100,
       duration: 1.5,
       ease: "power4.out",
+      delay: 0.2, // Slight delay to create a smooth sequence
     });
 
-    // **Main Section Animation**
+    // **Main Section Fade-In with Stagger Effect**
     gsap.from(".home .main h1, .home .main p, .home .main .search", {
       opacity: 0,
       y: 100,
       duration: 1.5,
       ease: "power4.out",
-      stagger: 0.3, // Staggered animation for multiple elements
+      stagger: 0.3, // Stagger elements for smoother sequencing
+      delay: 0.5, // Delay for smoother sequencing
     });
 
-    // **Scroll-triggered animations** for elements with 'animation-on-scroll' class
+    // **Fade-In Scroll Animation for Scroll-Triggered Elements**
     gsap.utils.toArray(".animation-on-scroll").forEach((box) => {
       gsap.fromTo(box, 
         {
           opacity: 0,
-          x: 0, 
-          y: 100,
-          scale: 0.9 
+          y: 50,
         },
         {
           opacity: 1,
-          x: 0, 
-          y: 0, 
-          scale: 1,
+          y: 0,
           duration: 1.5,
           ease: "power4.out",
           scrollTrigger: {
             trigger: box,
-            start: "top 100%", // Trigger when 75% of element is in view
-            toggleActions: "play none none reverse", // Play animation when scrolled into view
-          }
-        }
-      );
-    });
-    gsap.utils.toArray(".animation-on-scroll-Section1").forEach((box) => {
-      gsap.fromTo(box, 
-        {
-          opacity: 0,
-          x: 0, 
-          y: 65,
-          scale: 0.9 
-        },
-        {
-          opacity: 1,
-          x: 0, 
-          y: 0, 
-          scale: 1,
-          duration: 1.5,
-          // ease: "power.out",
-          scrollTrigger: {
-            trigger: box,
-            start: "top bottom", // Trigger as soon as the top of the element enters the viewport
-            toggleActions: "play none none none", // Play animation when scrolled into view
+            start: "top 80%", // Trigger when 80% of element is visible
+            toggleActions: "play none none reverse", // Play animation when in view
+            scrub: 1, // Tied to scroll for smoother experience
+            markers: false, // Remove markers in production for clean design
           }
         }
       );
     });
 
-    // **Card Slide-in Animation**
+    // **Card Fade-In Animation with Delay for Each Card**
     gsap.utils.toArray(".swiper-slide").forEach((slide, index) => {
       gsap.fromTo(slide, 
         {
           opacity: 0,
           y: 50,
-          scale: 0.9
         }, 
         {
           opacity: 1,
           y: 0,
-          scale: 1,
           duration: 1,
-          delay: index * 0.1, // Delay for staggered effect
+          delay: index * 0.1, // Stagger effect
           ease: "power4.out",
           scrollTrigger: {
             trigger: slide,
-            start: "top 75%", // Animation will start when 80% of slide is in view
-            toggleActions: "play none none reverse", // Play animation when scrolled into view
+            start: "top 80%", // Trigger when 80% of the slide is visible
+            toggleActions: "play none none reverse",
+            scrub: 0.5, // Tied to scroll for a smoother feel
+            markers: false, // Remove markers in production
           }
         }
       );
     });
 
+    // **Zoom-In Animation for Images (Fade and Slight Zoom-In)**
     gsap.utils.toArray(".zoom-in-on-scroll").forEach((image) => {
       gsap.fromTo(image, 
         {
-          scale: 1, 
-          opacity: 0 
+          opacity: 0, 
+          scale: 0.9,
         }, 
         {
-          scale: 1, 
-          opacity: 1, 
-          duration: 1, 
+          opacity: 1,
+          scale: 1,
+          duration: 1,
           ease: "power4.out",
           scrollTrigger: {
             trigger: image,
-            start: "top 80%", // Start animation when 80% of the image is in view
-            toggleActions: "play none none reverse", // Reverse the animation on scroll back
+            start: "top 80%", // Trigger when 80% of the image is visible
+            toggleActions: "play none none reverse",
+            scrub: 0.5,
+            markers: false,
           }
         }
       );
     });
 
+    // **Wave Card Fade-In with Stagger Effect**
     gsap.utils.toArray(".wave-card").forEach((card) => {
       gsap.fromTo(card, 
-           {
+        {
           opacity: 0,
-          y: 100, // All cards will come from bottom
-          rotation: 10 // Add a slight rotation for the "wave" effect
+          y: 100, // Cards will fade in from the bottom
         }, 
         {
           opacity: 1,
           y: 0,
-          rotation: 0,
           duration: 2,
           ease: "power4.out",
-          stagger: 0.2, // Each card will have a 0.2s stagger delay
+          stagger: 0.2, // Cards fade in sequentially
           scrollTrigger: {
             trigger: card,
-            start: "top 99%", // Animation will start when 80% of the container is in view
-            toggleActions: "play none none reverse", // No reverse on scroll back
-            markers: false, // Enable to debug
+            start: "top 99%", // Start when the container is mostly in view
+            toggleActions: "play none none reverse",
+            scrub: 0.5,
+            markers: false,
           }
         }
-
       );
+    });
+
+    // **Hover Effects: Subtle Fade**
+    gsap.utils.toArray(".hover-effect").forEach((el) => {
+      el.addEventListener("mouseenter", () => {
+        gsap.to(el, { opacity: 0.8, duration: 0.3, ease: "power3.out" });
+      });
+      el.addEventListener("mouseleave", () => {
+        gsap.to(el, { opacity: 1, duration: 0.3, ease: "power3.in" });
+      });
     });
 
   }, []);

@@ -15,7 +15,7 @@ const CorporateBooking = () => {
         data={WhyUsSection}
         text="text-mobile/h3 md:text-desktop/h3"
         textC="black"
-        ptext="text-mobile/body/2 md:text-desktop/body/large"
+        ptext="text-mobile/body/2 md:text-[16px]"
         lineh="text-mobile/body/1 md:leading-[50px]"
         bg="bg-white"
         paddTop="pt-0"

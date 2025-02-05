@@ -29,7 +29,7 @@ const AboutUs = () => {
         backgroundImage={testimonialData.backgroundImage}
       />
       <SunstarBrandsSection hotels={hotels} />
-    </div>
+    </div> 
   )
 }
 

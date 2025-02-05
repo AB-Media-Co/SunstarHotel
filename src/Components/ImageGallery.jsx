@@ -1,55 +1,82 @@
 /* eslint-disable react/prop-types */
+// import Marquee from "react-fast-marquee";
+
+// const ImageGallery = ({  items }) => {
+
+
+//     return (
+//         <Marquee gradient={false} >
+//         <div className="px-2 sm:px-4">
+//           <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+//             {items.map((item) => {
+//               if (item.type === "image") {
+//                 return (
+//                   <img
+//                     key={item.id}
+//                     src={item.src}
+//                     alt=""
+//                     className="w-full rounded-xl shadow mb-4"
+//                   />
+//                 );
+//               }
+//               if (item.type === "div") {
+//                 return (
+//                   <div
+//                     key={item.id}
+//                     className={`mb-4 p-4 h-[230px] flex justify-center items-center text-white text-center font-bold rounded-xl shadow ${item.bg}`}
+//                   >
+//                     {item.content}
+//                   </div>
+//                 );
+//               }
+//               return null;
+//             })}
+//           </div>
+//         </div>
+//       </Marquee>
+//     );
+// };
+
+// export default ImageGallery;
+
+
+
+/* eslint-disable react/prop-types */
 import Marquee from "react-fast-marquee";
-import Masonry from "react-masonry-css";
 
-const ImageGallery = ({ breakpointColumnsObj, items,rowCountMobile }) => {
-    const isMobile = window.innerWidth <= 500;
-    const rowCount = isMobile ? rowCountMobile : items.length;
-
+const ImageGallery = ({ items }) => {
     return (
-        <Marquee>
-            <div className="w-full flex overflow-hidden px-4">
-                <Masonry
-                    breakpointCols={breakpointColumnsObj}
-                    className="my-masonry-grid gap-4"
-                    columnClassName="my-masonry-grid_column"
-                >
-                    {items.slice(0, rowCount).map((item, index) => (
-                        item.type === "image" ? (
-                            <img
-                                key={index}
-                                src={item.src}
-                                alt={`Item ${index}`}
-                                className="rounded-lg shadow-md transition-transform transform hover:shadow-lg mb-4 object-cover"
-                                style={{
-                                    width: "100%",
-                                    height: `auto`, // Maintain aspect ratio for mobile view
-                                    maxHeight: `${item.height}px`,
-                                    objectFit: "cover",
-                                }}
-                                loading="lazy"
-                            />
-                        ) : (
-                            <div
-                                key={index}
-                                style={{
-                                    height: `${item.height}px`,
-                                    backgroundColor: item.bg || "#ccc",
-                                }}
-                                className={`flex items-center justify-center rounded-lg shadow-md mb-4 text-center transition-transform transform hover:shadow-lg ${item.bg}`}
-                            >
-                                <span
-                                    className="text-white text-xl font-semibold px-4"
-                                    style={{
-                                        fontSize: "clamp(1rem, 2.5vw, 1.5rem)",
-                                    }}
+        <Marquee gradient={false} speed={50} >
+            <div className="px-2 sm:px-4">
+                <div className="columns-2 sm:columns-3 md:columns-4 gap-4">
+                    {items.map((item, index) => {
+                        const dynamicHeight = index % 2 === 0 ? "h-64" : "h-80"; // Alternate heights for interest
+
+                        if (item.type === "image") {
+                            return (
+                                <img
+                                    key={item.id}
+                                    src={item.src}
+                                    alt=""
+                                    className="w-full rounded-xl shadow mb-4"
+                                />
+                            );
+                        }
+
+                        if (item.type === "div") {
+                            return (
+                                <div
+                                    key={item.id}
+                                    className={`p-4 ${dynamicHeight} flex justify-center items-center text-white my-2 text-center font-bold rounded-xl shadow-lg  transition-all duration-300 ${item.bg}`}
                                 >
-                                    {item.content || "Content Unavailable"}
-                                </span>
-                            </div>
-                        )
-                    ))}
-                </Masonry>
+                                    {item.content}
+                                </div>
+                            );
+                        }
+
+                        return null;
+                    })}
+                </div>
             </div>
         </Marquee>
     );

@@ -11,6 +11,7 @@ import { TrashIcon } from 'lucide-react';
 
 const EditRooms = () => {
     const { roomId } = useParams(); // Extract roomId from URL params
+    console.log(roomId)
     const { data, isLoading, isError, error } = useGetRoomById(roomId);
     const { data: hotels } = useGetHotels(); // Fetch all hotels for dropdown
     const { mutate: uploadImages, isLoading: isUploading } = useUploadHotelImages();
