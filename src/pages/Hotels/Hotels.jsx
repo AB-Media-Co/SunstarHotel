@@ -43,7 +43,7 @@ const Hotels = () => {
       <BannerSection data={AbouSunstartGrand} text='text-[26px] md:text-desktop/h2' imgClass="rounded-[20px] h-[350px]" textC="black"
         ptext=' text-[14px] md:text-[18px]' lineh='[60px]' bg='bg-white' paddTop='0 items-start gap-10' />
 
-      <div className="relative z-10 w-full">
+      <div className="relative z-10 content">
         <ImageGallery breakpointColumnsObj={HotelPageImgGallery.breakpointColumnsObj} items={HotelPageImgGallery.items} />
       </div>
 

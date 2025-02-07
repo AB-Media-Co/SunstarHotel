@@ -11,11 +11,8 @@ const Banner = () => {
         }}
       />
 
-      {/* Enhanced Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-
       {/* Content */}
-      <div className="relative z-10 content h-full flex flex-col justify-end px-6 pb-6 md:px-12 md:pb-16">
+      <div className="relative z-10 content h-full flex flex-col justify-end px-6 pb-6 md:px-12 ">
         <h1 className="text-white text-3xl md:text-5xl font-bold drop-shadow-xl mb-4">
           Need to get in touch?
         </h1>
@@ -25,28 +22,39 @@ const Banner = () => {
               name="rotatePhone"
               className="w-8 h-8 md:w-10 md:h-10 transition-transform duration-300 hover:scale-110"
             />
-            <span className="text-white text-base md:text-lg font-medium">
+            <a
+              href="tel:+915845965840"
+              className="text-white text-base md:text-lg font-medium hover:underline"
+            >
               +915845965840
-            </span>
+            </a>
           </div>
           <div className="flex items-center gap-3">
             <Icon
               name="email"
               className="w-8 h-8 md:w-10 md:h-10 transition-transform duration-300 hover:scale-110"
             />
-            <span className="text-white text-base md:text-lg font-medium">
-              help@sunstar.com
-            </span>
+            <a
+              href="mailto:ktaneja@sunstarhospitality.com"
+              className="text-white text-base md:text-lg font-medium hover:underline"
+            >
+             ktaneja@sunstarhospitality.com
+            </a>
           </div>
         </div>
         <p className="text-white text-sm md:text-base mt-6 drop-shadow">
-          For assistance with bookings, cancellations, etc. mail us on{" "}
-          <span className="underline font-semibold">book@sunstar.com</span>
+          For assistance with bookings, cancellations, etc. mail us on
+          <a
+            href="mailto:ktaneja@sunstarhospitality.com"
+            className="underline font-semibold ml-1"
+          >
+            ktaneja@sunstarhospitality.com
+          </a>
         </p>
         {/* Call to Action Button */}
         <div className="mt-6">
           <a
-            href="#contact" // Adjust the href as needed for your site
+            href="#contact"
             className="inline-flex items-center px-6 py-3 bg-white text-[#6EC4C3] font-semibold rounded-full shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
           >
             <span>Contact Us</span>

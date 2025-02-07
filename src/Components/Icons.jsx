@@ -69,6 +69,11 @@ const Icon = ({ name, className = 'w-6 h-6' }) => {
     generalChat: '/images/Icons/generalChat.svg',
     corporate: '/images/Icons/corporate.svg',
     builders: '/images/Icons/builders.svg',
+    discount: '/images/Icons/discount.svg',
+    rest: '/images/Icons/rest.svg',
+    planeH: '/images/Icons/planeH.svg',
+    metro: '/images/Icons/metro.svg',
+    location_on: '/images/Icons/location_on.svg',
   };
 
   const iconPath = icons[name];

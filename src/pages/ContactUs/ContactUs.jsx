@@ -3,7 +3,6 @@ import Banner from "./Components/Banner"
 import HotelsInfo from "./Components/HotelsInfo"
 import InstagramData from "./Components/InstagramData"
 import OtherEnquiries from "./Components/OtherEnquiries"
-import StayInTheLoop from "./Components/StayInLoop"
 
 const ContactUs = () => {
     return (

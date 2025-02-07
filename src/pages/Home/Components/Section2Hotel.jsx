@@ -26,7 +26,7 @@ const Section2Hotel = ({ section2HotelData }) => {
             </div>
 
             {/* Card Slider */}
-            <div className="w-full content pb-5 overflow-hidden">
+            <div className="w-full content  overflow-hidden">
                 <CardSlider />
             </div>
         </div>

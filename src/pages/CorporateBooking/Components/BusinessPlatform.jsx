@@ -9,7 +9,7 @@ const BusinessPlatform = ({ features }) => {
   useScrollAnimations();
   return (
     <div className="w-full py-10 px-4 content">
-      <h2 className="text-mobile/h4  md:text-desktop/h3 font-bold text-black text-center md:text-left mb-8 text-reveal-animation">
+      <h2 className="text-mobile/h4  md:text-desktop/h3 font-bold md:font-bold text-black text-center md:text-left mb-8 text-reveal-animation">
         The Most Complete Business Platform
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

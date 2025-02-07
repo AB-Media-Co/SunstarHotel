@@ -396,12 +396,12 @@ padding-top: 5px;
   transform: translateY(100px);
   will-change: opacity, transform;
 }
-
+/* 
 .swiper-slide {
   opacity: 0; 
   transform: translateY(50px) scale(0.9); 
   will-change: opacity, transform;
-}
+} */
 
 .zoom-in-on-scroll {
   transform: scale(0.8);
@@ -524,4 +524,10 @@ padding-top: 5px;
 
 .animate-spin-slow {
   animation: spinSlow 10s linear infinite;
+}
+
+
+
+.testimonial .swiper-slide {
+  width: 550px !important;
 }

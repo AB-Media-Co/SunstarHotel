@@ -16,6 +16,7 @@ const CommonSwiper = ({
   slidesPerViewDesktop = 3,
   arrow=''
 }) => {
+  
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const swiperRef = useRef(null);

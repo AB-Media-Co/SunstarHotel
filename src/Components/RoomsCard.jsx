@@ -5,7 +5,7 @@ import useScrollAnimations from "../hooks/useScrollAnimations";
 import useTextRevealAnimation from "../hooks/useTextRevealAnimation";
 import Icon from "./Icons";
 
-const RoomsCard = ({ room }) => { 
+const RoomsCard = ({ room }) => {
     const navigate = useNavigate();
 
     // Initialize animations
@@ -54,12 +54,12 @@ const RoomsCard = ({ room }) => {
                         <Icon name="beds" className="w-7 h-7" />
                         <span className="font-semibold">{room.beds}</span>
                     </div>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Icon name="sqFt" className="w-7 h-7" />
-                    <p className="text-mobile/body/2 md:text-desktop/body/1 text-gray-600 font-semibold">
-                        {room.area}
-                    </p>
+                    <div className="flex items-center gap-2">
+                        <Icon name="sqFt" className="w-7 h-7" />
+                        <p className="text-mobile/body/2 md:text-desktop/body/1 text-gray-600 font-semibold">
+                            {room.area}
+                        </p>
+                    </div>
                 </div>
 
                 {/* Room Pricing and Booking */}
@@ -67,27 +67,26 @@ const RoomsCard = ({ room }) => {
                     {/* Pricing Section */}
                     <div>
                         {room.originalPrice && (
-                            <p className="text-mobile/body/1 md:text-desktop/h6/medium text-gray-500 font-bold line-through">
+                            <p className="text-mobile/body/1 md:text-desktop/h6/medium text-red-500 font-bold line-through">
                                 {room.originalPrice}
                             </p>
                         )}
-                        <p className="text-mobile/h5 md:text-desktop/h5 font-bold text-[#009368]">
+                        <p className="text-mobile/h5 md:text-desktop/h5 font-bold text-[#058FA2]">
                             {room.price}
                             <span className="text-mobile/body/2 md:text-desktop/caption text-gray-600 font-normal">
                                 /night
-                                <br />
-                                <span className="text-gray-500">incl. Taxes</span>
+                              
+                                <span className="text-gray-500 ml-2">incl. Taxes</span>
                             </span>
                         </p>
                     </div>
 
                     {/* Booking Button */}
                     <button
-                        className={`mt-4 h-[40px] px-4 py-2 text-mobile/button md:text-desktop/button font-bold rounded ${
-                            room.available
+                        className={`mt-4 h-[40px] px-4 py-2 text-mobile/button md:text-desktop/button font-bold rounded ${room.available
                                 ? "bg-yellow-400 hover:bg-yellow-500 text-[#058FA2]"
                                 : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                        }`}
+                            }`}
                         onClick={handleBooking}
                         disabled={!room.available}
                     >

@@ -53,7 +53,7 @@ export const AdminHotels = () => {
 
   const handleEdit = (item) => {
     console.log(item);
-    navigate(`/admin/edithotels/${item?.hotelId}`, { state: { hotelData: item } });
+    navigate(`/admin/edithotels/${item?.hotelID}`, { state: { hotelData: item } });
   };
   
 

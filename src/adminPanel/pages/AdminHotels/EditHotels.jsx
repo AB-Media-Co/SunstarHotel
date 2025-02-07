@@ -1,25 +1,35 @@
 import { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Tabs from "../../Components/Tabs";
 import { Rating } from "../../Components/Rating";
 import MultipleImageUpload from "../../Components/MultipleImageUpload";
 import Select from "react-select";
 import { TrashIcon } from "lucide-react";
-import { useGetAllRooms, useUploadHotelImages, useUpdateHotelById, useGetSingleHotelByEzee, useUpdateHotelByEzee } from "../../../ApiHooks/useHotelHook";
+import { useGetSingleHotelByEzee, useUpdateHotelByEzee, useUploadHotelImages } from "../../../ApiHooks/useHotelHook";
 import AmentiesData from "../../../Data/AmenitiesData";
 import toast from "react-hot-toast";
 
 const EditHotels = () => {
-    const hotelsKey = useLocation();
-    const hotelApiData = hotelsKey.state?.hotelData;
+    const { state } = useLocation();
+    const hotelApiData = state?.hotelData;
+    console.log(hotelApiData);
 
-
-    const { data: hotelData, isLoading } = useGetSingleHotelByEzee(
-        hotelApiData?.hotelId,
-        hotelApiData?.authenticationId
+    const { data: hotelData, isLoading, error } = useGetSingleHotelByEzee(
+        hotelApiData?.hotelID,
+        hotelApiData?.hotelID
     );
 
-
+    const [hotelName, setHotelName] = useState("");
+    const [description, setDescription] = useState("");
+    const [location, setLocation] = useState("");
+    const [price, setPrice] = useState(0);
+    const [discountedPrice, setDiscountedPrice] = useState(0);
+    const [ammenities, setAmmenities] = useState([]);
+    const [rating, setRating] = useState(0);
+    const [imagesUrls, setImagesUrls] = useState([]);
+    const [testimonials, setTestimonials] = useState([{ name: "", description: "", rating: 0 }]);
+    const { mutate: uploadImages, isLoading: isUploading } = useUploadHotelImages();
+    const { mutate: updateHotelByEzee } = useUpdateHotelByEzee();
 
     useEffect(() => {
         if (hotelData?.data) {
@@ -54,31 +64,6 @@ const EditHotels = () => {
             );
         }
     }, [hotelData]);
-
-
-
-    // const { data: roomsData } = useGetAllRooms();
-    const { mutate: uploadImages, isLoading: isUploading } = useUploadHotelImages();
-
-
-    const [hotelName, setHotelName] = useState("");
-    const [description, setDescription] = useState("");
-    const [location, setLocation] = useState("");
-    const [price, setPrice] = useState(0);
-    const [discountedPrice, setDiscountedPrice] = useState(0);
-    const [ammenities, setAmmenities] = useState([]);
-    const [rating, setRating] = useState(0);
-    const [imagesUrls, setImagesUrls] = useState([]);
-    console.log(imagesUrls);
-    // const [selectedRooms, setSelectedRooms] = useState([]);
-    const [testimonials, setTestimonials] = useState([{ name: "", description: "", rating: 0 }]);
-
-    // const roomOptions = roomsData?.rooms?.map((room) => ({
-    //     value: room._id,
-    //     label: `${room.roomType} ${room.roomNumber}`,
-    // })) || [];
-
-    const { mutate: updateHotelByEzee } = useUpdateHotelByEzee();
 
     const handleSubmitClick = () => {
         if (!hotelName || !description || !location || price <= 0 || discountedPrice <= 0) {
@@ -121,8 +106,6 @@ const EditHotels = () => {
         );
     };
 
-
-
     const handleTestimonialChange = (index, field, value) => {
         const updatedTestimonials = testimonials.map((testimonial, i) =>
             i === index ? { ...testimonial, [field]: value } : testimonial
@@ -147,7 +130,6 @@ const EditHotels = () => {
         const formData = new FormData();
         images.forEach((image) => formData.append("images", image));
 
-        // Show loading toast while uploading
         const loadingToast = toast.loading('Uploading images...');
 
         uploadImages(formData, {
@@ -165,13 +147,10 @@ const EditHotels = () => {
     const tabContent = {
         "Edit Hotel": (
             <div className="space-y-6 p-6 bg-white">
-
                 <div className="flex gap-2">
                     <label className="block text-2xl font-semibold mb-2">Rating:  </label>
                     <Rating seiInitialRating={setRating} initialRating={rating} />
-
                 </div>
-
 
                 <label className="block text-2xl font-semibold mb-2">Hotel Name</label>
                 <input
@@ -194,9 +173,6 @@ const EditHotels = () => {
                     onChange={(e) => setLocation(e.target.value)}
                 />
 
-
-
-
                 <div className="flex gap-4">
                     <div className="w-full">
                         <label className="block text-2xl font-semibold mb-2">Amenities</label>
@@ -208,18 +184,7 @@ const EditHotels = () => {
                             classNamePrefix="select"
                         />
                     </div>
-                    {/* <div className="w-full">
-                        <label className="block text-2xl font-semibold mb-2">Select Rooms</label>
-                        <Select
-                            isMulti
-                            options={roomOptions}
-                            value={selectedRooms}
-                            onChange={setSelectedRooms}
-                            classNamePrefix="select"
-                        />
-                    </div> */}
                 </div>
-
 
                 <div className="flex space-x-4">
                     <div className="flex-1">
@@ -241,7 +206,6 @@ const EditHotels = () => {
                         />
                     </div>
                 </div>
-
             </div>
         ),
 
@@ -253,18 +217,16 @@ const EditHotels = () => {
                     isUploading={isUploading}
                     disabled={isUploading}
                     onRemoveImageUrl={handleRemoveImageUrl}
-
                 />
             </div>
         ),
 
         "Customer Reviews": (
             <div className="p-6 space-y-4">
-                <div className='flex justify-between flex-wrap'>
+                <div className="flex justify-between flex-wrap">
                     <h2 className="text-2xl font-semibold">Customer Reviews</h2>
                 </div>
-                <div className="flex flex-wrap gap-6 w-full ">
-
+                <div className="flex flex-wrap gap-6 w-full">
                     {testimonials.map((testimonial, index) => (
                         <div key={index} className="p-4 border rounded-lg space-y-2">
                             <input
@@ -310,16 +272,20 @@ const EditHotels = () => {
     };
 
     if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error loading hotel data</div>;
 
     return (
-        <div className="bg-gray-50 min-h-screen py-4  pt-24 flex flex-col pb-5">
+        <div className="bg-gray-50 min-h-screen py-4 pt-24 flex flex-col pb-5">
             <div className="flex px-10 justify-between">
-                <h1 className="text-[32px] font-bold pb-8 ">Edit Hotel</h1>
-                <button className="bg-gradient-to-r h-[40px] w-[150px]  from-blue-500 to-indigo-600 text-white px-2 rounded-lg shadow-md hover:shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all" onClick={handleSubmitClick}>Update</button>
-
+                <h1 className="text-[32px] font-bold pb-8">Edit Hotel</h1>
+                <button
+                    className="bg-gradient-to-r h-[40px] w-[150px] from-blue-500 to-indigo-600 text-white px-2 rounded-lg shadow-md hover:shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all"
+                    onClick={handleSubmitClick}
+                >
+                    Update
+                </button>
             </div>
             <Tabs tabNames={tabNames} tabContent={tabContent} />
-
         </div>
     );
 };

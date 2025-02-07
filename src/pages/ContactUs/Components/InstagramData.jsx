@@ -6,31 +6,39 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 const InstagramData = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     axios
       .get('http://localhost:5000/api/instagram/posts')
       .then(response => {
-        console.log("API Response:", response.data);
-        setPosts(response.data.posts || []);
+        setPosts(response.data || []);
         setLoading(false);
       })
       .catch(error => {
         console.error("There was an error fetching the posts:", error);
+        setError("Failed to fetch Instagram posts. Please try again later.");
         setLoading(false);
       });
   }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 py-10">
-      <div className="content mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="content mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-start mb-8">
           <h1 className="text-5xl font-bold text-gray-800 mb-4">Instagram Feed</h1>
           <p className="text-lg text-gray-600">
             Latest posts from our Instagram account
           </p>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="text-center text-red-500 mb-8">
+            {error}
+          </div>
+        )}
 
         {/* Loading Indicator */}
         {loading ? (
@@ -45,20 +53,6 @@ const InstagramData = () => {
                   key={index}
                   className="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105"
                 >
-                  {/* Image Section with Hover Overlay for Caption */}
-                  <div className="relative group">
-                    <img
-                      src={`http://localhost:5000/api/instagram/proxy-image?url=${encodeURIComponent(
-                        instaPost.imageUrl
-                      )}`}
-                      alt="Hotel Sunstar"
-                      className="w-full h-64 object-cover"
-                      referrerPolicy="no-referrer"
-                      crossOrigin="anonymous"
-                    />
-                
-                  </div>
-
                   {/* Details Section */}
                   <div className="p-4 flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -67,29 +61,36 @@ const InstagramData = () => {
                         alt="Sunstar Hospitality Logo"
                         className="w-10 h-10"
                       />
-                      <div>
-                        <p className="text-sm font-semibold text-gray-800">
-                          Sunstar Hospitality
-                        </p>
-                        <a
-                          href="https://www.instagram.com/hotel_sunstar_group?igsh=ZjdiMjM4ajY3NWpi"
+                      <div className='flex hover:underline'>
+                        <a href="https://www.instagram.com/hotel_sunstar_group" 
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-[#3C908F] hover:underline flex items-center"
-                        >
-                          <InstagramIcon className="mr-1" fontSize="small" />
-                          @hotel_sunstar_group
+                          className="text-sm font-semibold text-gray-800 leading-4">
+                          Sunstar <p>Hospitality</p> 
                         </a>
                       </div>
                     </div>
-                    <a
-                      href={`https://www.instagram.com/p/${instaPost.link.split('/p/')[1].replace('/', '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center px-3 py-1 bg-[#3C908F] text-white text-xs font-medium rounded hover:bg-[#3C908F] transition duration-300"
-                    >
-                      View Post <OpenInNewIcon className="ml-1" fontSize="small" />
-                    </a>
+                  </div>
+
+                  {/* Image Section with Hover Overlay for Caption */}
+                  <div className="relative group">
+                    <img
+                      src={instaPost?.media_url}
+                      alt="Hotel Sunstar"
+                      className="w-full h-[28rem] object-cover"
+                      referrerPolicy="no-referrer"
+                      crossOrigin="anonymous"
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <a
+                        href={`${instaPost.permalink}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-[#3C908F] text-white text-sm font-medium rounded hover:bg-[#3C908F] transition duration-300"
+                      >
+                        View Post <OpenInNewIcon className="ml-1" fontSize="small" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               ))

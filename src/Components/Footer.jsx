@@ -33,15 +33,15 @@ const Footer = () => {
 
                     {/* Social Media Links */}
                     <div className="flex flex-col space-y-4 lg:w-[300px]">
-                        <a href="https://instagram.com" className="flex items-center gap-3 hover:text-gray-200">
+                        <a href="https://www.instagram.com/hotel_sunstar_group?igsh=MWxscGl6NHgxdTd2bw==" className="flex items-center gap-3 hover:text-gray-200">
                             <InstagramIcon className='border border-yellow-500 rounded-lg p-1' />
                             <span>Instagram</span>
                         </a>
-                        <a href="https://facebook.com" className="flex items-center gap-3 hover:text-gray-200">
+                        <a href="https://www.facebook.com/share/1DZTntasMP/" className="flex items-center gap-3 hover:text-gray-200">
                             <FacebookIcon className='border border-yellow-500 rounded-lg p-1' />
                             <span>Facebook</span>
                         </a>
-                        <a href="https://youtube.com" className="flex items-center gap-3 hover:text-gray-200">
+                        <a href="https://youtube.com/@travelwithpriya-mk1ko?si=xz0moIn6eGxVRvaI" className="flex items-center gap-3 hover:text-gray-200">
                             <YouTubeIcon className='border border-yellow-500 rounded-lg p-1' />
                             <span>YouTube</span>
                         </a>

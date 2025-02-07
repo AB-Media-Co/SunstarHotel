@@ -83,56 +83,113 @@ export const testimonialData = {
 
 
 
-
 export const hotels = [
   {
-    name: "Hotel Sunstar Residency",
-    image: "/images/AbouPageImages/cardImg1.png", // Replace with actual image URL
-    rating: "4.2",
-    reviews: "498 Google reviews",
+    name: "Sunstar Grand",
+    location: "Karol Bagh, New Delhi",
+    rating: "4.96",
+    reviews: "972 reviews",
+    features: [
+      "20 Minutes International Airport",
+      "500 Meters Away From Metro Station",
+      "200 Meters Away Restaurants",
+    ],
+    price: "₹ 9,835",
+    discount: "₹ 1,448",
+    coupon: "B35TW",
+    image: "/images/AbouPageImages/cardImg1.png",
     hotelId: "14494"
+
   },
   {
-    name: "Hotel Sunstar Grand",
-    image: "/images/AbouPageImages/cardImg1.png", // Replace with actual image URL
-    rating: "4.2",
-    reviews: "498 Google reviews",
+    name: "Sunstar Heights",
+    location: "Karol Bagh, New Delhi",
+    rating: "4.96",
+    reviews: "972 reviews",
+    features: [
+      "20 Minutes International Airport",
+      "500 Meters Away From Metro Station",
+      "200 Meters Away Restaurants",
+    ],
+    price: "₹ 9,835",
+    discount: "₹ 1,448",
+    coupon: "B35TW",
+    image: "/images/AbouPageImages/cardImg1.png",
     hotelId: "14492"
 
   },
   {
-    name: "Hotel Sunstar Heights",
-    image: "/images/AbouPageImages/cardImg1.png", // Replace with actual image URL
-    rating: "4.2",
-    reviews: "498 Google reviews",
+    name: "Suncourt Yatri",
+    location: "Karol Bagh, New Delhi",
+    rating: "4.96",
+    reviews: "972 reviews",
+    features: [
+      "20 Minutes International Airport",
+      "500 Meters Away From Metro Station",
+      "200 Meters Away Restaurants",
+    ],
+    price: "₹ 9,835",
+    discount: "₹ 1,448",
+    coupon: "B35TW",
+    image: "/images/AbouPageImages/cardImg1.png",
     hotelId: "15282"
 
   },
   {
-    name: "Hotel Sunstar Heritage",
-    image: "/images/AbouPageImages/cardImg1.png", // Replace with actual image URL
-    rating: "4.2",
-    reviews: "498 Google reviews",
-    hotelId: "14493 "
+    name: "Hotel Surya Plaza",
+    location: "Paharganj, New Delhi",
+    rating: "4.80",
+    reviews: "850 reviews",
+    features: [
+      "10 Minutes from Connaught Place",
+      "Airport Pickup Available",
+      "Multi-cuisine Restaurant",
+    ],
+    price: "₹ 7,999",
+    discount: "₹ 1,200",
+    coupon: "SURYA20",
+    image: "/images/AbouPageImages/cardImg1.png",
+    hotelId: "14493"
 
   },
   {
-    name: "Hotel Sunshine",
-    image: "/images/AbouPageImages/cardImg1.png", // Replace with actual image URL
-    rating: "4.2",
-    reviews: "498 Google reviews",
+    name: "Hotel Sunrise",
+    location: "Karol Bagh, New Delhi",
+    rating: "4.85",
+    reviews: "910 reviews",
+    features: [
+      "Near Karol Bagh Market",
+      "Free WiFi & Breakfast",
+      "Taxi Services Available",
+    ],
+    price: "₹ 8,499",
+    discount: "₹ 1,100",
+    coupon: "SUNRISE10",
+    image: "/images/AbouPageImages/cardImg1.png",
     hotelId: "14495"
 
   },
   {
-    name: "The Suncourt Hotel Yatri",
-    image: "/images/AbouPageImages/cardImg1.png", // Replace with actual image URL
-    rating: "4.2",
-    reviews: "498 Google reviews",
+    name: "Hotel Florence",
+    location: "Karol Bagh, New Delhi",
+    rating: "4.75",
+    reviews: "765 reviews",
+    features: [
+      "Luxury Business Hotel",
+      "Spacious Rooms",
+      "Conference Facilities",
+    ],
+    price: "₹ 10,500",
+    discount: "₹ 1,600",
+    coupon: "FLORENCE15",
+    image: "/images/AbouPageImages/cardImg1.png",
     hotelId: "14496"
 
-  },
+  }
 ];
+
+
+
 
 
 export const AboutUsSection5cards = [

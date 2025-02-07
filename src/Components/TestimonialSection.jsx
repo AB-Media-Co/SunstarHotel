@@ -7,14 +7,15 @@ import CommonSwiper from "./CommonSlider";
 
 const TestimonialSection = ({ title, testimonials, backgroundImage }) => {
     const renderItem = (item) => {
+        console.log("Rendering item:", item);
         return (
             <motion.div
                 id="reviews"
-                className="bg-white pb-10 rounded-[32px] p-6 shadow-lg md:text-left flex flex-col h-full"
-                initial={{ opacity: 0, y: 30 }}
+                className="bg-white  rounded-[32px] p-6 shadow-lg md:text-left flex flex-col h-full"
+                initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                viewport={{ once: true }} // Ensures animation happens only once
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.5 }}
             >
                 <h3 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-800 mb-4">
                     {item.title}
@@ -66,7 +67,7 @@ const TestimonialSection = ({ title, testimonials, backgroundImage }) => {
 
     return (
         <div
-            className="w-full bg-[#BAE9EF] flex flex-col gap-6 py-12 px-4 md:px-0 md:ps-8 lg:ps-[140px] relative overflow-hidden"
+            className="w-full "
             style={{
                 backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
                 backgroundPosition: 'center',
@@ -74,21 +75,24 @@ const TestimonialSection = ({ title, testimonials, backgroundImage }) => {
                 backgroundSize: 'cover',
             }}
         >
-            {/* Section Heading */}
-            <h2 className="text-mobile/h4 md:text-desktop/h2 md:text-[40px] text-gray-900 mb-8 text-reveal-animation">
-                {title}
-            </h2>
+            <div className="content flex flex-col gap-6 py-8 pb-4  relative overflow-hidden">
 
-            {/* Slider */}
-            <CommonSwiper
-                items={testimonials}
-                renderItem={renderItem}
-                spaceBetween={30}
-                loop={false}
-                className="relative z-10 testiM mySwiper"
-                slidesPerViewDesktop={3.5}
-                arrow="pt-6"
-            />
+                {/* Section Heading */}
+                <h2 className="text-mobile/h4 md:text-desktop/h2 md:text-[40px] text-gray-900 mb-8 text-reveal-animation">
+                    {title}
+                </h2>
+
+                {/* Slider */}
+                <CommonSwiper
+                    items={testimonials}
+                    renderItem={renderItem}
+                    spaceBetween={30}
+                    loop={false}
+                    className="relative z-10 testiM mySwiper"
+                    slidesPerViewDesktop={3}
+                    arrow="pt-6"
+                />
+            </div>
         </div>
     );
 };

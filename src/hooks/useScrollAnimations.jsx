@@ -65,7 +65,7 @@ const useScrollAnimations = () => {
           ease: "power4.out",
           scrollTrigger: {
             trigger: slide,
-            start: "top 80%", // Trigger when 80% of the slide is visible
+            start: "top bottom", // Trigger when 80% of the slide is visible
             toggleActions: "play none none reverse",
             scrub: 0.5, // Tied to scroll for a smoother feel
             markers: false, // Remove markers in production

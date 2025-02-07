@@ -14,9 +14,9 @@ const CorporateBooking = () => {
       />
       <BannerSection
         data={WhyUsSection}
-        text="text-mobile/h3 md:text-desktop/h3"
+        text="text-mobile/h3 md:text-desktop/h3 md:font-bold"
         textC="black"
-        ptext="text-mobile/body/2 md:text-[16px]"
+        ptext="text-mobile/body/2 md:text-[16px] "
         lineh="text-mobile/body/1 md:leading-[50px]"
         bg="bg-white"
         paddTop="pt-0"

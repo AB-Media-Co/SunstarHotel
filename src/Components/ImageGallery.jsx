@@ -47,7 +47,7 @@ import Marquee from "react-fast-marquee";
 const ImageGallery = ({ items }) => {
     return (
         <Marquee gradient={false} speed={50} >
-            <div className="px-2 sm:px-4">
+            <div className="ps-2 sm:ps-4">
                 <div className="columns-2 sm:columns-3 md:columns-4 gap-4">
                     {items.map((item, index) => {
                         const dynamicHeight = index % 2 === 0 ? "h-64" : "h-80"; // Alternate heights for interest

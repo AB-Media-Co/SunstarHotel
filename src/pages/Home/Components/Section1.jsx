@@ -4,7 +4,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
 import useScrollAnimations from "../../../hooks/useScrollAnimations";
 import AllHotelCard from "../../../Components/AllHotelCard";
-import { hotels } from "../../../Data/AboutSectionData";
 
 const Section1 = ({ section1Data }) => {
     const { words, heading, description, buttonLabel, images } = section1Data;
@@ -89,7 +88,7 @@ const Section1 = ({ section1Data }) => {
                         <SearchIcon style={{ fontSize: '35px' }} />
                     </div>
                 </div>
-                <AllHotelCard hotels={hotels} isOpen={hotelOpen} onClose={() => setHotelOpen(false)} />
+                <AllHotelCard  isOpen={hotelOpen} onClose={() => setHotelOpen(false)} />
             </div>
 
 
