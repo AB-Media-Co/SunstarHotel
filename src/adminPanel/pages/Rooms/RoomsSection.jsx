@@ -75,47 +75,6 @@ const AddNewCard = ({ onClick }) => (
     </div>
 );
 
-// export const RoomsSection = ({
-//     title,
-//     data,
-//     type,
-//     onEdit,
-//     onDelete,
-//     onAdd,
-//     showAddButton = true,
-//     isDropdownShow = false,
-//     hotels,
-//     handleSelectHotel,
-//     selectedHotel
-// }) => {
-//     return (
-//         <div className="p-6 pt-24 bg-gray-50 min-h-screen">
-//             <div className="max-w-6xl mx-auto">
-//                 <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-8">{title}</h2>
-//                 {/* Dropdown for Hotels */}
-//                 {isDropdownShow && (
-//                     <div className="mb-6 max-w-md mx-auto">
-//                         <Select
-//                             options={hotels}
-//                             value={selectedHotel}
-//                             onChange={handleSelectHotel}
-//                             placeholder="Select a Hotel"
-//                             isClearable
-//                             className="text-gray-900"
-//                         />
-//                     </div>
-//                 )}
-//                 {/* Cards Section */}
-//                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-//                     {data?.map((item) => (
-//                         <Card key={item._id} item={item} type={type} onEdit={onEdit} onDelete={onDelete} />
-//                     ))}
-//                     {showAddButton && <AddNewCard onClick={onAdd} />}
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
 
 
 export const RoomsSection = ({

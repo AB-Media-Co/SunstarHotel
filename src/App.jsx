@@ -12,8 +12,6 @@ import Loader from './Components/Loader';
 import { Rooms } from './adminPanel/pages/Rooms/Rooms';
 import { AdminHotels } from './adminPanel/pages/AdminHotels/AdminHotels';
 import { AdminLogin } from './adminPanel/pages/AdminLogin';
-import EditHotels from './adminPanel/pages/AdminHotels/EditHotels';
-import AddHotels from './adminPanel/pages/AdminHotels/AddHotels';
 import AddRooms from './adminPanel/pages/Rooms/AddRooms';
 import EditRooms from './adminPanel/pages/Rooms/EditRooms';
 import { CreateUser } from './adminPanel/pages/Users/CreateUser';
@@ -21,6 +19,8 @@ import ViewUser from './adminPanel/pages/Users/ViewUser';
 import { AdminProvider } from './adminPanel/utils/AdminContext';
 import AllUsers from './adminPanel/pages/Users/AllUsers';
 import { HotelLocations } from './adminPanel/pages/HotelLocations/HotelLocations';
+import { EditHotel } from './adminPanel/pages/AdminHotels/EditHotel';
+import { AddHotel } from './adminPanel/pages/AdminHotels/AddHotel';
 
 const Layout = lazy(() => import(/* webpackChunkName: "layout" */ './Components/Layout'));
 const Home = lazy(() => import(/* webpackChunkName: "home" */ './pages/Home/Home'));
@@ -30,6 +30,7 @@ const Hotels = lazy(() => import(/* webpackChunkName: "hotels" */ './pages/Hotel
 const ContactUs = lazy(() => import(/* webpackChunkName: "contactus" */ './pages/ContactUs/ContactUs'));
 const HotelRooms = lazy(() => import(/* webpackChunkName: "hotelrooms" */ './pages/Rooms/Rooms'));
 const RoomsDetails = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/Rooms/Components/BookingDetailsPage'));
+const CityPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/Citypage/CityPage'));
 
 const queryClient = new QueryClient();
 
@@ -92,6 +93,7 @@ function App() {
                 <Route path="/hotels/:hotelId" element={<Hotels />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/room/:id" element={<HotelRooms />} />
+                <Route path="/citypage" element={<CityPage />} />
               </Route>
 
               <Route path="/room/details" element={<RoomsDetails />} />
@@ -101,8 +103,9 @@ function App() {
               <Routes>
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/hotels" element={<PrivateRoute><AdminHotels /></PrivateRoute>} />
-                <Route path="/admin/edithotels/:hotelId" element={<PrivateRoute><EditHotels /></PrivateRoute>} />
-                <Route path="/admin/addHotels" element={<PrivateRoute><AddHotels /></PrivateRoute>} />
+                <Route path="/admin/edithotels/:hotelId" element={<PrivateRoute><EditHotel/></PrivateRoute>} />
+                <Route path="/admin/addHotels" element={<PrivateRoute><AddHotel/></PrivateRoute>} />
+
                 <Route path="/admin/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
                 <Route path="/admin/addRooms" element={<PrivateRoute><AddRooms /></PrivateRoute>} />
                 <Route path="/admin/editRooms/:roomId" element={<PrivateRoute><EditRooms /></PrivateRoute>} />

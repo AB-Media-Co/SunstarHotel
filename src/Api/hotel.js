@@ -11,7 +11,7 @@ export const addHotelAPI = async (hotelData) => {
 };
 
 export const getHotelAPI = async () => {
-  const response = await axiosInstance.get(`/api/hotels`);
+  const response = await axiosInstance.get(`/api/ezee/allhotels`);
   return response.data;
 };
 
@@ -144,8 +144,8 @@ export const updateHotelByIdEzee = async ({ data }) => {
 
 
 export const getAllRoomsEzee = async ({ HotelCode, AuthCode  }) => {
-  const response = await axiosInstance.get('/api/ezeehotels/sync-rooms', {
-    params: { HotelCode, AuthCode  }
+  const response = await axiosInstance.post(`/api/ezee/fetch/roominfo/${HotelCode}/${AuthCode}`, {
+    // params: { HotelCode, AuthCode  }
 
   });
   return response.data;

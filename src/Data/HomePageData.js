@@ -1,7 +1,7 @@
 export const section1Data = {
     words: ["Conferences", "Parties", "Functions"],
     heading: "Hello Salut Hola",
-    description: "Nestled in the vibrant heart of Delhi, Hotel Sunstar Grand is a portal to comfort and luxury, beckoning international and business travellers alike. Guests from around the world find a welcoming retreat amidst the bustle of Karol Bagh.",
+    description: "Embarking on a journey to redefine mid-market hospitality in India, one hotel at a time.Opening soon in a city near you!!",
     buttonLabel: "Book us for",
     buttonIcon: "Search",
     images: {
@@ -12,13 +12,17 @@ export const section1Data = {
 
   export const section2HotelData = {
     heading: "Sunstar Hotels",
-    description: "While booking a property, what is probably running at the back of our mind is that the room and washroom should be clean. When you book with us @ Sunstar, you can leave your worries about getting a clean stay to us. We firmly believe in upholding the highest standards of cleanliness and hygiene. Our dedicated team works diligently to ensure that every inch of our property is immaculate.",
-  };
+    description: `Sunstar offers affordable accommodations and exceptional hospitality for business and leisure travelers.
+Sunstar reinvents accommodations with home-like comfort by offering warm service and a comforting ambience.
+In an industry that often loses sight of genuine hospitality, at Sunstar we believe that a hotel isn’t just a place to sleep; it’s a place that should feel like home, every single time.
+The mission is to be the go-to choice for the frequent traveler who is seeking comfort, reliability, and affordability.
+With Sunstar, our vision is to build a brand rooted in providing a consistently warm, high-quality experience in prime locations, all at a price that feels like a pleasant surprise
+`  };
 
 
 
 export const sec3CardSliderData = {
-    heading: "Why Choose Sunstar?",
+    heading: "What Makes Us Shine?",
     description: "The journey of a hassle-free experience starts from the time you book Sunstar to check out.",
     features: [
       {
@@ -35,22 +39,7 @@ export const sec3CardSliderData = {
         title: 'Vital Sleep Tech',
         description: 'Experience restful recovery with our proprietary "VitalSleepTM" beds, designed for optimal support and comfort.',
         image: '/images/HomepageImages/sec3CardImg.png',
-      },
-      {
-        title: 'Clean & Comfortable',
-        description: 'We firmly believe in cleanliness and comfort for every guest at our hotels.',
-        image: '/images/HomepageImages/sec3CardImg.png',
-      },
-      {
-        title: 'Vital Sleep Tech',
-        description: 'Experience restful recovery with our proprietary "VitalSleepTM" beds, designed for optimal support and comfort.',
-        image: '/images/HomepageImages/sec3CardImg.png',
-      },
-      {
-        title: 'Clean & Comfortable',
-        description: 'We firmly believe in cleanliness and comfort for every guest at our hotels.',
-        image: '/images/HomepageImages/sec3CardImg.png',
-      },
+      }
     ],
   };
   

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Link } from 'react-router-dom';
 
 const InstagramData = () => {
   const [posts, setPosts] = useState([]);
@@ -59,7 +60,7 @@ const InstagramData = () => {
                       <img
                         src="/images/Logo/sunstarlogo.svg"
                         alt="Sunstar Hospitality Logo"
-                        className="w-10 h-10"
+                        className="w-8 h-8"
                       />
                       <div className='flex hover:underline'>
                         <a href="https://www.instagram.com/hotel_sunstar_group" 
@@ -73,7 +74,7 @@ const InstagramData = () => {
                   </div>
 
                   {/* Image Section with Hover Overlay for Caption */}
-                  <div className="relative group">
+                  <Link to={instaPost.permalink} className="relative group ">
                     <img
                       src={instaPost?.media_url}
                       alt="Hotel Sunstar"
@@ -91,7 +92,7 @@ const InstagramData = () => {
                         View Post <OpenInNewIcon className="ml-1" fontSize="small" />
                       </a>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               ))
             ) : (

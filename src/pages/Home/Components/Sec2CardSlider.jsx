@@ -112,11 +112,11 @@ export default function SwiperComponent() {
         {/* Price Section */}
         <div className="flex items-center justify-end gap-3 mt-2 text-[#707070] font-semibold">
           <span className="text-mobile/body/2">Starting From</span>
-          {card.originalPrice && (
+          {/* {card.originalPrice && (
             <p className="text-mobile/body/2 text-red-500 font-bold line-through">
               ₹{card.originalPrice}
             </p>
-          )}
+          )} */}
           <p className="text-desktop/body/1 font-bold text-[#4DB8B6]">
             ₹{card.price}
           </p>

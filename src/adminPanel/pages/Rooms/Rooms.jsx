@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../../Components/Loader";
 import { RoomsSection } from "./RoomsSection";
+import RoomData from "./RoomData";
 
 const hotels = [
   { value: '14494', label: 'Hotel Sunstar Residency', authId: '164638176786a1a258-c6ea-11ec-9' },
@@ -21,6 +22,7 @@ export const Rooms = () => {
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
+  console.log(selectedRoomId, selectedHotel);
 
   const navigate = useNavigate();
 
@@ -92,9 +94,9 @@ export const Rooms = () => {
         <Loader />
       ) : (
         <div>
-          <RoomsSection
+          {/* <RoomsSection
             title="Our Premium Rooms"
-            data={rooms?.data}
+            data={rooms?.ezeeResponse?.RoomInfo}
             type="room"
             onEdit={handleEdit}
             onDelete={handleDeleteClick}
@@ -103,6 +105,10 @@ export const Rooms = () => {
             hotels={hotels}
             handleSelectHotel={handleSelectHotel}
             selectedHotel={selectedHotel} 
+
+          /> */}
+          <RoomData
+            data={rooms?.ezeeResponse?.RoomInfo}
 
           />
 

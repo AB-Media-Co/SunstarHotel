@@ -52,11 +52,12 @@ const Sec3CardSlider = ({ sec3CardSliderData }) => {
                 slidesPerView={{
                     default: 1, // 1 slide for small screens
                     768: 2.5,   // 2.5 slides for tablets
-                    1024: 3.5,  // 3.5 slides for desktops
+                    1024: 4,  // 3.5 slides for desktops
                 }}
                 spaceBetween={16} // Adjust spacing dynamically
                 loop={false}
                 className="mySwiper"
+                arrow='hidden'
             />
         </div>
     );

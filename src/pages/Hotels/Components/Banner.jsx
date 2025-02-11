@@ -52,7 +52,7 @@ function Banner({ businessPlatformFeatures }) {
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
       setItemFixed(currentScrollPos > 600);
-  
+
       // Only apply the hidden logic if isItemFixed is true
       if (isItemFixed) {
         // Determine scroll direction
@@ -64,10 +64,10 @@ function Banner({ businessPlatformFeatures }) {
           setIsTopSectionHidden(true);
         }
       }
-  
+
       setPrevScrollPos(currentScrollPos);
     };
-  
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -139,7 +139,7 @@ function Banner({ businessPlatformFeatures }) {
           </div>
 
           {/* Bottom Section: Tabs */}
-          <div className="flex flex-wrap px-4 justify-between items-center mt-6 gap-2 md:space-y-4 sm:space-y-0 space-x-0 md:space-x-6 w-full">
+          <div className="flex flex-wrap px-4 justify-between items-center mt-6 gap-2 w-full">
             {tabs.map((tab, index) => (
               <a
                 key={index}

@@ -20,7 +20,7 @@ const HotelCard = ({ hotel }) => {
       animate="visible"
     >
       <img src={hotel.image} alt={hotel.name} className="w-full h-48 object-cover" />
-      <div className="p-4 pb-0 flex flex-col gap-4">
+      <div className="p-4  flex flex-col gap-4">
         <div className="flex justify-between flex-col md:flex-row ms:items-start gap-4 items-center">
           <div className="text-start flex flex-col gap-2 items-start">
             <h1 className="text-lg font-bold text-black">{hotel.name}</h1>
@@ -55,11 +55,10 @@ const HotelCard = ({ hotel }) => {
           </Link>
         </div>
       </div>
-      <p className="text-xs text-gray-500 mt-2 px-4 py-1 flex items-center bg-[#4DB8B629]">
-        {/* <LocalOffer className="text-red-500 text-sm mr-1" /> */}
+      {/* <p className="text-xs text-gray-500 mt-2 px-4 py-1 flex items-center bg-[#4DB8B629]">
         <Icon name='discount' />
         Discount of {hotel.discount} included with coupon <span className="font-bold ml-1">{hotel.coupon}</span>
-      </p>
+      </p> */}
     </motion.div>
   );
 };

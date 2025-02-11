@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDeleteHotelById, useGetHotels } from "../../../ApiHooks/useHotelHook";
-import { Section } from "../../Components/Card";
 import { DeleteConfirmationModal } from "../../Components/DeletePopup";
 import toast from "react-hot-toast";
+import { Section } from "./HotelsSection";
 
 export const AdminHotels = () => {
   const { data: hotels, isLoading, isError, error } = useGetHotels();
-  const { mutate: deleteHotelById, } = useDeleteHotelById();
+  const { mutate: deleteHotelById } = useDeleteHotelById();
 
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ export const AdminHotels = () => {
     if (selectedHotelId) {
       deleteHotelById(selectedHotelId, {
         onSuccess: () => {
-          toast.success(`Hotel Deeleted Successfully`);
+          toast.success(`Hotel Deleted Successfully`);
           setIsModalOpen(false);
           setSelectedHotelId(null);
         },
@@ -52,10 +52,8 @@ export const AdminHotels = () => {
   const handleAddHotel = () => navigate('/admin/addHotels');
 
   const handleEdit = (item) => {
-    console.log(item);
     navigate(`/admin/edithotels/${item?.hotelID}`, { state: { hotelData: item } });
   };
-  
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {error.message}</p>;

@@ -24,7 +24,7 @@
 
 .rotating-image {
 
-  animation: rotateAnimation 15s linear infinite;
+  animation: rotateAnimation 25s linear infinite;
   /* Smooth, continuous rotation */
   transform-origin: center;
   /* Ensure rotation is around the center */
@@ -523,7 +523,7 @@ padding-top: 5px;
 }
 
 .animate-spin-slow {
-  animation: spinSlow 10s linear infinite;
+  animation: spinSlow 25s linear infinite;
 }
 
 

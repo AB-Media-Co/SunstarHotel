@@ -33,7 +33,7 @@ const SunstarEnquiryForm = () => {
           Sunstar Enquiry Form
         </h1>
         <p className="text-center text-[#058FA2] text-mobile/body/2 md:text-desktop/body/1 mb-8">
-          Find out if your fleet meets our criteria
+        Get Connected (For Corporates & Travel Agents to register their interest)
         </p>
         <form>
           <div className="grid md:grid-cols-2 gap-6">
