@@ -116,24 +116,24 @@ const HotelIImageCarousel = () => {
 
             {/* Carousel Navigation Buttons */}
             <button
-                className="hidden md:block absolute top-1/2 left-0 transform -translate-y-1/2 text-white p-2 rounded-full"
+                className="hidden md:block absolute top-1/2 left-0 transform -translate-y-1/2 text-primary-white p-2 rounded-full"
                 onClick={prevSlide}
             >
                 <Icon name="leftIcon" />
             </button>
             <button
-                className="hidden md:block absolute top-1/2 right-0 transform -translate-y-1/2 text-white p-2 rounded-full"
+                className="hidden md:block absolute top-1/2 right-0 transform -translate-y-1/2 text-primary-white p-2 rounded-full"
                 onClick={nextSlide}
             >
                 <Icon name="rightIcon" />
             </button>
 
             {/* Carousel Dots */}
-            <div className="absolute bottom-0 left-0 z-50 right-0 px-4 flex justify-center mb-8">
+            <div className="absolute bottom-0 left-0 z-10 right-0 px-4 flex justify-center mb-8">
                 {images.map((_, index) => (
                     <div
                         key={index}
-                        className={`w-28 rounded-full transition-all duration-500 ease-in-out h-[5px] mx-1 cursor-pointer ${index === currentIndex ? 'bg-[#FDC114] w-44' : 'bg-white'
+                        className={`w-28 rounded-full transition-all duration-500 ease-in-out h-[5px] mx-1 cursor-pointer ${index === currentIndex ? 'bg-[#FDC114] w-44' : 'bg-primary-white'
                             }`}
                         onClick={() => {
                             if (index !== currentIndex) {
@@ -149,7 +149,7 @@ const HotelIImageCarousel = () => {
             {/* View All Images Button */}
             <div className="absolute bottom-0 right-4 md:right-[16%] text-center mb-10">
                 <button
-                    className="text-white p-2 rounded underline transition-all duration-500 ease-in-out hover:text-[#FDC114]"
+                    className="text-primary-white p-2 rounded underline transition-all duration-500 ease-in-out hover:text-[#FDC114]"
                     onClick={() => setShowGallery(true)}
                 >
                     View All Images
@@ -161,15 +161,15 @@ const HotelIImageCarousel = () => {
                 className={`fixed inset-0 bg-[#6EC4C2] flex justify-center items-start z-50 transition-transform duration-500 transform ${showGallery ? 'translate-y-0' : 'translate-y-full pointer-events-none'
                     }`}
             >
-                {/* Close button positioned outside the white container */}
+                {/* Close button positioned outside the primary-white container */}
                 <button
-                    className="absolute top-4 right-4 text-white p-2  rounded"
+                    className="absolute top-4 right-4 text-primary-white p-2  rounded"
                     onClick={() => setShowGallery(false)}
                 >
                     <CloseOutlined style={{ height: "40px", width: "40px" }} />
 
                 </button>
-                <div className="bg-white hotelSelection overflow-y-auto py-10 w-full md:w-[1300px] h-full mt-16 rounded-t-[40px] px-8">
+                <div className="bg-primary-white hotelSelection overflow-y-auto py-10 pb-20 w-full md:w-[1300px] h-full mt-16 rounded-t-[40px] px-8">
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {images.map((src, index) => (
                             <img

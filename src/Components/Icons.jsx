@@ -74,6 +74,13 @@ const Icon = ({ name, className = 'w-6 h-6' }) => {
     planeH: '/images/Icons/planeH.svg',
     metro: '/images/Icons/metro.svg',
     location_on: '/images/Icons/location_on.svg',
+    Airport: '/images/MapIcons/Airport.svg',
+    Railway: '/images/MapIcons/Airport.svg',
+    Metro: '/images/MapIcons/Airport.svg',
+    Attraction: '/images/MapIcons/Airport.svg',
+    Reataurents: '/images/MapIcons/Airport.svg',
+    NightLife: '/images/MapIcons/Airport.svg',
+    Activities: '/images/MapIcons/Airport.svg',
   };
 
   const iconPath = icons[name];
@@ -81,7 +88,6 @@ const Icon = ({ name, className = 'w-6 h-6' }) => {
   if (!iconPath) {
     return <div>Icon not found</div>;
   }
-
   return (
     <img
       src={iconPath}

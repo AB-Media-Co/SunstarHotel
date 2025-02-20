@@ -1,20 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/prop-types */
 import { useNavigate } from "react-router-dom";
-import useScrollAnimations from "../hooks/useScrollAnimations";
-import useTextRevealAnimation from "../hooks/useTextRevealAnimation";
 import Icon from "./Icons";
 
 const RoomsCard = ({ room }) => {
     const navigate = useNavigate();
-
-    // Initialize animations
-    useTextRevealAnimation();
-    useScrollAnimations();
-
-    /**
-     * Handle navigation to room details page.
-     */
     const handleBooking = () => {
         if (room.available) {
             navigate(`/room/${room.id}`);
@@ -22,7 +12,7 @@ const RoomsCard = ({ room }) => {
     };
 
     return (
-        <div className="bg-white shadow-md rounded-lg overflow-hidden animation-on-scroll">
+        <div className="bg-primary-white shadow-md rounded-lg overflow-hidden ">
             {/* Room Image Section */}
             <div className="relative">
                 <img
@@ -31,7 +21,7 @@ const RoomsCard = ({ room }) => {
                     className="w-full h-64 object-cover"
                 />
                 {room.tag && (
-                    <span className="absolute top-6 left-0 bg-red-500 text-white text-mobile/caption md:text-desktop/caption font-bold px-2 py-1 rounded-r-xl">
+                    <span className="absolute top-6 left-0 bg-red-500 text-primary-white text-mobile/caption md:text-desktop/caption font-bold px-2 py-1 rounded-r-xl">
                         {room.tag}
                     </span>
                 )}
@@ -50,10 +40,10 @@ const RoomsCard = ({ room }) => {
                         <Icon name="guests" className="w-7 h-7" />
                         <span className="font-semibold">{room.guests}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-mobile/body/2 md:text-desktop/body/1 text-gray-600 mt-2">
+                    {/* <div className="flex items-center gap-2 text-mobile/body/2 md:text-desktop/body/1 text-gray-600 mt-2">
                         <Icon name="beds" className="w-7 h-7" />
                         <span className="font-semibold">{room.beds}</span>
-                    </div>
+                    </div> */}
                     <div className="flex items-center gap-2">
                         <Icon name="sqFt" className="w-7 h-7" />
                         <p className="text-mobile/body/2 md:text-desktop/body/1 text-gray-600 font-semibold">
@@ -84,7 +74,7 @@ const RoomsCard = ({ room }) => {
                     {/* Booking Button */}
                     <button
                         className={`mt-4 h-[40px] px-4 py-2 text-mobile/button md:text-desktop/button font-bold rounded ${room.available
-                                ? "bg-yellow-400 hover:bg-yellow-500 text-[#058FA2]"
+                                ? "bg-yellow-400 hover:bg-yellow-500 text-primary-white"
                                 : "bg-gray-300 text-gray-600 cursor-not-allowed"
                             }`}
                         onClick={handleBooking}

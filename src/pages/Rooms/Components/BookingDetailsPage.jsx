@@ -66,7 +66,7 @@ const BookingDetailsPage = () => {
   return (
     <div className="p-4 content md:flex gap-5">
       <div className="flex flex-col gap-8">
-        <div className="flex flex-col lg:flex-row lg:h-[200px] w-full border p-4 rounded-md border-gray-300 bg-white gap-4 lg:gap-4">
+        <div className="flex flex-col lg:flex-row lg:h-[200px] w-full border p-4 rounded-md border-gray-300 bg-primary-white gap-4 lg:gap-4">
           {/* Image Section */}
           <div className="w-full lg:w-1/3 relative">
             <img
@@ -74,8 +74,8 @@ const BookingDetailsPage = () => {
               alt="Hotel Room"
               className="rounded-md w-full h-full object-cover"
             />
-            <p className="text-[#FDC114] px-4 py-1 top-[116px] rounded-e-full font-semibold absolute bg-white overflow-hidden animate-wipe">
-              <span className="inline-block whitespace-nowrap">Best Choice</span>
+            <p className="text-[#FDC114] px-4 py-1 top-[116px] rounded-e-full font-semibold absolute bg-primary-white overflow-hidden animate-wipe">
+              <span className="inline-block primary-whitespace-nowrap">Best Choice</span>
             </p>
           </div>
 
@@ -206,7 +206,7 @@ const BookingDetailsPage = () => {
           </form>
         </div>
 
-        <div className="p-4 bg-white">
+        <div className="p-4 bg-primary-white">
           <h2 className="text-3xl font-bold mb-4">Add To Your Stay</h2>
           {options.map((option) => (
             <div
@@ -265,7 +265,7 @@ const BookingDetailsPage = () => {
 
         <hr className="h-[2px] bg-gray-500 lg:hidden  w-full" />
 
-        <div className="p-4 bg-white rounded-lg shadow-lg lg:hidden  w-full md:max-w-xl mx-auto">
+        <div className="p-4 bg-primary-white rounded-lg shadow-lg lg:hidden  w-full md:max-w-xl mx-auto">
           <h2 className="text-3xl font-bold mb-4">Reservation Summary</h2>
 
           <div className="flex flex-col gap-4 border-2 p-4 rounded-lg">
@@ -343,7 +343,7 @@ const BookingDetailsPage = () => {
           </div>
 
           {/* Pay Button */}
-          {/* <button className="mt-6 w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 rounded">
+          {/* <button className="mt-6 w-full bg-teal-500 hover:bg-teal-600 text-primary-white font-semibold py-3 rounded">
             Pay and Book
           </button> */}
         </div>
@@ -394,7 +394,7 @@ const BookingDetailsPage = () => {
 
           {/* Continue Button */}
           <div className="w-full justify-end flex">
-            <button className="mt-6 w-[200px]  bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 rounded">
+            <button className="mt-6 w-[200px]  bg-teal-500 hover:bg-teal-600 text-primary-white font-semibold py-3 rounded">
               Continue to Pay
             </button>
 
@@ -438,7 +438,7 @@ const BookingDetailsPage = () => {
 
       <div className="hidden lg:block">
 
-        <div className="p-4 bg-white sticky top-4  border-2  rounded-lg  w-full md:max-w-md mx-auto">
+        <div className="p-4 bg-primary-white sticky top-4  border-2  rounded-lg  w-full md:max-w-md mx-auto">
           <h2 className="text-2xl font-bold mb-4">Reservation Summary</h2>
 
           <div className="flex flex-col gap-4 border-2 p-4 rounded-lg">
@@ -511,7 +511,7 @@ const BookingDetailsPage = () => {
           <div className="border-t pt-4">
             <div className="flex justify-between text-base font-semibold">
               <p>Payable Amount</p>
-              <p className="text-teal-600">₹ 7,056</p>
+              <p className="text-primary-green">₹ 7,056</p>
             </div>
           </div>
 
@@ -519,7 +519,7 @@ const BookingDetailsPage = () => {
           <a href="#payment-method" className="">
             {showButton && (
               <button
-                className={`mt-6 w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 rounded transition-opacity duration-300 ${isPaymentVisible ? "opacity-0" : "opacity-100"
+                className={`mt-6 w-full bg-primary-green text-primary-white font-semibold py-3 rounded transition-opacity duration-300 ${isPaymentVisible ? "opacity-0" : "opacity-100"
                   }`}
               >
                 See Payment Options

@@ -134,7 +134,7 @@ const CommonSwiper = ({
       <div className={`hidden justify-end gap-8   lg:flex ${arrow}`}>
         <button
           ref={prevRef}
-          className={`p-4 rounded-full custom-prev-button flex ${isFirstSlide ? "bg-gray-300 disabled cursor-not-allowed" : "bg-[#FDC114]"
+          className={`p-4 rounded-full custom-prev-button flex ${isFirstSlide ? "bg-gray-300 disabled cursor-not-allowed" : "bg-primary-yellow"
             }`}
           onClick={() => handleNavigationClick("prev")}
           disabled={isFirstSlide || isNavigating}
@@ -144,7 +144,7 @@ const CommonSwiper = ({
 
         <button
           ref={nextRef}
-          className={`p-4 rounded-full custom-next-button flex bg-[#FDC114]`}
+          className={`p-4 rounded-full custom-next-button flex bg-primary-yellow`}
           onClick={() => handleNavigationClick("next")}
           disabled={isNavigating}
         >

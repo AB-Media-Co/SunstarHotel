@@ -122,7 +122,7 @@ const HotelDropdown = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-r from-blue-50 to-blue-100 p-10">
-            <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="max-w-6xl mx-auto bg-primary-white rounded-xl shadow-lg overflow-hidden">
                 <div className="p-6">
                     <label
                         htmlFor="hotelDropdown"
@@ -195,14 +195,14 @@ const HotelDropdown = () => {
                     <div>
                         {roomAvailablity?.RoomList?.map((availableRoom) => (
                             <div key={availableRoom.RoomtypeID} className="p-6">
-                                <div className="border p-4 rounded-lg shadow-md bg-white hover:shadow-lg">
+                                <div className="border p-4 rounded-lg shadow-md bg-primary-white hover:shadow-lg">
                                     {availableRoom.RoomtypeName}
                                 </div>
 
                                 <h1 className="text-[28px] py-8">Inside Rooms</h1>
                                 {availableRoom?.RoomData
                                     ?.map((rooms) => (
-                                        <div key={rooms.RoomID} className="border p-4 rounded-lg shadow-md bg-white hover:shadow-lg">
+                                        <div key={rooms.RoomID} className="border p-4 rounded-lg shadow-md bg-primary-white hover:shadow-lg">
                                             <span>{rooms.RoomName}</span>
                                         </div>
                                     ))}
@@ -221,13 +221,13 @@ const HotelDropdown = () => {
                                         {roomData.map((plan) => (
                                             <div key={plan.RatePlanID} >
                                                 <h1 className="font-bold text-2xl py-4">Room Type</h1>
-                                                <div className="border p-4 rounded-lg shadow-md bg-white hover:shadow-lg">
+                                                <div className="border p-4 rounded-lg shadow-md bg-primary-white hover:shadow-lg">
                                                     <span>{plan.Name}</span> - Rate Type: {plan.RateType}
                                                 </div>
 
                                                 <h1 className="text-[28px] py-8">Inside Rooms</h1>
                                                 {plan?.Rooms?.map((rooms) => (
-                                                    <div key={rooms.RoomID} className="border p-4 my-4 rounded-lg shadow-md bg-white hover:shadow-lg">
+                                                    <div key={rooms.RoomID} className="border p-4 my-4 rounded-lg shadow-md bg-primary-white hover:shadow-lg">
                                                         <span>{rooms.RoomName}</span>
                                                     </div>
                                                 ))}
@@ -246,7 +246,7 @@ const HotelDropdown = () => {
                                                     {ratePlans
                                                         .filter((ratePlan) => ratePlan.RateType === rateType.Name)
                                                         .map((matchingRatePlan) => (
-                                                            <div key={matchingRatePlan.RatePlanID} className="border p-4 my-4 rounded-lg shadow-md bg-white hover:shadow-lg">
+                                                            <div key={matchingRatePlan.RatePlanID} className="border p-4 my-4 rounded-lg shadow-md bg-primary-white hover:shadow-lg">
                                                                 <p><strong>Plan Name:</strong> {matchingRatePlan.Name}</p>
                                                                 <p><strong>Rate Type:</strong> {matchingRatePlan.RateType}</p>
                                                             </div>

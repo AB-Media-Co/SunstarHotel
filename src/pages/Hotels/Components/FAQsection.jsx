@@ -3,12 +3,20 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 
-const FAQSection = ({ faqs }) => {
+const FAQSection = () => {
+    const { faqs } = useUpdatePagesHook();
+
     const [activeIndex, setActiveIndex] = useState(null);
+    const [showMore, setShowMore] = useState(false);
 
     const toggleFAQ = (index) => {
         setActiveIndex(activeIndex === index ? null : index);
+    };
+
+    const handleViewMore = () => {
+        setShowMore(!showMore);
     };
 
     return (
@@ -22,9 +30,9 @@ const FAQSection = ({ faqs }) => {
                 </p>
                 {/* FAQ List */}
                 <div className="flex flex-col gap-4">
-                    {faqs.map((faq, index) => (
-                        <div key={index} className="border border-gray-300 bg-white rounded-lg shadow-sm">
-                            {/* Toggle Button */}
+                    {faqs.slice(0, showMore ? faqs.length : 5).map((faq, index) => (
+                        <div key={index} className="border border-gray-300 bg-primary-white rounded-lg shadow-sm">
+                            {/* Button Toggle */}
                             <button
                                 onClick={() => toggleFAQ(index)}
                                 className="w-full text-left px-5 py-4 flex justify-between items-center font-medium text-gray-700 focus:outline-none transition-all duration-300"
@@ -60,6 +68,15 @@ const FAQSection = ({ faqs }) => {
                         </div>
                     ))}
                 </div>
+                {/* View More Button */}
+                {faqs.length > 5 && (
+                    <button
+                        onClick={handleViewMore}
+                        className="mx-auto md:mx-0 mt-4 px-4 py-2 bg-primary-green text-primary-white rounded  focus:outline-none"
+                    >
+                        {showMore ? "View Less" : "View More"}
+                    </button>
+                )}
             </div>
         </div>
     );

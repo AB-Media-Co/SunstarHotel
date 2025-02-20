@@ -11,15 +11,15 @@ const StayInTheLoop = ({ theme = 'light' }) => {
     const isDarkTheme = theme === 'dark';
 
     return (
-        <div className={`${isDarkTheme ? 'bg-[#0A0C08]' : 'bg-white'}`}>
+        <div className={`${isDarkTheme ? 'bg-[#0A0C08]' : 'bg-primary-white'}`}>
             <div className={`content flex font-markot flex-col justify-between px-[16px] md:px-0 pt-[60px] pb-[20px] `}>
                 <div className="flex justify-between flex-col md:flex-row">
-                    <h3 className={`text-mobile/h4 md:text-desktop/h4 ${isDarkTheme ? 'text-white' : 'text-black'}`}>
-                        <Instagram className='text-[#43AFAD] mr-2 ' style={{fontSize:"36px"}}/>
+                    <h3 className={`text-mobile/h4 md:text-desktop/h4 ${isDarkTheme ? 'text-primary-white' : 'text-black'}`}>
+                        <Instagram className='text-primary-green mr-2 ' style={{fontSize:"36px"}}/>
                         @sunstarhotel on Instagram!
                     </h3>
-                    <a href="#" target='_blank' className={`flex items-center justify-center border-white border w-[200px] md:w-[350px] text-white font-semibold p-2 md:px-4 mt-3 md:mt-0 rounded-full mt shadow-md hover:shadow-lg transition duration-300`}>
-                        <span className={`uppercase text-mobile/button md:text-desktop/button ${isDarkTheme ? 'text-white' : 'text-black'}`}>Follow us on Instagram</span>
+                    <a href="#" target='_blank' className={`flex items-center justify-center border-primary-white border w-[200px] md:w-[350px] text-primary-white font-semibold p-2 md:px-4 mt-3 md:mt-0 rounded-full mt shadow-md hover:shadow-lg transition duration-300`}>
+                        <span className={`uppercase text-mobile/button md:text-desktop/button ${isDarkTheme ? 'text-primary-white' : 'text-black'}`}>Follow us on Instagram</span>
                         <svg
                             className="ml-2 w-4 h-4 text-red-500"
                             fill="none"

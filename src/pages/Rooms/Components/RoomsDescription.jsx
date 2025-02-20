@@ -1,12 +1,9 @@
-import useScrollAnimations from "../../../hooks/useScrollAnimations";
-import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
 
 const RoomsDescription = () => {
-    useTextRevealAnimation();
-    useScrollAnimations();
+    
 
     return (
-        <div className="w-full bg-white py-4 md:py-12 px-4 md:px-8 lg:px-16">
+        <div className="w-full bg-primary-white py-4 md:py-12 px-4 md:px-8 lg:px-16">
             <div className="content gap-5 flex md:items-center flex-col lg:flex-row justify-between">
                 {/* Text Section */}
                 <div className="lg:w-1/2 md:text-center lg:text-left flex flex-col gap-4">

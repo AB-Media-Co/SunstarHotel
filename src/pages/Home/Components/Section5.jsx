@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
 
+import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 import CommonSwiper from "../../../Components/CommonSlider";
 
-const Card = ({ image, title, description }) => {
+const Card = ({ image, title, description, index }) => {
   return (
-    <div className="rounded-[10px] pb-10 md:pb-2 overflow-hidden">
+    <div className="rounded-[10px] pb-10 md:pb-2 overflow-hidden"
+
+    >
       <img
         src={image}
         alt={title}
@@ -22,21 +25,33 @@ const Card = ({ image, title, description }) => {
   );
 };
 
-const Section5 = ({ cards }) => {
+const Section5 = () => {
+  const { offeringSection } = useUpdatePagesHook();
+
   const renderCard = (card, index) => (
-    <Card
-      key={index}
-      image={card.image}
-      title={card.title}
-      description={card.description}
-    />
+    <div
+      data-aos="fade-up"
+      data-aos-delay={index * 100}
+    >
+
+      <Card
+        key={index}
+        image={card.image}
+        title={card.title}
+        description={card.description}
+      />
+
+    </div>
   );
 
   return (
     <div className="swiper-container bg-[#BAE9EF]">
       <div className=" pt-12 p-5 content">
+        <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-left mb-8">
+          {offeringSection?.heading}
+        </h2>
         <CommonSwiper
-          items={cards}
+          items={offeringSection?.offers}
           renderItem={renderCard}
           slidesPerView={3.5}
           spaceBetween={30}

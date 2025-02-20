@@ -104,7 +104,7 @@ const MultipleImageUpload = ({ onUploadSuccess, isUploading, imagesUrls = [], on
                     </div>
 
                     <button
-                        type="submit"
+                        onClick={handleSubmit}
                         className={`w-full mt-6 py-3 rounded-lg font-semibold text-white text-lg ${isUploading
                                 ? "bg-gray-400 cursor-not-allowed"
                                 : "bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition duration-200 transform hover:scale-105"

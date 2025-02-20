@@ -52,7 +52,7 @@ const InstagramData = () => {
               posts.map((instaPost, index) => (
                 <div
                   key={index}
-                  className="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105"
+                  className="bg-primary-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105"
                 >
                   {/* Details Section */}
                   <div className="p-4 flex items-center justify-between">
@@ -87,7 +87,7 @@ const InstagramData = () => {
                         href={`${instaPost.permalink}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 bg-[#3C908F] text-white text-sm font-medium rounded hover:bg-[#3C908F] transition duration-300"
+                        className="px-4 py-2 bg-primary-green text-primary-white text-sm font-medium rounded hover:bg-primmary-green transition duration-300"
                       >
                         View Post <OpenInNewIcon className="ml-1" fontSize="small" />
                       </a>

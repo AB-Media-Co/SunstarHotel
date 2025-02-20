@@ -20,7 +20,7 @@ const PropertyPolicies = ({ propertyData }) => {
       <ul className="list-none my-5 space-y-2">
         {policiesToShow.map((policy, index) => (
           <li key={index} className="flex items-start gap-2">
-            <div className="bg-black rounded-full p-[2px] text-white">
+            <div className="bg-black rounded-full p-[2px] text-primary-white">
               <CheckIcon className="w-[12px] h-[12px]" />
             </div>
             <span className="text-mobile/body/2 md:text-desktop/body/1 font-semibold">
@@ -31,7 +31,7 @@ const PropertyPolicies = ({ propertyData }) => {
       </ul>
       <button
         onClick={() => setShowAll(!showAll)}
-        className="mt-4 text-[#058FA2] text-mobile/button md:text-desktop/button hover:underline"
+        className="mt-4 text-primary-dark-green text-mobile/button md:text-desktop/button hover:underline"
       >
         {showAll ? "View less" : "View all 17 property policies"}
       </button>

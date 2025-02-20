@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 .content {
   @apply mx-auto max-w-7xl w-full md:w-11/12 px-2;
 }
@@ -10,3 +12,7 @@ html {
   scroll-behavior: smooth;
 }
 
+
+.myGlobalButton {
+  @apply bg-white my-2 w-full text-center py-4 px-2 cursor-pointer rounded-lg shadow-lg hover:shadow-xl font-semibold border text-2xl;
+}

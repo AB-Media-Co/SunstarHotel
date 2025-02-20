@@ -1,84 +1,76 @@
-/* eslint-disable react/prop-types */
-// import Marquee from "react-fast-marquee";
-
-// const ImageGallery = ({  items }) => {
-
-
-//     return (
-//         <Marquee gradient={false} >
-//         <div className="px-2 sm:px-4">
-//           <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-//             {items.map((item) => {
-//               if (item.type === "image") {
-//                 return (
-//                   <img
-//                     key={item.id}
-//                     src={item.src}
-//                     alt=""
-//                     className="w-full rounded-xl shadow mb-4"
-//                   />
-//                 );
-//               }
-//               if (item.type === "div") {
-//                 return (
-//                   <div
-//                     key={item.id}
-//                     className={`mb-4 p-4 h-[230px] flex justify-center items-center text-white text-center font-bold rounded-xl shadow ${item.bg}`}
-//                   >
-//                     {item.content}
-//                   </div>
-//                 );
-//               }
-//               return null;
-//             })}
-//           </div>
-//         </div>
-//       </Marquee>
-//     );
-// };
-
-// export default ImageGallery;
-
-
-
-/* eslint-disable react/prop-types */
+import React from 'react';
 import Marquee from "react-fast-marquee";
+import useUpdatePagesHook from "../ApiHooks/useUpdatePagesHook";
 
-const ImageGallery = ({ items }) => {
+const ImageGallery = () => {
+    const { galleryImages } = useUpdatePagesHook();
+
+    if (!galleryImages || !galleryImages.images || !galleryImages.content) {
+        return <div className="flex items-center justify-center h-48 text-gray-500">Loading or no data available...</div>;
+    }
+
+    const { images, content } = galleryImages;
+    const combinedItems = [...images.map(src => ({ type: "image", src })), ...content];
+
+    // Function to shuffle array (Fisher-Yates shuffle)
+    const shuffleArray = (array) => {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+    };
+
+    const shuffledItems = shuffleArray(combinedItems);
+
     return (
-        <Marquee gradient={false} speed={50} >
-            <div className="ps-2 sm:ps-4">
-                <div className="columns-2 sm:columns-3 md:columns-4 gap-4">
-                    {items.map((item, index) => {
-                        const dynamicHeight = index % 2 === 0 ? "h-64" : "h-80"; // Alternate heights for interest
+        <div className="relative z-10 w-full md:h-[40rem] h-[800px] overflow-hidden">
+            <Marquee gradient={false} speed={50}>
+                <div className="ps-2 sm:ps-4">
+                    <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
+                        {shuffledItems.map((item, index) => {
+                            if (item.type === "image") {
+                                return (
+                                    <div key={`image-${index}`} className="break-inside-avoid mb-4">
+                                        <div className="relative group">
+                                            <img
+                                                src={item.src}
+                                                alt=""
+                                                className="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
+                                            />
+                                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300 rounded-xl" />
+                                        </div>
+                                    </div>
+                                );
+                            }
 
-                        if (item.type === "image") {
-                            return (
-                                <img
-                                    key={item.id}
-                                    src={item.src}
-                                    alt=""
-                                    className="w-full rounded-xl shadow mb-4"
-                                />
-                            );
-                        }
-
-                        if (item.type === "div") {
-                            return (
-                                <div
-                                    key={item.id}
-                                    className={`p-4 ${dynamicHeight} flex justify-center items-center text-white my-2 text-center font-bold rounded-xl shadow-lg  transition-all duration-300 ${item.bg}`}
-                                >
-                                    {item.content}
-                                </div>
-                            );
-                        }
-
-                        return null;
-                    })}
+                            if (item.type === "div") {
+                                return (
+                                    <div
+                                        key={item._id}
+                                        className="break-inside-avoid mb-4"
+                                    >
+                                        <div 
+                                            className={`${item.bg} p-4 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 text-primary-white font-bold flex items-center justify-center`}
+                                            style={{ 
+                                                backgroundColor: item.bg,
+                                                minHeight: index % 2 === 0 ? '16rem' : '20rem'
+                                            }}
+                                        >
+                                            <div className="text-center w-full">
+                                                {item.content}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        })}
+                    </div>
                 </div>
-            </div>
-        </Marquee>
+            </Marquee>
+        </div>
     );
 };
 

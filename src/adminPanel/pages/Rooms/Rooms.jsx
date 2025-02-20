@@ -1,124 +1,219 @@
-import { useEffect } from "react";
-import { useDeleteRoomById, useGetRoomDetailsEzee } from "../../../ApiHooks/useHotelHook";
-import { useState } from "react";
-import { DeleteConfirmationModal } from "../../Components/DeletePopup";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import Loader from "../../../Components/Loader";
-import { RoomsSection } from "./RoomsSection";
-import RoomData from "./RoomData";
+// src/pages/RoomsPage.jsx
+import { useState, useEffect } from 'react';
+import {
+  Container,
+  Box,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  Button,
+  CircularProgress,
+  Typography,
+} from '@mui/material';
+import { styled } from '@mui/system';
+import { useGetHotels } from '../../../ApiHooks/useHotelHook2';
+import { useRooms, useUpdateRoom } from '../../../ApiHooks/useRoomsHook';
+import RoomCard from './RoomCard';
+import EditRooms from './EditRooms';
 
-const hotels = [
-  { value: '14494', label: 'Hotel Sunstar Residency', authId: '164638176786a1a258-c6ea-11ec-9' },
-  { value: '14492', label: 'Hotel Sunstar Grand', authId: '431032638481c78c0e-cd20-11ec-9' },
-  { value: '15282', label: 'Hotel Sunstar Heights', authId: '520246986786a91364-c6ea-11ec-9' },
-  { value: '14493', label: 'Hotel Sunstar Heritage', authId: '107320434586afe643-c6ea-11ec-9' },
-  { value: '14495', label: 'Hotel Sunshine', authId: '77963264823686bfcb-d038-11ec-9' },
-  { value: '14496', label: 'The Suncourt Hotel Yatri', authId: '43431464258699abee-c6ea-11ec-9' },
-];
+// Styled Components
+const StyledContainer = styled(Container)(({ theme }) => ({
+  paddingTop: theme.spacing(12),
+  paddingBottom: theme.spacing(4),
+  backgroundColor: '#fff',
+  borderRadius: theme.shape.borderRadius,
 
+}));
+
+const HeaderBox = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(4),
+  padding: theme.spacing(2),
+  backgroundColor: '#fff',
+  borderRadius: theme.shape.borderRadius,
+}));
+
+const HotelSelect = styled(FormControl)(({ theme }) => ({
+  width: '100%',
+  marginBottom: theme.spacing(2),
+}));
+
+const DateTextField = styled(TextField)(({ theme }) => ({
+  width: '100%',
+  marginBottom: theme.spacing(2),
+}));
+
+const AddRoomButton = styled(Button)(({ theme }) => ({
+  textAlign: 'right',
+  marginTop: theme.spacing(2),
+  [theme.breakpoints.down('md')]: {
+    textAlign: 'left',
+  },
+}));
+
+const RoomsGrid = styled(Grid)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+}));
 
 export const Rooms = () => {
-  const [selectedHotel, setSelectedHotel] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRoomId, setSelectedRoomId] = useState(null);
-  console.log(selectedRoomId, selectedHotel);
+  const [selectedHotel, setSelectedHotel] = useState('');
+  const [authCode, setAuthCode] = useState('');
+  const { data: hotels } = useGetHotels();
 
-  const navigate = useNavigate();
+  // Filter out hotels that have a valid hotelCode
+  const filteredHotels = hotels?.hotels?.filter((hotel) => hotel.hotelCode);
 
-  const { data: rooms, isLoading } = useGetRoomDetailsEzee(
-    selectedHotel?.value,
-    selectedHotel?.authId
+  // Auto-select the first available hotel if none is selected
+  useEffect(() => {
+    if (!selectedHotel && filteredHotels && filteredHotels.length > 0) {
+      const firstHotel = filteredHotels[0];
+      setSelectedHotel(String(firstHotel.hotelCode));
+      setAuthCode(firstHotel.authKey);
+    }
+  }, [filteredHotels, selectedHotel]);
 
+  // Define default date values
+  const today = new Date().toISOString().split('T')[0];
+  const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+  const [fromDate, setFromDate] = useState(today);
+  const [toDate, setToDate] = useState(tomorrow);
+
+  // Fetch rooms based on selected hotel and date range
+  const { data: rooms, isLoading: roomsLoading } = useRooms(
+    selectedHotel,
+    authCode,
+    fromDate,
+    toDate
   );
 
-  console.log(rooms)
-  const { mutate: deleteRoomById } = useDeleteRoomById();
+  // Deduplicate room types based on RoomTypeID
+  const uniqueRoomTypes = rooms
+    ? Array.from(new Map(rooms.map((item) => [item.RoomTypeID, item])).values())
+    : [];
 
-  useEffect(() => {
-    const defaultHotel = hotels[0]; // Default hotel set karo
-    setSelectedHotel(defaultHotel);
-  }, []);
+  const [editingRoom, setEditingRoom] = useState(null);
 
-  useEffect(() => {
-    // Disable scrolling when modal is open
-    document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [isModalOpen]);
+  const updateRoomMutation = useUpdateRoom(selectedHotel, authCode, fromDate, toDate);
 
-
-  const handleSelectHotel = (selectedOption) => {
-    setSelectedHotel(selectedOption);
-    console.log(`Hotel ID: ${selectedOption.value}, Authentication ID: ${selectedOption.authId}`);
-  };
-
-  const handleEdit = (roomId) => {
-    navigate(`/admin/editRooms/${roomId}`);
-  };
-
-  const handleAddRoom = () => {
-    navigate('/admin/addRooms');
-  };
-
-  const handleDeleteClick = (roomId) => {
-    setSelectedRoomId(roomId);
-    setIsModalOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    if (selectedRoomId) {
-      deleteRoomById(selectedRoomId, {
-        onSuccess: () => {
-          toast.success(`Room Deleted Successfully`);
-          setIsModalOpen(false);
-          setSelectedRoomId(null);
-        },
-        onError: (error) => {
-          toast.error(`Failed to delete Room: ${error.message}`);
-          setIsModalOpen(false);
-        },
-      });
-    }
-  };
-
-  const handleCancelDelete = () => {
-    setIsModalOpen(false);
-    setSelectedRoomId(null);
+  const handleSaveRoom = (updatedRoom) => {
+    updateRoomMutation.mutate(updatedRoom, {
+      onSuccess: () => setEditingRoom(null),
+      onError: (error) => console.error('Error updating room:', error),
+    });
   };
 
   return (
-    <>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <div>
-          {/* <RoomsSection
-            title="Our Premium Rooms"
-            data={rooms?.ezeeResponse?.RoomInfo}
-            type="room"
-            onEdit={handleEdit}
-            onDelete={handleDeleteClick}
-            onAdd={handleAddRoom}
-            isDropdownShow={true}
-            hotels={hotels}
-            handleSelectHotel={handleSelectHotel}
-            selectedHotel={selectedHotel} 
+    <StyledContainer maxWidth="lg">
+      {/* Header Section: Hotel Selector, Date Range, and Add Room Button */}
+      <HeaderBox>
+        <Grid container spacing={2} alignItems="center">
+          {/* Left Section: Hotel Select and Date Range */}
+          <Grid item xs={12} md={8}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <HotelSelect fullWidth>
+                  <InputLabel id="hotel-select-label">Select Hotel</InputLabel>
+                  <Select
+                    labelId="hotel-select-label"
+                    value={selectedHotel}
+                    label="Select Hotel"
+                    onChange={(e) => {
+                      setSelectedHotel(e.target.value);
+                      const selected = filteredHotels?.find(
+                        (hotel) => String(hotel.hotelCode) === e.target.value
+                      );
+                      if (selected) {
+                        setAuthCode(selected.authKey);
+                      }
+                    }}
+                  >
+                    {filteredHotels &&
+                      filteredHotels.map((hotel) => (
+                        <MenuItem key={hotel._id} value={String(hotel.hotelCode)}>
+                          {hotel.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </HotelSelect>
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <DateTextField
+                  fullWidth
+                  label="From"
+                  type="date"
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <DateTextField
+                  fullWidth
+                  label="To"
+                  type="date"
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          {/* Right Section: Add Room Button */}
+          <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'left', md: 'right' } }}>
+            <AddRoomButton
+              variant="contained"
+              // color="success"
+              onClick={() =>
+                setEditingRoom({
+                  RoomTypeID: '',
+                  RoomName: '',
+                  RoomDescription: '',
+                  defaultRate: '',
+                  discountRate: '',
+                  Amenities: [],
+                  RoomImage: [],
+                })
+              }
+            >
+              Add Room
+            </AddRoomButton>
+          </Grid>
+        </Grid>
+      </HeaderBox>
 
-          /> */}
-          <RoomData
-            data={rooms?.ezeeResponse?.RoomInfo}
+      {/* Rooms List Section */}
+      <Box>
+        {roomsLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <RoomsGrid container spacing={3}>
+            {rooms &&
+              rooms
+                .filter((room) => room.HotelCode && room.HotelCode === selectedHotel)
+                .map((room) => (
+                  <Grid item xs={12} sm={6} md={4} key={room._id}>
+                    <RoomCard room={room} onEdit={() => setEditingRoom(room)} />
+                  </Grid>
+                ))}
+          </RoomsGrid>
+        )}
+      </Box>
 
-          />
-
-          <DeleteConfirmationModal
-            isOpen={isModalOpen}
-            onConfirm={handleConfirmDelete}
-            onCancel={handleCancelDelete}
-          />
-        </div>
+      {/* Edit Room Modal */}
+      {editingRoom && (
+        <EditRooms
+          room={editingRoom}
+          roomTypes={uniqueRoomTypes}
+          onClose={() => setEditingRoom(null)}
+          onSave={handleSaveRoom}
+        />
       )}
-    </>
+    </StyledContainer>
   );
 };
+
+export default Rooms;

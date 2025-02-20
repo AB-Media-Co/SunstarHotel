@@ -1,11 +1,7 @@
 /* eslint-disable react/prop-types */
 import HotelCard from "../../../Components/CardsCommonComp/HotelCardLayout";
-import useScrollAnimations from "../../../hooks/useScrollAnimations";
-import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
 
 const SunstarBrandsSection = ({ hotels }) => {
-    useTextRevealAnimation();
-    useScrollAnimations();
 
     return (
         <section className="py-12 content">

@@ -1,14 +1,15 @@
 /* eslint-disable react/prop-types */
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import { useState, useCallback, useEffect } from "react";
+import { ExternalLink } from 'lucide-react';
 
 const MapGoogle = ({ locationData }) => {
   const { name, address, mapCoordinates } = locationData;
 
   const containerStyle = {
     width: "100%",
-    height: "441px",
-    borderRadius: "50px",
+    height: "580px",
+    borderRadius: "10px",
   };
 
   const center = {
@@ -25,15 +26,13 @@ const MapGoogle = ({ locationData }) => {
   const [map, setMap] = useState(null);
   const [places, setPlaces] = useState([]);
   const [activeTab, setActiveTab] = useState("attractions");
-  const [activeMarker, ] = useState(null);
+  const [activeMarker,] = useState(null);
 
   const [attractions, setAttractions] = useState([]);
-  console.log(attractions)
   const [restaurants, setRestaurants] = useState([]);
 
 
   const onLoad = useCallback((mapInstance) => {
-    console.log('Map loaded:', mapInstance);
     setMap(mapInstance);
     fetchPlaces(mapInstance, "tourist_attraction");
   }, []);
@@ -158,23 +157,24 @@ const MapGoogle = ({ locationData }) => {
     <div className="flex flex-col my-10 content">
       {isLoaded ? (
         <>
-          <div className="w-full mb-5">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Location Of {name}
-            </h2>
-            <div className="flex items-center space-x-2 mb-6">
-              <p className="text-gray-600">{address}</p>
-              <a
-                onClick={handleResetMap}
-                className="text-blue-500 underline cursor-pointer"
-              >
-                View Hotel Location
-              </a>
-            </div>
-          </div>
+
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-2 space-y-4 w-full">
+              <div className="w-full mb-5 flex flex-col gap-1">
+                <h2 className="text-desktop/h3 font-bold mb-1">
+                  Location
+                </h2>
+                <p className="text-[#999999] text-desktop/h6/medium">{address}</p>
+                <a
+                  onClick={handleResetMap}
+                  className="my-2 underline items-center text-[#999999] font-bold text-lg cursor-pointer flex gap-2"
+                >
+                  View Hotel Location <ExternalLink style={{height:"16px"}} />
+                </a>
+
+              </div>
+
               <div className="relative border-b-2 w-full flex justify-evenly p-2 border-2 rounded-xl">
                 {[
                   {
@@ -198,7 +198,7 @@ const MapGoogle = ({ locationData }) => {
                     <img src={icon} alt={label} className="w-10 h-10" />
                     <div className="text-start">
                       {label} <br />
-                      {count} Nearby {/* Dynamically display the count for the selected tab */}
+                      {count} Nearby 
                     </div>
                   </button>
                 ))}

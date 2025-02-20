@@ -9,7 +9,11 @@ const OtherEnquiries = ({ enquiries }) => {
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8">Other Enquiries</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {enquiries.map((enquiry, index) => (
-                        <div key={index} className="flex items-center space-x-4">
+                        <div key={index} className="flex items-center space-x-4"
+
+                            data-aos="fade-up"
+                            data-aos-delay={index * 100}
+                        >
                             <Icon name={enquiry.icon} className="w-10 h-10" />
                             <div>
                                 <p className="text-md font-medium text-[#A4A4A4]">{enquiry.title}</p>

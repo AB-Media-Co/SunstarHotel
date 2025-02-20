@@ -1,51 +1,88 @@
-import useScrollAnimations from "../../../hooks/useScrollAnimations";
-import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
+/* eslint-disable react/prop-types */
 
-function HotelCard() {
-    useTextRevealAnimation();
-    useScrollAnimations();
+function HotelCard({ hotelData }) {
+    console.log(hotelData);
     return (
-        <div className="py-6 content px-4">
-            <div className="flex flex-col sm:flex-row justify-between md:items-center sm:space-x-5">
-                {/* Hotel Name and Price Section */}
-                <div className="flex flex-col sm:flex-row items-center sm:space-x-5 w-full sm:w-auto">
-                    <div>
-                        <h2 className="text-mobile/h4 md:text-desktop/h3 text-reveal-animation font-bold text-gray-800">
-                            Hotel Sunstar - Grand
-                        </h2>
-                        <div className="text-mobile/caption md:text-desktop/caption text-teal-500 animation-on-scroll">
-                            <a href="#" className="hover:underline">
-                                Book Direct for Lowest Prices!
-                            </a>
-                        </div>
-                    </div>
-                    <div className="text-mobile/body/2 md:text-desktop/body/1 mt-3 sm:mt-0 flex md:flex-col gap-2 animation-on-scroll">
-                        <p className="text-teal-500 font-bold">
-                            ₹ 5,880 <span className="font-normal text-gray-600">/ night</span>
-                        </p>
-                        <p className="text-xs text-gray-500">Incl. taxes</p>
-                    </div>
+      <div className=" mx-auto bg-white  content">
+        {/* Optional Image Section */}
+        {hotelData?.image && (
+          <div className="relative">
+            <img
+              src={hotelData.image}
+              alt={`${hotelData?.name} image`}
+              className="w-full h-48 object-cover"
+            />
+            {hotelData?.price && hotelData?.discountedPrice && (
+              <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                {Math.round(
+                  ((hotelData.price - hotelData.discountedPrice) / hotelData.price) *
+                    100
+                )}
+                % OFF
+              </div>
+            )}
+          </div>
+        )}
+        <div className="p-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center sm:space-x-5">
+            {/* Hotel Name and Price Section */}
+            <div className="flex flex-col sm:flex-row items-center sm:space-x-5">
+              <div>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
+                  {hotelData?.name}
+                </h2>
+                <div className="text-sm text-teal-500">
+                  <a href="#" className="hover:underline">
+                    Book Direct for Lowest Prices!
+                  </a>
                 </div>
-                {/* Check-In/Check-Out Section */}
-                <div className="bg-teal-100 text-[#058FA2] font-medium rounded-full py-2 px-4 justify-center flex text-mobile/body/2 md:text-desktop/body/1 shadow-sm mt-4 sm:mt-0">
-                    Check-In <span className="font-bold text-teal-800">2:00pm</span> Check-Out{" "}
-                    <span className="font-bold text-teal-800">11:00am</span>
+              </div>
+              <div className="mt-3 sm:mt-0 flex flex-col items-center">
+                <div className="flex gap-4 items-center">
+                  {hotelData?.price && (
+                    <span className="text-sm md:text-base text-red-500 font-bold line-through">
+                      ₹ {hotelData?.price}
+                    </span>
+                  )}
+                  <span className="text-teal-500 text-2xl font-bold">
+                    ₹ {hotelData?.discountedPrice}{" "}
+                    <span className="font-normal text-base text-gray-600">
+                      / night
+                    </span>
+                  </span>
                 </div>
+                <p className="text-xs text-gray-500">Incl. taxes</p>
+              </div>
             </div>
-
-            {/* Hotel Description */}
-            <div className="mt-4 text-gray-600 animation-on-scroll w-full sm:w-[800px] text-mobile/body/2 md:text-desktop/body/1">
-                <p>
-                    Nestled in the heart of Karol Bagh, New Delhi, our hotel boasts a welcoming
-                    wooden lodge-inspired lobby, a versatile restaurant and meeting room for your
-                    culinary and business needs.
-                </p>
+            {/* Check-In/Check-Out Section */}
+            <div className="mt-4 sm:mt-0 bg-teal-100 text-[#058FA2] font-medium rounded-full py-2 px-4 flex items-center shadow-sm">
+              <span>
+                Check-In{" "}
+                <span className="font-bold text-teal-800">{hotelData?.checkIn}</span>
+              </span>
+              <span className="mx-2">|</span>
+              <span>
+                Check-Out{" "}
+                <span className="font-bold text-teal-800">
+                  {hotelData?.checkOut}
+                </span>
+              </span>
             </div>
-
-            {/* Divider */}
-            <hr className="mt-4 border-gray-300" />
+          </div>
+  
+          {/* Optional Hotel Description */}
+          {hotelData?.description && (
+            <div className="mt-4 text-gray-600 text-sm line-clamp-3">
+              <p>{hotelData.description}</p>
+            </div>
+          )}
+  
+          {/* Divider */}
+          <hr className="mt-4 border-gray-300" />
         </div>
+      </div>
     );
-}
-
-export default HotelCard;
+  }
+  
+  export default HotelCard;
+  

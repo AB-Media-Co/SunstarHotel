@@ -19,7 +19,7 @@ const Button = ({ label, onClick, additionalClasses = "" }) => (
   <button
     type="submit"
     onClick={onClick}
-    className={`px-8 py-3 bg-[#058FA2] text-white text-mobile/button md:text-desktop/button font-semibold rounded-full shadow-md  focus:outline-none focus:ring-2 focus:ring-yellow-300 ${additionalClasses}`}
+    className={`px-8 py-3 bg-[#058FA2] text-primary-white text-mobile/button md:text-desktop/button font-semibold rounded-full shadow-md  focus:outline-none focus:ring-2 focus:ring-yellow-300 ${additionalClasses}`}
   >
     {label}
   </button>

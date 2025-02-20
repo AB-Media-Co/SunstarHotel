@@ -1,10 +1,7 @@
 /* eslint-disable react/prop-types */
-import useScrollAnimations from "../../../hooks/useScrollAnimations";
-import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
 
 const HotelsInfo = ({ hotels }) => {
-  useTextRevealAnimation();
-  useScrollAnimations();
+ 
   
   return (
     <div className="bg-gradient-to-r from-blue-50 to-gray-50 py-12">
@@ -23,6 +20,9 @@ const HotelsInfo = ({ hotels }) => {
           {hotels.map((hotel, index) => (
             <div
               key={index}
+               
+      data-aos="fade-up"
+      data-aos-delay={index * 100} 
               className="group relative cursor-pointer animation-on-scroll rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2"
             >
               {/* Hotel Image */}
@@ -35,13 +35,13 @@ const HotelsInfo = ({ hotels }) => {
               </div>
               {/* Overlay on Hover */}
               <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <button className="px-4 py-2 bg-[#3C908F] text-white rounded-full text-sm font-semibold hover:bg-[#3C908F] transition-colors">
+                <button className="px-4 py-2 bg-primary-green text-primary-white rounded-full text-sm font-semibold hover:bg-primary-green transition-colors">
                   Contact Now
                 </button>
               </div>
               {/* Hotel Name */}
-              <div className="p-4 bg-white">
-                <p className="text-center text-mobile/body/2 md:text-desktop/body/1 font-bold text-gray-800 group-hover:text-[#3C908F]  transition-colors">
+              <div className="p-4 bg-primary-white">
+                <p className="text-center text-mobile/body/2 md:text-desktop/body/1 font-bold text-gray-800 group-hover:text-primary-green  transition-colors">
                   {hotel.name} <span className="text-gray-400">&gt;</span>
                 </p>
               </div>

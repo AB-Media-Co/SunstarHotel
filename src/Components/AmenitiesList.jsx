@@ -1,50 +1,81 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import useScrollAnimations from "../hooks/useScrollAnimations";
-import useTextRevealAnimation from "../hooks/useTextRevealAnimation";
+
 const AmenitiesList = ({ title, subtitle, amenities }) => {
     const [visible, setVisible] = useState(false);
-
-    const toggleVisibility = () => {
-        setVisible(!visible);
-    };
-
-    useTextRevealAnimation();
-    useScrollAnimations();
+    const itemsToShow = visible ? amenities.length : 12;
 
     return (
-        <div id="amenities" className="py-8 bg-white content">
-            <hr className="bg-[#A4A4A4] h-[2px]" />
-            <h2 className="md:text-[36px] text-[20px] font-bold my-6 text-reveal-animation">{title}</h2>
-            <hr className="bg-[#A4A4A4] h-[2px]" />
-            <p className="bg-[#FFC700] text-white text-[18px] md:px-4 md:py-2 py-1 rounded-lg text-center font-bold w-[200px] my-4">{subtitle}</p>
-            <div className="grid grid-cols-3 sm:grid-cols-3 mt-8 lg:grid-cols-6 gap-8">
-                {amenities.slice(0, visible ? amenities.length : 12).map((amenity, index) => (
-                    <div key={index} className="flex flex-col justify-center items-center space-y-2 animation-on-scroll">
-                        <img src={amenity.icon} alt="" className="md:w-[50px] w-[40px] md:h-[50px] h-[40px]" />
-                        <p className="md:text-[16px] text-[12px] font-medium text-[#FDC114]">{amenity.label}</p>
-                    </div>
-                ))}
-            </div>
-            <button
-                onClick={toggleVisibility}
-                className="mt-6 text-[#848484] hover:underline flex items-center"
-            >
-                {visible ? (
-                    <div className="flex gap-2 items-center">
-                        <span className="md:text-[22px] font-bold underline"> See Less</span>
-                        <KeyboardArrowUpIcon className="mt-2"/>
-                    </div>
-                ) : (
-                    <div className="flex gap-2 items-center">
-                        <span className="md:text-[22px] font-bold underline">See More </span>
-                        <ExpandMoreIcon className="mt-2"/>
+        <section id="amenities" className="py-12 bg-primary-white content">
+            <div className="container mx-auto px-4">
+                <hr className="bg-[#A4A4A4] h-[2px] w-full" />
+                <h2 className="md:text-4xl text-2xl font-bold my-8 text-reveal-animation transition-all duration-300">
+                    {title || "Amenities"}
+                </h2>
+                <hr className="bg-[#A4A4A4] h-[2px] w-full mb-6" />
+                
+                <div className="flex justify-start">
+                    <span className="bg-primary-yellow text-primary-white text-lg font-bold 
+                           px-6 py-2 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300">
+                        {subtitle}
+                    </span>
+                </div>
+                
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-8 mt-10">
+                    <AnimatePresence>
+                        {amenities.slice(0, itemsToShow).map((amenity, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.3, delay: index % 12 * 0.05 }}
+                                className="flex flex-col justify-center items-start group"
+                            >
+                                <div className="p-3 
+                                       transition-all duration-300">
+                                    <img 
+                                        src={amenity.icon} 
+                                        alt={amenity.label}
+                                        className="md:w-12 w-10 md:h-12 h-10 object-contain " 
+                                    />
+                                </div>
+                                <p className="md:text-base text-sm font-medium mt-3 text-center text-gray-800 group-hover:text-black">
+                                    {amenity.label}
+                                </p>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </div>
+                
+                {amenities.length > 12 && (
+                    <div className="flex  mt-10">
+                        <motion.button
+                            onClick={() => setVisible(!visible)}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="flex items-center gap-2 px-6 py-2 rounded-lg bg-gray-100 
+                                     text-gray-700 font-bold transition-colors duration-300"
+                        >
+                            {visible ? (
+                                <>
+                                    <span>See Less</span>
+                                    <KeyboardArrowUpIcon />
+                                </>
+                            ) : (
+                                <>
+                                    <span>See More</span>
+                                    <ExpandMoreIcon />
+                                </>
+                            )}
+                        </motion.button>
                     </div>
                 )}
-            </button>
-        </div>
+            </div>
+        </section>
     );
 };
 

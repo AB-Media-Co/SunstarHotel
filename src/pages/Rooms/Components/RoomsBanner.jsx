@@ -8,19 +8,24 @@ import { differenceInCalendarDays } from "date-fns";
 import GuestsDropdown from "../../../Components/GuestsDropdown";
 import { useNavigate } from "react-router-dom";
 
-
 function RoomsBanner({ businessPlatformFeatures }) {
     const [checkIn, setCheckIn] = useState(null);
     const [checkOut, setCheckOut] = useState(null);
     const [openCalender, setOpenCalender] = useState(false);
+    const [bookingError, setBookingError] = useState(false);
 
+    const navigate = useNavigate();
 
-    const navigate = useNavigate()
     const handleBooking = () => {
-        console.log("Check-In Date:", checkIn);
-        console.log("Check-Out Date:", checkOut);
-
-        navigate('/room/details')
+        if (!checkIn || !checkOut) {
+            setBookingError(true);
+            return;
+        } else {
+            setBookingError(false);
+            console.log("Check-In Date:", checkIn);
+            console.log("Check-Out Date:", checkOut);
+            navigate('/room/details');
+        }
     };
 
     const calculateNights = () => {
@@ -39,9 +44,8 @@ function RoomsBanner({ businessPlatformFeatures }) {
                 iconSize="h-6 w-6"
             />
 
-
             <div
-                className={`bg-white bg-opacity-50 backdrop-blur-sm py-8 px-4  lg:left-[10%] transition-all duration-500 ease-in-out 
+                className={`bg-primary-white bg-opacity-50 backdrop-blur-sm py-8 px-4  lg:left-[10%] transition-all duration-500 ease-in-out 
         content absolute top-[55%]
         md:px-8 lg:px-12 rounded-md shadow-lg lg:mx-auto  
         z-10 flex flex-col items-center gap-6 mx-2`}
@@ -50,7 +54,8 @@ function RoomsBanner({ businessPlatformFeatures }) {
 
                     <div
                         onClick={() => setOpenCalender(true)}
-                        className="flex flex-wrap w-full justify-center items-center border border-[#006167] rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"
+                        className={`flex flex-wrap w-full justify-center items-center border rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm ${bookingError ? 'border-red-500' : 'border-[#006167]'
+                            }`}
                     >
                         <Icon name="calendar" className="h-6 w-6 text-[#006167]" />
                         <span className="text-[#006167] font-semibold text-base sm:text-lg md:text-[24px]">
@@ -72,15 +77,16 @@ function RoomsBanner({ businessPlatformFeatures }) {
                         {/* Select Button */}
                         <button
                             onClick={handleBooking}
-                            // className="bg-[#006167] text-white text-[19px] lg:w-[150px] rounded-full shadow-md px-6 md:px-6 md:py-3"
-                            className="bg-[#006167] text-white text-sm sm:text-base lg:text-lg  sm:w-auto rounded-full shadow-md px-6 py-3"
-
+                            className="bg-[#006167] text-primary-white text-sm sm:text-base lg:text-lg  sm:w-auto rounded-full shadow-md px-6 py-3"
                         >
                             Book Room
                         </button>
                     </div>
 
                 </div>
+                {bookingError && (
+                    <p className="text-red-500 text-sm">Please select Check-In and Check-Out dates.</p>
+                )}
             </div>
 
             {openCalender && (
@@ -97,4 +103,3 @@ function RoomsBanner({ businessPlatformFeatures }) {
 }
 
 export default RoomsBanner;
-

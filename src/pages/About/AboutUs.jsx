@@ -1,12 +1,14 @@
 import HeroSection from './Components/HeroSection'
 import ValuesSection from './Components/ValuesSection'
-import { heroData, valuesData, testimonialData, hotels, AboutUsSection5cards } from '../../Data/AboutSectionData';
+import { heroData, valuesData, testimonialData,  AboutUsSection5cards } from '../../Data/AboutSectionData';
 import TestimonialSection from '../../Components/TestimonialSection';
 import SunstarBrandsSection from './Components/SunstarBrandsSection';
 import ShineSection from './Components/ShineSection';
 import CompnayCards from './Components/CompnayCards';
+import { useGetHotels } from '../../ApiHooks/useHotelHook2';
 
 const AboutUs = () => {
+  const { data: hotels } = useGetHotels();
   return (
     <div className="font-sans ">
       <HeroSection
@@ -29,7 +31,7 @@ const AboutUs = () => {
         backgroundImage={testimonialData.backgroundImage}
         
       />
-      <SunstarBrandsSection hotels={hotels} />
+      <SunstarBrandsSection hotels={hotels?.hotels} />
     </div> 
   )
 }

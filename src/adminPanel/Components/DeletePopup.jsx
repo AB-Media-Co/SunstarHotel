@@ -33,7 +33,7 @@ export const DeleteConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
             exit={{ opacity: 0 }}
           >
             <motion.div 
-              className="modal-container bg-white rounded-xl p-10 text-center shadow-2xl transform transition-all duration-500 ease-in-out" 
+              className="modal-container bg-primary-white rounded-xl p-10 text-center shadow-2xl transform transition-all duration-500 ease-in-out" 
               initial={{ y: -20, opacity: 0 }} 
               animate={{ y: 0, opacity: 1 }} 
               exit={{ y: 20, opacity: 0 }}
@@ -42,13 +42,13 @@ export const DeleteConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
               <p className="text-gray-600 mb-4">Are you sure you want to delete this? This action cannot be undone.</p>
               <div className="flex justify-around mt-6">
                 <button 
-                  className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg transform hover:scale-105 transition-transform duration-200 shadow-md" 
+                  className="bg-red-600 hover:bg-red-700 text-primary-white font-semibold py-3 px-8 rounded-lg transform hover:scale-105 transition-transform duration-200 shadow-md" 
                   onClick={onConfirm}
                 >
                   Yes, Delete
                 </button>
                 <button 
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transform hover:scale-105 transition-transform duration-200 shadow-md" 
+                  className="bg-blue-600 hover:bg-blue-700 text-primary-white font-semibold py-3 px-8 rounded-lg transform hover:scale-105 transition-transform duration-200 shadow-md" 
                   onClick={onCancel}
                 >
                   Cancel

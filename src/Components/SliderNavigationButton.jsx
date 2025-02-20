@@ -11,7 +11,7 @@ const SliderNavigationButton = ({ direction, onClick, disabled }) => {
 
     return (
         <button
-            className={`bg-[#FDC114] text-white p-4 rounded-full ${disabled ? "opacity-50 bg-gray-500" : ""}`}
+            className={`bg-primary-yellow text-primary-white p-4 rounded-full ${disabled ? "opacity-50 bg-gray-500" : ""}`}
             onClick={onClick}
             disabled={disabled}
         >

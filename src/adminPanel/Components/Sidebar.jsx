@@ -12,16 +12,13 @@ const SidebarContext = createContext();
 export function Sidebar() {
     const [expanded, setExpanded] = useState(true);
     const { adminProfile } = useAdminContext();
-    console.log(adminProfile,"sidebar")
 
-    // useEffect(() => {
-    //     useAdminContext(); // Call only when this page is loaded
-    //   }, []);
     const sidebarItems = [
         { id: 1, text: 'Hotels', icon: <Hotel />, path: '/admin/hotels' },
         { id: 2, text: 'Rooms', icon: <NightShelterOutlined />, path: '/admin/rooms' },
-        { id: 4, text: 'Locations', icon: <LocationCity />, path: '/admin/hotel-locations' },
-        { id: 3, text: 'All Users', icon: <PeopleAlt />, path: '/admin/all-users', role: 'admin' }, 
+        // { id: 4, text: 'Locations', icon: <LocationCity />, path: '/admin/hotel-locations' },
+        { id: 3, text: 'Update Pages', icon: <PeopleAlt />, path: '/admin/pages' }, 
+        { id: 4, text: 'All Users', icon: <PeopleAlt />, path: '/admin/all-users', role: 'admin' }, 
     ];
 
     return (

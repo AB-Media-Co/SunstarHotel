@@ -1,12 +1,9 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import useScrollAnimations from "../../../hooks/useScrollAnimations";
-import useTextRevealAnimation from "../../../hooks/useTextRevealAnimation";
 
 const HeroSection = ({ title, highlightText, description, imageSrc }) => {
     const words = title.split(" ");
-    useTextRevealAnimation();
-    useScrollAnimations("#section1");
+
 
     return (
         <div className="w-full bg-[#6EC4C2] py-20 px-6 md:px-12 lg:px-20 relative overflow-hidden">
@@ -18,7 +15,7 @@ const HeroSection = ({ title, highlightText, description, imageSrc }) => {
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     className="lg:w-1/2 text-center lg:text-left"
                 >
-                    <h1 className="text-mobile/h2 md:text-desktop/h2 md:text-[47px]  text-white  mb-6">
+                    <h1 className="text-mobile/h2 md:text-desktop/h2 md:text-[47px]  text-primary-white  mb-6">
                         {words.map((word, index) => {
                             const shouldHighlight = highlightText?.includes(word);
                             return (
@@ -27,7 +24,7 @@ const HeroSection = ({ title, highlightText, description, imageSrc }) => {
                                     className={`${
                                         shouldHighlight
                                             ? "text-[#FDC114] text-reveal-animation"
-                                            : "text-white text-reveal-animation"
+                                            : "text-primary-white text-reveal-animation"
                                     }`}
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -39,7 +36,7 @@ const HeroSection = ({ title, highlightText, description, imageSrc }) => {
                             );
                         })}
                     </h1>
-                    <p className="text-mobile/body/2 md:text-desktop/body/large text-white mb-6 whitespace-pre-line animation-on-scroll-Section1 leading-relaxed">
+                    <p className="text-mobile/body/2 md:text-desktop/body/large text-primary-white mb-6 whitespace-pre-line animation-on-scroll-Section1 leading-relaxed">
                         {description}
                     </p>
                 </motion.div>

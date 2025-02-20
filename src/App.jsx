@@ -19,8 +19,12 @@ import ViewUser from './adminPanel/pages/Users/ViewUser';
 import { AdminProvider } from './adminPanel/utils/AdminContext';
 import AllUsers from './adminPanel/pages/Users/AllUsers';
 import { HotelLocations } from './adminPanel/pages/HotelLocations/HotelLocations';
-import { EditHotel } from './adminPanel/pages/AdminHotels/EditHotel';
-import { AddHotel } from './adminPanel/pages/AdminHotels/AddHotel';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import EditHotel from './adminPanel/pages/AdminHotels/EditHotel';
+import AddHotel from './adminPanel/pages/AdminHotels/AddHotel';
+import UpdatePage from './adminPanel/pages/UpdatePages/UpdatePage';
+
 
 const Layout = lazy(() => import(/* webpackChunkName: "layout" */ './Components/Layout'));
 const Home = lazy(() => import(/* webpackChunkName: "home" */ './pages/Home/Home'));
@@ -79,6 +83,12 @@ function LoaderWrapper({ children }) {
 }
 
 function App() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Customize animation duration (in ms)
+      once: false,     // Whether animation should occur only once while scrolling down
+    });
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
@@ -90,7 +100,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/why-sunstar" element={<AboutUs />} />
                 <Route path="/corporate-booking" element={<Corporatebooking />} />
-                <Route path="/hotels/:hotelId" element={<Hotels />} />
+                <Route path="/hotels/:hotelCode" element={<Hotels />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/room/:id" element={<HotelRooms />} />
                 <Route path="/citypage" element={<CityPage />} />
@@ -103,8 +113,10 @@ function App() {
               <Routes>
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/hotels" element={<PrivateRoute><AdminHotels /></PrivateRoute>} />
-                <Route path="/admin/edithotels/:hotelId" element={<PrivateRoute><EditHotel/></PrivateRoute>} />
-                <Route path="/admin/addHotels" element={<PrivateRoute><AddHotel/></PrivateRoute>} />
+                <Route path="/admin/hotels/edit/:hotelCode" element={<PrivateRoute><EditHotel/></PrivateRoute>} />
+                <Route path="/admin/hotels/add" element={<PrivateRoute><AddHotel/></PrivateRoute>} />
+                <Route path="/admin/pages" element={<PrivateRoute><UpdatePage/></PrivateRoute>} />
+          
 
                 <Route path="/admin/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
                 <Route path="/admin/addRooms" element={<PrivateRoute><AddRooms /></PrivateRoute>} />
@@ -112,7 +124,7 @@ function App() {
                 <Route path="/admin/create_user" element={<PrivateRoute><CreateUser /></PrivateRoute>} />
                 <Route path="/admin/view-user" element={<PrivateRoute><ViewUser /></PrivateRoute>} />
                 <Route path="/admin/all-users" element={<PrivateRoute><AllUsers /></PrivateRoute>} />
-                <Route path="/admin/hotel-locations" element={<PrivateRoute><HotelLocations/></PrivateRoute>} />
+                <Route path="/admin/hotel-locations" element={<PrivateRoute><HotelLocations /></PrivateRoute>} />
               </Routes>
             </AdminProvider>
           </LoaderWrapper>

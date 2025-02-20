@@ -4,8 +4,9 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
+
     return (
-        <footer className="bg-gradient-to-r from-[#4DB8B6] to-[#3A8B8A] text-white">
+        <footer className="bg-gradient-to-r from-[#4DB8B6] to-[#3A8B8A] text-primary-white">
             <div className="content mx-auto pt-10  py-4">
                 {/* Top Section */}
                 <div className="flex flex-col md:flex-row justify-between items-start gap-12">
@@ -56,11 +57,11 @@ const Footer = () => {
                 {/* Bottom Section */}
                 <div className="md:flex hidden md:flex-row gap-4 md:items-center justify-center">
                     <a href="#" className="hover:underline">©2024 Sunstar Hospitality  </a>
-                    <hr className='bg-white h-[20px] w-[1px]'/>
+                    <hr className='bg-primary-white h-[20px] w-[1px]'/>
                     <a href="#" className="hover:underline">Terms & Conditions </a>
-                    <hr className='bg-white h-[20px] w-[1px]'/>
+                    <hr className='bg-primary-white h-[20px] w-[1px]'/>
                     <a href="#" className="hover:underline">Cancellation Policy </a>
-                    <hr className='bg-white h-[20px] w-[1px]'/>
+                    <hr className='bg-primary-white h-[20px] w-[1px]'/>
                     <a href="#" className="hover:underline">Privacy & Cookie Policy</a>
                 </div>
                 <div className="flex flex-col md:hidden  gap-4  mt-6 justify-center">

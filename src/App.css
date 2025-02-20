@@ -213,16 +213,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 /* calender */
 .calendar-container {
   margin: auto;
@@ -355,88 +345,6 @@ padding-top: 5px;
 
 
 
-
-
-
-
-
-.text-reveal-animation {
-  overflow: hidden;
-}
-
-.text-reveal-animation .letter {
-  display: inline-block;
-  transform: translateY(100%);
-  opacity: 0;
-}
-
-.word {
-  display: inline-block;
-  margin-right: 5px;
-}
-
-
-/* Initial State for animation-on-scroll elements */
-.animation-on-scroll .animation-on-scroll-Section1 {
-  opacity: 0;
-  transform: translateY(-50px);
-  will-change: opacity, transform;
-}
-
-.home header {
-  opacity: 0;
-  transform: translateY(-100px);
-  will-change: opacity, transform;
-}
-
-.home .main h1, 
-.home .main p, 
-.home .main .search {
-  opacity: 0;
-  transform: translateY(100px);
-  will-change: opacity, transform;
-}
-/* 
-.swiper-slide {
-  opacity: 0; 
-  transform: translateY(50px) scale(0.9); 
-  will-change: opacity, transform;
-} */
-
-.zoom-in-on-scroll {
-  transform: scale(0.8);
-  opacity: 0;
-  transition: all 0.3s ease-out;
-  will-change: transform, opacity;
-}
-
-.swiper-slide img.zoom-in-on-scroll {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-
-/* Initial state for wave animation */
-.wave-card {
-  opacity: 0;
-  transform: translateY(50px) rotate(5deg);
-  will-change: opacity, transform;
-}
-
-.wave-card img {
-  transition: transform 0.3s ease-in-out;
-}
-
-.wave-card:hover img {
-  transform: scale(1.05);
-}
-
-.wave-card:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-
 .iconb .css-1umw9bq-MuiSvgIcon-root .icon{
   height: 50px !important;
   width: 50px !important;
@@ -460,8 +368,6 @@ padding-top: 5px;
 .sec2Swiper .swiper-wrapper{
   height: 435px !important;
 }
-
-
 
 
 @keyframes wipe {
@@ -531,3 +437,6 @@ padding-top: 5px;
 .testimonial .swiper-slide {
   width: 550px !important;
 }
+
+
+

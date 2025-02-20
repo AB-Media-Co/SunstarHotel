@@ -53,7 +53,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-transparent nav text-white py-4 top-2 absolute w-full z-40">
+    <nav className="bg-transparent nav text-primary-white py-4 top-2 absolute w-full z-40">
       <div className="content flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold">
@@ -77,7 +77,7 @@ const Navbar = () => {
                       navigate(route);
                     }
                   }}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name ? "text-[#F9BF02]" : "hover:text-[#F9BF02]"
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name ? "text-primary-yellow" : "hover:text-primary-yellow"
                     }`}
                 >
                   {icon}
@@ -88,7 +88,7 @@ const Navbar = () => {
           </ul>
 
           {/* Book Now Button */}
-          <button className="bg-[#F9BF02] px-11 py-2 text-black font-bold rounded-full md:ml-4 hidden md:block">
+          <button className="bg-primary-yellow px-11 py-2 text-black font-bold rounded-full md:ml-4 hidden md:block">
             Book Now
           </button>
         </div>
@@ -106,7 +106,7 @@ const Navbar = () => {
         {/* Mobile Menu (Slide-in Sidebar) */}
         <div
           id="mobile-menu"
-          className={`fixed top-0 md:hidden left-0 h-screen overflow-hidden bg-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+          className={`fixed top-0 md:hidden left-0 h-screen overflow-hidden bg-primary-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
             }`}
         >
           {/* Header with Logo and Close Button */}
@@ -141,8 +141,8 @@ const Navbar = () => {
                       closeMobileMenu();
                     }}
                     className={`flex items-center space-x-2 w-full text-left px-4 py-2 rounded-lg transition-colors duration-300 ${active === name
-                      ? "text-[#F9BF02] bg-gray-100"
-                      : "hover:text-[#F9BF02]"
+                      ? "text-primary-yellow bg-gray-100"
+                      : "hover:text-primary-yellow"
                       }`}
                   >
                     {icon}
@@ -161,31 +161,31 @@ const Navbar = () => {
               <div className="flex flex-col space-y-4 relative">
                 <a
                   href="https://instagram.com"
-                  className="flex items-center space-x-2 hover:text-[#F9BF02] transition-colors duration-300"
+                  className="flex items-center space-x-2 hover:text-primary-yellow transition-colors duration-300"
                 >
                   <InstagramIcon style={{ color: "#FDC114" }} />
                   <span className="text-mobile/body/2">Instagram</span>
                 </a>
                 <a
                   href="https://facebook.com"
-                  className="flex items-center space-x-2 hover:text-[#F9BF02] transition-colors duration-300"
+                  className="flex items-center space-x-2 hover:text-primary-yellow transition-colors duration-300"
                 >
                   <FacebookIcon style={{ color: "#FDC114" }} />
                   <span className="text-mobile/body/2">Facebook</span>
                 </a>
                 <a
                   href="https://youtube.com"
-                  className="flex items-center space-x-2 hover:text-[#F9BF02] transition-colors duration-300"
+                  className="flex items-center space-x-2 hover:text-primary-yellow transition-colors duration-300"
                 >
                   <YouTubeIcon style={{ color: "#FDC114" }} />
                   <span className="text-mobile/body/2">YouTube</span>
                 </a>
               </div>
 
-              <button onClick={()=>navigate('/admin/login')} className="mt-6 bg-[#F9BF02] text-[#006167] px-6 py-3 w-full rounded-lg font-bold relative">
+              <button onClick={()=>navigate('/admin/login')} className="mt-6 bg-primary-yellow text-primary-green px-6 py-3 w-full rounded-lg font-bold relative">
                 Switch to admin
               </button>
-              <button className="mt-6 bg-[#F9BF02] text-[#006167] px-6 py-3 w-full rounded-lg font-bold relative">
+              <button className="mt-6 bg-primary-yellow text-primary-green px-6 py-3 w-full rounded-lg font-bold relative">
                 Book Now
               </button>
             </div>

@@ -67,26 +67,26 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
               onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}
               className={`font-bold text-2xl ${isSameMonth(currentMonth, new Date())
                 ? "bg-[#E5E5E5] text-gray-300"
-                : "text-white bg-[#006167]"
+                : "text-primary-white bg-primary-green"
                 } rounded-full text-[8px] flex items-center py-2 px-2 md:py-3 md:px-3`}
               disabled={isSameMonth(currentMonth, new Date())}
             >
               <ArrowBackIosNew style={{width:"12px", height:"12px"}} />
             </button>
           )}
-          <h2 className="text-center flex justify-center items-center w-full font-bold text-lg md:text-2xl lg:text-3xl text-[#006167]">
+          <h2 className="text-center flex justify-center items-center w-full font-bold text-lg md:text-2xl lg:text-3xl text-primary-green">
             {format(month, "MMMM yyyy")}
           </h2>
           {showRightArrow && (
             <button
               onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-              className="font-bold text-2xl text-white bg-[#006167] rounded-full flex items-center py-2 px-2 md:py-3 md:px-3"
+              className="font-bold text-2xl text-primary-white bg-primary-green rounded-full flex items-center py-2 px-2 md:py-3 md:px-3"
             >
               <ArrowForwardIos style={{width:"12px", height:"12px"}} />
             </button>
           )}
         </div>
-        <h2 className="text-center md:hidden flex justify-center items-center w-full font-bold text-lg md:text-2xl lg:text-3xl text-[#006167]">
+        <h2 className="text-center md:hidden flex justify-center items-center w-full font-bold text-lg md:text-2xl lg:text-3xl text-primary-green">
             {format(month, "MMMM yyyy")}
           </h2>
         <div className="px-2 md:px-10">
@@ -109,9 +109,9 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
                   key={index}
                   className={`day-cell  flex items-center  justify-center h-8  sm:h-10  md:h-12 md:w-full 
                   ${isCurrentMonth ? "current-month" : "other-month"} 
-                  ${isRangeStart ? "range-start bg-[#178d8d] text-[#006167]  rounded-l-full" : ""} 
-                  ${isRangeEnd ? "range-end bg-[#178d8d] text-[#006167]  rounded-r-full" : ""} 
-                  ${inRange ? "in-range bg-[#178d8d]  text-white" : ""} 
+                  ${isRangeStart ? "range-start bg-primary-green text-primary-green  rounded-l-full" : ""} 
+                  ${isRangeEnd ? "range-end bg-primary-green text-primary-green  rounded-r-full" : ""} 
+                  ${inRange ? "in-range bg-primary-green  text-primary-white" : ""} 
                   ${isPastDate ? "text-gray-400 cursor-not-allowed" : "text-gray-700"} 
                 `}
                   onClick={() => isCurrentMonth && !isPastDate && handleDateClick(day)}
@@ -144,12 +144,12 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
 
   return (
     <div className="calendar-container items-center flex flex-col ">
-      <div className="flex Calender justify-between md:hidden rounded-t-xl bg-white py-4 items-center px-2 w-full">
+      <div className="flex Calender justify-between md:hidden rounded-t-xl bg-primary-white py-4 items-center px-2 w-full">
         <button
           onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}
           className={`font-bold p-[6px] text-[5px] ${isSameMonth(currentMonth, new Date())
             ? "bg-[#E5E5E5] text-gray-300"
-            : "text-white bg-[#006167]"
+            : "text-primary-white bg-primary-green"
             } rounded-full flex items-center `}
           disabled={isSameMonth(currentMonth, new Date())}
         >
@@ -164,14 +164,14 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
 
         <button
           onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-          className="font-bold p-[6px] text-[5px] text-white bg-[#006167] rounded-full flex items-center "
+          className="font-bold p-[6px] text-[5px] text-primary-white bg-primary-green rounded-full flex items-center "
         >
           <ArrowForwardIos
           style={{width:"10px", height:"10px"}}/>
         </button>
 
       </div>
-      <div className="flex flex-col Calender hotelSelection overflow-y-auto bg-white md:rounded-lg lg:w-[90%] w-full lg:rounded-[40px] lg:flex-row gap-6">
+      <div className="flex flex-col Calender hotelSelection overflow-y-auto bg-primary-white md:rounded-lg lg:w-[90%] w-full lg:rounded-[40px] lg:flex-row gap-6">
         {renderCalendar(currentMonth, true, false)}
         {renderCalendar(nextMonth, false, true)}
       </div>
@@ -180,13 +180,13 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
         <Close /> 
       </button>
 
-      <div className="footer md:-mt-10 border-2 border-gray-200  bg-[#ffcc00] w-full py-6 mb- md:mb-0 md:py-10">
+      <div className="footer md:-mt-10 border-2 border-gray-200  bg-primary-yellow w-full py-6 mb- md:mb-0 md:py-10">
         <div className="content flex flex-col h-[150px] md:h-auto md:flex-row  gap-6 justify- items-center px-4">
-          <div className="flex items-center  max-w-full lg:w-[600px] bg-white px-4 py-2 md:px-10 md:py-4 rounded-full gap-4 md:gap-8">
+          <div className="flex items-center  max-w-full lg:w-[600px] bg-primary-white px-4 py-2 md:px-10 md:py-4 rounded-full gap-4 md:gap-8">
             {/* Check-In Date */}
-            <Icon name="calendar" className="md:h-6 md:w-6 w-4 text-[#006167]" />
+            <Icon name="calendar" className="md:h-6 md:w-6 w-4 text-primary-green" />
 
-            <div className={`flex flex-col ${confirmClicked && !checkIn ? 'text-red-500' : 'text-gray-700'}`}>
+            <div className={`flex flex-col ${confirmClicked && !checkIn ? 'text-red-500' : 'text-primary-gray'}`}>
               <span className="font-semibold text-[10px] lg:text-[18px]">
                 {checkIn ? ` ${format(checkIn, "dd MMM , EEEE")}` : "Check in"}
               </span>
@@ -194,7 +194,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
             <ArrowRightAlt className="text-yellow-400" />
 
             {/* Check-Out Date */}
-            <div className={`flex flex-col ${confirmClicked && !checkOut ? 'text-red-500' : 'text-gray-700'}`}>
+            <div className={`flex flex-col ${confirmClicked && !checkOut ? 'text-red-500' : 'text-primary-gray'}`}>
               <span className="font-semibold text-[10px] lg:text-[18px]">
                 {checkOut ? `${format(checkOut, "dd MMM , EEEE")}` : "Check-out"}
               </span>
@@ -210,7 +210,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
           <div className="flex justify-between w-full">
             <GuestsDropdown dropdownDirection="up" />
             {/* Confirm Button */}
-              <button onClick={handleConfirmClick} className="confirm-btn w-[150px] font-bold bg-[#006167] text-white px-4 py-2 rounded-full">
+              <button onClick={handleConfirmClick} className="confirm-btn w-[150px] font-bold bg-primary-green text-primary-white px-4 py-2 rounded-full">
                 Confirm 
               </button>
          

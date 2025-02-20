@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
+// AdminHotels.js
+import  { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDeleteHotelById, useGetHotels } from "../../../ApiHooks/useHotelHook";
+import {  useGetHotels } from "../../../ApiHooks/useHotelHook";
 import { DeleteConfirmationModal } from "../../Components/DeletePopup";
 import toast from "react-hot-toast";
 import { Section } from "./HotelsSection";
+import { useDeleteHotelById } from "../../../ApiHooks/useHotelHook2";
 
 export const AdminHotels = () => {
   const { data: hotels, isLoading, isError, error } = useGetHotels();
   const { mutate: deleteHotelById } = useDeleteHotelById();
-
   const navigate = useNavigate();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedHotelId, setSelectedHotelId] = useState(null);
 
@@ -49,10 +49,14 @@ export const AdminHotels = () => {
     setSelectedHotelId(null);
   };
 
-  const handleAddHotel = () => navigate('/admin/addHotels');
+  const handleAddHotel = () => {
+    navigate("/admin/hotels/add");
+  };
 
+  // Updated: When editing, navigate to the edit page and pass the hotel data via state.
   const handleEdit = (item) => {
-    navigate(`/admin/edithotels/${item?.hotelID}`, { state: { hotelData: item } });
+    console.log(item)
+    navigate(`/admin/hotels/edit/${item.hotelCode}`, { state: { hotel: item } });
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -67,9 +71,8 @@ export const AdminHotels = () => {
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
         onAdd={handleAddHotel}
-        showAddButton={false}
+        showAddButton={true}
       />
-
       <DeleteConfirmationModal
         isOpen={isModalOpen}
         onConfirm={handleConfirmDelete}
