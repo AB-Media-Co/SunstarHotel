@@ -11,7 +11,6 @@ import {
   TextField,
   Button,
   CircularProgress,
-  Typography,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { useGetHotels } from '../../../ApiHooks/useHotelHook2';
@@ -62,10 +61,8 @@ export const Rooms = () => {
   const [authCode, setAuthCode] = useState('');
   const { data: hotels } = useGetHotels();
 
-  // Filter out hotels that have a valid hotelCode
   const filteredHotels = hotels?.hotels?.filter((hotel) => hotel.hotelCode);
 
-  // Auto-select the first available hotel if none is selected
   useEffect(() => {
     if (!selectedHotel && filteredHotels && filteredHotels.length > 0) {
       const firstHotel = filteredHotels[0];
@@ -74,13 +71,11 @@ export const Rooms = () => {
     }
   }, [filteredHotels, selectedHotel]);
 
-  // Define default date values
   const today = new Date().toISOString().split('T')[0];
   const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
   const [fromDate, setFromDate] = useState(today);
   const [toDate, setToDate] = useState(tomorrow);
 
-  // Fetch rooms based on selected hotel and date range
   const { data: rooms, isLoading: roomsLoading } = useRooms(
     selectedHotel,
     authCode,
@@ -88,7 +83,6 @@ export const Rooms = () => {
     toDate
   );
 
-  // Deduplicate room types based on RoomTypeID
   const uniqueRoomTypes = rooms
     ? Array.from(new Map(rooms.map((item) => [item.RoomTypeID, item])).values())
     : [];
@@ -106,10 +100,8 @@ export const Rooms = () => {
 
   return (
     <StyledContainer maxWidth="lg">
-      {/* Header Section: Hotel Selector, Date Range, and Add Room Button */}
       <HeaderBox>
         <Grid container spacing={2} alignItems="center">
-          {/* Left Section: Hotel Select and Date Range */}
           <Grid item xs={12} md={8}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -183,7 +175,6 @@ export const Rooms = () => {
         </Grid>
       </HeaderBox>
 
-      {/* Rooms List Section */}
       <Box>
         {roomsLoading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
@@ -203,7 +194,6 @@ export const Rooms = () => {
         )}
       </Box>
 
-      {/* Edit Room Modal */}
       {editingRoom && (
         <EditRooms
           room={editingRoom}

@@ -1,6 +1,9 @@
+import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 import Icon from "../../../Components/Icons";
 
 const Banner = () => {
+  const { ContactUsDetail } = useUpdatePagesHook();
+
   return (
     <div className="relative h-[370px] md:h-[400px]">
       {/* Background Image */}
@@ -26,10 +29,10 @@ const Banner = () => {
               className="w-8 h-8 md:w-10 md:h-10 transition-transform duration-300 hover:scale-110"
             />
             <a
-              href="tel:+915845965840"
+              href={`tel:${ContactUsDetail?.phoneNumber}`}
               className="text-primary-white text-base md:text-lg font-medium hover:underline"
             >
-              +915845965840
+              {ContactUsDetail?.phoneNumber}
             </a>
           </div>
           <div className="flex items-center gap-3"  data-aos="fade-up">
@@ -38,20 +41,20 @@ const Banner = () => {
               className="w-8 h-8 md:w-10 md:h-10 transition-transform duration-300 hover:scale-110"
             />
             <a
-              href="mailto:ktaneja@sunstarhospitality.com"
+              href= {ContactUsDetail?.emailId}
               className="text-primary-white text-base md:text-lg font-medium hover:underline"
             >
-             ktaneja@sunstarhospitality.com
+             {ContactUsDetail?.emailId}
             </a>
           </div>
         </div>
         <p className="text-primary-white text-sm md:text-base mt-6 drop-shadow"  data-aos="fade-up">
           For assistance with bookings, cancellations, etc. mail us on
           <a
-            href="mailto:ktaneja@sunstarhospitality.com"
+            href= {ContactUsDetail?.emailId}
             className="underline font-semibold ml-1"
           >
-            ktaneja@sunstarhospitality.com
+             {ContactUsDetail?.emailId}
           </a>
         </p>
         {/* Call to Action Button */}

@@ -1,9 +1,11 @@
+/* eslint-disable react/prop-types */
 import { Add, Remove } from "@mui/icons-material";
 import Icon from "../../../Components/Icons";
 import { useState } from "react";
 
-const RoomPriceSection = () => {
+const RoomPriceSection = ({ roomData }) => {
   const [roomQty, setRoomQty] = useState(1);
+  const [showAlert, setShowAlert] = useState(false);
 
   const tabs = [
     { id: "rooms", iconName: "roundedbed", label: "Rooms", link: "#rooms" },
@@ -13,38 +15,74 @@ const RoomPriceSection = () => {
     { id: "faqs", iconName: "faqs", label: "FAQs", link: "#faqs" },
   ];
 
+  const increaseRoomQty = () => {
+    if (roomQty >= 3) {
+      setShowAlert(true);
+    } else {
+      setRoomQty(roomQty + 1);
+    }
+  };
+
+  const decreaseRoomQty = () => {
+    if (roomQty > 1) {
+      setRoomQty(roomQty - 1);
+    }
+  };
+
   return (
-    <div className="content mx-auto bg-primary-white  p-6">
+    <div className="content mx-auto bg-primary-white p-6 relative">
+      {showAlert && (
+        <div className="absolute top-20 right-4 bg-white border border-gray-300 p-4 rounded-md shadow-md z-50 max-w-xs text-sm text-gray-700">
+          <p className="font-bold">For a stay of 15 nights, only 2 rooms can be selected.</p>
+          <p className="mt-2">
+            Online bookings are limited to 30 units (rooms x nights) and a maximum of 3 rooms per booking.
+          </p>
+          <div className="flex items-center justify-end mt-4 gap-2">
+            <button
+              onClick={() => {
+                // “Book More” logic here, or redirect to a different page
+                alert("Book more clicked!");
+              }}
+              className="px-3 py-1 bg-primary-green text-white rounded-full hover:bg-primary-green/90"
+            >
+              Book More
+            </button>
+            <button
+              onClick={() => setShowAlert(false)}
+              className="px-3 py-1 border border-gray-300 rounded-full hover:bg-gray-100"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row justify-between items-start gap-6">
         {/* Left Section: Room Title and Pricing */}
         <div className="flex flex-col gap-4 text-[#058FA2]">
-          <h1 className="text-2xl md:text-4xl font-bold">Superior King Room</h1>
+          <h1 className="text-2xl md:text-4xl font-bold">{roomData?.RoomName}</h1>
           <p className="text-base md:text-lg">Book Direct for Lowest Prices!</p>
-          <p className="text-xl md:text-2xl font-bold">
-            ₹ 5,880{" "}
-            <span className="text-sm md:text-base text-gray-500 font-normal">
-              / night Incl. taxes
-            </span>
-          </p>
+          <div className="flex items-center gap-4">
+            {roomData?.defaultRate && (
+              <span className="text-sm md:text-base text-red-500 font-bold line-through">
+                ₹ {roomData?.defaultRate}
+              </span>
+            )}
+            <p className="text-xl md:text-2xl font-bold">
+              ₹ {roomData?.discountRate}{" "}
+              <span className="text-sm md:text-base text-gray-500 font-normal">
+                / night Incl. taxes
+              </span>
+            </p>
+          </div>
         </div>
 
         {/* Right Section: Check-in/Check-out Info & Room Quantity */}
         <div className="flex flex-col gap-6 items-end text-[#058FA2]">
-          <div className="text-right">
-            <p className="text-base md:text-lg">
-              <span>Check-in </span>
-              <span className="font-bold text-[#006167]">2:00pm</span>
-            </p>
-            <p className="text-base md:text-lg">
-              <span>Check-out </span>
-              <span className="font-bold text-[#006167]">11:00am</span>
-            </p>
-           
-          </div>
           <div className="flex items-center border border-gray-300 rounded-full px-4 py-2">
             <button
               aria-label="Decrease Room Quantity"
-              onClick={() => roomQty > 1 && setRoomQty(roomQty - 1)}
+              onClick={decreaseRoomQty}
               className="text-yellow-500 hover:bg-yellow-100 rounded-full p-1 transition duration-200"
             >
               <Remove fontSize="small" />
@@ -54,15 +92,12 @@ const RoomPriceSection = () => {
             </span>
             <button
               aria-label="Increase Room Quantity"
-              onClick={() => setRoomQty(roomQty + 1)}
+              onClick={increaseRoomQty}
               className="text-yellow-500 hover:bg-yellow-100 rounded-full p-1 transition duration-200"
             >
               <Add fontSize="small" />
             </button>
           </div>
-          {/* <p className="text-xs md:text-sm text-gray-500 mt-2">
-              Book directly to request Early Check-in / Late Check-out, as per availability.
-            </p> */}
         </div>
       </div>
 
@@ -72,7 +107,8 @@ const RoomPriceSection = () => {
       <div className="flex flex-wrap justify-center md:justify-between gap-6">
         {tabs.map((tab) => (
           <button
-            key={tab.id}            className={`flex flex-col sm:flex-row items-center gap-2 px-4 py-2 rounded-lg transition duration-200 focus:outline-none `}
+            key={tab.id}
+            className="flex flex-col sm:flex-row items-center gap-2 px-4 py-2 rounded-lg transition duration-200 focus:outline-none"
           >
             <Icon name={tab.iconName} className="h-6 w-6 md:h-8 md:w-8" />
             <span className="font-semibold text-sm md:text-base">{tab.label}</span>

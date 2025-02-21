@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
-import { Add, Delete, Edit, StarRate, LocationOn, Hotel, KingBed, Wifi, LocalParking, Restaurant, Pool, AccessTime } from "@mui/icons-material";
+import { Add, Delete, Edit, StarRate, LocationOn, KingBed, Wifi, LocalParking, Restaurant, Pool, AccessTime } from "@mui/icons-material";
 import { useGetHotels } from "../../../ApiHooks/useHotelHook2";
 import { useState } from "react";
 
 // Helper function to get icon for amenity
 const getAmenityIcon = (amenity) => {
+  const amenityLabel = typeof amenity === 'object' && amenity !== null ? amenity.label : amenity;
+
   const amenityMap = {
     "wifi": <Wifi fontSize="small" />,
     "parking": <LocalParking fontSize="small" />,
@@ -13,14 +15,13 @@ const getAmenityIcon = (amenity) => {
     "king bed": <KingBed fontSize="small" />,
   };
 
-  // Look for partial matches in the amenity name
   for (const [key, icon] of Object.entries(amenityMap)) {
-    if (amenity.toLowerCase().includes(key)) {
+    if (amenityLabel.toLowerCase().includes(key)) {
       return icon;
     }
   }
 
-  return null; // Return null if no matching icon found
+  return null; 
 };
 
 const Card = ({ item, type, onEdit, onDelete }) => {
@@ -79,7 +80,7 @@ const Card = ({ item, type, onEdit, onDelete }) => {
             <span className="ml-1 text-gray-700 font-semibold">{item.rating || 'N/A'}</span>
           </div>
         </div>
-        
+
         <div className="mb-auto">
           <div className="flex items-center">
             <LocationOn fontSize="small" className="text-gray-500 mr-2" />
@@ -114,7 +115,7 @@ const Card = ({ item, type, onEdit, onDelete }) => {
               </div>
             )}
           </div>
-{/*           
+          {/*           
           {type === 'hotel' && (
             <div className="bg-blue-50 px-3 py-1 rounded-lg border border-blue-100">
               <span className="text-blue-700 text-sm font-medium">
@@ -135,7 +136,7 @@ const Card = ({ item, type, onEdit, onDelete }) => {
                     className="bg-indigo-50 text-indigo-700 text-xs px-3 py-1.5 rounded-full border border-indigo-100 flex items-center gap-1 transition-colors duration-200 hover:bg-indigo-100"
                   >
                     {getAmenityIcon(amenity)}
-                    {amenity}
+                    {typeof amenity === 'object' ? amenity.label : amenity}
                   </li>
                 ))}
                 {item.amenities.length > 3 && (
@@ -149,6 +150,7 @@ const Card = ({ item, type, onEdit, onDelete }) => {
             )}
           </ul>
         </div>
+
       </div>
     </div>
   );

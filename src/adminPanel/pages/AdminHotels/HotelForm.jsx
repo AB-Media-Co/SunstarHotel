@@ -48,11 +48,11 @@ const HotelForm = ({ initialData = null }) => {
     authKey: initialData?.authKey || '',
     images: initialData?.images || [],
     testimonials: initialData?.testimonials || [],
-    checkIn: initialData?.checkIn || '',    
-    checkOut: initialData?.checkOut || '',    
+    checkIn: initialData?.checkIn || '',
+    checkOut: initialData?.checkOut || '',
     aboutUs: {
       description: initialData?.aboutUs?.description || '',
-      image: initialData?.aboutUs?.img || '', 
+      image: initialData?.aboutUs?.img || '',
     },
   });
 
@@ -67,7 +67,7 @@ const HotelForm = ({ initialData = null }) => {
   });
 
   const [isUploading, setIsUploading] = useState(false);
-  const [isAboutUsUploading, setIsAboutUsUploading] = useState(false);
+  const [, setIsAboutUsUploading] = useState(false);
 
   const { mutate: addHotel } = useAddHotel();
   const { mutate: editHotel } = useEditHotel();
@@ -221,12 +221,12 @@ const HotelForm = ({ initialData = null }) => {
   };
 
   const handleAmenitiesChange = (event, newValue) => {
-    const selectedLabels = newValue.map((option) => option.label);
     setFormData((prev) => ({
       ...prev,
-      amenities: selectedLabels,
+      amenities: newValue, // yahan newValue already objects { label, value } ke form me honge
     }));
   };
+
 
   const handleLocationChange = (event) => {
     const selectedLocation = event.target.value;
@@ -236,6 +236,8 @@ const HotelForm = ({ initialData = null }) => {
     }));
   };
 
+
+  console.log(formData)
   return (
     <div className="mx-auto py-16 px-8">
       <div className="bg-white p-8">
@@ -256,9 +258,8 @@ const HotelForm = ({ initialData = null }) => {
               </span>
               {/* Animated Underline */}
               <span
-                className={`absolute left-0 bottom-0 h-0.5 bg-blue-500 transition-all duration-300 ease-in-out ${
-                  currentTab === tab ? 'w-full' : 'w-0'
-                }`}
+                className={`absolute left-0 bottom-0 h-0.5 bg-blue-500 transition-all duration-300 ease-in-out ${currentTab === tab ? 'w-full' : 'w-0'
+                  }`}
               ></span>
             </button>
           ))}
@@ -328,7 +329,7 @@ const HotelForm = ({ initialData = null }) => {
                     label: amenity.label,
                     value: amenity.value,
                   }))}
-                  value={formData.amenities.map((label) => ({ label, value: label }))}
+                  value={formData.amenities}  // ab directly objects ke array ko use karenge
                   onChange={handleAmenitiesChange}
                   isOptionEqualToValue={(option, value) => option.label === value.label}
                   getOptionLabel={(option) => option.label}
@@ -336,6 +337,7 @@ const HotelForm = ({ initialData = null }) => {
                     <TextField {...params} label="Select amenities" placeholder="Select amenities" />
                   )}
                 />
+
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>

@@ -1,47 +1,111 @@
-/* eslint-disable react/prop-types */
+// src/pages/RoomCard.jsx
 import React from 'react';
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import RoomServiceIcon from '@mui/icons-material/RoomService';
 
 const RoomCard = ({ room, onEdit }) => {
-  // Calculate discount percentage
-  const discountPercentage = room.defaultRate > 0 ? ((room.defaultRate - room.discountRate) / room.defaultRate) * 100 : 0;
+  const truncateDescription = (text, wordLimit) => {
+    if (!text) return '';
+    const words = text.split(' ');
+    return words.length <= wordLimit
+      ? text
+      : words.slice(0, wordLimit).join(' ') + '...';
+  };
 
   return (
-    <div className="bg-white border border-gray-200 p-4 rounded-lg shadow hover:shadow-lg transition duration-300 ease-in-out transform">
+    <Card
+      sx={{
+        maxWidth: 345,
+        m: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        transition: 'transform 0.3s',
+        '&:hover': { transform: 'scale(1.03)' },
+      }}
+    >
       {room.RoomImage && room.RoomImage.length > 0 ? (
-        <img
-          src={room.RoomImage[0]}
+        <CardMedia
+          component="img"
+          height="180"
+          image={room.RoomImage[0]}
           alt={room.RoomName}
-          className="w-full h-48 object-cover rounded mb-4"
         />
       ) : (
-        <div className="w-full h-48 bg-gray-300 rounded mb-4 flex items-center justify-center">
-          <span className="text-gray-500">No Image</span>
-        </div>
+        <Box
+          sx={{
+            height: 180,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'grey.300',
+          }}
+        >
+          <Typography variant="caption" color="text.secondary">
+            No Image
+          </Typography>
+        </Box>
       )}
-      <h3 className="text-xl font-semibold text-gray-800 mb-2">{room.RoomName}</h3>
-      <p className="text-gray-600 mb-2">{room.RoomDescription}</p>
-   
-      {room.Amenities && room.Amenities.length > 0 && (
-        <p className="text-gray-600 mb-2">
-          <strong className="font-semibold">Amenities:</strong> {room.Amenities.join(', ')}
-        </p>
-      )}
-      <div className="mb-2 flex gap-2">
-        <span className="text-gray-600 line-through">
-          ₹ {room.defaultRate}
-        </span>
-        <span className="text-green-600  text-lg font-semibold">
-          ₹{room.discountRate}
-        </span>
-    
-      </div>
-      <button
-        className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-        onClick={() => onEdit(room)}
-      >
-        Edit / Update Room
-      </button>
-    </div>
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Typography gutterBottom variant="h6" component="div">
+          {room.RoomName}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {truncateDescription(room.RoomDescription, 15)}
+        </Typography>
+
+        {/* Extra Room Details */}
+        <Box sx={{ mt: 1 }}>
+          {room.maxGuests && (
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+              <PeopleAltIcon fontSize="small" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">Max Guests: {room.maxGuests}</Typography>
+            </Box>
+          )}
+          {room.squareFeet && (
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+              <SquareFootIcon fontSize="small" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">
+                Square Feet: {room.squareFeet}
+              </Typography>
+            </Box>
+          )}
+          {room.services && room.services.length > 0 && (
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+              <RoomServiceIcon fontSize="small" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">
+                Services: {room.services.join(', ')}
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </CardContent>
+      <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
+        <Box>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textDecoration: 'line-through' }}
+          >
+            ₹ {room.defaultRate}
+          </Typography>
+          <Typography variant="subtitle1" color="success.main">
+            ₹ {room.discountRate}
+          </Typography>
+        </Box>
+        <Button size="small" variant="contained" onClick={() => onEdit(room)}>
+          Edit
+        </Button>
+      </CardActions>
+    </Card>
   );
 };
 

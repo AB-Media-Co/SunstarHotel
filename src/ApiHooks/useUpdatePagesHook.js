@@ -237,6 +237,21 @@ const useUpdatePagesHook = () => {
   });
 
 
+  const updateContactUsDetailMutation = useMutation({
+    mutationFn: async (Data) => {
+      const res = await axiosInstance.post('/api/websiteData/contactUs', Data);
+      return res;
+    },
+    onSuccess: () => {
+      toast.success('contactUs Updated successfully!');
+      queryClient.invalidateQueries({ queryKey: ['websiteData'] });
+    },
+    onError: (error) => {
+      toast.error(`Failed to add: ${error.message}`);
+    },
+  });
+
+
 
   return {
     websiteData,
@@ -251,6 +266,7 @@ const useUpdatePagesHook = () => {
     CoorporateBooking: websiteData?.CoorporateBooking || [],
     homePageDescription: websiteData?.homePageDescription || [],
     faqs: websiteData?.faqs || [],
+    ContactUsDetail: websiteData?.ContactUsDetail || [],
 
 
     loading: isLoading,
@@ -270,6 +286,7 @@ const useUpdatePagesHook = () => {
     updtateCoorporateBooking: CoorporateBookingMutation.mutateAsync,
     updateHomepageDescriptionData: HomePageDescriptionMutation.mutateAsync,
     updateFaq: faqsSectionMutation.mutateAsync,
+    updateContactUs: updateContactUsDetailMutation.mutateAsync,
   };
 };
 

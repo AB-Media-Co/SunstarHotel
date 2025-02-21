@@ -12,8 +12,8 @@ import Loader from './Components/Loader';
 import { Rooms } from './adminPanel/pages/Rooms/Rooms';
 import { AdminHotels } from './adminPanel/pages/AdminHotels/AdminHotels';
 import { AdminLogin } from './adminPanel/pages/AdminLogin';
-import AddRooms from './adminPanel/pages/Rooms/AddRooms';
-import EditRooms from './adminPanel/pages/Rooms/EditRooms';
+// import AddRooms from './adminPanel/pages/Rooms/AddRooms';
+// import EditRooms from './adminPanel/pages/Rooms/EditRooms';
 import { CreateUser } from './adminPanel/pages/Users/CreateUser';
 import ViewUser from './adminPanel/pages/Users/ViewUser';
 import { AdminProvider } from './adminPanel/utils/AdminContext';
@@ -119,8 +119,7 @@ function App() {
           
 
                 <Route path="/admin/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
-                <Route path="/admin/addRooms" element={<PrivateRoute><AddRooms /></PrivateRoute>} />
-                <Route path="/admin/editRooms/:roomId" element={<PrivateRoute><EditRooms /></PrivateRoute>} />
+
                 <Route path="/admin/create_user" element={<PrivateRoute><CreateUser /></PrivateRoute>} />
                 <Route path="/admin/view-user" element={<PrivateRoute><ViewUser /></PrivateRoute>} />
                 <Route path="/admin/all-users" element={<PrivateRoute><AllUsers /></PrivateRoute>} />

@@ -95,34 +95,43 @@ function Banner({ businessPlatformFeatures }) {
            ${isTopSectionHidden ? "wipe-animation-hidden" : "wipe-animation"}
         ${isTopSectionHidden ? "hidden" : ""}
          `}
-         
+
       >
         <div className="w-full flex flex-col items-center">
           {/* Top Section: Dates and Guests */}
           <div className="flex gap-2 justify-center md:px-4 md:space-x-6 lg:justify-between items-center w-full md:space-y-0 space-x-0">
-            <div className="flex gap-8">
-              <div
-                onClick={() => setOpenCalender(true)}
-                className="flex px-[10px] py-[4px] items-center border border-primary-green rounded-full hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"
-              >
-                <Icon name="calendar" className="h-6 w-6 text-primary-green" />
-                <span className="text-mobile/body/2 md:text-desktop/body/1 text-primary-green font-semibold">
-                  {checkIn ? checkIn : "Check In"}{" "}
-                  <span className="text-yellow-500">→</span>{" "}
-                  {checkOut ? checkOut : "Check Out"}
-                </span>
-                {checkIn && checkOut && (
-                  <span className="text-gray-400 text-xs sm:text-sm flex">
-                    ({calculateNights()})
+            <div className="flex gap-8 justify-between w-full md:flex-row flex-col">
+              <div className="flex gap-4">
+                <div
+                  onClick={() => setOpenCalender(true)}
+                  className="flex px-[10px] py-[4px] items-center border  border-primary-dark-green text-primary-dark-green rounded-full hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"
+                >
+                  <Icon name="calendar" className="h-6 w-6 text-primary-dark-green" />
+                  <span className="text-mobile/body/2 md:text-desktop/body/1 text-primary-dark-green font-semibold">
+                    {checkIn ? checkIn : "Check In"}{" "}
+                    <span className="text-yellow-500">→</span>{" "}
+                    {checkOut ? checkOut : "Check Out"}
                   </span>
-                )}
+                  {checkIn && checkOut && (
+                    <span className="text-gray-400 text-xs sm:text-sm flex">
+                      ({calculateNights()})
+                    </span>
+                  )}
+                </div>
+                <div className="">
+                  <GuestsDropdown />
+                </div>
+
               </div>
-              <div className="lg:block hidden">
-                <GuestsDropdown />
-              </div>
+              <button
+                onClick={handleBooking}
+                className="bg-primary-green text-primary-white lg:w-[180px] text-mobile/button md:text-desktop/h4 rounded-full py-2 md:py-0 text-xl shadow-md px-6 md:px-6 md:py-3"
+              >
+                Select
+              </button>
             </div>
 
-            <div className="flex gap-2 md:gap-6">
+            {/* <div className="flex gap-2 md:gap-6">
               <div className="lg:hidden">
                 <GuestsDropdown />
               </div>
@@ -132,11 +141,11 @@ function Banner({ businessPlatformFeatures }) {
               >
                 Select
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Bottom Section: Tabs */}
-          <div className="flex flex-wrap px-4 justify-between items-center mt-6 gap-2 w-full">
+          <div className={`flex flex-wrap px-4 justify-between items-center mt-6 gap-2 w-full  ${isItemFixed ? "hidden" : ""}`}>
             {tabs.map((tab, index) => (
               <a
                 key={index}

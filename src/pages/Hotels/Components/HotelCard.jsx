@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 
 function HotelCard({ hotelData }) {
-    console.log(hotelData);
     return (
-      <div className=" mx-auto bg-white  content">
+      <div className=" bg-white  content">
         {/* Optional Image Section */}
         {hotelData?.image && (
           <div className="relative">
@@ -24,11 +23,11 @@ function HotelCard({ hotelData }) {
           </div>
         )}
         <div className="p-6">
-          <div className="flex flex-col sm:flex-row justify-between items-center sm:space-x-5">
+          <div className="flex flex-col sm:flex-row justify-between items-start md:items-center ">
             {/* Hotel Name and Price Section */}
-            <div className="flex flex-col sm:flex-row items-center sm:space-x-5">
+            <div className="flex flex-col sm:flex-row items-start md:items-center sm:space-x-5">
               <div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
+                <h2 className="  text-3xl md:text-3xl font-bold text-gray-800">
                   {hotelData?.name}
                 </h2>
                 <div className="text-sm text-teal-500">
@@ -55,7 +54,7 @@ function HotelCard({ hotelData }) {
               </div>
             </div>
             {/* Check-In/Check-Out Section */}
-            <div className="mt-4 sm:mt-0 bg-teal-100 text-[#058FA2] font-medium rounded-full py-2 px-4 flex items-center shadow-sm">
+            <div className="mt-4 sm:mt-0 text-[14px]  bg-teal-100 text-[#058FA2] font-medium rounded-full py-2 px-4 flex items-center shadow-sm">
               <span>
                 Check-In{" "}
                 <span className="font-bold text-teal-800">{hotelData?.checkIn}</span>

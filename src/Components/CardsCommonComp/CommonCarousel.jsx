@@ -13,10 +13,10 @@ function Carousel({
     autoPlayInterval = 3000,
 }) {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isHovered, setIsHovered] = useState(false); 
+    const [isHovered, setIsHovered] = useState(false);
     const [startX, setStartX] = useState(0);
-    const [isDragging, setIsDragging] = useState(false); 
-    const carouselRef = useRef(null); 
+    const [isDragging, setIsDragging] = useState(false);
+    const carouselRef = useRef(null);
 
     const handlePrevious = () => {
         const newIndex = currentIndex === 0 ? features.length - 1 : currentIndex - 1;
@@ -101,18 +101,23 @@ function Carousel({
                     ))}
                 </div>
 
-                <button
-                    className={`absolute top-1/2 ${className} left-0 transform -translate-y-1/2 bg-[${buttonColor}] text-primary-white p-2 rounded-full`}
-                    onClick={handlePrevious}
-                >
-                    <Icon name="leftIcon" className={iconSize} />
-                </button>
-                <button
-                    className={`absolute top-1/2 ${className} right-0 transform -translate-y-1/2 bg-[${buttonColor}] text-primary-white p-2 rounded-full`}
-                    onClick={handleNext}
-                >
-                    <Icon name="rightIcon" className={iconSize} />
-                </button>
+                {features.length > 1 && (
+                    <>
+                        <button
+                            className={`absolute top-1/2 ${className} left-0 transform -translate-y-1/2 bg-[${buttonColor}] text-primary-white p-2 rounded-full`}
+                            onClick={handlePrevious}
+                        >
+                            <Icon name="leftIcon" className={iconSize} />
+                        </button>
+                        <button
+                            className={`absolute top-1/2 ${className} right-0 transform -translate-y-1/2 bg-[${buttonColor}] text-primary-white p-2 rounded-full`}
+                            onClick={handleNext}
+                        >
+                            <Icon name="rightIcon" className={iconSize} />
+                        </button>
+                    </>
+                )}
+
             </div>
 
             <div
@@ -121,11 +126,10 @@ function Carousel({
                 {features.map((_, index) => (
                     <button
                         key={index}
-                        className={`w-3 h-3 mx-1 rounded-full transition-all duration-500 ease-in-out ${
-                            currentIndex === index
+                        className={`w-3 h-3 mx-1 rounded-full transition-all duration-500 ease-in-out ${currentIndex === index
                                 ? `bg-[${buttonColor}] w-[40px]`
                                 : 'bg-primary-white'
-                        }`}
+                            }`}
                         onClick={() => setCurrentIndex(index)}
                     ></button>
                 ))}

@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 
-const RoomsDescription = () => {
+const RoomsDescription = ({roomData}) => {
     
 
     return (
@@ -11,21 +12,13 @@ const RoomsDescription = () => {
                         Description
                     </h1>
                     <p className="text-mobile/body/2 md:text-desktop/body/1 animation-on-scroll leading-relaxed">
-                        Nullam elementum ante a massa posuere mollis. Integer bibendum consequat
-                        nulellentesque ac quam urna. Nam vel lectus libero. Sed id varius nunc. Cras
-                        diam velit, commodo ut scelerisque ultricies, commodo quis sapien fermentum.
-                        Nam urna nisl, luctus ac cursus lectus non, pellentesque placerat est.
-                        Vivamus dapibus augue. Pellentesque pellentesque orci sed sem sagittis,
-                        convallis malesuada tellus commodo. Proin egestas ut justo sed molestie.
-                        Morbi vitae laoreet ante, elementum in ligula. Sed imperdiet, urna eget
-                        ullamcorper pharetra, mi nulla mattis odio, blandit porttitor tellus velit eu
-                        justo.
+                      {roomData?.AboutRoom?.description}
                     </p>
                 </div>
 
                 {/* Image Section */}
                 <img
-                    src="/images/AbouPageImages/cardImg1.png"
+                    src={roomData?.AboutRoom?.img}
                     alt="Corporate Booking Banner"
                     className="w-[500px] h-[250px] rounded-xl animation-on-scroll bg-cover"
                 />

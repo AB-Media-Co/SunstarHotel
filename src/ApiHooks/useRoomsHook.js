@@ -1,6 +1,7 @@
 import axiosInstance from '../services/axiosInstance';
 import { useQuery } from '@tanstack/react-query';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 export const useRooms = (hotelCode, authCode, fromDate, toDate) => {
     return useQuery({
@@ -29,6 +30,12 @@ export const useRooms = (hotelCode, authCode, fromDate, toDate) => {
       onSuccess: () => {
         // Invalidate the rooms query so that data is refetched after update.
         queryClient.invalidateQueries(['rooms', hotelCode, authCode, fromDate, toDate]);
+        toast.success("Room updated successfully")
       },
     });
+  };
+
+  export const getSingleRoomById = async (id) => {
+    const response = await axiosInstance.get(`/api/ezee/room/${id}`);
+    return response.data;
   };

@@ -58,14 +58,14 @@ const Hotels = () => {
     <div>
       <Banner businessPlatformFeatures={hotelData?.images} />
       <HotelCard hotelData={hotelData} />
-      <RoomLayout rooms={rooms} />
+      <RoomLayout rooms={hotelData?.rooms} />
       {/* <AmenitiesList
         title={Amenities.title}
         subtitle={Amenities.subtitle}
         amenities={Amenities.List}
       /> */}
 
-      <AmenitiesList2 amenities={amenities}/>
+      <AmenitiesList2 amenities={hotelData?.amenities}/>
 
       <TestimonialSection
         title={OurClientsData.title}
@@ -73,7 +73,7 @@ const Hotels = () => {
         backgroundImage={OurClientsData.backgroundImage}
       />
       {/* <PropertyPolicies propertyData={propertyData} /> */}
-      <Location address={hotelData?.name+ " " + hotelData?.location} />
+      <Location address={hotelData?.name+ ", " + hotelData?.location} />
       {/* <MapGoogle locationData={locationData} /> */}
       {/* <Carousel
         features={businessPlatformFeatures}
@@ -93,7 +93,7 @@ const Hotels = () => {
         <ImageGallery breakpointColumnsObj={HotelPageImgGallery.breakpointColumnsObj} items={HotelPageImgGallery.items} />
       </div>
 
-      <FAQSection faqs={faqs} />
+      <FAQSection />
       <img src="/images/HotelsSectionImg/Img.png" alt="" className="h-[130px] w-full" />
 
 

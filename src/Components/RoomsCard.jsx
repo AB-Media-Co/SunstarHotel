@@ -7,7 +7,7 @@ const RoomsCard = ({ room }) => {
     const navigate = useNavigate();
     const handleBooking = () => {
         if (room.available) {
-            navigate(`/room/${room.id}`);
+            navigate(`/room/${room._id}`);
         }
     };
 
@@ -16,7 +16,7 @@ const RoomsCard = ({ room }) => {
             {/* Room Image Section */}
             <div className="relative">
                 <img
-                    src={room.image}
+                    src={room?.RoomImage[0]}
                     alt={room.title}
                     className="w-full h-64 object-cover"
                 />
@@ -31,38 +31,39 @@ const RoomsCard = ({ room }) => {
             <div className="p-4 flex flex-col gap-4">
                 {/* Room Title */}
                 <h2 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-700">
-                    {room.title}
+                    {room.RoomName}
                 </h2>
 
                 {/* Room Features */}
                 <div className="flex justify-between">
-                    <div className="flex items-center gap-2 text-mobile/body/2 md:text-desktop/body/1 text-gray-600 mt-2">
-                        <Icon name="guests" className="w-7 h-7" />
-                        <span className="font-semibold">{room.guests}</span>
+                    <div className="flex items-center gap-2 text-mobile/body/2 md:text-desktop/body/1 font-semibold text-gray-600 ">
+                        <Icon name="guests" className="w-5 h-5" />
+                        <span className="font-semibold">{room.maxGuests} Guest Max</span>
                     </div>
                     {/* <div className="flex items-center gap-2 text-mobile/body/2 md:text-desktop/body/1 text-gray-600 mt-2">
                         <Icon name="beds" className="w-7 h-7" />
                         <span className="font-semibold">{room.beds}</span>
                     </div> */}
                     <div className="flex items-center gap-2">
-                        <Icon name="sqFt" className="w-7 h-7" />
+                        <Icon name="sqFt" className="w-5 h-5" />
                         <p className="text-mobile/body/2 md:text-desktop/body/1 text-gray-600 font-semibold">
-                            {room.area}
+                            {room.squareFeet} sq. ft. Area
                         </p>
                     </div>
+
                 </div>
 
                 {/* Room Pricing and Booking */}
                 <div className="flex justify-between items-center">
                     {/* Pricing Section */}
                     <div>
-                        {room.originalPrice && (
+                        {room.defaultRate && (
                             <p className="text-mobile/body/1 md:text-desktop/h6/medium text-red-500 font-bold line-through">
-                                {room.originalPrice}
+                               ₹ {room.defaultRate}
                             </p>
                         )}
                         <p className="text-mobile/h5 md:text-desktop/h5 font-bold text-[#058FA2]">
-                            {room.price}
+                           ₹ {room.discountRate}
                             <span className="text-mobile/body/2 md:text-desktop/caption text-gray-600 font-normal">
                                 /night
                               

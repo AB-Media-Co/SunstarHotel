@@ -58,7 +58,7 @@ const ImageGallery = () => {
                                                 minHeight: index % 2 === 0 ? '16rem' : '20rem'
                                             }}
                                         >
-                                            <div className="text-center w-full">
+                                            <div className="text-center w-full text-xl">
                                                 {item.content}
                                             </div>
                                         </div>
