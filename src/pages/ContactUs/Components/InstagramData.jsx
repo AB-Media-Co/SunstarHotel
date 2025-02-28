@@ -3,6 +3,7 @@ import axios from 'axios';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Link } from 'react-router-dom';
+import axiosInstance from '../../../services/axiosInstance';
 
 const InstagramData = () => {
   const [posts, setPosts] = useState([]);
@@ -10,8 +11,8 @@ const InstagramData = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/api/instagram/posts')
+    axiosInstance
+      .get('/api/instagram/posts')
       .then(response => {
         setPosts(response.data || []);
         setLoading(false);

@@ -24,6 +24,8 @@ import 'aos/dist/aos.css';
 import EditHotel from './adminPanel/pages/AdminHotels/EditHotel';
 import AddHotel from './adminPanel/pages/AdminHotels/AddHotel';
 import UpdatePage from './adminPanel/pages/UpdatePages/UpdatePage';
+import DealsOffers from './adminPanel/pages/Deals&Offers/DealsOffers';
+import { PricingProvider } from './Context/PricingContext';
 
 
 const Layout = lazy(() => import(/* webpackChunkName: "layout" */ './Components/Layout'));
@@ -33,7 +35,7 @@ const Corporatebooking = lazy(() => import(/* webpackChunkName: "corporatebookin
 const Hotels = lazy(() => import(/* webpackChunkName: "hotels" */ './pages/Hotels/Hotels'));
 const ContactUs = lazy(() => import(/* webpackChunkName: "contactus" */ './pages/ContactUs/ContactUs'));
 const HotelRooms = lazy(() => import(/* webpackChunkName: "hotelrooms" */ './pages/Rooms/Rooms'));
-const RoomsDetails = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/Rooms/Components/BookingDetailsPage'));
+const RoomsDetails = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/RoomDetailPricing/BookingDetailsPage'));
 const CityPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/Citypage/CityPage'));
 
 const queryClient = new QueryClient();
@@ -94,29 +96,32 @@ function App() {
       <Router>
         <Suspense fallback={<Loader />}>
           <LoaderWrapper>
-            <Routes>
-              {/* Public Routes */}
-              <Route element={<Layout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/why-sunstar" element={<AboutUs />} />
-                <Route path="/corporate-booking" element={<Corporatebooking />} />
-                <Route path="/hotels/:hotelCode" element={<Hotels />} />
-                <Route path="/contact" element={<ContactUs />} />
-                <Route path="/room/:id" element={<HotelRooms />} />
-                <Route path="/citypage" element={<CityPage />} />
-              </Route>
+            <PricingProvider>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/why-sunstar" element={<AboutUs />} />
+                  <Route path="/corporate-booking" element={<Corporatebooking />} />
+                  <Route path="/hotels/:hotelCode" element={<Hotels />} />
+                  <Route path="/contact" element={<ContactUs />} />
+                  <Route path="/room/:id" element={<HotelRooms />} />
+                  <Route path="/citypage/:cityName" element={<CityPage />} />
+                </Route>
+                <Route path="/room/details" element={<RoomsDetails />} />
 
-              <Route path="/room/details" element={<RoomsDetails />} />
-            </Routes>
+              </Routes>
+            </PricingProvider>
+
 
             <AdminProvider>
               <Routes>
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/hotels" element={<PrivateRoute><AdminHotels /></PrivateRoute>} />
-                <Route path="/admin/hotels/edit/:hotelCode" element={<PrivateRoute><EditHotel/></PrivateRoute>} />
-                <Route path="/admin/hotels/add" element={<PrivateRoute><AddHotel/></PrivateRoute>} />
-                <Route path="/admin/pages" element={<PrivateRoute><UpdatePage/></PrivateRoute>} />
-          
+                <Route path="/admin/hotels/edit/:hotelCode" element={<PrivateRoute><EditHotel /></PrivateRoute>} />
+                <Route path="/admin/hotels/add" element={<PrivateRoute><AddHotel /></PrivateRoute>} />
+                <Route path="/admin/pages" element={<PrivateRoute><UpdatePage /></PrivateRoute>} />
+                <Route path="/admin/offers" element={<PrivateRoute><DealsOffers /></PrivateRoute>} />
+
 
                 <Route path="/admin/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
 

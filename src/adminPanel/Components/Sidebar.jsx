@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { ChevronLast, ChevronFirst } from "lucide-react";
-import { useState, createContext, useContext, useEffect } from "react";
+import { useState, createContext, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Hotel, LocationCity, NightShelterOutlined, PeopleAlt } from "@mui/icons-material";
 import { useAdminContext } from "../utils/AdminContext";
@@ -16,9 +16,10 @@ export function Sidebar() {
     const sidebarItems = [
         { id: 1, text: 'Hotels', icon: <Hotel />, path: '/admin/hotels' },
         { id: 2, text: 'Rooms', icon: <NightShelterOutlined />, path: '/admin/rooms' },
-        // { id: 4, text: 'Locations', icon: <LocationCity />, path: '/admin/hotel-locations' },
-        { id: 3, text: 'Update Pages', icon: <PeopleAlt />, path: '/admin/pages' }, 
-        { id: 4, text: 'All Users', icon: <PeopleAlt />, path: '/admin/all-users', role: 'admin' }, 
+        { id: 3, text: 'Locations', icon: <LocationCity />, path: '/admin/hotel-locations' },
+        { id: 4, text: 'Offers And Deals', icon: <PeopleAlt />, path: '/admin/offers' }, 
+        { id: 5, text: 'Update Pages', icon: <PeopleAlt />, path: '/admin/pages' }, 
+        { id: 6, text: 'All Users', icon: <PeopleAlt />, path: '/admin/all-users', role: 'admin' }, 
     ];
 
     return (
@@ -39,7 +40,6 @@ export function Sidebar() {
 
                     <ul className="flex-1 px-3 space-y-2 overflow-y-auto">
                         {sidebarItems.map((item) => {
-                            // Render "All Users" only if adminProfile.role is "admin"
                             if (item?.role && adminProfile?.data?.role !== 'admin') return null;
                             return (
                                 <SidebarItem key={item.id} icon={item.icon} text={item.text} path={item.path} />
@@ -48,7 +48,6 @@ export function Sidebar() {
                     </ul>
                 </nav>
             </aside>
-            {/* This div ensures the content starts after the sidebar */}
             <div className={`transition-all duration-500 ease-in-out ${expanded ? 'ml-64' : 'ml-20'}`}>
 
             </div>

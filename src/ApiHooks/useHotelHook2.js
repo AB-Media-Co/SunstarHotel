@@ -61,3 +61,5 @@ export const getSingleHotelWithCode = async (hotelCode) => {
   const response = await axiosInstance.get(`/api/ezee/hotels/${hotelCode}`);
   return response.data;
 };
+
+

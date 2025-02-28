@@ -1,43 +1,44 @@
-/* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Icon from './Icons';
 
 const GuestsDropdown = ({
   dropdownDirection = "down",
   classBg = 'bg-primary-white',
-  nights='2'
+  nights = '2',
+  maxGuests = 2,
 }) => {
-
   const [showDropdown, setShowDropdown] = useState(false);
-
-  // State to manage the pop-up alert
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
-  const [guestDetails, setGuestDetails] = useState({
-    adults: 2,
-    kids: 0,
-    rooms: 1,
+  // Retrieve guest details from local storage or set default values
+  const [guestDetails, setGuestDetails] = useState(() => {
+    const storedGuestDetails = localStorage.getItem('guestDetails');
+    return storedGuestDetails ? JSON.parse(storedGuestDetails) : { adults: maxGuests, kids: 0, rooms: 1 };
   });
 
   const totalGuests = guestDetails.adults + guestDetails.kids;
 
- 
+  useEffect(() => {
+    // Save guest details to local storage whenever they change
+    localStorage.setItem('guestDetails', JSON.stringify(guestDetails));
+  }, [guestDetails]);
+
   const checkLimits = (field, newValue) => {
-    // 1. Check max guests (example: 6 total)
+    // For guests, check if the new total exceeds maxGuests (adults + kids)
     if (field !== 'rooms') {
       const newTotalGuests =
         field === 'adults'
           ? newValue + guestDetails.kids
           : guestDetails.adults + newValue;
-      if (newTotalGuests > 3) {
-        setAlertMessage("Maximum of 6 total guests (adults + kids) allowed.");
+      if (newTotalGuests > maxGuests) {
+        setAlertMessage(`Maximum of ${maxGuests} total guests (adults + kids) allowed.`);
         setShowAlert(true);
         return false;
       }
     }
 
-    // 2. Check rooms constraints
+    // For rooms, apply your existing logic:
     if (field === 'rooms') {
       // If 15 nights, only 2 rooms allowed
       if (nights === 15 && newValue > 2) {
@@ -52,9 +53,7 @@ const GuestsDropdown = ({
 
       // Max 5 rooms overall
       if (newValue > 5) {
-        setAlertMessage(
-          "You cannot select more than 5 rooms in a single booking."
-        );
+        setAlertMessage("You cannot select more than 5 rooms in a single booking.");
         setShowAlert(true);
         return false;
       }
@@ -63,24 +62,19 @@ const GuestsDropdown = ({
       const newTotalUnits = newValue * nights;
       if (newTotalUnits > 30) {
         setAlertMessage(
-          `Online bookings are limited to 30 total units (rooms x nights). ` +
-          `Currently: ${newTotalUnits} units.`
+          `Online bookings are limited to 30 total units (rooms x nights). Currently: ${newTotalUnits} units.`
         );
         setShowAlert(true);
         return false;
       }
     }
 
-    return true; // If all checks pass
+    return true; // All checks passed
   };
 
   const handleIncrement = (field) => {
     const newValue = guestDetails[field] + 1;
-
-    // Check limits first
     if (!checkLimits(field, newValue)) return;
-
-    // If okay, update
     setGuestDetails((prev) => ({
       ...prev,
       [field]: newValue,
@@ -88,9 +82,7 @@ const GuestsDropdown = ({
   };
 
   const handleDecrement = (field) => {
-    if (
-      (field === "adults" || field === "rooms") && guestDetails[field] > 1
-    ) {
+    if ((field === "adults" || field === "rooms") && guestDetails[field] > 1) {
       const newValue = guestDetails[field] - 1;
       if (!checkLimits(field, newValue)) return;
       setGuestDetails((prev) => ({
@@ -111,11 +103,7 @@ const GuestsDropdown = ({
     <div className="relative">
       {/* MAIN BUTTON */}
       <div
-        className={`
-          flex items-center ${classBg} border border-primary-dark-green 
-          rounded-full px-[8px] md:px-6 py-[8px] md:py-[15px] 
-          sm:py-3 space-x-2 cursor-pointer hover:shadow-md shadow-sm
-        `}
+        className={`flex items-center ${classBg} border border-primary-dark-green rounded-full px-[8px] md:px-6 py-[8px] md:py-[15px] sm:py-3 space-x-2 cursor-pointer hover:shadow-md shadow-sm`}
         onClick={() => setShowDropdown((prev) => !prev)}
       >
         <Icon name="guestHotel" className="h-5 w-5 sm:h-6 sm:w-6 text-primary-dark-green" />
@@ -136,11 +124,7 @@ const GuestsDropdown = ({
       {/* DROPDOWN */}
       {showDropdown && (
         <div
-          className={`
-            absolute z-20 bg-primary-white border  border-gray-200 
-            rounded-md shadow-lg px-[5px] py-[10px] md:p-4 w-full sm:w-64
-            ${dropdownDirection === "up" ? "bottom-full mb-2" : "top-full mt-2"}
-          `}
+          className={`absolute z-20 bg-primary-white border border-gray-200 rounded-md shadow-lg px-[5px] py-[10px] md:p-4 w-full sm:w-64 ${dropdownDirection === "up" ? "bottom-full mb-2" : "top-full mt-2"}`}
         >
           {/* Dropdown Items */}
           {["Adults", "Kids", "Rooms"].map((label, index) => {
@@ -186,21 +170,13 @@ const GuestsDropdown = ({
       {/* ALERT BOX */}
       {showAlert && (
         <div
-          className="absolute  left-1/2 top-[7rem] transform -translate-x-1/2 mt-2
-                     bg-white border border-gray-300 rounded-md p-4 shadow-md w-72
-                     z-30"
+          className="absolute left-1/2 top-[7rem] transform -translate-x-1/2 mt-2 bg-white border border-gray-300 rounded-md p-4 shadow-md w-72 z-30"
         >
-          <p className="text-gray-700 text-sm mb-3">
-            {alertMessage}
-          </p>
+          <p className="text-gray-700 text-sm mb-3">{alertMessage}</p>
           <div className="flex items-center justify-end space-x-2">
             <button
               className="text-primary-green font-semibold"
-              onClick={() => {
-                // Example: maybe redirect to a contact page or something
-                // For now, just close the alert.
-                setShowAlert(false);
-              }}
+              onClick={() => setShowAlert(false)}
             >
               Book More
             </button>

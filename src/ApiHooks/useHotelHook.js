@@ -17,13 +17,12 @@ import {
   getAllRoomsEzee
 } from '../Api/hotel.js';
 
-// Get Hotels
 export const useGetHotels = () =>
   useQuery({
     queryKey: ['hotels'],
     queryFn: getHotelAPI
   });
-// Add Hotel
+
 export const useAddHotel = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -35,8 +34,6 @@ export const useAddHotel = () => {
 };
 
 
-
-// Delete Hotel by ID
 export const useDeleteHotelById = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -47,7 +44,6 @@ export const useDeleteHotelById = () => {
   });
 };
 
-// Add Room to Hotel
 export const useAddRoomToHotel = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -58,14 +54,12 @@ export const useAddRoomToHotel = () => {
   });
 };
 
-// Get Room by ID
 export const useGetRoomById = (roomId) =>
   useQuery({
     queryKey: ['room', roomId],
     queryFn: () => getRoomByIdAPI(roomId)
   });
 
-// Update Room by ID
 export const useUpdateRoomById = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -80,7 +74,6 @@ export const useUpdateRoomById = () => {
   });
 };
 
-// Delete Room by ID
 export const useDeleteRoomById = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -90,7 +83,6 @@ export const useDeleteRoomById = () => {
     }
   });
 };
-// Update Hotel by ID
 export const useUpdateHotelById = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -101,7 +93,6 @@ export const useUpdateHotelById = () => {
   });
 };
 
-// Get All Rooms
 export const useGetAllRooms = () =>
   useQuery({
     queryKey: ['rooms'],

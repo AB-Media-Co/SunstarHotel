@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // src/pages/RoomCard.jsx
 import React from 'react';
 import Card from '@mui/material/Card';
@@ -19,6 +20,7 @@ const RoomCard = ({ room, onEdit }) => {
       ? text
       : words.slice(0, wordLimit).join(' ') + '...';
   };
+
 
   return (
     <Card
@@ -105,6 +107,7 @@ const RoomCard = ({ room, onEdit }) => {
           Edit
         </Button>
       </CardActions>
+
     </Card>
   );
 };

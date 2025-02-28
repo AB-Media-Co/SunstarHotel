@@ -16,7 +16,6 @@ const useUpdatePagesHook = () => {
     staleTime: 1000 * 60, 
   });
 
-  // Add new amenity
   const addAmenityMutation = useMutation({
     mutationFn: async (amenity) => {
       const res = await axiosInstance.post('/api/websiteData/amenities', amenity);
@@ -31,7 +30,6 @@ const useUpdatePagesHook = () => {
     },
   });
 
-  // Update an existing amenity
   const updateAmenityMutation = useMutation({
     mutationFn: async ({ id, amenity }) => {
       const res = await axiosInstance.put(`/api/websiteData/amenities/${id}`, amenity);
@@ -61,50 +59,6 @@ const useUpdatePagesHook = () => {
     },
   });
 
-  // Add new location
-  const addLocationMutation = useMutation({
-    mutationFn: async (location) => {
-      const res = await axiosInstance.post('/api/websiteData/locations', location);
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success('Location added successfully!');
-      queryClient.invalidateQueries({ queryKey: ['websiteData'] });
-    },
-    onError: (error) => {
-      toast.error(`Failed to add location: ${error.message}`);
-    },
-  });
-
-  // Update an existing location
-  const updateLocationMutation = useMutation({
-    mutationFn: async ({ id, location }) => {
-      const res = await axiosInstance.put(`/api/websiteData/locations/${id}`, location);
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success('Location updated successfully!');
-      queryClient.invalidateQueries({ queryKey: ['websiteData'] });
-    },
-    onError: (error) => {
-      toast.error(`Failed to update location: ${error.message}`);
-    },
-  });
-
-  // Delete a location
-  const deleteLocationMutation = useMutation({
-    mutationFn: async (id) => {
-      const res = await axiosInstance.delete(`/api/websiteData/locations/${id}`);
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success('Location deleted successfully!');
-      queryClient.invalidateQueries({ queryKey: ['websiteData'] });
-    },
-    onError: (error) => {
-      toast.error(`Failed to delete location: ${error.message}`);
-    },
-  });
 
 
 
@@ -256,7 +210,6 @@ const useUpdatePagesHook = () => {
   return {
     websiteData,
     amenities: websiteData?.amenities || [],
-    locations: websiteData?.locations || [],
     galleryImages: websiteData?.grid || [],
     shineSection: websiteData?.shineSection || [],
     heroSectionUpdate: websiteData?.heroSection || [],
@@ -274,9 +227,6 @@ const useUpdatePagesHook = () => {
     addAmenity: addAmenityMutation.mutateAsync,
     updateAmenity: updateAmenityMutation.mutateAsync,
     deleteAmenity: deleteAmenityMutation.mutateAsync,
-    addLocation: addLocationMutation.mutateAsync,
-    updateLocation: updateLocationMutation.mutateAsync,
-    deleteLocation: deleteLocationMutation.mutateAsync,
     addGalleryImages: addGalleryImagesMutation.mutateAsync,
     whatMakesUsShine: whatMakesUsShineMutation.mutateAsync,
     updateHerosection: HeroSectionMutation.mutateAsync,

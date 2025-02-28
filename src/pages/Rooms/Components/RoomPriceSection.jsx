@@ -1,10 +1,9 @@
-/* eslint-disable react/prop-types */
 import { Add, Remove } from "@mui/icons-material";
 import Icon from "../../../Components/Icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const RoomPriceSection = ({ roomData }) => {
-  const [roomQty, setRoomQty] = useState(1);
+  const [roomQty, setRoomQty] = useState(1); // Default to 1 if no data is found
   const [showAlert, setShowAlert] = useState(false);
 
   const tabs = [
@@ -15,17 +14,41 @@ const RoomPriceSection = ({ roomData }) => {
     { id: "faqs", iconName: "faqs", label: "FAQs", link: "#faqs" },
   ];
 
+  useEffect(() => {
+    // Retrieve guest details from local storage
+    const storedGuestDetails = localStorage.getItem('guestDetails');
+    if (storedGuestDetails) {
+      const guestDetails = JSON.parse(storedGuestDetails);
+      // Set room quantity from the stored guest details
+      setRoomQty(guestDetails.rooms || 1);
+    }
+  }, []);
+
   const increaseRoomQty = () => {
     if (roomQty >= 3) {
       setShowAlert(true);
     } else {
       setRoomQty(roomQty + 1);
+      // Update local storage with the new room quantity
+      const storedGuestDetails = localStorage.getItem('guestDetails');
+      if (storedGuestDetails) {
+        const guestDetails = JSON.parse(storedGuestDetails);
+        guestDetails.rooms = roomQty + 1;
+        localStorage.setItem('guestDetails', JSON.stringify(guestDetails));
+      }
     }
   };
 
   const decreaseRoomQty = () => {
     if (roomQty > 1) {
       setRoomQty(roomQty - 1);
+      // Update local storage with the new room quantity
+      const storedGuestDetails = localStorage.getItem('guestDetails');
+      if (storedGuestDetails) {
+        const guestDetails = JSON.parse(storedGuestDetails);
+        guestDetails.rooms = roomQty - 1;
+        localStorage.setItem('guestDetails', JSON.stringify(guestDetails));
+      }
     }
   };
 

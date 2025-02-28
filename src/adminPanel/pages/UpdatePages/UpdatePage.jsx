@@ -5,7 +5,6 @@ import Faq from "./Faq/Faq"
 import Images from "./GalleryImages/Images"
 import HeroSection from "./HeroSection/HeroSection"
 import HomePageDescription from "./HeroSection/HomePageDescription"
-import ManageLocation from "./Locations/ManageLocation"
 import OurValue from "./OurValue/OurValue"
 import ShineSectionUpdate from "./ShineSection/ShineSectionUpdate"
 import Testimonials from "./Testimonials/Testimonials"
@@ -17,7 +16,6 @@ const UpdatePage = () => {
         <HeroSection />
         <HomePageDescription/>
         <Amenities />
-        <ManageLocation />
         <Images />
         <ShineSectionUpdate />
         <WhatWeOffering />

@@ -9,6 +9,7 @@ const BannerSection = ({
     textC = "white",
     imgClass = "h-auto object-cover",
 }) => {
+    console.log(data)
     return (
         <div className={`w-full ${bg} py-8 md:py-20 px-4 md:px-8 lg:px-16`}>
             <div className={`content flex section flex-col lg:flex-row justify-between ${paddTop}`}>
@@ -20,12 +21,12 @@ const BannerSection = ({
                     <h1
                         className={`${text} ${lineh} text-reveal-animation font-bold text-${textC} mb-2 md:mb-6 leading-snug tracking-tight`}
                     >
-                       About {data?.name}
+                       {data?.title? data?.title:"About Us"}
                     </h1>
                     <p
                         className={`text-${textC} ${ptext} animation-on-scroll leading-relaxed tracking-wide`}
                     >
-                        {data?.aboutUs?.description}
+                        {data?.description}
                     </p>
                 </div>
 
@@ -35,7 +36,7 @@ const BannerSection = ({
                 data-aos="fade-up"
                 >
                     <img
-                        src={data?.aboutUs?.img}
+                        src={data?.image? data?.image:data?.img}
                         alt="Corporate Booking Banner"
                         className={`max-w-full ${imgClass} rounded-x`}
                     />

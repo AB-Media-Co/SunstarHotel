@@ -26,6 +26,15 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
   const [checkOut, setCheckOut] = useState(null);
   const [confirmClicked, setConfirmClicked] = useState(false);
 
+  useEffect(() => {
+    const storedCheckIn = localStorage.getItem("checkInDate");
+    const storedCheckOut = localStorage.getItem("checkOutDate");
+    if (storedCheckIn && storedCheckOut) {
+      setCheckIn(new Date(storedCheckIn));
+      setCheckOut(new Date(storedCheckOut));
+    }
+  }, []);
+
   const handleDateClick = (day) => {
     if (!checkIn || (checkIn && checkOut)) {
       setCheckIn(day);
@@ -38,7 +47,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
   };
 
   const handleConfirmClick = () => {
-    setConfirmClicked(true); // Set confirm clicked flag to true
+    setConfirmClicked(true);
     if (!checkIn || !checkOut) {
       gsap.fromTo(".dates", { x: 0 }, { duration: 0.1, x: 10, repeat: 3, yoyo: true });
     } else {
@@ -46,6 +55,8 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
       const formattedEndDate = format(checkOut, "yyyy-MM-dd");
       setCheckInDate(formattedStartDate);
       setCheckOutDate(formattedEndDate);
+      localStorage.setItem("checkInDate", formattedStartDate);
+      localStorage.setItem("checkOutDate", formattedEndDate);
       setOpenCalender(false);
     }
   };
@@ -59,7 +70,6 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
 
     return (
       <div className="calendar-month w-full lg:w-[48%] flex flex-col gap-6 relative">
-        {/* Month & Navigation */}
         <div className="md:flex hidden items-center px-4">
           {showLeftArrow && (
             <button
@@ -106,7 +116,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
               const isRangeEnd = isCurrent && checkOut && isSameDay(day, checkOut);
               const inRange =
                 isCurrent && checkIn && checkOut && isAfter(day, checkIn) && isBefore(day, checkOut);
-                const isPastDate = isBefore(day, startOfDay(new Date()));
+              const isPastDate = isBefore(day, startOfDay(new Date()));
 
               return (
                 <div
@@ -114,25 +124,11 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
                   className={`
                     day-cell flex items-center justify-center h-8 sm:h-10 md:h-12 md:w-full 
                     transition-colors duration-200 
-                    ${
-                      isCurrent ? "current-month" : "other-month"
-                    } 
-                    ${
-                      isRangeStart
-                        ? "range-start bg-primary-green text-primary-green rounded-l-full"
-                        : ""
-                    } 
-                    ${
-                      isRangeEnd
-                        ? "range-end bg-primary-green text-primary-green rounded-r-full"
-                        : ""
-                    } 
+                    ${isCurrent ? "current-month" : "other-month"} 
+                    ${isRangeStart ? "range-start bg-primary-green text-primary-green rounded-l-full" : ""} 
+                    ${isRangeEnd ? "range-end bg-primary-green text-primary-green rounded-r-full" : ""} 
                     ${inRange ? "in-range bg-primary-green text-primary-white" : ""} 
-                    ${
-                      isPastDate
-                        ? "text-gray-400 cursor-not-allowed"
-                        : "text-gray-700 hover:bg-primary-green/20 cursor-pointer"
-                    } 
+                    ${isPastDate ? "text-gray-400 cursor-not-allowed" : "text-gray-700 hover:bg-primary-green/20 cursor-pointer"} 
                     rounded-md
                   `}
                   onClick={() => isCurrent && !isPastDate && handleDateClick(day)}
@@ -174,7 +170,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
   return (
     <div className="calendar-container items-center flex flex-col relative">
       {/* Top Navigation (Mobile) */}
-      <div className="flex Calender  justify-between md:hidden rounded-t-xl bg-primary-white py-4 items-center px-2 w-full shadow-sm">
+      <div className="flex Calender justify-between md:hidden rounded-t-xl bg-primary-white py-4 items-center px-2 w-full shadow-sm">
         <button
           onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}
           className={`font-bold p-[6px] text-[5px] rounded-full flex items-center shadow-sm transition-colors
@@ -190,7 +186,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
         </button>
 
         {/* Weekday labels on Mobile */}
-        <div className="calendar-header  w-full grid lg:hidden grid-cols-7 text-sm md:text-lg text-center font-bold text-gray-400">
+        <div className="calendar-header w-full grid lg:hidden grid-cols-7 text-sm md:text-lg text-center font-bold text-gray-400">
           {daysInWeek.map((day) => (
             <div key={day}>{day}</div>
           ))}
@@ -205,7 +201,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
       </div>
 
       {/* Main Calendar */}
-      <div className="flex flex-col h-[67vh] overflow-y-auto md:h-[78vh] Calender hotelSelection  bg-primary-white md:rounded-lg lg:w-[90%] w-full lg:rounded-t-[40px] md:pt-6 md:pb-20 lg:flex-row gap-6 shadow-md">
+      <div className="flex flex-col h-[67vh] overflow-y-auto md:h-[78vh] Calender hotelSelection bg-primary-white md:rounded-lg lg:w-[90%] w-full lg:rounded-t-[40px] md:pt-6 md:pb-20 lg:flex-row gap-6 shadow-md">
         {renderCalendar(currentMonth, true, false)}
         {renderCalendar(nextMonth, false, true)}
       </div>
@@ -219,16 +215,12 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
       </button>
 
       {/* Footer */}
-      <div className="footer md:-mt-10 border-2 border-gray-200 bg-primary-yellow w-full py-6  absolute bottom-0 shadow-sm">
-        <div className="content flex flex-col  md:flex-row gap-6 items-center px-4">
+      <div className="footer md:-mt-10 border-2 border-gray-200 bg-primary-yellow w-full py-6 absolute bottom-0 shadow-sm">
+        <div className="content flex flex-col md:flex-row gap-6 items-center px-4">
           {/* Dates & Nights */}
           <div className="flex items-center max-w-full lg:w-[1200px] bg-primary-white px-4 py-2 md:px-10 md:py-4 rounded-full gap-4 md:gap-8 shadow-sm">
             <Icon name="calendar" className="md:h-6 md:w-6 w-4 text-primary-green" />
-            <div
-              className={`flex flex-col ${
-                confirmClicked && !checkIn ? "text-red-500" : "text-primary-gray"
-              }`}
-            >
+            <div className={`flex flex-col ${confirmClicked && !checkIn ? "text-red-500" : "text-primary-gray"}`}>
               <span className="font-semibold text-[10px] lg:text-[18px]">
                 {checkIn ? ` ${format(checkIn, "dd MMM , EEEE")}` : "Check in"}
               </span>
@@ -236,11 +228,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
 
             <ArrowRightAlt className="text-yellow-400" />
 
-            <div
-              className={`flex flex-col ${
-                confirmClicked && !checkOut ? "text-red-500" : "text-primary-gray"
-              }`}
-            >
+            <div className={`flex flex-col ${confirmClicked && !checkOut ? "text-red-500" : "text-primary-gray"}`}>
               <span className="font-semibold text-[10px] lg:text-[18px]">
                 {checkOut ? `${format(checkOut, "dd MMM , EEEE")}` : "Check-out"}
               </span>

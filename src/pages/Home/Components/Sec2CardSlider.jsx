@@ -53,7 +53,7 @@ export default function SwiperComponent() {
         {/* Location */}
         <div className="flex items-end gap-1 text-mobile/body/2 text-[#707070] font-semibold">
           <LocationOnSharp className="text-[#4DB8B6]" style={{ fontSize: "18px" }} />
-          <span>{card.location}</span>
+          <span>{card.location?.hotelAddress}</span>
         </div>
 
         {/* Price Section */}

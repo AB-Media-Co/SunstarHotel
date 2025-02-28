@@ -19,16 +19,21 @@ import useUpdatePagesHook from '../../../../ApiHooks/useUpdatePagesHook';
 const OurValueModal = ({ open, handleClose, initialData, onSave }) => {
   const [heading, setHeading] = useState('');
   const [valueData, setValueData] = useState([]);
+  const [heroSectionDescription, setHeroSectionDescription] = useState('');
 
   useEffect(() => {
     if (initialData) {
       setHeading(initialData.heading || '');
       setValueData(initialData.valueData || []);
+      setHeroSectionDescription(initialData.heroSectionDescription || '');
     }
   }, [initialData]);
 
   const handleHeadingChange = (e) => {
     setHeading(e.target.value);
+  };
+  const handleDescriptionChange = (e) => {
+    setHeroSectionDescription(e.target.value);
   };
 
   const handleValueChange = (index, field, value) => {
@@ -48,7 +53,7 @@ const OurValueModal = ({ open, handleClose, initialData, onSave }) => {
   };
 
   const handleSaveChanges = () => {
-    const updatedData = { heading, valueData };
+    const updatedData = { heading, valueData, heroSectionDescription };
     onSave(updatedData);
     handleClose();
   };
@@ -64,6 +69,14 @@ const OurValueModal = ({ open, handleClose, initialData, onSave }) => {
             fullWidth
             value={heading}
             onChange={handleHeadingChange}
+            sx={{ mb: 3 }}
+          />
+          <TextField
+            label="Hero Section Description"
+            variant="outlined"
+            fullWidth
+            value={heroSectionDescription}
+            onChange={handleDescriptionChange}
             sx={{ mb: 3 }}
           />
 

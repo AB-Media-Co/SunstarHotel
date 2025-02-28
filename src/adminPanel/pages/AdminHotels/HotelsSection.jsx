@@ -82,12 +82,7 @@ const Card = ({ item, type, onEdit, onDelete }) => {
         </div>
 
         <div className="mb-auto">
-          <div className="flex items-center">
-            <LocationOn fontSize="small" className="text-gray-500 mr-2" />
-            <span className="text-gray-700 text-sm">
-              {item.location || item.hotel?.location || 'Location N/A'}
-            </span>
-          </div>
+       
           {type === 'hotel' && (
             <div className="flex items-center mt-2">
               <AccessTime fontSize="small" className="text-gray-500 mr-1" />

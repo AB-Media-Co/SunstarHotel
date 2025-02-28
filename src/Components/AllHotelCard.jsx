@@ -40,7 +40,7 @@ const AllHotelCard = ({ isOpen, onClose }) => {
           animate="visible"
           exit="hidden"
         >
-          <div className="rounded-t-[32px] bg-primary-white p-10 md:py-12">
+          <div className="rounded-t-[32px] bg-primary-white  md:py-12">
             <HotelSelectingCards />
           </div>
         </motion.div>

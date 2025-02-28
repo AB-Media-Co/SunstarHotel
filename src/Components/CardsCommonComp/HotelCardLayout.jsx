@@ -101,7 +101,7 @@ const HotelCard = ({
   };
 
   return (
-    <div className="group relative rounded-xl shadow-md overflow-hidden bg-primary-white transition-shadow duration-300 hover:shadow-lg transform hover:-translate-y-1">
+    <div className="group relative  rounded-xl shadow-md overflow-hidden bg-primary-white transition-shadow duration-300 hover:shadow-lg transform hover:-translate-y-1">
       <div className="relative w-full h-56 md:h-64">
         {images.length > 0 ? (
           <div className="relative w-full h-full overflow-hidden">
@@ -159,7 +159,7 @@ const HotelCard = ({
           </div>
         )}
         <div className="absolute top-2 left-2 bg-primary-white bg-opacity-75 rounded-md px-2 py-1 text-xs font-medium text-gray-700">
-          {hotel.location || "Location"}
+          {hotel?.location?.hotelAddress || "Location"}
         </div>
       </div>
 

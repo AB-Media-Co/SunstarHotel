@@ -16,6 +16,15 @@ function Banner({ businessPlatformFeatures }) {
   const [isTopSectionHidden, setIsTopSectionHidden] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
 
+  // Retrieve dates from localStorage on mount (without changing the UI)
+  useEffect(() => {
+    const storedCheckIn = localStorage.getItem("checkInDate");
+    const storedCheckOut = localStorage.getItem("checkOutDate");
+    if (storedCheckIn && storedCheckOut) {
+      setCheckIn(storedCheckIn);
+      setCheckOut(storedCheckOut);
+    }
+  }, []);
 
   const handleBooking = () => {
     if (!checkIn || !checkOut) {
@@ -68,11 +77,11 @@ function Banner({ businessPlatformFeatures }) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [prevScrollPos, isItemFixed]); // Add isItemFixed to the dependency array
+  }, [prevScrollPos, isItemFixed]);
 
   const calculateNights = () => {
     if (checkIn && checkOut) {
-      return <div>{differenceInCalendarDays(checkOut, checkIn)} Nights</div>;
+      return <div>{differenceInCalendarDays(new Date(checkOut), new Date(checkIn))} Nights</div>;
     }
     return 0;
   };
@@ -131,17 +140,7 @@ function Banner({ businessPlatformFeatures }) {
               </button>
             </div>
 
-            {/* <div className="flex gap-2 md:gap-6">
-              <div className="lg:hidden">
-                <GuestsDropdown />
-              </div>
-              <button
-                onClick={handleBooking}
-                className="bg-primary-green text-primary-white lg:w-[180px] text-mobile/button md:text-desktop/h4 rounded-full shadow-md px-6 md:px-6 md:py-3"
-              >
-                Select
-              </button>
-            </div> */}
+
           </div>
 
           {/* Bottom Section: Tabs */}

@@ -1,150 +1,160 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+// src/components/CityPage.jsx
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import Calendar from '../../Components/Calendar';
+import GuestsDropdown from '../../Components/GuestsDropdown';
+import { differenceInCalendarDays } from 'date-fns';
+import Icon from "../../Components/Icons";
+import HotelSelectingCards from '../../Components/CardsCommonComp/HotelSelectingCards';
+import RoatinfImg from '../../Components/RoatinfImg';
+import Sec3CardSlider from '../Home/Components/Sec3CrdSlider';
+import ImageGallery from '../../Components/ImageGallery';
+import Section5 from '../Home/Components/Section5';
+import { useGetLocationById } from '../../ApiHooks/useLocationHook';
+import Loader from '../../Components/Loader';
 
 const CityPage = () => {
+    const [checkIn, setCheckIn] = useState(null);
+    const [checkOut, setCheckOut] = useState(null);
+    const [openCalender, setOpenCalender] = useState(false);
+
+    const { state } = useLocation();
+    const cityId = state?.id; // ID passed from CityPagesOptions
+
+    const { data: singleLocationData } = useGetLocationById(cityId, { enabled: !!cityId });
+
+
+    useEffect(() => {
+        const storedCheckIn = localStorage.getItem("checkInDate");
+        const storedCheckOut = localStorage.getItem("checkOutDate");
+        if (storedCheckIn && storedCheckOut) {
+            setCheckIn(storedCheckIn);
+            setCheckOut(storedCheckOut);
+        }
+    }, []);
+
+    const calculateNights = () => {
+        if (checkIn && checkOut) {
+            const nights = differenceInCalendarDays(new Date(checkOut), new Date(checkIn));
+            return <div>{nights} Nights</div>;
+        }
+        return 0;
+    };
+
     return (
-        <div className="bg-gray-100">
-            {/* Banner */}
-            <div className="relative overflow-hidden bg-cover bg-center h-96" style={{ backgroundImage: 'url("/images/HomepageImages/sec3CardImg.png")' }}>
-                <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-                <div className="absolute inset-0 flex flex-col justify-center content  text-primary-white">
-                    <h1 className="text-4xl font-bold">Ahmedabad</h1>
-                    <div className="mt-4">
-                        <input type="date" className="bg-primary-white text-gray-800 p-2 rounded-lg" />
-                        <button className="bg-green-500 text-primary-white p-2 ml-2 rounded-lg">Check Availability</button>
-                    </div>
-                </div>
-            </div>
-
-
-            <div className='content'>
-                {/* Hotels */}
-                <section className="container mx-auto py-8">
-                    <h2 className="text-3xl font-bold mb-4">Hotels in Ahmedabad</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {/* Featured Hotels */}
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg">
-                            <img src="/images/HomepageImages/sec3CardImg.png" alt="Featured Hotel" className="w-full h-48 object-cover rounded-lg mb-4" />
-                            <h3 className="text-2xl font-bold">Featured Hotel 1</h3>
-                            <p className="text-gray-600">Description of the featured hotel.</p>
-                            <button className="bg-green-500 text-primary-white p-2 mt-4 rounded-lg">Book Now</button>
-                        </div>
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg">
-                            <img src="/images/HomepageImages/sec3CardImg.png" alt="Featured Hotel" className="w-full h-48 object-cover rounded-lg mb-4" />
-                            <h3 className="text-2xl font-bold">Featured Hotel 2</h3>
-                            <p className="text-gray-600">Description of the featured hotel.</p>
-                            <button className="bg-green-500 text-primary-white p-2 mt-4 rounded-lg">Book Now</button>
-                        </div>
-                        {/* Other Hotels */}
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg">
-                            <img src="/images/HomepageImages/sec3CardImg.png" alt="Hotel" className="w-full h-48 object-cover rounded-lg mb-4" />
-                            <h3 className="text-2xl font-bold">Hotel 1</h3>
-                            <p className="text-gray-600">Description of the hotel.</p>
-                            <button className="bg-green-500 text-primary-white p-2 mt-4 rounded-lg">Book Now</button>
-                        </div>
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg">
-                            <img src="/images/HomepageImages/sec3CardImg.png" alt="Hotel" className="w-full h-48 object-cover rounded-lg mb-4" />
-                            <h3 className="text-2xl font-bold">Hotel 2</h3>
-                            <p className="text-gray-600">Description of the hotel.</p>
-                            <button className="bg-green-500 text-primary-white p-2 mt-4 rounded-lg">Book Now</button>
+        <div className="">
+            {singleLocationData ? (
+                <>
+                    <div
+                        className="relative overflow-hidden bg-cover bg-center h-96"
+                        style={{ backgroundImage: `url(${singleLocationData?.image}) ` }}
+                    >
+                        <div className="absolute inset-0 bg-primary-green z-0 bg-opacity-50"></div>
+                        <div className="absolute inset-0 flex flex-col z-20 justify-center items-center lg:items-start lg:justify-end md:pb-20 content text-primary-white">
+                            <h1 className="text-6xl font-bold">{singleLocationData?.name}</h1>
                         </div>
                     </div>
-                </section>
 
-                {/* What Makes Us Shine */}
-                <section className="container mx-auto py-8">
-                    <h2 className="text-3xl font-bold mb-4">What Makes Us Shine</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg">
-                            <h3 className="text-2xl font-bold">Lowest Price, Guaranteed!</h3>
-                            <p className="text-gray-600">We offer the best prices for your stay.</p>
-                        </div>
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg">
-                            <h3 className="text-2xl font-bold">Exceptional Service</h3>
-                            <p className="text-gray-600">Our team is dedicated to making your stay memorable.</p>
+                    <div
+                        className={`bg-primary-white py-8 px-4 lg:left-[8%] transition-all duration-500 ease-in-out 
+        content absolute top-[46%] md:top-[45%]
+        md:px-8 lg:px-12 rounded-md shadow-lg lg:mx-auto  
+        z-10 flex flex-col items-center gap-6 mx-2`}
+                    >
+                        <div
+                            className={`flex justify-center flex-col md:flex-row items-center w-full space-y-4 md:space-y-0 space-x-0 md:space-x-4`}
+                        >
+                            <div
+                                onClick={() => setOpenCalender(true)}
+                                className={`flex flex-wrap w-full justify-center items-center border rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm`}
+                            >
+                                <Icon name="calendar" className="h-6 w-6 text-[#006167]" />
+                                <span className="text-[#006167] font-semibold text-base sm:text-lg md:text-[24px]">
+                                    {checkIn ? checkIn : "Check In"}{" "}
+                                    <span className="text-yellow-500">→</span>{" "}
+                                    {checkOut ? checkOut : "Check Out"}
+                                </span>
+                                {checkIn && checkOut && (
+                                    <span className="text-[#006167] text-xs sm:text-sm flex">
+                                        ({calculateNights()})
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className="flex items-center justify-between gap-4 w-full">
+                                <GuestsDropdown classBg="bg-transparant" />
+                                <a
+                                    href="#hotels"
+                                    className="bg-[#006167] flex gap-2 items-center cursor-pointer text-primary-white text-sm sm:text-base lg:text-lg sm:w-auto rounded-full shadow-md px-6 py-3"
+                                >
+                                    <img src="/images/Logo/ViewHotels.svg" alt="" className="h-4 md:h-8 w-4 md:w-8" />
+                                    <span>View Hotels</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </section>
 
-                {/* About City */}
-                <section className="container mx-auto py-8">
-                    <h2 className="text-3xl font-bold mb-4">About Ahmedabad</h2>
-                    <p className="text-gray-600">Ahmedabad is a vibrant city with a rich history and a bustling modern life. It is known for its architectural marvels, vibrant markets, and cultural events.</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg">
-                            <h3 className="text-2xl font-bold">Monuments</h3>
-                            <p className="text-gray-600">Explore the historical monuments of Ahmedabad.</p>
+                    {openCalender && (
+                        <div className="fixed inset-0 flex justify-center items-center z-50">
+                            <Calendar
+                                setCheckInDate={setCheckIn}
+                                setCheckOutDate={setCheckOut}
+                                setOpenCalender={setOpenCalender}
+                            />
                         </div>
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg">
-                            <h3 className="text-2xl font-bold">Night Life</h3>
-                            <p className="text-gray-600">Enjoy the vibrant night life with numerous bars and clubs.</p>
+                    )}
+
+                    <div className="mt-24" id="hotels">
+                        <section className="content mx-auto">
+                            <h2 className="text-3xl font-bold mb-4">Hotels in {singleLocationData?.name}</h2>
+                            {singleLocationData?.hotels ? <HotelSelectingCards data={singleLocationData} /> : (
+                                <div className='text-lg font-medium'>
+                                    Sorry  No HOtels For this Location
+                                </div>
+                            )}
+
+                        </section>
+
+                        <div
+                            data-aos="fade-up"
+                            className="relative content flex flex-col items-center lg:items-start my-8 lg:my-20 w-full"
+                        >
+                            <RoatinfImg position="md:left-0 top-[-3rem] md:top-0 left-[-6rem] z-0 lg:w-[18rem]" />
+                            <div className="relative text-black px-4">
+                                <h1 className="text-mobile/h2 lg:text-desktop/h2 font-bold text-reveal-animation">
+                                    {singleLocationData?.aboutus?.heading}
+                                </h1>
+                                <p className="text-mobile/body/2 lg:text-desktop/body/large mt-4 animation-on-scroll">
+                                    {singleLocationData?.aboutus?.paragraph}
+                                </p>
+                            </div>
                         </div>
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg">
-                            <h3 className="text-2xl font-bold">Activities</h3>
-                            <p className="text-gray-600">Engage in various activities like hiking, cycling, and more.</p>
+
+                        <div className="relative bg-[#78C9C8] px-4 overflow-hidden">
+                            <div className="md:block hidden">
+                                <RoatinfImg position="right-0" src="/images/HomepageImages/section3pattern.png" />
+                            </div>
+                            <div className="content pt-5 md:pt-[50px] z-10 relative">
+                                <Sec3CardSlider />
+                            </div>
                         </div>
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg">
-                            <h3 className="text-2xl font-bold">Events</h3>
-                            <p className="text-gray-600">Attend cultural and sports events throughout the year.</p>
+
+                        <div className="relative flex flex-col justify-between content items-center mt-10 py-10 z-0">
+                            <div className="absolute top-0 left-0 z-0 w-full h-full">
+                                <RoatinfImg position="md:left-0 top-[-60px] md:top-0 left-[-60px]" />
+                            </div>
+                            <ImageGallery />
                         </div>
+
+                        <Section5 />
                     </div>
-                </section>
+                </>
+            ) : (
+                <Loader />
+            )}
 
-                {/* Scroller */}
-                <section className="container mx-auto py-8">
-                    <h2 className="text-3xl font-bold mb-4">Popular Destinations</h2>
-                    <div className="flex overflow-x-auto space-x-4">
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg w-64">
-                            <img src="/path/to/destination.jpg" alt="Destination" className="w-full h-32 object-cover rounded-lg mb-4" />
-                            <h3 className="text-2xl font-bold">Destination 1</h3>
-                        </div>
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg w-64">
-                            <img src="/path/to/destination.jpg" alt="Destination" className="w-full h-32 object-cover rounded-lg mb-4" />
-                            <h3 className="text-2xl font-bold">Destination 2</h3>
-                        </div>
-                        <div className="bg-primary-white shadow-lg p-4 rounded-lg w-64">
-                            <img src="/path/to/destination.jpg" alt="Destination" className="w-full h-32 object-cover rounded-lg mb-4" />
-                            <h3 className="text-2xl font-bold">Destination 3</h3>
-                        </div>
-                    </div>
-                </section>
 
-                {/* Corporate Bookings */}
-                <section className="container mx-auto py-8">
-                    <h2 className="text-3xl font-bold mb-4">Corporate Bookings</h2>
-                    <p className="text-gray-600">We offer special packages for corporate bookings.</p>
-                    <button className="bg-green-500 text-primary-white p-2 mt-4 rounded-lg">Contact Us</button>
-                </section>
 
-                {/* Developers & Owners */}
-                <section className="container mx-auto py-8">
-                    <h2 className="text-3xl font-bold mb-4">Developers & Owners</h2>
-                    <p className="text-gray-600">Partner with us to grow your business.</p>
-                    <button className="bg-green-500 text-primary-white p-2 mt-4 rounded-lg">Join Us</button>
-                </section>
-
-                {/* Bottom Banner */}
-                <div className="bg-green-500 text-primary-white py-8">
-                    <div className="container mx-auto text-center">
-                        <h2 className="text-3xl font-bold mb-4">Ready to Book Your Stay?</h2>
-                        <p className="text-lg">Choose from our wide selection of hotels and book directly for the best prices.</p>
-                        <button className="bg-primary-white text-green-500 p-2 mt-4 rounded-lg">Book Now</button>
-                    </div>
-                </div>
-
-                {/* Links to Different City Pages */}
-                <footer className="bg-primary-white py-8">
-                    <div className="container mx-auto text-center">
-                        <p className="text-gray-600">Explore Other Cities</p>
-                        <div className="flex justify-center space-x-4 mt-4">
-                            <Link to="/mumbai" className="text-green-500 hover:text-green-700">Mumbai</Link>
-                            <Link to="/delhi" className="text-green-500 hover:text-green-700">Delhi</Link>
-                            <Link to="/bangalore" className="text-green-500 hover:text-green-700">Bangalore</Link>
-                        </div>
-                    </div>
-                </footer>
-
-            </div>
         </div>
     );
 };

@@ -3,7 +3,19 @@ import { ExternalLink } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-const Location = ({address}) => {
+const Location = ({ address }) => {
+    // Destructure the passed object
+    const {
+        hotelAddress,
+        metro,
+        airport,
+        railwayStation,
+        attractions,
+        restaurants,
+        activities,
+        nightlife,
+    } = address || {};
+
     const zoom = 20;
     const mapContainerRef = useRef(null);
     const mapInstanceRef = useRef(null);
@@ -12,18 +24,26 @@ const Location = ({address}) => {
     const [hotelLocation, setHotelLocation] = useState(null);
     const [mapUnlocked, setMapUnlocked] = useState(false);
 
-    const leftCategories = ["Airport", "Railway Station", "Metro Station"];
-    const popupCategories = ["Attractions", "Restaurants", "Nightlife", "Activities"];
+    // Categories for left side and popup
+    const leftCategories = ['Airport', 'Railway Station', 'Metro Station'];
+    const popupCategories = ['Attractions', 'Restaurants', 'Nightlife', 'Activities'];
 
+    // Icon mapping for popup view
     const popupIcons = {
         Attractions: '/images/MapIcons/Attraction.svg',
         Restaurants: '/images/MapIcons/Restaurents.svg',
         Nightlife: '/images/MapIcons/NightLife.svg',
         Activities: '/images/MapIcons/Activities.svg'
     };
+    const leftIcons = {
+        'Airport': '/images/MapIcons/Airport.svg',
+        'Railway Station': '/images/MapIcons/Railway.svg',
+        'Metro Station': '/images/MapIcons/Metro.svg',
+    };
+
 
     const [showPopup, setShowPopup] = useState(false);
-    const [activeTab, setActiveTab] = useState("Attractions");
+    const [activeTab, setActiveTab] = useState('Attractions');
     const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
 
     const popupMapContainerRef = useRef(null);
@@ -39,109 +59,77 @@ const Location = ({address}) => {
             console.error('Google Maps JavaScript API not loaded.');
             return;
         }
+        if (!hotelAddress) {
+            console.error('Hotel address is missing.');
+            return;
+        }
         const geocoder = new window.google.maps.Geocoder();
-        geocoder.geocode({ address }, (results, status) => {
+        geocoder.geocode({ address: hotelAddress }, (results, status) => {
             if (status === 'OK' && results[0]) {
-                const location = results[0].geometry.location;
-                setHotelLocation(location);
+                const hotelLoc = results[0].geometry.location;
+                setHotelLocation(hotelLoc);
                 const map = new window.google.maps.Map(mapContainerRef.current, {
-                    center: location,
+                    center: hotelLoc,
                     zoom,
                 });
                 mapInstanceRef.current = map;
+
                 new window.google.maps.Marker({
-                    position: location,
+                    position: hotelLoc,
                     map,
-                    title: address,
+                    title: hotelAddress,
                 });
-                const service = new window.google.maps.places.PlacesService(map);
-                const placeTypes = [
-                    { label: 'Airport', type: 'airport', icons: '/images/MapIcons/Airport.svg' },
-                    { label: 'Railway Station', type: 'train_station', icons: '/images/MapIcons/Railway.svg' },
-                    { label: 'Metro Station', type: 'subway_station', icons: '/images/MapIcons/Metro.svg' },
-                    { label: 'Attractions', type: 'tourist_attraction', icons: '/images/MapIcons/Attraction.svg' },
-                    { label: 'Restaurants', type: 'restaurant', icons: '/images/MapIcons/Reataurents.svg' },
-                    { label: 'Nightlife', type: 'night_club', icons: '/images/MapIcons/NightLife.svg' },
-                    { label: 'Activities', type: 'amusement_park', icons: '/images/MapIcons/Activities.svg' }
-                ];
-                placeTypes.forEach(({ label, type, icons }) => {
-                    const request = {
-                        location,
-                        radius: type === 'airport' ? 50000 : 5000,
-                        type,
-                    };
-                    service.nearbySearch(request, (results, status) => {
-                        if (
-                            status === window.google.maps.places.PlacesServiceStatus.OK &&
-                            results
-                        ) {
-                            let computedResults = results.map(place => {
-                                const distance = window.google.maps.geometry.spherical.computeDistanceBetween(
-                                    location,
-                                    place.geometry.location
-                                );
-                                return { ...place, distance, icons };
-                            });
-                            computedResults.sort((a, b) => a.distance - b.distance);
-                            if (label === 'Airport') {
-                                const airportResults = computedResults.filter(
-                                    (p) => p.types && p.types.includes('airport')
-                                );
-                                const realAirports = airportResults.filter(p => {
-                                    const name = p.name.toLowerCase();
-                                    return (
-                                        (name.includes('international airport') || name.includes('domestic airport')) &&
-                                        !name.includes('service') &&
-                                        !name.includes('academy') &&
-                                        !name.includes('training') &&
-                                        !name.includes('aviation services')
-                                    );
-                                });
-                                const igiMainAirport = realAirports.find(p => {
-                                    const name = p.name.toLowerCase();
-                                    return (
-                                        name.includes('indira gandhi') ||
-                                        name.includes('igi airport') ||
-                                        name.includes('delhi international airport')
-                                    );
-                                });
-                                if (igiMainAirport) {
-                                    setGroupedPlaces(prev => ({ ...prev, [label]: [igiMainAirport] }));
-                                    createMarker(igiMainAirport, map);
-                                } else if (realAirports.length > 0) {
-                                    setGroupedPlaces(prev => ({ ...prev, [label]: [realAirports[0]] }));
-                                    createMarker(realAirports[0], map);
-                                } else if (airportResults.length > 0) {
-                                    setGroupedPlaces(prev => ({ ...prev, [label]: [airportResults[0]] }));
-                                    createMarker(airportResults[0], map);
-                                } else {
-                                    setGroupedPlaces(prev => ({ ...prev, [label]: [] }));
-                                }
-                            } else if (label === 'Metro Station' || label === 'Railway Station') {
-                                const best = computedResults[0];
-                                if (best) {
-                                    setGroupedPlaces(prev => ({ ...prev, [label]: [best] }));
-                                    createMarker(best, map);
-                                } else {
-                                    setGroupedPlaces(prev => ({ ...prev, [label]: [] }));
-                                }
-                            } else {
-                                setGroupedPlaces(prev => ({ ...prev, [label]: computedResults }));
-                                computedResults.forEach(place => createMarker(place, map));
-                            }
-                        } else {
-                            console.error(`Nearby search for ${label} failed: ${status}`);
-                            setGroupedPlaces(prev => ({ ...prev, [label]: [] }));
-                        }
-                    });
+
+                const categories = {
+                    'Metro Station': metro,
+                    'Airport': airport,
+                    'Railway Station': railwayStation,
+                    'Attractions': attractions,
+                    'Restaurants': restaurants,
+                    'Activities': activities,
+                    'Nightlife': nightlife,
+                };
+
+                Object.entries(categories).forEach(([label, places]) => {
+                    if (places && places.length > 0) {
+                        Promise.all(
+                            places.map((place) =>
+                                new Promise((resolve) => {
+                                    geocoder.geocode({ address: `${place.name}, New Delhi, India` }, (results, status) => {
+                                        if (status === 'OK' && results[0]) {
+                                            const placeLoc = results[0].geometry.location;
+                                            const distance = window.google.maps.geometry.spherical.computeDistanceBetween(
+                                                hotelLoc,
+                                                placeLoc
+                                            );
+                                            const travelTime = Math.round(distance / 80);
+                                            const enrichedPlace = { ...place, location: placeLoc, distance, travelTime, place_id: place.place_id || place.name };
+                                            resolve(enrichedPlace);
+                                        } else {
+                                            console.error(`Geocode failed for ${place.name}: ${status}`);
+                                            resolve({ ...place, location: null });
+                                        }
+                                    });
+                                })
+                            )
+                        ).then((computedResults) => {
+                            const validResults = computedResults.filter((res) => res.location);
+                            validResults.sort((a, b) => a.distance - b.distance);
+                            setGroupedPlaces((prev) => ({ ...prev, [label]: validResults }));
+                            validResults.forEach((p) => createMarker(p, map));
+                        });
+                    } else {
+                        setGroupedPlaces((prev) => ({ ...prev, [label]: [] }));
+                    }
                 });
+
             } else {
                 console.error('Geocode was not successful for: ' + status);
             }
         });
-    }, [address, zoom]);
+    }, [hotelAddress, address, zoom]);
 
-    // Initialize popup map in the popup modal within the right column
+    // Initialize popup map when the popup is shown
     useEffect(() => {
         if (showPopup && window.google && popupMapContainerRef.current && !popupMapInstance) {
             const map = new window.google.maps.Map(popupMapContainerRef.current, {
@@ -152,9 +140,10 @@ const Location = ({address}) => {
         }
     }, [showPopup, hotelLocation, popupMapInstance]);
 
+    // Helper to create markers on the map using the enriched location property
     const createMarker = (place, map) => {
         const marker = new window.google.maps.Marker({
-            position: place.geometry.location,
+            position: place.location, // use the enriched location
             map,
             title: place.name,
         });
@@ -171,6 +160,7 @@ const Location = ({address}) => {
         markersRef.current[place.place_id] = { marker, infoWindow };
     };
 
+    // Smoothly pan the map to a target location
     const smoothPanTo = (map, target) => {
         let currentCenter = map.getCenter();
         let targetLat = target.lat();
@@ -193,39 +183,62 @@ const Location = ({address}) => {
         }, 20);
     };
 
-    // Update main map from left side
+    // Function to pan the main map to the selected place and open its info window
     const viewOnMap = (place) => {
         setMapUnlocked(true);
-        const { place_id, geometry: { location } } = place;
+        const { location, place_id, name } = place;
         const map = mapInstanceRef.current;
-        if (map && markersRef.current[place_id]) {
+        if (map && location) {
             smoothPanTo(map, location);
             setTimeout(() => {
                 map.setZoom(zoom);
             }, 600);
-            markersRef.current[place.place_id].infoWindow.open(map, markersRef.current[place.place_id].marker);
+            // Open existing marker if available, or create one if missing
+            if (markersRef.current[place_id]) {
+                markersRef.current[place_id].infoWindow.open(map, markersRef.current[place_id].marker);
+            } else {
+                const marker = new window.google.maps.Marker({
+                    position: location,
+                    map,
+                    title: name,
+                });
+                const infoWindow = new window.google.maps.InfoWindow({
+                    content: `<div>
+                      <strong>${name}</strong><br/>
+                      Distance: ${(place.distance / 1000).toFixed(2)} km<br/>
+                      ${place.vicinity || ''}<br/>
+                      Travel Time: ${place.travelTime} min
+                    </div>`,
+                });
+                marker.addListener('click', () => {
+                    infoWindow.open(map, marker);
+                });
+                markersRef.current[place_id] = { marker, infoWindow };
+                infoWindow.open(map, marker);
+            }
         }
     };
 
     // Update popup map to a selected location and add/update a marker (red dot)
     const viewPopupMapOnLocation = (place) => {
-        if (popupMapInstance && place && place.geometry) {
-            smoothPanTo(popupMapInstance, place.geometry.location);
+        if (popupMapInstance && place && place.location) {
+            smoothPanTo(popupMapInstance, place.location);
             setTimeout(() => {
                 popupMapInstance.setZoom(zoom);
             }, 600);
             if (!popupMarkerRef.current) {
                 popupMarkerRef.current = new window.google.maps.Marker({
-                    position: place.geometry.location,
+                    position: place.location,
                     map: popupMapInstance,
                     title: place.name,
                 });
             } else {
-                popupMarkerRef.current.setPosition(place.geometry.location);
+                popupMarkerRef.current.setPosition(place.location);
             }
         }
     };
 
+    // Pan back to the hotel location
     const viewHotelLocationOnMap = () => {
         setMapUnlocked(true);
         const map = mapInstanceRef.current;
@@ -237,8 +250,10 @@ const Location = ({address}) => {
         }
     };
 
+    // Simple travel time calculation (distance in meters / 80 gives minutes)
     const calcTravelTime = (distance) => Math.round(distance / 80);
 
+    // Framer Motion popup animation variants
     const popupVariants = {
         hidden: { y: '100%', opacity: 0 },
         visible: {
@@ -262,7 +277,7 @@ const Location = ({address}) => {
             {/* Top Section */}
             <div className="w-full mb-5 flex flex-col gap-1">
                 <h2 className="text-desktop/h3 font-bold mb-1">Location</h2>
-                <p className="text-primary-gray text-desktop/h6/medium">{address}</p>
+                <p className="text-primary-gray text-desktop/h6/medium">{hotelAddress}</p>
                 <a
                     onClick={viewHotelLocationOnMap}
                     className="my-2 underline items-center text-primary-green font-bold text-lg cursor-pointer flex gap-2"
@@ -271,15 +286,15 @@ const Location = ({address}) => {
                 </a>
             </div>
 
-            <div className="flex justify-between gap-14">
+            <div className="flex justify-between flex-col-reverse md:flex-row gap-14">
                 {/* Left Side */}
-                <div style={{ width: '50%', overflowY: 'auto' }}>
-                    <div className="flex gap-4 justify-between items-center">
+                <div style={{ overflowY: 'auto' }} className="md:w-[50%] flex flex-col-reverse md:flex-col gap-6 md:gap-0">
+                    <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between items-center">
                         {leftCategories.map(category => (
                             <div
                                 key={category}
                                 style={{ marginBottom: '20px' }}
-                                className="flex flex-col p-4 gap-2 border rounded-lg shadow-md justify-center items-center"
+                                className="flex flex-col w-full md:w-auto p-4 gap-2 border rounded-lg shadow-md justify-center items-center"
                             >
                                 {groupedPlaces[category] && groupedPlaces[category].length > 0 ? (
                                     groupedPlaces[category].map(place => {
@@ -290,7 +305,7 @@ const Location = ({address}) => {
                                                 className="flex flex-col gap-2 p-6 justify-center items-center"
                                             >
                                                 <img
-                                                    src={place.icons}
+                                                    src={leftIcons[category]}
                                                     alt={category}
                                                     className="w-16 h-16"
                                                 />
@@ -339,7 +354,7 @@ const Location = ({address}) => {
                 </div>
 
                 {/* Right Side: Main Map Container */}
-                <div style={{ position: 'relative', height: '500px', width: '50%' }}>
+                <div style={{ position: 'relative', height: '500px' }} className="md:w-[50%]">
                     <div
                         ref={mapContainerRef}
                         style={{
@@ -348,7 +363,7 @@ const Location = ({address}) => {
                             filter: mapUnlocked ? 'none' : 'blur(8px)',
                             transition: 'filter 0.3s ease'
                         }}
-                        className="rounded-2xl  shadow-lg"
+                        className="rounded-2xl shadow-lg"
                     ></div>
                     {!mapUnlocked && (
                         <div
@@ -380,26 +395,29 @@ const Location = ({address}) => {
 
             {showPopup && (
                 <AnimatePresence>
-
-                    <motion.div variants={popupVariants}
-                        className="fixed inset-0  bg-primary-green flex justify-center items-start z-50 transition-transform duration-500 transform">
+                    <motion.div
+                        variants={popupVariants}
+                        className="fixed inset-0 bg-primary-green flex justify-center items-start z-50 transition-transform duration-500 transform"
+                    >
                         <button
                             className="absolute top-4 right-4 text-primary-white p-2 rounded"
                             onClick={() => setShowPopup(false)}
                         >
                             <CloseOutlined style={{ height: "40px", width: "40px" }} />
                         </button>
-                        <motion.div variants={popupVariants}
-                            className="bg-white hotelSelection overflow-y-auto pb-20 w-full md:w-[1300px] h-full mt-16 rounded-t-[40px] shadow-lg">
+                        <motion.div
+                            variants={popupVariants}
+                            className="bg-white hotelSelection overflow-y-auto pb-20 w-full md:w-[1300px] h-full mt-16 rounded-t-[40px] shadow-lg"
+                        >
                             <div className="sticky top-0 z-50 bg-white px-8 pt-4 border-b-2 border-gray-200">
                                 <div className="flex justify-between max-w-4xl mx-auto">
                                     {popupCategories.map(category => (
                                         <button
                                             key={category}
                                             onClick={() => setActiveTab(category)}
-                                            className={`flex flex-col items-center px-4 py-2 transition-all duration-200  ${activeTab === category
-                                                ? 'border-b-2 border-primary-green text-primary-green font-medium'
-                                                : 'text-gray-600'
+                                            className={`flex flex-col items-center px-4 py-2 transition-all duration-200 ${activeTab === category
+                                                    ? 'border-b-2 border-primary-green text-primary-green font-medium'
+                                                    : 'text-gray-600'
                                                 }`}
                                         >
                                             <img
@@ -442,11 +460,13 @@ const Location = ({address}) => {
                                                                     {place.rating && (
                                                                         <div className="flex items-center mt-1">
                                                                             <div className="flex text-yellow-400">
-                                                                                {Array(Math.floor(place.rating)).fill().map((_, i) => (
-                                                                                    <svg key={i} className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                                                    </svg>
-                                                                                ))}
+                                                                                {Array(Math.floor(place.rating))
+                                                                                    .fill()
+                                                                                    .map((_, i) => (
+                                                                                        <svg key={i} className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                                                        </svg>
+                                                                                    ))}
                                                                                 {place.rating % 1 !== 0 && (
                                                                                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
@@ -492,10 +512,8 @@ const Location = ({address}) => {
                                                             </div>
                                                         </div>
 
-                                                        {/* Accordion Content (can be expanded with additional details) */}
                                                         {openAccordionIndex === index && (
                                                             <div className="bg-gray-50 p-4 border-t border-gray-100">
-                                                                {/* Place details go here */}
                                                                 <p className="text-gray-600">{place.vicinity || 'No address available'}</p>
                                                                 {place.opening_hours && (
                                                                     <p className="mt-2 text-sm">
@@ -522,7 +540,7 @@ const Location = ({address}) => {
                                         )}
                                     </div>
 
-                                    {/* Map Section */}
+                                    {/* Popup Map Section */}
                                     <div className="w-full lg:w-[40%] mt-6 lg:mt-0">
                                         <div className="sticky top-24">
                                             <h2 className="text-2xl font-bold mb-4 text-gray-800">Map View</h2>
@@ -530,8 +548,6 @@ const Location = ({address}) => {
                                                 ref={popupMapContainerRef}
                                                 className="w-full h-[450px] rounded-lg overflow-hidden shadow-lg border border-gray-200"
                                             ></div>
-
-
                                         </div>
                                     </div>
                                 </div>

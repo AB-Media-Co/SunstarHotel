@@ -1,7 +1,4 @@
 import { useParams } from "react-router-dom"
-import AmenitiesList from "../../Components/AmenitiesList"
-import TestimonialSection from "../../Components/TestimonialSection"
-import { OtherRooms } from "../../Data/RoomsData"
 import FAQSection from "../Hotels/Components/FAQsection"
 import RoomLayout from "../Hotels/Components/RoomLayout"
 import RoomPriceSection from "./Components/RoomPriceSection"
@@ -9,9 +6,10 @@ import RoomsBanner from "./Components/RoomsBanner"
 import RoomsDescription from "./Components/RoomsDescription"
 import { useEffect, useState } from "react"
 import { getSingleRoomById } from "../../ApiHooks/useRoomsHook"
-import { Loader } from "lucide-react"
 import { AmenitiesList2 } from "../../Components/AmenitiesList2";
 import { getSingleHotelWithCode } from "../../ApiHooks/useHotelHook2"
+import Loader from "../../Components/Loader"
+import BottomRoomSticky from "../../Components/BottomRoomSticky"
 
 const Rooms = () => {
   const id = useParams()
@@ -19,9 +17,8 @@ const Rooms = () => {
   const [roomData, setroomData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  
   const [otherRoomData, setOtherRoomData] = useState(null);
-
   useEffect(() => {
     if (id) {
       const fetchRooms = async () => {
@@ -78,7 +75,9 @@ const Rooms = () => {
       <RoomLayout rooms={otherRoomData?.rooms} title='Other Room' />
 
       <hr className="mt-10 content h-[2px] bg-gray-400" />
-      <FAQSection />
+      <FAQSection faqs={otherRoomData?.faqs} />
+
+      <BottomRoomSticky/>
 
 
 

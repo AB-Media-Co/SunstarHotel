@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import Carousel from "../../../Components/CardsCommonComp/CommonCarousel";
 import Calendar from "../../../Components/Calendar";
@@ -7,6 +7,7 @@ import Icon from "../../../Components/Icons";
 import { differenceInCalendarDays } from "date-fns";
 import GuestsDropdown from "../../../Components/GuestsDropdown";
 import { useNavigate } from "react-router-dom";
+import { usePricing } from "../../../Context/PricingContext";
 
 function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
   const [checkIn, setCheckIn] = useState(null);
@@ -16,14 +17,25 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
 
   const navigate = useNavigate();
 
-  const handleBooking = () => {
+  const { fetchRoomHotelDetails } = usePricing();
+  useEffect(() => {
+    const storedCheckIn = localStorage.getItem("checkInDate");
+    const storedCheckOut = localStorage.getItem("checkOutDate");
+    if (storedCheckIn && storedCheckOut) {
+      setCheckIn(storedCheckIn);
+      setCheckOut(storedCheckOut);
+    }
+  }, []);
+
+  const handleBooking = async () => {
     if (!checkIn || !checkOut) {
       setBookingError(true);
       return;
     } else {
       setBookingError(false);
+      console.log(hotelDetail)
+     await fetchRoomHotelDetails(businessPlatformFeatures?._id, hotelDetail?.hotelCode);
 
-      // Pass data via the `state` object
       navigate("/room/details", {
         state: {
           businessPlatformFeatures,
@@ -37,7 +49,11 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
 
   const calculateNights = () => {
     if (checkIn && checkOut) {
-      return <div>{differenceInCalendarDays(checkOut, checkIn)} Nights</div>;
+      const nights = differenceInCalendarDays(
+        new Date(checkOut),
+        new Date(checkIn)
+      );
+      return <div>{nights} Nights</div>;
     }
     return 0;
   };
@@ -60,16 +76,12 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
         `}
       >
         <div
-          className={`flex  justify-center flex-col md:flex-row items-center w-full  
-            space-y-4 md:space-y-0 space-x-0 md:space-x-4
-          `}
+          className={`flex justify-center flex-col md:flex-row items-center w-full space-y-4 md:space-y-0 space-x-0 md:space-x-4`}
         >
-          {/* CheckIn / CheckOut Picker */}
           <div
             onClick={() => setOpenCalender(true)}
-            className={`flex flex-wrap w-full justify-center items-center border rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm ${
-              bookingError ? "border-red-500" : "border-[#006167]"
-            }`}
+            className={`flex flex-wrap w-full justify-center items-center border rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm ${bookingError ? "border-red-500" : "border-[#006167]"
+              }`}
           >
             <Icon name="calendar" className="h-6 w-6 text-[#006167]" />
             <span className="text-[#006167] font-semibold text-base sm:text-lg md:text-[24px]">
@@ -84,12 +96,11 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
             )}
           </div>
 
-          {/* Guests + Book Room */}
-          <div className="flex  items-center justify-between gap-4 w-full">
+          <div className="flex items-center justify-between gap-4 w-full">
             <GuestsDropdown classBg="bg-transparant" />
             <button
               onClick={handleBooking}
-              className="bg-[#006167] text-primary-white text-sm sm:text-base lg:text-lg  sm:w-auto rounded-full shadow-md px-6 py-3"
+              className="bg-[#006167] text-primary-white text-sm sm:text-base lg:text-lg sm:w-auto rounded-full shadow-md px-6 py-3"
             >
               Book Room
             </button>

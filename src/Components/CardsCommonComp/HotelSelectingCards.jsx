@@ -34,7 +34,7 @@ const HotelCard = ({ hotel }) => {
   };
 
   // Ensure amenities are handled as objects
-  const visibleAmenities = hotel?.amenities?.slice(0, 4) || [];
+  const visibleAmenities = hotel?.amenities?.slice(0, 3) || [];
   const remainingAmenitiesCount = (hotel?.amenities?.length || 0) - visibleAmenities.length;
 
   return (
@@ -46,13 +46,10 @@ const HotelCard = ({ hotel }) => {
     >
       <img src={hotel?.images[0]} alt={hotel.name} className="w-full h-48 object-cover" />
       <div className="p-4 flex flex-col gap-4 flex-grow">
-        <div className="flex justify-between flex-col md:flex-row items-start gap-4">
+        <div className="flex justify-between flex-row items-start gap-4">
           <div className="text-start flex flex-col gap-2 items-start">
             <h1 className="text-xl font-bold text-black">{hotel?.name}</h1>
-            <div className="flex gap-2 items-center">
-              <Icon name="location_on" />
-              <p className="text-gray-600 text-sm">{hotel?.location}</p>
-            </div>
+          
           </div>
           <div className="flex items-center space-x-2">
             <span className="bg-primary-green text-primary-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
@@ -62,15 +59,15 @@ const HotelCard = ({ hotel }) => {
           </div>
         </div>
 
-        <div className="mt-2">
-          <ul className="flex flex-wrap mt-2">
+        <div className="md:mt-2">
+          <ul className="flex items-center mt-2">
             {visibleAmenities.length > 0 ? (
               visibleAmenities.map((amenity, index) => {
-                const label = typeof amenity === "object" ? amenity.label : amenity;
+                const label = typeof amenity === "object" ? amenity.value : amenity;
                 return (
                   <li
                     key={index}
-                    className="bg-gradient-to-r from-primary-green to-primary-green text-primary-white text-xs px-3 py-1 rounded-full m-1 flex items-center gap-1"
+                    className="bg-gradient-to-r text-start from-primary-green to-primary-green text-primary-white text-xs px-3 py-2 rounded-full m-1 flex items-center gap-1"
                   >
                     {getAmenityIcon(amenity)}
                     <span>{label}</span>
@@ -86,8 +83,8 @@ const HotelCard = ({ hotel }) => {
           </ul>
         </div>
 
-        <div className="mt-4 flex justify-between items-center">
-          <div className="text-start">
+        <div className="md:mt-4 w-full flex  flex-col gap-4  justify-between items-center">
+          <div className="text-start w-full">
             <span className="text-2xl leading-none font-bold text-primary-green">
               ₹ {hotel?.price}
               <span className="text-gray-400 text-sm font-medium"> / night onwards</span>
@@ -98,9 +95,9 @@ const HotelCard = ({ hotel }) => {
           </div>
           <Link
             to={`/hotels/${hotel.hotelCode}`}
-            className="bg-primary-green text-primary-white px-4 py-2 rounded-lg shadow-md flex items-center transition duration-300 hover:bg-primary-dark-green"
+            className="bg-primary-green w-full text-primary-white px-4 py-2 rounded-lg shadow-md flex justify-center items-center transition duration-300 hover:bg-primary-dark-green"
           >
-            Book Now
+            Select Hotel
           </Link>
         </div>
       </div>
@@ -108,10 +105,11 @@ const HotelCard = ({ hotel }) => {
   );
 };
 
-const HotelSelectingCards = () => {
+const HotelSelectingCards = ({ data }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
-  const { data: hotels } = useGetHotels();
+  const { data: hotelsFromHook } = useGetHotels();
+  const hotels = data ? data : hotelsFromHook;
 
   return (
     <motion.div

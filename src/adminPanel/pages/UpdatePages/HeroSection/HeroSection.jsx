@@ -101,7 +101,6 @@ const HeroSection = () => {
                 Edit Hero Section
             </div>
 
-            {/* Modal for editing hero section */}
             <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="sm">
                 <DialogTitle>Edit Hero Section</DialogTitle>
                 <DialogContent>
