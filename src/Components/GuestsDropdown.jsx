@@ -1,75 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Icon from './Icons';
+import { usePricing } from '../Context/PricingContext';
 
 const GuestsDropdown = ({
   dropdownDirection = "down",
   classBg = 'bg-primary-white',
   nights = '2',
-  maxGuests = 2,
 }) => {
+  // Use guestDetails and setGuestDetails from PricingContext
+  const { guestDetails, setGuestDetails, maxRoomSelection } = usePricing();
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
-  // Retrieve guest details from local storage or set default values
-  const [guestDetails, setGuestDetails] = useState(() => {
-    const storedGuestDetails = localStorage.getItem('guestDetails');
-    return storedGuestDetails ? JSON.parse(storedGuestDetails) : { adults: maxGuests, kids: 0, rooms: 1 };
-  });
-
-  const totalGuests = guestDetails.adults + guestDetails.kids;
-
-  useEffect(() => {
-    // Save guest details to local storage whenever they change
-    localStorage.setItem('guestDetails', JSON.stringify(guestDetails));
-  }, [guestDetails]);
-
   const checkLimits = (field, newValue) => {
-    // For guests, check if the new total exceeds maxGuests (adults + kids)
-    if (field !== 'rooms') {
-      const newTotalGuests =
-        field === 'adults'
-          ? newValue + guestDetails.kids
-          : guestDetails.adults + newValue;
-      if (newTotalGuests > maxGuests) {
-        setAlertMessage(`Maximum of ${maxGuests} total guests (adults + kids) allowed.`);
-        setShowAlert(true);
-        return false;
-      }
-    }
-
-    // For rooms, apply your existing logic:
     if (field === 'rooms') {
-      // If 15 nights, only 2 rooms allowed
-      if (nights === 15 && newValue > 2) {
-        setAlertMessage(
-          "For a stay of 15 nights, only 2 rooms can be selected. " +
-          "Online bookings are limited to 30 units (rooms x nights) " +
-          "and a maximum of 5 rooms per booking."
-        );
+      // Use maxRoomSelection from context, fallback value is 5 if not set
+      const maxRooms = maxRoomSelection || 5;
+      if (newValue > maxRooms) {
+        setAlertMessage(`You cannot select more than ${maxRooms} rooms in a single booking.`);
         setShowAlert(true);
         return false;
       }
 
-      // Max 5 rooms overall
-      if (newValue > 5) {
-        setAlertMessage("You cannot select more than 5 rooms in a single booking.");
-        setShowAlert(true);
-        return false;
-      }
 
-      // Check total units (rooms x nights <= 30)
-      const newTotalUnits = newValue * nights;
-      if (newTotalUnits > 30) {
-        setAlertMessage(
-          `Online bookings are limited to 30 total units (rooms x nights). Currently: ${newTotalUnits} units.`
-        );
-        setShowAlert(true);
-        return false;
-      }
     }
-
-    return true; // All checks passed
+    return true;
   };
 
   const handleIncrement = (field) => {
@@ -108,7 +65,7 @@ const GuestsDropdown = ({
       >
         <Icon name="guestHotel" className="h-5 w-5 sm:h-6 sm:w-6 text-primary-dark-green" />
         <span className="text-primary-dark-green text-mobile/body/2 md:text-desktop/body/1 font-semibold">
-          {totalGuests} Guests, {guestDetails.rooms} Room
+          {guestDetails.rooms} Room
         </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +84,7 @@ const GuestsDropdown = ({
           className={`absolute z-20 bg-primary-white border border-gray-200 rounded-md shadow-lg px-[5px] py-[10px] md:p-4 w-full sm:w-64 ${dropdownDirection === "up" ? "bottom-full mb-2" : "top-full mt-2"}`}
         >
           {/* Dropdown Items */}
-          {["Adults", "Kids", "Rooms"].map((label, index) => {
+          {["Rooms"].map((label, index) => {
             const field = label.toLowerCase();
             return (
               <div key={index} className="flex justify-between items-center mb-4">
@@ -155,7 +112,6 @@ const GuestsDropdown = ({
             );
           })}
 
-          {/* Done Button */}
           <div className="flex justify-center mt-4">
             <button
               onClick={() => setShowDropdown(false)}
@@ -167,7 +123,6 @@ const GuestsDropdown = ({
         </div>
       )}
 
-      {/* ALERT BOX */}
       {showAlert && (
         <div
           className="absolute left-1/2 top-[7rem] transform -translate-x-1/2 mt-2 bg-white border border-gray-300 rounded-md p-4 shadow-md w-72 z-30"

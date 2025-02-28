@@ -84,3 +84,20 @@ export const useDiscountedRate = () => {
     });
   };
   
+  export const useSendOtp = () => {
+    return useMutation({
+      mutationFn: async (phone) => {
+        const response = await axiosInstance.post('/api/deals/sendOtp', { phone });
+        return response.data;
+      },
+    });
+  };
+  
+  export const useVerifyOtp = () => {
+    return useMutation({
+      mutationFn: async ({ phone, code }) => {
+        const response = await axiosInstance.post('/api/deals/verifyOtp', { phone, code });
+        return response.data;
+      },
+    });
+  };

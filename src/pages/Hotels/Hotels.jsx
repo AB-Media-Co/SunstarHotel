@@ -45,7 +45,7 @@ const Hotels = () => {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-  console.log(hotelData)
+  // console.log(hotelData)
 
   return (
     <div>

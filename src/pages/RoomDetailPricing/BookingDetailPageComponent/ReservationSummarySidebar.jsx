@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { usePricing } from "../../../Context/PricingContext";
+import { useEffect } from "react";
 
 /* eslint-disable react/prop-types */
 const formatDate = (dateString) => {
@@ -14,7 +15,6 @@ const formatDate = (dateString) => {
 
 export const ReservationSummarySidebar = ({
   hotelDetail,
-  businessPlatformFeatures,
   checkIn,
   checkOut,
   days,
@@ -22,7 +22,23 @@ export const ReservationSummarySidebar = ({
   isPaymentVisible,
 }) => {
   const navigate = useNavigate();
-  const {  setEditAddPricing, selectedRooms,totalOtherCharges } = usePricing();
+  const {
+    setEditAddPricing,
+    selectedRooms,
+    totalOtherCharges,
+    finalPrice,
+    baseFinalPrice,
+    setNights,
+  } = usePricing();
+
+  useEffect(() => {
+    if (days) {
+      setNights(days);
+      localStorage.setItem("days", days);
+
+    }
+  }, [days, setNights]);
+
   const handelChangeClick = () => {
     setEditAddPricing(true);
     localStorage.setItem("editAddPricing", true);
@@ -60,10 +76,7 @@ export const ReservationSummarySidebar = ({
             <span className="ml-2 font-semibold text-gray-800">{days} Days</span>
           </p>
           <p className="text-sm text-gray-700 mt-2">
-            You Selected:
-            <span className="block text-xl font-semibold text-teal-600">
-              {hotelDetail?.name} - {businessPlatformFeatures?.RoomName}
-            </span>
+       
             <div
               onClick={handelChangeClick}
               className="text-sm cursor-pointer text-orange-600 underline"
@@ -77,46 +90,46 @@ export const ReservationSummarySidebar = ({
         <h3 className="text-sm font-medium text-gray-700 mb-2">
           Your Price Summary
         </h3>
-        {selectedRooms && selectedRooms.length > 0 ? (
-          selectedRooms.map((room, index) => (
-            <div key={index} className="flex justify-between text-sm text-gray-700">
-              <p>
-                {room.roomName} (
-                {room.option === "roomOnly" ? "Room Only" : "Continental Plan"}) X {days} Night
-              </p>
-              <p className="font-medium text-gray-800">
-                ₹ {room.price * days}
-              </p>
-            </div>
-          ))
-        ) : (
-          <div className="flex justify-between text-sm text-gray-700">
+
+
+        {selectedRooms && selectedRooms.length > 0 && selectedRooms.map((room, index) => {
+          return <div key={index} className="flex justify-between text-sm text-gray-700">
             <p>
-              {businessPlatformFeatures?.RoomName} X {days} Night
+              {room.roomName} (
+              {room.option === "roomOnly" ? "Room Only" : "Continental Plan"}) X {days} Night
             </p>
             <p className="font-medium text-gray-800">
-              ₹ {businessPlatformFeatures?.discountRate * days}
+              ₹ {room.price * days}
             </p>
           </div>
-        )}
+        })}
       </div>
-        <div className="flex justify-between text-sm text-gray-700">
-          <p>Other Charges</p>
-          <p className= "font-medium text-gray-800">₹ {totalOtherCharges}</p>
-        </div>
-     
+      <div className="flex justify-between text-sm text-gray-700">
+        <p>Other Charges</p>
+        <p className="font-medium text-gray-800">₹ {totalOtherCharges}</p>
+      </div>
+
+      {/* Price Breakdown */}
       <div className="border-t mt-2 pt-2">
-        <div className="flex justify-between text-base font-semibold">
+        <div className="flex justify-between text-sm text-gray-700">
+          <p>Original Amount</p>
+          <p className="font-medium text-gray-800">₹ {baseFinalPrice}</p>
+        </div>
+        <div className="flex justify-between text-sm text-gray-700 mt-1">
+          <p>Discount</p>
+          <p className="font-medium text-gray-800">₹ {baseFinalPrice - finalPrice}</p>
+        </div>
+        <div className="flex justify-between text-base font-semibold mt-1">
           <p>Payable Amount</p>
-          <p className="text-primary-green">₹ 7,056</p>
+          <p className="text-primary-green">₹ {finalPrice}</p>
         </div>
       </div>
+
       <a href="#payment-method" className="hidden lg:block">
         {showButton && (
           <button
-            className={`mt-6 w-full bg-primary-green text-primary-white font-semibold py-3 rounded transition-opacity duration-300 ${
-              isPaymentVisible ? "opacity-0" : "opacity-100"
-            }`}
+            className={`mt-6 w-full bg-primary-dark-green text-primary-white font-semibold py-3 rounded transition-opacity duration-300 ${isPaymentVisible ? "opacity-0" : "opacity-100"
+              }`}
           >
             See Payment Options
           </button>

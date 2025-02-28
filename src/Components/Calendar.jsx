@@ -243,12 +243,12 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender }) => {
           </div>
 
           {/* Guests & Confirm */}
-          <div className="flex justify-between w-full">
-            <GuestsDropdown dropdownDirection="up" nights={calculateNights()} />
+          <div className="flex justify-end w-full">
+            {/* <GuestsDropdown dropdownDirection="up" nights={calculateNights()} /> */}
 
             <button
               onClick={handleConfirmClick}
-              className="confirm-btn w-[150px] font-bold bg-primary-green text-primary-white px-4 py-2 rounded-full hover:bg-primary-green/90 transition-colors shadow-sm"
+              className="confirm-btn w-[150px] font-bold bg-primary-dark-green text-primary-white px-4 py-2 rounded-full hover:bg-primary-green/90 transition-colors shadow-sm"
             >
               Confirm
             </button>

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useUpdatePagesHook from "../../ApiHooks/useUpdatePagesHook";
 import { Footer } from "./BookingDetailPageComponent/Footer";
 import { PaymentMethod } from "./BookingDetailPageComponent/PaymentMethod";
@@ -9,7 +9,7 @@ import { OfferCode } from "./BookingDetailPageComponent/OfferCode";
 import { AddToYourStayOptions } from "./BookingDetailPageComponent/AddToYourStayOptions";
 import { GuestDetailsForm } from "./BookingDetailPageComponent/GuestDetailsForm";
 import { HotelDetailsCard } from "./BookingDetailPageComponent/HotelDetailsCard";
-import BottomRoomSticky from "../../Components/BottomRoomSticky";
+import { usePricing } from "../../Context/PricingContext";
 
 const calculateDays = (checkIn, checkOut) => {
   if (!checkIn || !checkOut) return 0;
@@ -20,17 +20,20 @@ const calculateDays = (checkIn, checkOut) => {
 };
 
 const BookingDetailsPage = () => {
-  const location = useLocation();
-  const { businessPlatformFeatures, hotelDetail, checkIn, checkOut } = location.state || {};
   const { ContactUsDetail } = useUpdatePagesHook();
+  const { details, hotelData } = usePricing();
+  const hotelDetail = details[0];
+
+  const navigate = useNavigate();
 
 
+
+  const checkIn = localStorage.getItem("checkInDate");
+  const checkOut = localStorage.getItem("checkOutDate");
   const days = calculateDays(checkIn, checkOut);
 
-  const [RoomQty, setRoomQty] = useState(1);
   const [isPaymentVisible, setIsPaymentVisible] = useState(false);
   const [showButton, setShowButton] = useState(true);
-
 
   useEffect(() => {
     const paymentMethodElement = document.querySelector("#payment-method");
@@ -42,9 +45,7 @@ const BookingDetailsPage = () => {
         { threshold: 0.1 }
       );
       observer.observe(paymentMethodElement);
-      return () => {
-        observer.disconnect();
-      };
+      return () => observer.disconnect();
     }
   }, []);
 
@@ -56,15 +57,20 @@ const BookingDetailsPage = () => {
     }
   }, [isPaymentVisible]);
 
+    useEffect(() => {
+      if (!details || details.length === 0 || !hotelDetail) {
+        navigate(`/hotels/${hotelData?.hotelCode}`);
+      }
+    }, [details, hotelData, hotelDetail, navigate]);
+  
+    if (!details || details.length === 0 || !hotelDetail) {
+      return null; // or a loading indicator, if preferred
+    }
+
   return (
     <div className="p-4 content md:flex gap-5">
       <div className="flex flex-col gap-8">
-        <HotelDetailsCard
-          hotelDetail={hotelDetail}
-          businessPlatformFeatures={businessPlatformFeatures}
-          RoomQty={RoomQty}
-          setRoomQty={setRoomQty}
-        />
+        <HotelDetailsCard />
         <GuestDetailsForm />
         <AddToYourStayOptions data={hotelDetail} />
         <OfferCode hotelDetail={hotelDetail} />
@@ -72,7 +78,6 @@ const BookingDetailsPage = () => {
         <div className="lg:hidden">
           <ReservationSummarySidebar
             hotelDetail={hotelDetail}
-            businessPlatformFeatures={businessPlatformFeatures}
             checkIn={checkIn}
             checkOut={checkOut}
             days={days}
@@ -86,7 +91,6 @@ const BookingDetailsPage = () => {
       <div className="hidden lg:block">
         <ReservationSummarySidebar
           hotelDetail={hotelDetail}
-          businessPlatformFeatures={businessPlatformFeatures}
           checkIn={checkIn}
           checkOut={checkOut}
           days={days}
@@ -94,8 +98,6 @@ const BookingDetailsPage = () => {
           isPaymentVisible={isPaymentVisible}
         />
       </div>
-      {/* <BottomRoomSticky/> */}
-    
     </div>
   );
 };

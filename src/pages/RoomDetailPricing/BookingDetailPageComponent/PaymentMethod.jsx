@@ -1,5 +1,22 @@
-export const PaymentMethod = ({ hotelDetail }) => (
-  <div id="payment-method" className="flex flex-col  bg-white ">
+import { usePricing } from "../../../Context/PricingContext";
+
+export const PaymentMethod = ({ hotelDetail }) => {
+    const {
+      setEditAddPricing,
+      setDetails,
+      setSelectedRooms,
+      setGuestDetails
+    } = usePricing();
+  const ContinueBtnClick=()=>{
+    setDetails([]);
+    localStorage.removeItem("roomHotelDetails");
+    setEditAddPricing(false);
+    localStorage.setItem("editAddPricing", false);
+    setSelectedRooms([]);
+    localStorage.removeItem("guestDetails");
+    setGuestDetails({rooms:1})
+  }
+  return<div id="payment-method" className="flex flex-col  bg-white ">
     <div className="flex items-center mb-6">
       <div className="w-1 h-8 bg-teal-500 rounded-full mr-3" style={{ backgroundColor: "#058FA2" }}></div>
       <h2 className="text-3xl font-bold text-gray-800">Payment Method</h2>
@@ -43,9 +60,10 @@ export const PaymentMethod = ({ hotelDetail }) => (
       <button
         className="mt-6 w-[200px] bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 rounded"
         style={{ backgroundColor: "#058FA2", color: "#ffffff" }}
+        onClick={ContinueBtnClick}
       >
         Continue to Pay
       </button>
     </div>
   </div>
-);
+};

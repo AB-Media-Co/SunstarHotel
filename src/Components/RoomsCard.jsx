@@ -102,7 +102,7 @@ const RoomsCard = ({ room }) => {
                     {editAddPricing  == true ?
                         <>
                             <button
-                                className={`mt-4 h-[40px] px-4 py-2 text-mobile/button md:text-desktop/button font-bold rounded bg-yellow-400 hover:bg-yellow-500 text-primary-white 
+                                className={`mt-4 h-[40px] px-4 py-2 text-mobile/button md:text-desktop/button font-bold rounded bg-primary-dark-green text-primary-white 
                                     `}
                                 onClick={handeEditBooking}
                             >
@@ -111,7 +111,7 @@ const RoomsCard = ({ room }) => {
                         </> : (
                             <button
                                 className={`mt-4 h-[40px] px-4 py-2 text-mobile/button md:text-desktop/button font-bold rounded ${room.available
-                                    ? "bg-yellow-400 hover:bg-yellow-500 text-primary-white"
+                                    ? "bg-primary-dark-green text-primary-white"
                                     : "bg-gray-300 text-gray-600 cursor-not-allowed"
                                     }`}
                                 onClick={handleBooking}

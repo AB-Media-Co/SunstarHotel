@@ -1,64 +1,55 @@
-import { Add, Remove } from "@mui/icons-material";
+/* eslint-disable react/prop-types */
 import Icon from "../../../Components/Icons";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { usePricing } from "../../../Context/PricingContext";
 
-const RoomPriceSection = ({ roomData }) => {
-  const [roomQty, setRoomQty] = useState(1); // Default to 1 if no data is found
+const RoomPriceSection = ({ roomData}) => {
+  const { guestDetails } = usePricing();
+  const roomQty = guestDetails?.rooms || 1;
+
   const [showAlert, setShowAlert] = useState(false);
+  // const [, setAlertMessage] = useState("");
 
-  const tabs = [
-    { id: "rooms", iconName: "roundedbed", label: "Rooms", link: "#rooms" },
-    { id: "amenities", iconName: "lamp", label: "Amenities", link: "#amenities" },
-    { id: "reviews", iconName: "message", label: "Reviews", link: "#reviews" },
-    { id: "location", iconName: "location", label: "Location", link: "#location" },
-    { id: "faqs", iconName: "faqs", label: "FAQs", link: "#faqs" },
-  ];
+  // const checkLimits = (newValue) => {
+  //   const maxRooms = maxRoomSelection || 5;
+  //   if (newValue > maxRooms) {
+  //     setAlertMessage(`You cannot select more than ${maxRooms} rooms in a single booking.`);
+  //     setShowAlert(true);
+  //     return false;
+  //   }
+  //   const newTotalUnits = newValue * nights;
+  //   if (newTotalUnits > 30) {
+  //     setAlertMessage(
+  //       `Online bookings are limited to 30 total units (rooms x nights). Currently: ${newTotalUnits} units.`
+  //     );
+  //     setShowAlert(true);
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
-  useEffect(() => {
-    // Retrieve guest details from local storage
-    const storedGuestDetails = localStorage.getItem('guestDetails');
-    if (storedGuestDetails) {
-      const guestDetails = JSON.parse(storedGuestDetails);
-      // Set room quantity from the stored guest details
-      setRoomQty(guestDetails.rooms || 1);
-    }
-  }, []);
+  // const increaseRoomQty = () => {
+  //   const newValue = roomQty + 1;
+  //   if (!checkLimits(newValue)) return;
+  //   setGuestDetails((prev) => ({ ...prev, rooms: newValue }));
+  // };
 
-  const increaseRoomQty = () => {
-    if (roomQty >= 3) {
-      setShowAlert(true);
-    } else {
-      setRoomQty(roomQty + 1);
-      // Update local storage with the new room quantity
-      const storedGuestDetails = localStorage.getItem('guestDetails');
-      if (storedGuestDetails) {
-        const guestDetails = JSON.parse(storedGuestDetails);
-        guestDetails.rooms = roomQty + 1;
-        localStorage.setItem('guestDetails', JSON.stringify(guestDetails));
-      }
-    }
-  };
-
-  const decreaseRoomQty = () => {
-    if (roomQty > 1) {
-      setRoomQty(roomQty - 1);
-      // Update local storage with the new room quantity
-      const storedGuestDetails = localStorage.getItem('guestDetails');
-      if (storedGuestDetails) {
-        const guestDetails = JSON.parse(storedGuestDetails);
-        guestDetails.rooms = roomQty - 1;
-        localStorage.setItem('guestDetails', JSON.stringify(guestDetails));
-      }
-    }
-  };
+  // const decreaseRoomQty = () => {
+  //   if (roomQty > 1) {
+  //     const newValue = roomQty - 1;
+  //     if (!checkLimits(newValue)) return;
+  //     setGuestDetails((prev) => ({ ...prev, rooms: newValue }));
+  //   }
+  // };
 
   return (
     <div className="content mx-auto bg-primary-white p-6 relative">
       {showAlert && (
         <div className="absolute top-20 right-4 bg-white border border-gray-300 p-4 rounded-md shadow-md z-50 max-w-xs text-sm text-gray-700">
-          <p className="font-bold">For a stay of 15 nights, only 2 rooms can be selected.</p>
+      
           <p className="mt-2">
-            Online bookings are limited to 30 units (rooms x nights) and a maximum of 3 rooms per booking.
+       
+            You cannot select more than {roomQty} rooms in a single booking.
           </p>
           <div className="flex items-center justify-end mt-4 gap-2">
             <button
@@ -100,8 +91,8 @@ const RoomPriceSection = ({ roomData }) => {
           </div>
         </div>
 
-        {/* Right Section: Check-in/Check-out Info & Room Quantity */}
-        <div className="flex flex-col gap-6 items-end text-[#058FA2]">
+        {/* Right Section: Room Quantity */}
+        {/* <div className="flex flex-col gap-6 items-end text-[#058FA2]">
           <div className="flex items-center border border-gray-300 rounded-full px-4 py-2">
             <button
               aria-label="Decrease Room Quantity"
@@ -121,14 +112,20 @@ const RoomPriceSection = ({ roomData }) => {
               <Add fontSize="small" />
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <hr className="my-6 border-gray-200" />
 
       {/* Tabs Section */}
       <div className="flex flex-wrap justify-center md:justify-between gap-6">
-        {tabs.map((tab) => (
+        {[
+          { id: "rooms", iconName: "roundedbed", label: "Rooms", link: "#rooms" },
+          { id: "amenities", iconName: "lamp", label: "Amenities", link: "#amenities" },
+          { id: "reviews", iconName: "message", label: "Reviews", link: "#reviews" },
+          { id: "location", iconName: "location", label: "Location", link: "#location" },
+          { id: "faqs", iconName: "faqs", label: "FAQs", link: "#faqs" },
+        ].map((tab) => (
           <button
             key={tab.id}
             className="flex flex-col sm:flex-row items-center gap-2 px-4 py-2 rounded-lg transition duration-200 focus:outline-none"

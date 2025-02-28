@@ -6,8 +6,8 @@ export const AddToYourStayOptions = ({ data }) => {
   const options = data?.addToYourStay;
   const [expanded, setExpanded] = useState({});
 
-  // Using the context state for managing extra charge selections.
   const { selectedOtherCharges, setSelectedOtherCharges } = usePricing();
+
 
   const toggleDescription = (id) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -16,19 +16,15 @@ export const AddToYourStayOptions = ({ data }) => {
   const toggleSelection = (option, event) => {
     event.stopPropagation();
     setSelectedOtherCharges((prevSelected) => {
-      // Check if the option is already selected.
       const exists = prevSelected.find((item) => item._id === option._id);
       if (exists) {
-        // If selected, remove it.
         return prevSelected.filter((item) => item._id !== option._id);
       } else {
-        // Otherwise, add the option to the selected list.
         return [...prevSelected, option];
       }
     });
   };
 
-  // Helper function to check if an option is selected.
   const isSelected = (id) => selectedOtherCharges.some((item) => item._id === id);
 
   return (

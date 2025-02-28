@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { Add, Remove } from "@mui/icons-material";
 import { usePricing } from "../../../Context/PricingContext";
 
-export const HotelDetailsCard = ({ RoomQty, setRoomQty }) => {
-  const { details, selectedRooms, setSelectedRooms } = usePricing();
+export const HotelDetailsCard = () => {
+  const { details, setDetails, selectedRooms, setSelectedRooms } = usePricing();
 
   const handleOptionChange = (index, newOption) => {
     setSelectedRooms((prevSelectedRooms) => {
@@ -26,6 +25,43 @@ export const HotelDetailsCard = ({ RoomQty, setRoomQty }) => {
     });
   };
 
+  const handleGuestQtyChange = (index, type) => {
+    setSelectedRooms((prevRooms) => {
+      const updatedRooms = [...prevRooms];
+      const maxGuests = details[index]?.roomData?.maxGuests || 1;
+
+      let currentQty = updatedRooms[index]?.guestQty ?? 1;
+      let showMaxGuestAlert = updatedRooms[index]?.showMaxGuestAlert ?? false;
+
+      if (type === "increment") {
+        if (currentQty < maxGuests) {
+          currentQty += 1;
+          showMaxGuestAlert = false;
+        } else {
+          showMaxGuestAlert = true;
+        }
+      } else if (type === "decrement") {
+        if (currentQty > 0) {
+          currentQty -= 1;
+        }
+        showMaxGuestAlert = false;
+      }
+
+      updatedRooms[index] = {
+        ...updatedRooms[index],
+        guestQty: currentQty,
+        showMaxGuestAlert,
+      };
+
+      if (currentQty === 0) {
+        updatedRooms.splice(index, 1);
+        setDetails((prevDetails) => prevDetails.filter((_, i) => i !== index));
+      }
+
+      return updatedRooms;
+    });
+  };
+
   return (
     <>
       {details?.map((data, index) => {
@@ -33,7 +69,13 @@ export const HotelDetailsCard = ({ RoomQty, setRoomQty }) => {
           roomName: data?.roomData?.RoomName || "",
           option: "roomOnly",
           price: data?.roomData?.discountRate || 0,
+          guestQty: 1,
+          showMaxGuestAlert: false,
         };
+
+        if (roomSelection.guestQty === 0) {
+          return null;
+        }
 
         return (
           <div
@@ -63,22 +105,48 @@ export const HotelDetailsCard = ({ RoomQty, setRoomQty }) => {
             </div>
 
             {/* Guest Qty and Options */}
-            <div className="flex flex-col items-start w-full lg:w-[400px] gap-4">
+            <div className="flex flex-col items-start w-full lg:w-[400px] gap-4 relative">
+              {/* Guest Qty Counter */}
               <div className="flex items-center justify-between w-full lg:w-[180px] text-[#288592] font-medium border-2 p-2 gap-4 text-lg rounded-xl">
                 <span
                   className="cursor-pointer text-yellow-500"
-                  onClick={() => RoomQty > 1 && setRoomQty(RoomQty - 1)}
+                  onClick={() => handleGuestQtyChange(index, "decrement")}
                 >
                   <Remove />
                 </span>
-                {RoomQty} {RoomQty > 1 ? "Guests" : "Guest"}
+                {roomSelection.guestQty > 1 ? `${roomSelection.guestQty} Guests` : "1 Guest"}
                 <span
                   className="cursor-pointer text-yellow-500"
-                  onClick={() => setRoomQty(RoomQty + 1)}
+                  onClick={() => handleGuestQtyChange(index, "increment")}
                 >
                   <Add />
                 </span>
               </div>
+
+              {/* Alert if exceeding maxGuests */}
+              {roomSelection.showMaxGuestAlert && (
+                <div className="absolute top-[3rem] right-0 z-10 bg-white border border-gray-300 px-2 py-4 rounded-md shadow-md w-64">
+                  <p className="text-gray-800 text-sm font-medium">
+                    Maximum of {data?.roomData?.maxGuests} guests allowed.
+                  </p>
+                  <div className="flex items-center justify-end gap-2 mt-2">
+                    <button
+                      onClick={() =>
+                        setSelectedRooms((prev) => {
+                          const updated = [...prev];
+                          updated[index].showMaxGuestAlert = false;
+                          return updated;
+                        })
+                      }
+                      className="px-2 py-1 bg-gray-200 text-sm rounded-md"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Room Options (Room only / Continental) */}
               <div className="w-full">
                 <h3 className="text-gray-500 text-xl font-bold">Room Options:</h3>
                 <div className="flex flex-col gap-2 mt-2">
@@ -112,12 +180,7 @@ export const HotelDetailsCard = ({ RoomQty, setRoomQty }) => {
           </div>
         );
       })}
-      {/* <button
-        onClick={() => console.log("Selected Rooms:", selectedRooms)}
-        className="mt-4 p-2 bg-blue-500 text-white rounded"
-      >
-        Log Current Selections
-      </button> */}
+      {details.length<=0 && <> No data Available </>}
     </>
   );
 };

@@ -1,17 +1,31 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
-import { useDiscountedRate, useOfferCodesForHotel } from '../../../ApiHooks/useOffersAndDealsHook';
+import { useDiscountedRate, useOfferCodesForHotel, useSendOtp, useVerifyOtp } from '../../../ApiHooks/useOffersAndDealsHook';
 import toast from 'react-hot-toast';
+import { usePricing } from '../../../Context/PricingContext';
+import Cookies from 'js-cookie';
 
 export const OfferCode = ({ hotelDetail }) => {
+  // Existing states
   const [inputValue, setInputValue] = useState('');
   const [appliedOffer, setAppliedOffer] = useState(null);
-  const [offerResult, setOfferResult] = useState(null);
-  console.log(offerResult)
-  const [OfferSuccess, setOfferSuccess] = useState(false);
+  const [, setOfferResult] = useState(null);
+  const [offerSuccess, setOfferSuccess] = useState(false);
   const primaryColor = '#058FA2';
-
   const { mutate: fetchOfferCodes, data } = useOfferCodesForHotel();
   const { mutateAsync: getDiscountAsync } = useDiscountedRate();
+  const { finalPrice, setFinalPrice, baseFinalPrice } = usePricing();
+
+  // New states for phone verification flow
+  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [otp, setOtp] = useState('');
+  const [showOTPSection, setShowOTPSection] = useState(false);
+
+  // Custom hooks for OTP API calls
+  const { mutate: sendOtp } = useSendOtp();
+  const { mutate: verifyOtp } = useVerifyOtp();
 
   useEffect(() => {
     if (hotelDetail && hotelDetail._id) {
@@ -19,44 +33,190 @@ export const OfferCode = ({ hotelDetail }) => {
     }
   }, [fetchOfferCodes, hotelDetail]);
 
+  useEffect(() => {
+    const verified = Cookies.get('phoneVerified');
+    if (verified === 'true') {
+      setPhoneVerified(true);
+    }
+  }, []);
 
-  const handleApplyCode = () => {
+  // Handle sending OTP using API
+  const handleSendOTP = () => {
+    if (!phoneNumber.trim()) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+    sendOtp(`+91${phoneNumber}`, {
+      onSuccess: (data) => {
+        setShowOTPSection(true);
+        toast.success("OTP sent to your phone");
+      },
+      onError: (error) => {
+        toast.error("Error sending OTP");
+      }
+    });
+  };
+
+  // Handle verifying OTP using API
+  const handleVerifyOTP = () => {
+    if (!otp.trim()) {
+      toast.error("Please enter the OTP");
+      return;
+    }
+    let formattedPhone = phoneNumber.trim();
+    if (!formattedPhone.startsWith('+91')) {
+      formattedPhone = '+91' + formattedPhone;
+    }
+    verifyOtp({ phone: formattedPhone, code: otp }, {
+      onSuccess: (data) => {
+        if (data && data.status === 'approved') {
+          // Save the verification status in a cookie (set expiry as needed, here 7 days)
+          Cookies.set('phoneVerified', 'true', { expires: 7 });
+          setPhoneVerified(true);
+          setShowModal(false);
+          toast.success("Phone number verified");
+        } else {
+          toast.error("Invalid OTP");
+        }
+      },
+      onError: (error) => {
+        toast.error("OTP verification failed");
+      }
+    });
+  };
+  
+
+  // Existing handlers remain unchanged
+  const handleApplyCode = async () => {
     if (!inputValue.trim()) return;
-    const baseRate = 25000;
-    console.log(inputValue.trim() )
-
     try {
-      const result = getDiscountAsync({ hotelId: hotelDetail._id, rate: baseRate, offerCode: inputValue.trim() });
+      const result = await getDiscountAsync({
+        hotelId: hotelDetail._id,
+        rate: finalPrice,
+        offerCode: inputValue.trim()
+      });
       setOfferResult(result);
+      if (result.discountedRate) {
+        setFinalPrice(result.discountedRate);
+      }
       toast.success("Discounted rate calculated successfully");
     } catch (error) {
-      toast.error( error?.response?.data?.error?error?.response?.data?.error: "Error calculating discounted rate" );
+      toast.error(
+        error?.response?.data?.error
+          ? error?.response?.data?.error
+          : "Error calculating discounted rate"
+      );
     }
-
-
   };
 
   const handleRemoveOffer = () => {
     setAppliedOffer(null);
     setOfferResult(null);
+    setFinalPrice(baseFinalPrice);
   };
-
 
   const handlePredefinedOfferClick = async (offer) => {
     setAppliedOffer(offer);
-    const baseRate = 25000;
-    setOfferSuccess(false)
-    console.log("log",offer)
+    setOfferSuccess(false);
     try {
-      const result = await getDiscountAsync({ hotelId: hotelDetail._id, rate: baseRate, offerCode: offer.offerCode });
+      const result = await getDiscountAsync({
+        hotelId: hotelDetail._id,
+        rate: finalPrice,
+        offerCode: offer.offerCode
+      });
       setOfferResult(result);
-      setOfferSuccess(true)
-      // toast.success("Discounted rate calculated successfully");
+      if (result.discountedRate) {
+        setFinalPrice(result.discountedRate);
+      }
+      setOfferSuccess(true);
     } catch (error) {
-      toast.error( error?.response?.data?.error?error?.response?.data?.error: "Error calculating discounted rate" );
+      toast.error(
+        error?.response?.data?.error
+          ? error?.response?.data?.error
+          : "Error calculating discounted rate"
+      );
     }
   };
 
+  // If phone is not verified, show the verification UI only
+  if (!phoneVerified) {
+    return (
+      <div className="flex flex-col min-h-auto">
+        <div className="flex items-center mb-8">
+          <div
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-cyan-600 text-white mr-3"
+            style={{ backgroundColor: primaryColor }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+              <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </svg>
+          </div>
+          <h2 className="text-3xl font-bold text-gray-800">Exclusive Offers</h2>
+        </div>
+
+        <button
+          onClick={() => setShowModal(true)}
+          className="px-4 py-2 text-start rounded-lg"
+        >
+          <span className="text-primary-green underline font-semibold">Click Here</span> Verify Number to Get Offers and Discounts
+        </button>
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg w-80">
+              {!showOTPSection ? (
+                <div>
+                  <h2 className="text-xl font-bold mb-4">Enter Your Phone Number</h2>
+                  <input
+                    type="text"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="Phone Number"
+                    className="w-full p-2 border border-gray-300 rounded mb-4"
+                  />
+                  <button
+                    onClick={handleSendOTP}
+                    className="w-full px-4 py-2 bg-primary-dark-green text-white rounded"
+                  >
+                    Proceed
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-xl font-bold mb-4">Enter OTP</h2>
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="OTP"
+                    className="w-full p-2 border border-gray-300 rounded mb-4"
+                  />
+                  <button
+                    onClick={handleVerifyOTP}
+                    className="w-full px-4 py-2 bg-primary-dark-green text-white rounded"
+                  >
+                    Verify OTP
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Render the OfferCode UI once phone is verified
   return (
     <div className="flex flex-col bg-white w-full mx-auto">
       <div className="flex items-center mb-8">
@@ -82,7 +242,6 @@ export const OfferCode = ({ hotelDetail }) => {
         <h2 className="text-3xl font-bold text-gray-800">Exclusive Offers</h2>
       </div>
 
-      {/* Input and Apply Button - Only shown when no offer is applied */}
       {!appliedOffer && (
         <div className="relative mb-8">
           <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-3">
@@ -125,7 +284,6 @@ export const OfferCode = ({ hotelDetail }) => {
         </div>
       )}
 
-      {/* Predefined Offers - Only shown when no offer is applied */}
       {!appliedOffer && (
         <div className="mb-8">
           <div className="flex items-center mb-4">
@@ -176,7 +334,6 @@ export const OfferCode = ({ hotelDetail }) => {
         </div>
       )}
 
-      {/* Applied Offer */}
       {appliedOffer && (
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
@@ -248,12 +405,11 @@ export const OfferCode = ({ hotelDetail }) => {
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
-              {OfferSuccess &&
+              {offerSuccess && (
                 <p className="font-medium" style={{ color: primaryColor }}>
                   Offer successfully applied to your order!
                 </p>
-
-              }
+              )}
             </div>
           </div>
         </div>

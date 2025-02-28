@@ -16,7 +16,6 @@ function Banner({ businessPlatformFeatures }) {
   const [isTopSectionHidden, setIsTopSectionHidden] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
 
-  // Retrieve dates from localStorage on mount (without changing the UI)
   useEffect(() => {
     const storedCheckIn = localStorage.getItem("checkInDate");
     const storedCheckOut = localStorage.getItem("checkOutDate");
@@ -127,9 +126,9 @@ function Banner({ businessPlatformFeatures }) {
                     </span>
                   )}
                 </div>
-                <div className="">
+                {/* <div className="">
                   <GuestsDropdown />
-                </div>
+                </div> */}
 
               </div>
               <button
@@ -143,7 +142,6 @@ function Banner({ businessPlatformFeatures }) {
 
           </div>
 
-          {/* Bottom Section: Tabs */}
           <div className={`flex flex-wrap px-4 justify-between items-center mt-6 gap-2 w-full  ${isItemFixed ? "hidden" : ""}`}>
             {tabs.map((tab, index) => (
               <a

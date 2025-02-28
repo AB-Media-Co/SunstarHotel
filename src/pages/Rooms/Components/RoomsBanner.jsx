@@ -17,7 +17,7 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
 
   const navigate = useNavigate();
 
-  const { fetchRoomHotelDetails } = usePricing();
+  const { fetchRoomHotelDetails,sethotelData } = usePricing();
   useEffect(() => {
     const storedCheckIn = localStorage.getItem("checkInDate");
     const storedCheckOut = localStorage.getItem("checkOutDate");
@@ -34,16 +34,13 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
     } else {
       setBookingError(false);
       console.log(hotelDetail)
-     await fetchRoomHotelDetails(businessPlatformFeatures?._id, hotelDetail?.hotelCode);
+      await fetchRoomHotelDetails(businessPlatformFeatures?._id, hotelDetail?.hotelCode);
 
-      navigate("/room/details", {
-        state: {
-          businessPlatformFeatures,
-          hotelDetail,
-          checkIn,
-          checkOut,
-        },
-      });
+      navigate("/room/details");
+
+      localStorage.setItem("hotelData", JSON.stringify(hotelDetail));
+
+      sethotelData(hotelDetail)
     }
   };
 
@@ -96,8 +93,8 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
             )}
           </div>
 
-          <div className="flex items-center justify-between gap-4 w-full">
-            <GuestsDropdown classBg="bg-transparant" />
+          <div className="flex items-center justify-end gap-4 w-full">
+            {/* <GuestsDropdown classBg="bg-transparant" /> */}
             <button
               onClick={handleBooking}
               className="bg-[#006167] text-primary-white text-sm sm:text-base lg:text-lg sm:w-auto rounded-full shadow-md px-6 py-3"

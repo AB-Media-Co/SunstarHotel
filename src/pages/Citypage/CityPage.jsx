@@ -82,7 +82,7 @@ const CityPage = () => {
                             </div>
 
                             <div className="flex items-center justify-between gap-4 w-full">
-                                <GuestsDropdown classBg="bg-transparant" />
+                                {/* <GuestsDropdown classBg="bg-transparant" /> */}
                                 <a
                                     href="#hotels"
                                     className="bg-[#006167] flex gap-2 items-center cursor-pointer text-primary-white text-sm sm:text-base lg:text-lg sm:w-auto rounded-full shadow-md px-6 py-3"

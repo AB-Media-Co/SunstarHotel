@@ -5,7 +5,7 @@ import AllHotelCard from "../../../Components/AllHotelCard";
 import useUpdatePagesHook from '../../../ApiHooks/useUpdatePagesHook'
 
 const Section1 = ({ section1Data }) => {
-  const { heroSectionUpdate } = useUpdatePagesHook();console.log(heroSectionUpdate)
+  const { heroSectionUpdate } = useUpdatePagesHook();
   const { words, buttonLabel, } = section1Data;
   const [index, setIndex] = useState(0);
   const [currentWord, setCurrentWord] = useState("");
