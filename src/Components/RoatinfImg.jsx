@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-const RoatinfImg = ({ position, src = "/images/HomepageImages/RoundPatternSection2.svg" }) => {
+const RoatinfImg = ({ position, src = "/images/HomepageImages/RoundPatternSection2.svg", divClass='relative' }) => {
   return (
-    <div className="relative w-full h-full">
+    <div className={`${divClass} w-full h-full`}>
       <img
         src={src}
         alt="Background Pattern"

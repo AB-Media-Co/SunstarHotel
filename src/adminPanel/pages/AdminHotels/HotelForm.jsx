@@ -118,6 +118,7 @@ const HotelForm = ({ initialData = null }) => {
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
     description: initialData?.description || '',
+    phoneNumber: initialData?.phoneNumber || '',
     location: {
       hotelAddress: initialData?.location?.hotelAddress || '',
       metro: getInitialTransportValue('metro'),
@@ -133,7 +134,6 @@ const HotelForm = ({ initialData = null }) => {
     price: initialData?.price || 0,
     discountedPrice: initialData?.discountedPrice || 0,
     soldOut: initialData?.soldOut || false,
-    // New field: Pay at Hotel (defaults to "no")
     payAtHotel: initialData?.payAtHotel || "no",
     hotelCode: initialData?.hotelCode || '',
     authKey: initialData?.authKey || '',
@@ -147,16 +147,17 @@ const HotelForm = ({ initialData = null }) => {
     },
     imageSections: initialImageSections,
     cityLocation: initialData?.cityLocation || '',
-
-    // Initialize FAQs (new field)
     faqs: initialData?.faqs || [],
     addToYourStay: initialData?.addToYourStay || [],
     continentalPlan: initialData?.continentalPlan || { rate: { amount: 0, period: 'per person' } },
-
   });
 
   // State for new FAQ input
   const [newFAQ, setNewFAQ] = useState({ question: '', answer: '' });
+  // State for inline FAQ editing
+  const [faqEditIndex, setFaqEditIndex] = useState(null);
+  const [faqEditValues, setFaqEditValues] = useState({ question: '', answer: '' });
+
   const [currentTab, setCurrentTab] = useState('details');
   const [locationInputs, setLocationInputs] = useState({
     attractions: { name: '' },
@@ -172,7 +173,6 @@ const HotelForm = ({ initialData = null }) => {
   });
   const [newSectionHeading, setNewSectionHeading] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-  // const [, setIsAboutUsUploading] = useState(false);
 
   const { mutate: addHotel } = useAddHotel();
   const { mutate: editHotel } = useEditHotel();
@@ -248,6 +248,25 @@ const HotelForm = ({ initialData = null }) => {
       newFAQs.splice(index, 1);
       return { ...prev, faqs: newFAQs };
     });
+  };
+
+  // Handlers for FAQ inline editing
+  const handleFAQEditClick = (index) => {
+    setFaqEditIndex(index);
+    setFaqEditValues({ ...formData.faqs[index] });
+  };
+  const handleFAQEditChange = (e) => {
+    const { name, value } = e.target;
+    setFaqEditValues(prev => ({ ...prev, [name]: value }));
+  };
+  const handleFAQEditSave = (index) => {
+    const updatedFAQs = [...formData.faqs];
+    updatedFAQs[index] = faqEditValues;
+    setFormData(prev => ({ ...prev, faqs: updatedFAQs }));
+    setFaqEditIndex(null);
+  };
+  const handleFAQEditCancel = () => {
+    setFaqEditIndex(null);
   };
 
   const handleImagesUpload = async selectedFiles => {
@@ -407,6 +426,7 @@ const HotelForm = ({ initialData = null }) => {
         activities: formData.location.activities,
         nightlife: formData.location.nightlife,
       },
+      phoneNumber: formData.phoneNumber,
       amenities: formData.amenities,
       rating: Number(formData.rating),
       price: Number(formData.price),
@@ -417,7 +437,6 @@ const HotelForm = ({ initialData = null }) => {
       },
       imageSections: formData.imageSections,
       faqs: formData.faqs,
-
       cityLocation: formData.cityLocation,
       addToYourStay: formData.addToYourStay,
       continentalPlan: formData.continentalPlan
@@ -454,7 +473,6 @@ const HotelForm = ({ initialData = null }) => {
 
   const transportLocations = ['metro', 'airport', 'railwayStation'];
   const pointsOfInterest = ['attractions', 'restaurants', 'activities', 'nightlife'];
-  console.log(formData)
 
   return (
     <div className="mx-auto py-16 px-8">
@@ -533,6 +551,7 @@ const HotelForm = ({ initialData = null }) => {
           {currentTab === 'testimonials' && (
             <TestimonialsTab
               formData={formData}
+              setFormData={setFormData}
               testimonialInput={testimonialInput}
               handleTestimonialChange={handleTestimonialChange}
               handleAddTestimonial={handleAddTestimonial}
@@ -552,6 +571,7 @@ const HotelForm = ({ initialData = null }) => {
             <div className="space-y-6">
               <h2 className="text-2xl font-bold">FAQs</h2>
               <div className="flex flex-col gap-4">
+                {/* Add New FAQ */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <input
                     type="text"
@@ -575,20 +595,71 @@ const HotelForm = ({ initialData = null }) => {
                     Add FAQ
                   </button>
                 </div>
+                {/* Render Existing FAQs with Inline Editing */}
                 {formData.faqs.length > 0 ? (
                   formData.faqs.map((faq, index) => (
-                    <div key={index} className="flex justify-between items-center p-4 border rounded-md">
-                      <div>
-                        <p className="font-semibold">{faq.question}</p>
-                        <p className="text-gray-600">{faq.answer}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveFAQ(index)}
-                        className="text-red-500 hover:underline"
-                      >
-                        Remove
-                      </button>
+                    <div key={index} className="flex flex-col sm:flex-row justify-between items-center p-4 border rounded-md">
+                      {faqEditIndex === index ? (
+                        <>
+                          <div className="flex-1">
+                            <input
+                              type="text"
+                              name="question"
+                              value={faqEditValues.question}
+                              onChange={handleFAQEditChange}
+                              placeholder="Edit question"
+                              className="w-full border rounded-md p-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                            />
+                            <input
+                              type="text"
+                              name="answer"
+                              value={faqEditValues.answer}
+                              onChange={handleFAQEditChange}
+                              placeholder="Edit answer"
+                              className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                            />
+                          </div>
+                          <div className="flex gap-2 mt-2 sm:mt-0">
+                            <button
+                              type="button"
+                              onClick={() => handleFAQEditSave(index)}
+                              className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md transition-colors"
+                            >
+                              Save
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleFAQEditCancel}
+                              className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-md transition-colors"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="flex-1">
+                            <p className="font-semibold">{faq.question}</p>
+                            <p className="text-gray-600">{faq.answer}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleFAQEditClick(index)}
+                              className="text-blue-500 hover:underline"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveFAQ(index)}
+                              className="text-red-500 hover:underline"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </>
+                      )}
                     </div>
                   ))
                 ) : (
@@ -601,7 +672,6 @@ const HotelForm = ({ initialData = null }) => {
           {currentTab === 'addToYourStay' && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold">Add To Your Stay</h2>
-
               {formData.addToYourStay.length > 0 && formData.addToYourStay.map((item, index) => (
                 <div key={index} className="border p-4 rounded-md space-y-2">
                   <input
@@ -669,7 +739,6 @@ const HotelForm = ({ initialData = null }) => {
                   </button>
                 </div>
               ))}
-
               <button
                 type="button"
                 onClick={() => {

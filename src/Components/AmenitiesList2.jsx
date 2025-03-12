@@ -15,7 +15,7 @@ export const AmenitiesList2 = ({ amenities }) => {
         <section id="amenities" className="py-12 bg-primary-white content">
             <div className="container mx-auto px-4">
                 <hr className="bg-[#A4A4A4] h-[2px] w-full" />
-                <h2 className="md:text-4xl text-2xl font-bold my-8 text-reveal-animation transition-all duration-300">
+                <h2 className="md:text-4xl text-3xl font-bold my-4 text-reveal-animation transition-all duration-300">
                     Amenities
                 </h2>
                 <hr className="bg-[#A4A4A4] h-[2px] w-full mb-6" />

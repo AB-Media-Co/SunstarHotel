@@ -1,44 +1,48 @@
 /* eslint-disable react/prop-types */
 const BannerSection = ({
     data,
-    text = "text-mobile/h1 md:text-desktop/h1",
-    ptext = "text-mobile/body/1 md:text-desktop/body/large",
-    lineh = "md:leading-[75px]",
-    bg = "bg-primary-green",  // Keeping the original background color
-    paddTop = "md:pt-20 items-center",
+    text = "text-xl md:text-4xl lg:text-5xl",
+    ptext = "text-base md:text-lg lg:text-xl",
+    lineh = "leading-tight md:leading-[60px] lg:leading-[75px]",
+    bg = "bg-gradient-to-r from-primary-green to-teal-500",
+    paddTop = "pt-10 md:pt-20 items-center",
     textC = "white",
     imgClass = "h-auto object-cover",
+    ctaText,
+    ctaLink,
 }) => {
-    console.log(data)
     return (
-        <div className={`w-full ${bg} py-8 md:py-20 px-4 md:px-8 lg:px-16`}>
-            <div className={`content flex section flex-col lg:flex-row justify-between ${paddTop}`}>
+        <div className={`w-full ${bg} py-8 md:py-12 lg:py-20 px-4 md:px-8 lg:px-16 `}>
+            <div className={`content flex flex-col lg:flex-row justify-between items-center max-w-7xl mx-auto gap-8 lg:gap-12 ${paddTop}`}>
                 {/* Text Section */}
-                <div
-                    className="lg:w-1/2 md:text-center lg:text-left"
-                    data-aos="fade-up"
-                >
+                <div className="lg:w-1/2 text-center lg:text-left" data-aos="fade-up" data-aos-delay="100">
                     <h1
-                        className={`${text} ${lineh} text-reveal-animation font-bold text-${textC} mb-2 md:mb-6 leading-snug tracking-tight`}
+                        className={`${text} ${lineh} animate-fade-in font-bold text-${textC} mb-2 md:mb-6 tracking-tight max-w-2xl`}
                     >
-                       {data?.title? data?.title:"About Us"}
+                        {data?.title ?? "About Us"}
                     </h1>
                     <p
-                        className={`text-${textC} ${ptext} animation-on-scroll leading-relaxed tracking-wide`}
+                        className={`text-${textC} ${ptext} animate-fade-in text-justify leading-relaxed tracking-wide max-w-xl `}
+                        // style={{ animationDelay: "200ms" }}
                     >
-                        {data?.description}
+                        {data?.description ?? "We are a company dedicated to excellence."}
                     </p>
+                    {ctaText && ctaLink && (
+                        <a
+                            href={ctaLink}
+                            className={`mt-4 inline-block px-6 py-3 bg-${textC === "white" ? "black" : "white"} text-${textC === "white" ? "white" : "black"} rounded-lg hover:bg-opacity-90 transition-colors`}
+                        >
+                            {ctaText}
+                        </a>
+                    )}
                 </div>
 
                 {/* Image Section */}
-                <div
-                    className="lg:w-1/2 flex animation-on-scroll justify-center items-center mt-8 lg:mt-0 relative"
-                data-aos="fade-up"
-                >
+                <div className="lg:w-1/2 flex justify-center items-center mt-6 lg:mt-0" data-aos="fade-up" >
                     <img
                         src={data?.image? data?.image:data?.img}
-                        alt="Corporate Booking Banner"
-                        className={`max-w-full ${imgClass} rounded-x`}
+                        alt={data?.title ?? "Corporate Booking Banner"}
+                        className={`w-full max-h-[400px] ${imgClass} rounded-xl transition-transform duration-300  `}
                     />
                 </div>
             </div>

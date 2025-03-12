@@ -5,12 +5,12 @@ import Icon from "../../../Components/Icons";
 import Carousel from "../../../Components/CardsCommonComp/CommonCarousel";
 import Calendar from "../../../Components/Calendar";
 import { differenceInCalendarDays } from "date-fns";
-import GuestsDropdown from "../../../Components/GuestsDropdown";
+// import GuestsDropdown from "../../../Components/GuestsDropdown";
+import { ArrowRightAlt } from "@mui/icons-material";
 
-function Banner({ businessPlatformFeatures }) {
+function Banner({ businessPlatformFeatures, setOpenCalender, openCalender }) {
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
-  const [openCalender, setOpenCalender] = useState(false);
   const [activeTab, setActiveTab] = useState(null); // Tracks the active tab index
   const [isItemFixed, setItemFixed] = useState(false);
   const [isTopSectionHidden, setIsTopSectionHidden] = useState(false);
@@ -24,6 +24,8 @@ function Banner({ businessPlatformFeatures }) {
       setCheckOut(storedCheckOut);
     }
   }, []);
+
+
 
   const handleBooking = () => {
     if (!checkIn || !checkOut) {
@@ -57,17 +59,13 @@ function Banner({ businessPlatformFeatures }) {
       const currentScrollPos = window.scrollY;
       setItemFixed(currentScrollPos > 600);
 
-      // Only apply the hidden logic if isItemFixed is true
-      if (isItemFixed) {
-        // Determine scroll direction
-        if (prevScrollPos > currentScrollPos) {
-          // Scrolling up
-          setIsTopSectionHidden(false);
-        } else {
-          // Scrolling down
-          setIsTopSectionHidden(true);
-        }
-      }
+      // if (isItemFixed) {
+      //   if (prevScrollPos > currentScrollPos) {
+      //     setIsTopSectionHidden(false);
+      //   } else {
+      //     setIsTopSectionHidden(true);
+      //   }
+      // }
 
       setPrevScrollPos(currentScrollPos);
     };
@@ -80,7 +78,12 @@ function Banner({ businessPlatformFeatures }) {
 
   const calculateNights = () => {
     if (checkIn && checkOut) {
-      return <div>{differenceInCalendarDays(new Date(checkOut), new Date(checkIn))} Nights</div>;
+      return (
+        <div>
+          ({differenceInCalendarDays(new Date(checkOut), new Date(checkIn))}{" "}
+          Nights)
+        </div>
+      );
     }
     return 0;
   };
@@ -97,65 +100,83 @@ function Banner({ businessPlatformFeatures }) {
 
       <div
         className={`bg-primary-white py-8 px-4 transition-all duration-500 ease-in-out 
-          ${isItemFixed ? "fixed md:left-[8%] top-0 z-50 translate-y-2" : "relative translate-y-[-10px]"}
+          ${isItemFixed
+            ? "fixed md:left-[8%] top-0 z-50 translate-y-2"
+            : "relative translate-y-[-10px]"
+          }
           sm:px-8 lg:px-12 content rounded-md shadow-lg mx-auto -mt-6 
           z-10 flex flex-col items-center gap-6 border border-gray-200
            ${isTopSectionHidden ? "wipe-animation-hidden" : "wipe-animation"}
         ${isTopSectionHidden ? "hidden" : ""}
          `}
-
       >
         <div className="w-full flex flex-col items-center">
           {/* Top Section: Dates and Guests */}
           <div className="flex gap-2 justify-center md:px-4 md:space-x-6 lg:justify-between items-center w-full md:space-y-0 space-x-0">
-            <div className="flex gap-8 justify-between w-full md:flex-row flex-col">
+            <div className="flex gap-4 md:gap-8 items-center justify-between w-full md:flex-row flex-col">
               <div className="flex gap-4">
                 <div
                   onClick={() => setOpenCalender(true)}
-                  className="flex px-[10px] py-[4px] items-center border  border-primary-dark-green text-primary-dark-green rounded-full hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm"
+                  className="flex flex-row cursor-pointer items-center justify-evenly border max-w-full w-full md:w-auto  bg-white px-4 py-3 md:px-8 md:py-4 rounded-full gap-3 shadow-md"
                 >
-                  <Icon name="calendar" className="h-6 w-6 text-primary-dark-green" />
-                  <span className="text-mobile/body/2 md:text-desktop/body/1 text-primary-dark-green font-semibold">
-                    {checkIn ? checkIn : "Check In"}{" "}
-                    <span className="text-yellow-500">→</span>{" "}
-                    {checkOut ? checkOut : "Check Out"}
-                  </span>
+                  <Icon
+                    name="calendar"
+                    className="w-5 h-5 md:w-6 md:h-6 text-primary-green"
+                  />
+                  <div className={`flex flex-col text-gray-700`}>
+                    <span className="font-semibold text-[12px]  md:text-base">
+                      {checkIn ? checkIn : "Check In"}{" "}
+                    </span>
+                  </div>
+                  <ArrowRightAlt className="text-yellow-500" />
+                  <div className={`flex flex-col  text-gray-700`}>
+                    <span className="font-semibold text-[12px] md:text-base">
+                      {checkOut ? checkOut : "Check Out"}
+                    </span>
+                  </div>
                   {checkIn && checkOut && (
-                    <span className="text-gray-400 text-xs sm:text-sm flex">
-                      ({calculateNights()})
+                    <span className="flex items-center justify-center text-[8px] md:text-base text-black rounded-full border border-gray-300 px-3 md:py-1">
+                      {calculateNights()}
                     </span>
                   )}
                 </div>
-                {/* <div className="">
-                  <GuestsDropdown />
-                </div> */}
-
               </div>
               <button
                 onClick={handleBooking}
-                className="bg-primary-green text-primary-white lg:w-[180px] text-mobile/button md:text-desktop/h4 rounded-full py-2 md:py-0 text-xl shadow-md px-6 md:px-6 md:py-3"
+                className="bg-primary-green text-primary-white text-mobile/button md:text-desktop/h5/medium  rounded-xl md:rounded-full py-2  text-xl shadow-md px-6 md:px-10 md:py-2"
               >
                 Select
               </button>
             </div>
-
-
           </div>
 
-          <div className={`flex flex-wrap px-4 justify-between items-center mt-6 gap-2 w-full  ${isItemFixed ? "hidden" : ""}`}>
+          <div
+            className={`flex flex-wrap px-4 justify-between items-center mt-6 gap-2 w-full  ${isItemFixed ? "hidden" : ""
+              }`}
+          >
             {tabs.map((tab, index) => (
               <a
                 key={index}
                 href={tab.link}
                 onClick={() => setActiveTab(index)}
-                className={`flex flex-col sm:flex-row gap-2 items-center cursor-pointer ${activeTab === index ? "text-[#FDC114]" : "text-primary-green"} `}
+                className={`flex flex-col sm:flex-row gap-2 items-center cursor-pointer ${activeTab === index ? "text-[#FDC114]" : "text-primary-green"
+                  } `}
               >
                 <Icon
                   name={tab.iconName}
-                  className={`h-6 w-6 md:h-8 md:w-8 ${activeTab === index ? "text-[#FDC114]" : "text-primary-green"} `}
+                  className={`h-6 w-6 md:h-8 md:w-8 ${activeTab === index ? "text-[#FDC114]" : "text-primary-green"
+                    } `}
+                  styleCss={{
+                    filter:
+                      activeTab === index
+                        ? "brightness(0) saturate(100%) invert(100%) brightness(50%) sepia(100%) saturate(800%) hue-rotate(20deg) contrast(110%)"
+                        : "none",
+                  }}
                 />
+
                 <span
-                  className={`text-mobile/body/2 md:text-desktop/body/1 font-semibold ${activeTab === index ? "text-[#FDC114]" : "text-gray-500"} `}
+                  className={`text-mobile/body/2 md:text-desktop/body/1 font-semibold ${activeTab === index ? "text-[#FDC114]" : "text-gray-500"
+                    } `}
                 >
                   {tab.label}
                 </span>

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-const Icon = ({ name, className = 'w-6 h-6' }) => {
+const Icon = ({ name, className = 'w-6 h-6',styleCss={} }) => {
   const icons = {
     iwant: '/images/Icons/1.svg',
     ac: '/images/Icons/ac.svg',
@@ -90,9 +90,11 @@ const Icon = ({ name, className = 'w-6 h-6' }) => {
   }
   return (
     <img
-      src={iconPath}
-      alt={name}
-      className={` ${className}`}
+    src={iconPath}
+    alt={name}
+    className={` ${className}`}
+    style={styleCss} // ✅ Correct: This properly spreads the passed object.
+  
     />
   );
 };

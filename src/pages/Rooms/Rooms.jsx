@@ -10,6 +10,7 @@ import { AmenitiesList2 } from "../../Components/AmenitiesList2";
 import { getSingleHotelWithCode } from "../../ApiHooks/useHotelHook2"
 import Loader from "../../Components/Loader"
 import BottomRoomSticky from "../../Components/BottomRoomSticky"
+import { Helmet } from "react-helmet"
 
 const Rooms = () => {
   const id = useParams()
@@ -64,6 +65,11 @@ const Rooms = () => {
 
   return (
     <div>
+         <Helmet>
+          <title>Rooms</title>
+          <meta name="" content={``} />
+          <meta name="" content={``} />
+        </Helmet>
       <RoomsBanner businessPlatformFeatures={roomData} hotelDetail={otherRoomData} />
       <RoomPriceSection roomData={roomData} />
       <hr className="content h-[2px] bg-gray-400" />

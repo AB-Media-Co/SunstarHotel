@@ -1,6 +1,4 @@
 /* eslint-disable react/prop-types */
-// src/pages/RoomCard.jsx
-import React from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -11,8 +9,11 @@ import Box from '@mui/material/Box';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
+import { useDeleteRoom } from '../../../ApiHooks/useRoomsHook';
 
 const RoomCard = ({ room, onEdit }) => {
+  const { mutate: deleteRoom, isLoading: isDeleting } = useDeleteRoom();
+
   const truncateDescription = (text, wordLimit) => {
     if (!text) return '';
     const words = text.split(' ');
@@ -21,6 +22,10 @@ const RoomCard = ({ room, onEdit }) => {
       : words.slice(0, wordLimit).join(' ') + '...';
   };
 
+  const handleDelete = () => {
+ 
+    deleteRoom(room._id);
+  };
 
   return (
     <Card
@@ -103,11 +108,22 @@ const RoomCard = ({ room, onEdit }) => {
             ₹ {room.discountRate}
           </Typography>
         </Box>
-        <Button size="small" variant="contained" onClick={() => onEdit(room)}>
-          Edit
-        </Button>
+        <Box>
+          <Button size="small" variant="contained" onClick={() => onEdit(room)}>
+            Edit
+          </Button>
+          <Button
+            size="small"
+            variant="outlined"
+            color="error"
+            onClick={handleDelete}
+            disabled={isDeleting}
+            sx={{ ml: 1 }}
+          >
+            {isDeleting ? 'Deleting...' : 'Delete'}
+          </Button>
+        </Box>
       </CardActions>
-
     </Card>
   );
 };

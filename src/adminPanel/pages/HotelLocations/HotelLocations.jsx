@@ -139,7 +139,7 @@ export const HotelLocations = () => {
   };
 
   return (
-    <div className="container mx-auto mt-20 p-4">
+    <div className="container mx-auto mt-24 p-4 px-16">
       {/* Button to open Add Location Modal */}
       <div className="mb-6">
         <Button variant="contained" color="primary" onClick={() => setOpenAddModal(true)}>

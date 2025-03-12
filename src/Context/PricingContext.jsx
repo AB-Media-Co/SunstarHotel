@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../services/axiosInstance";
+import ConfirmationModal from "./ConfirmationModal";
 
 const PricingContext = createContext();
 
 export const PricingProvider = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [editAddPricing, setEditAddPricing] = useState(() => {
     const saved = localStorage.getItem("editAddPricing");
@@ -44,24 +46,34 @@ export const PricingProvider = ({ children }) => {
     return storedGuestDetails ? JSON.parse(storedGuestDetails) : { rooms: 1 };
   });
 
+  // Confirmation Modal state
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+
+  // Functions to control the Confirmation Modal
+  const openConfirmationModal = () => setIsConfirmationModalOpen(true);
+  const closeConfirmationModal = () => setIsConfirmationModalOpen(false);
+
+  // NEW: Hotel Modal state and functions
+  const [isHotelModalOpen, setIsHotelModalOpen] = useState(false);
+  const openHotelModal = () => setIsHotelModalOpen(true);
+  const closeHotelModal = () => setIsHotelModalOpen(false);
+
   useEffect(() => {
     const daysFromStorage = localStorage.getItem("days");
     const days = daysFromStorage ? parseInt(daysFromStorage, 10) : 1;
-  
-  
+
     const sumOtherCharges = selectedOtherCharges.reduce((acc, charge) => {
       const amount = charge.rate?.amount || 0;
       const period = charge.rate?.period?.toLowerCase();
-  
+
       if (period === "per day" || period === "per night") {
         return acc + amount * days;
       }
       return acc + amount;
     }, 0);
-  
+
     setTotalOtherCharges(sumOtherCharges);
   }, [selectedOtherCharges]);
-  
 
   useEffect(() => {
     const roomTotal = selectedRooms.reduce(
@@ -85,21 +97,27 @@ export const PricingProvider = ({ children }) => {
     localStorage.setItem("guestDetails", JSON.stringify(guestDetails));
   }, [guestDetails]);
 
+  // Agar user kisi aise route pe jaye jahan details hon, to modal show kar de
   useEffect(() => {
     const routesToCheck = ["/", "/why-sunstar", "/corporate-booking", "/contact"];
     if (details.length > 0 && routesToCheck.includes(location.pathname)) {
-      const confirmCancel = window.confirm("Are you sure want to cancel booking?");
-      if (confirmCancel) {
-        setDetails([]);
-        localStorage.removeItem("roomHotelDetails");
-        setEditAddPricing(false);
-        localStorage.setItem("editAddPricing", false);
-        setSelectedRooms([]);
-      }
+      openConfirmationModal();
     }
   }, [location, details]);
 
+  const handleConfirmCancel = () => {
+    setDetails([]);
+    localStorage.removeItem("roomHotelDetails");
+    setEditAddPricing(false);
+    localStorage.setItem("editAddPricing", false);
+    setSelectedRooms([]);
+    closeConfirmationModal();
+  };
 
+  const handleCancel = () => {
+    closeConfirmationModal();
+    // Yahan navigation rok sakte hain agar zarurat ho
+  };
 
   const fetchRoomHotelDetails = async (roomId, hotelCode) => {
     try {
@@ -134,6 +152,27 @@ export const PricingProvider = ({ children }) => {
     }
   };
 
+  const removeRoom = (roomName) => {
+    // selectedRooms update karna
+    setSelectedRooms((prev) => {
+      const index = prev.findIndex((r) => r.roomName === roomName);
+      if (index === -1) return prev;
+      const newRooms = [...prev];
+      newRooms.splice(index, 1);
+      return newRooms;
+    });
+
+    // details update karna
+    setDetails((prev) => {
+      const index = prev.findIndex((d) => d.roomData?.RoomName === roomName);
+      if (index === -1) return prev;
+      const newDetails = [...prev];
+      newDetails.splice(index, 1);
+      localStorage.setItem("roomHotelDetails", JSON.stringify(newDetails));
+      return newDetails;
+    });
+  };
+
   return (
     <PricingContext.Provider
       value={{
@@ -147,9 +186,9 @@ export const PricingProvider = ({ children }) => {
         selectedOtherCharges,
         setSelectedOtherCharges,
         totalOtherCharges,
-        finalPrice, // final price including discount or not
+        finalPrice, // Final price including discount or not
         setFinalPrice,
-        baseFinalPrice, // original calculated final price
+        baseFinalPrice, // Original calculated final price
         nights,
         setNights,
         maxRoomSelection,
@@ -157,10 +196,22 @@ export const PricingProvider = ({ children }) => {
         guestDetails,
         setGuestDetails,
         sethotelData,
-        hotelData
+        hotelData,
+        removeRoom,
+        openConfirmationModal,
+        closeConfirmationModal,
+        isConfirmationModalOpen,
+        isHotelModalOpen,
+        openHotelModal,
+        closeHotelModal,
       }}
     >
       {children}
+      <ConfirmationModal
+        show={isConfirmationModalOpen}
+        onHide={handleCancel}
+        onConfirm={handleConfirmCancel}
+      />
     </PricingContext.Provider>
   );
 };

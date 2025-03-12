@@ -148,11 +148,27 @@
     margin-right: 123px;
   }
 
-  /* .swiper-wrapper {
-  gap: 100px;
-} */
 
 }
+
+@media screen and (min-width: 768px) {
+  .hotelCardsHome .swiper .swiper-wrapper {
+    display: flex;
+    justify-content: flex-start !important;
+    gap: 1.5rem;
+  }
+  
+  .hotelCardsHome .swiper .swiper-wrapper[data-cards="3"] {
+    justify-content: space-between !important;
+  }
+}
+
+
+
+
+.swiper-wrapper {
+  justify-content: space-between !important;
+ }
 
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   .swiper-wrapper {
@@ -219,7 +235,7 @@
   background-image: url('/images/HotelsSectionImg/hote1.png'); /* Replace with your image path */
   background-size: cover; /* Ensure the image covers the entire container */
   background-position: center; /* Center the image */
-  padding-top: 70px;
+  padding-top: 47px;
   width: 100%;
   height: 100vh;
 }
@@ -269,7 +285,6 @@
   transition: background-color 0.3s ease;
 }
 
-/* Highlight Current Month Dates */
 .current-month {
   color: #333;
 }
@@ -280,17 +295,18 @@
   pointer-events: none;
 }
 
-/* Start of Range: Rounded Left Edge */
 .range-start {
 
   position: relative;
   z-index: 2;
+  color: #5BBEBC;
 }
 
 /* End of Range: Rounded Right Edge */
 .range-end {
   position: relative;
   z-index: 2;
+  color: #5BBEBC;
   /* Keeps the end circle above other elements */
 }
 
@@ -311,12 +327,13 @@ padding-top: 5px;
   text-align: center;
   font-weight: bold;
   z-index: 3;
+  color: #5BBEBC !important;
   /* Ensures circle stays on top of the yellow bar */
 }
 
 .in-range p {
   color: white;
-}
+} 
 
 .calendar-days {
   gap: 20px 0;
@@ -339,6 +356,7 @@ padding-top: 5px;
     height: 87%;
     width: 74%;
     padding-top: 0px;
+    color: #5BBEBC;
   }
 }
 
@@ -440,3 +458,38 @@ padding-top: 5px;
 
 
 
+.testiM .swiper-slide{
+  padding: 32px 8px;
+}
+
+
+/* Add this to your CSS file */
+@keyframes wipeUp {
+  from {
+      transform: translateY(100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
+@keyframes wipeDown {
+  from {
+      transform: translateY(0);
+      opacity: 1;
+  }
+  to {
+      transform: translateY(100%);
+      opacity: 0;
+  }
+}
+
+.wipe-up {
+  animation: wipeUp 0.5s ease-out forwards;
+}
+
+.wipe-down {
+  animation: wipeDown 0.5s ease-out forwards;
+}

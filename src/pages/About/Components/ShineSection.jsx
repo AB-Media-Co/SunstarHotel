@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
+import { useLocation } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -115,10 +116,16 @@ const ShineSection = () => {
     const calculateTopPositionTablet = (index) => {
         return baseTop + index * (spacing + 280);
     };
+    const location = useLocation(); // Get current URL
+    useEffect(() => {
+        if (location.hash === "#what-make-us-shine") {
+            document.getElementById("what-make-us-shine")?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [location]);
 
     return (
-        <div className="bg-primary-green py-12 relative text-primary-white">
-            <div className="content">
+        <div id="what-make-us-shine" className="bg-primary-green py-12 relative text-primary-white" >
+            <div className="content" data-aos="fade-up">
                 <h2 className="text-mobile/h3 md:text-desktop/h2 font-bold mb-4 text-reveal-animation">
                     {shineSection?.heading}
                 </h2>
@@ -148,7 +155,7 @@ const ShineSection = () => {
                 </div>
 
                 {/* Timeline nodes */}
-                <div className="flex justify-center top-[33rem] lg:top-[23rem] left-[2rem] md:left-[10rem] lg:left-[46rem] absolute py-10 text-primary-white">
+                {/* <div className="flex justify-center top-[33rem] lg:top-[23rem] left-[2rem] md:left-[10rem] lg:left-[46rem] absolute py-10 text-primary-white">
                     <div className="timeline-bg w-1 h-[96rem] md:h-[115rem] lg:h-[71rem] bg-primary-white relative">
                         <div className="timeline-fill bg-[#FDC114] w-full h-0 absolute top-0 left-0"></div>
                         {shineSection?.features?.map((_, index) => (
@@ -197,7 +204,7 @@ const ShineSection = () => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );

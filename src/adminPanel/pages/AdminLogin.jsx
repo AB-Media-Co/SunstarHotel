@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAdminLogin } from '../../ApiHooks/useAdminHooks';
+import { useAdminLogin } from '../../ApiHooks/useAdminHooks'; // Adjust path as needed
 import toast from 'react-hot-toast';
 
 export const AdminLogin = () => {
@@ -8,29 +8,27 @@ export const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  
-  const { mutate, isLoading, isError, error } = useAdminLogin();
+
+  const { mutate: login, isLoading } = useAdminLogin();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!username || !password) {
-      alert('Please enter both username and password');
+      toast.error('Please enter both username and password');
       return;
     }
 
     const userData = { username, password };
 
-    // Call the mutation to log in the admin
-    mutate(userData, {
+    login(userData, {
       onSuccess: (data) => {
-        localStorage.setItem('token', data.token); 
+        localStorage.setItem('token', data.token);
         navigate('/admin/hotels');
-        toast.success("logged In Successfully")
+        toast.success('Logged in successfully');
       },
       onError: (error) => {
-        console.error('Login failed', error);
-        toast.error(error?.response?.data?.message || 'Login failed');
+        toast.error(error.message || 'Login failed');
       },
     });
   };
@@ -48,6 +46,7 @@ export const AdminLogin = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-2xl outline-none peer focus:border-blue-500 focus:ring-2 focus:ring-blue-400"
+              disabled={isLoading}
             />
           </div>
 
@@ -58,11 +57,13 @@ export const AdminLogin = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="block w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-2xl outline-none peer focus:border-blue-500 focus:ring-2 focus:ring-blue-400"
+              disabled={isLoading}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute top-3 right-4 text-sm text-blue-500 hover:underline"
+              disabled={isLoading}
             >
               {showPassword ? 'Hide' : 'Show'}
             </button>
@@ -70,15 +71,15 @@ export const AdminLogin = () => {
 
           <button
             type="submit"
-            className="w-full py-3 text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700"
+            className="w-full py-3 text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700 disabled:bg-blue-400"
             disabled={isLoading}
           >
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
-
-          {isError && <p className="text-red-500 mt-4 text-center">{error?.response?.data?.message || 'Something went wrong!'}</p>}
         </form>
       </div>
     </div>
   );
 };
+
+export default AdminLogin;

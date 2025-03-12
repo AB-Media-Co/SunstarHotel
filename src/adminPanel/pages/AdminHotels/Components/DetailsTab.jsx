@@ -22,7 +22,7 @@ const StarRating = ({ rating, onChange, maxRating = 5 }) => {
   );
 };
 
-export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAmenitiesChange ,setFormData}) => (
+export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAmenitiesChange, setFormData }) => (
   <div className="space-y-5">
     <FormControlLabel
       control={
@@ -119,9 +119,9 @@ export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAme
         className="w-full border rounded-md p-3 focus:ring focus:ring-blue-200"
       ></textarea>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
       <div>
-        <label className="block text-gray-700 font-medium mb-1">Price:</label>
+        <label className="block text-gray-700 font-medium ">Price:</label>
         <input
           type="number"
           name="price"
@@ -132,7 +132,7 @@ export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAme
           className="w-full border rounded-md p-3 focus:ring focus:ring-blue-200"
         />
       </div>
-      <div>
+      {/* <div>
         <label className="block text-gray-700 font-medium mb-1">Discounted Price:</label>
         <input
           type="number"
@@ -143,14 +143,29 @@ export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAme
           placeholder="Discounted Price"
           className="w-full border rounded-md p-3 focus:ring focus:ring-blue-200"
         />
+      </div> */}
+      <div>
+        <label className="block text-gray-700 font-medium mb-1">Phone Number:</label>
+        <input
+          type="number"
+          name="phoneNumber"
+
+          value={formData.phoneNumber}
+          onChange={handleDetailsChange}
+          placeholder="Phoone Number"
+          className="w-full border rounded-md p-3 focus:ring focus:ring-blue-200"
+        />
       </div>
+
+
+
     </div>
     <div>
       <label className="block text-gray-700 font-medium mb-1">Amenities:</label>
       <Autocomplete
         multiple
         id="amenities-select"
-        options={amenities.map(a => ({ label: a.label, value: a.value }))}
+        options={amenities?.map(a => ({ label: a.label, value: a.value }))}
         value={formData.amenities}
         onChange={handleAmenitiesChange}
         isOptionEqualToValue={(option, value) => option.label === value.label}

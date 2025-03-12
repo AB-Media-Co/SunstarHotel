@@ -58,7 +58,7 @@ const ShineSectionUpdate = () => {
             ...prevState,
             features: [
                 ...prevState.features,
-                { title: '', description: '', image: '', _id: Date.now().toString() },
+                { title: '', description: '', image: '' },
             ],
         }));
     };
@@ -72,6 +72,20 @@ const ShineSectionUpdate = () => {
     };
 
     const handleUpdateShine = () => {
+        // Check main description word count
+        const mainDescWords = shineData?.description?.trim().split(/\s+/).length || 0;
+        
+        // Check feature descriptions word count
+        const hasLongDescription = shineData?.features?.some(feature => {
+            const wordCount = feature.description.trim().split(/\s+/).length;
+            return wordCount > 130;
+        });
+
+        if (mainDescWords > 130 || hasLongDescription) {
+            alert('Descriptions should not exceed 130 words');
+            return;
+        }
+
         console.log('Updated Shine Section Data:', shineData);
         whatMakesUsShine(shineData);
     };
@@ -79,19 +93,19 @@ const ShineSectionUpdate = () => {
     return (
         <div>
             <div onClick={() => setOpen(true)} className='myGlobalButton'>
-                Edit Shine Section
+                Shine Section
             </div>
             
 
             <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md" fullWidth>
-                <DialogTitle>Edit Shine Section</DialogTitle>
+                <DialogTitle>Shine Section</DialogTitle>
                 <DialogContent dividers>
                     <div style={{ padding: 20 }}>
                         <TextField
                             label="Heading"
                             variant="outlined"
                             fullWidth
-                            value={shineData.heading}
+                            value={shineData?.heading}
                             onChange={handleHeadingChange}
                             style={{ marginBottom: 20 }}
                         />
@@ -102,14 +116,17 @@ const ShineSectionUpdate = () => {
                             fullWidth
                             multiline
                             rows={4}
-                            value={shineData.description}
+                            value={shineData?.description}
                             onChange={handleDescriptionChange}
                             style={{ marginBottom: 20 }}
+                            helperText={`${shineData?.description?.trim().split(/\s+/).length || 0}/130 words`}
+                            error={(shineData?.description?.trim().split(/\s+/).length || 0) > 130}
                         />
 
                         <Grid container spacing={3}>
-                            {shineData.features && shineData.features.length > 0 ? (
-                                shineData.features.map((feature, index) => (
+
+                            {shineData?.features && shineData?.features.length > 0 ? (
+                                shineData?.features.map((feature, index) => (
                                     <Grid item xs={12} sm={6} md={4} key={feature._id}>
                                         <Card elevation={3} style={{ padding: 16, marginBottom: 20 }}>
                                             <IconButton
@@ -142,6 +159,8 @@ const ShineSectionUpdate = () => {
                                                     handleFeatureChange(index, 'description', e.target.value)
                                                 }
                                                 style={{ marginBottom: 10 }}
+                                                helperText={`${feature.description.trim().split(/\s+/).length}/130 words`}
+                                                error={feature.description.trim().split(/\s+/).length > 130}
                                             />
 
                                             <ImageUpload

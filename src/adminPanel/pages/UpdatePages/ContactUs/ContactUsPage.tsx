@@ -89,12 +89,12 @@ const ContactUsPage = () => {
   return (
     <div>
       <div className="myGlobalButton" onClick={handleOpen}>
-        Update Contact
+        Contact Us Page
       </div>
 
       <Dialog open={open} onClose={handleClose} fullScreen={fullScreen} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ m: 0, p: 2 }}>
-          <Typography variant="h6">Update Contact Details</Typography>
+          <Typography variant="h6">Contact Details</Typography>
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -128,6 +128,9 @@ const ContactUsPage = () => {
               type="email"
               helperText="Enter a valid email address (e.g., example@example.com)"
             />
+           
+            <h1 className='text-desktop/h4 py-4'>  Other Enquiries</h1>
+
             <TextField
               label="Reservations"
               value={reservations}

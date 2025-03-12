@@ -71,6 +71,17 @@ const Testimonials = () => {
 
   // Save the changes: update local state and call the update API function
   const handleSaveChanges = () => {
+    // Check descriptions word count
+    const hasLongDescription = editingData.clients.some(client => {
+      const wordCount = client.description.trim().split(/\s+/).length;
+      return wordCount > 50;
+    });
+
+    if (hasLongDescription) {
+      alert('Testimonial descriptions should not exceed 50 words');
+      return;
+    }
+
     setTestimonialData(editingData);
     updateTestimonials({ TestimonialData: editingData });
     setOpenModal(false);
@@ -140,6 +151,8 @@ const Testimonials = () => {
                       rows={3}
                       value={client.description}
                       onChange={(e) => handleClientChange(index, 'description', e.target.value)}
+                      helperText={`${client.description.trim().split(/\s+/).length}/50 words`}
+                      error={client.description.trim().split(/\s+/).length > 50}
                     />
                     <Button
                       variant="outlined"

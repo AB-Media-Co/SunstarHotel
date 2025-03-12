@@ -5,12 +5,15 @@ import Icon from "./Icons";
 import { useEffect, useState } from "react";
 import { getSingleHotelWithCode } from "../ApiHooks/useHotelHook2";
 import { usePricing } from "../Context/PricingContext";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
 
 const RoomsCard = ({ room }) => {
     const navigate = useNavigate();
-    const { editAddPricing,fetchRoomHotelDetails,details } = usePricing();
-
+    const { fetchRoomHotelDetails, selectedRooms, removeRoom, maxRoomSelection } = usePricing();
     const [hotelData, setHotelData] = useState(null);
+
+    const roomCount = selectedRooms.filter((r) => r.roomName === room.RoomName).length;
 
     useEffect(() => {
         if (room?.HotelCode) {
@@ -26,20 +29,22 @@ const RoomsCard = ({ room }) => {
         }
     }, [room?.HotelCode]);
 
+    const handleAddRoom = () => {
+        if (roomCount >= maxRoomSelection) return; // Optional: Prevent exceeding max rooms
+        fetchRoomHotelDetails(room?._id, hotelData?.hotelCode)
+            .catch((err) => {
+                console.error("Error adding room:", err);
+            });
+    };
 
-    const handleBooking = () => {
-        if (room.available) {
-            navigate(`/room/${room._id}`);
+    const handleRemoveRoom = () => {
+        if (roomCount > 0) {
+            removeRoom(room.RoomName);
         }
     };
 
-    const handeEditBooking = () => {
-        fetchRoomHotelDetails(room?._id, hotelData?.hotelCode);
-    };
-
     return (
-        <div className="bg-primary-white shadow-md rounded-lg overflow-hidden ">
-            {/* Room Image Section */}
+        <div className="bg-primary-white shadow-md rounded-lg overflow-hidden">
             <div className="relative">
                 <img
                     src={room?.RoomImage[0]}
@@ -53,35 +58,28 @@ const RoomsCard = ({ room }) => {
                 )}
             </div>
 
-            {/* Room Details Section */}
             <div className="p-4 flex flex-col gap-4">
-                {/* Room Title */}
-                <h2 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-700">
+                <h2
+                    onClick={() => navigate(`/room/${room._id}`)}
+                    className="cursor-pointer text-mobile/h5 md:text-desktop/h5 font-bold text-gray-700"
+                >
                     {room.RoomName}
                 </h2>
 
-                {/* Room Features */}
                 <div className="flex justify-between">
-                    <div className="flex items-center gap-2 text-mobile/body/2 md:text-desktop/body/1 font-semibold text-gray-600 ">
+                    <div className="flex items-center gap-2 text-mobile/body/2 md:text-desktop/body/1 font-semibold text-gray-600">
                         <Icon name="guests" className="w-5 h-5" />
                         <span className="font-semibold">{room.maxGuests} Guest Max</span>
                     </div>
-                    {/* <div className="flex items-center gap-2 text-mobile/body/2 md:text-desktop/body/1 text-gray-600 mt-2">
-                        <Icon name="beds" className="w-7 h-7" />
-                        <span className="font-semibold">{room.beds}</span>
-                    </div> */}
                     <div className="flex items-center gap-2">
                         <Icon name="sqFt" className="w-5 h-5" />
                         <p className="text-mobile/body/2 md:text-desktop/body/1 text-gray-600 font-semibold">
                             {room.squareFeet} sq. ft. Area
                         </p>
                     </div>
-
                 </div>
 
-                {/* Room Pricing and Booking */}
                 <div className="flex justify-between items-center">
-                    {/* Pricing Section */}
                     <div>
                         {room.defaultRate && (
                             <p className="text-mobile/body/1 md:text-desktop/h6/medium text-red-500 font-bold line-through">
@@ -92,36 +90,29 @@ const RoomsCard = ({ room }) => {
                             ₹ {room.discountRate}
                             <span className="text-mobile/body/2 md:text-desktop/caption text-gray-600 font-normal">
                                 /night
-
                                 <span className="text-gray-500 ml-2">incl. Taxes</span>
                             </span>
                         </p>
                     </div>
 
-                    {/* Booking Button */}
-                    {editAddPricing  == true ?
-                        <>
-                            <button
-                                className={`mt-4 h-[40px] px-4 py-2 text-mobile/button md:text-desktop/button font-bold rounded bg-primary-dark-green text-primary-white 
-                                    `}
-                                onClick={handeEditBooking}
-                            >
-                                Add Room
-                            </button>
-                        </> : (
-                            <button
-                                className={`mt-4 h-[40px] px-4 py-2 text-mobile/button md:text-desktop/button font-bold rounded ${room.available
-                                    ? "bg-primary-dark-green text-primary-white"
-                                    : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                                    }`}
-                                onClick={handleBooking}
-                                disabled={!room.available}
-                            >
-                                {room.available ? "Book Now" : "Sold Out"}
-                            </button>
-
-                        )
-                    }
+                    <div className="flex items-center border border-primary-green rounded-lg px-3 py-1 gap-2">
+                        <button
+                            className={`text-mobile/button md:text-desktop/button md:text-2xl font-bold rounded text-primary-green ${roomCount === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            onClick={handleRemoveRoom}
+                            disabled={roomCount === 0}
+                        >
+                            <RemoveIcon />
+                        </button>
+                        <span className="text-mobile/h5 md:text-lg font-semibold text-primary-dark-green">
+                            {roomCount} Rooms
+                        </span>
+                        <button
+                            className="text-mobile/button md:text-desktop/button md:text-2xl font-bold rounded text-primary-green"
+                            onClick={handleAddRoom}
+                        >
+                            <AddIcon />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

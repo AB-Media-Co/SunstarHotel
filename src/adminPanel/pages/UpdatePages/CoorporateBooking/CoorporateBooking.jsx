@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
-  Typography,
   Grid,
   TextField,
   Button,
@@ -10,7 +9,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  IconButton,
+  Typography,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import useUpdatePagesHook from "../../../../ApiHooks/useUpdatePagesHook";
 import ImageUpload from "../../../Components/ImageUpload";
 
@@ -27,13 +29,14 @@ const CoorporateBooking = () => {
       description: "",
       image: "",
     },
+    BusinessPlatformSection: [],
   });
 
   const [headImageUploading, setHeadImageUploading] = useState(false);
   const [descImageUploading, setDescImageUploading] = useState(false);
-
   const [open, setOpen] = useState(false);
 
+  // Load initial data from API (including BusinessPlatformSection)
   useEffect(() => {
     if (CoorporateBooking) {
       setFormData({
@@ -47,15 +50,17 @@ const CoorporateBooking = () => {
           title:
             CoorporateBooking.CoorporateBookingDescription?.title || "",
           description:
-            CoorporateBooking.CoorporateBookingDescription?.description ||
-            "",
+            CoorporateBooking.CoorporateBookingDescription?.description || "",
           image:
             CoorporateBooking.CoorporateBookingDescription?.image || "",
         },
+        BusinessPlatformSection:
+          CoorporateBooking.BusinessPlatformSection || [],
       });
     }
   }, [CoorporateBooking]);
 
+  // Generic handler for Head & Description sections
   const handleInputChange = (section, field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -74,8 +79,47 @@ const CoorporateBooking = () => {
     handleInputChange("CoorporateBookingDescription", field, value);
   };
 
+  // Business Platform Section handlers
+  const handleBusinessPlatformChange = (index, field, value) => {
+    const updatedBusinessPlatforms = formData.BusinessPlatformSection.map(
+      (item, idx) => {
+        if (idx === index) {
+          return { ...item, [field]: value };
+        }
+        return item;
+      }
+    );
+    setFormData((prev) => ({
+      ...prev,
+      BusinessPlatformSection: updatedBusinessPlatforms,
+    }));
+  };
+
+  const addBusinessPlatformSection = () => {
+    if (formData.BusinessPlatformSection.length < 4) {
+      setFormData((prev) => ({
+        ...prev,
+        BusinessPlatformSection: [
+          ...prev.BusinessPlatformSection,
+          { title: "", description: "" },
+        ],
+      }));
+    }
+  };
+
+  const removeBusinessPlatformSection = (index) => {
+    const updatedBusinessPlatforms = formData.BusinessPlatformSection.filter(
+      (_, idx) => idx !== index
+    );
+    setFormData((prev) => ({
+      ...prev,
+      BusinessPlatformSection: updatedBusinessPlatforms,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Send entire formData (including the BusinessPlatformSection) to the API
     updtateCoorporateBooking(formData);
     setOpen(false);
   };
@@ -83,17 +127,17 @@ const CoorporateBooking = () => {
   return (
     <div>
       <div className="myGlobalButton" onClick={() => setOpen(true)}>
-        Edit Corporate Booking
+        Corporate Booking Page
       </div>
 
       {/* Modal (Dialog) containing the form */}
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
-        <DialogTitle>Edit Corporate Booking</DialogTitle>
+        <DialogTitle>Corporate Booking</DialogTitle>
         <form onSubmit={handleSubmit}>
           <DialogContent>
             {/* Head Content Section */}
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h5" gutterBottom>
                 Head Content
               </Typography>
               <Grid container spacing={2}>
@@ -158,7 +202,7 @@ const CoorporateBooking = () => {
 
             {/* Description Content Section */}
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h5" gutterBottom>
                 Description Content
               </Typography>
               <Grid container spacing={2}>
@@ -219,6 +263,73 @@ const CoorporateBooking = () => {
                   />
                 </Grid>
               </Grid>
+            </Box>
+
+            {/* Business Platform Section */}
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h5" gutterBottom>
+                Business Platform Section
+              </Typography>
+              {/* Display already added items (if any) as editable fields */}
+              {formData.BusinessPlatformSection.map((platform, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    mb: 2,
+                    border: "1px solid #ccc",
+                    borderRadius: 1,
+                    p: 2,
+                  }}
+                >
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={12} sm={5}>
+                      <TextField
+                        label="Title"
+                        variant="outlined"
+                        fullWidth
+                        value={platform.title}
+                        onChange={(e) =>
+                          handleBusinessPlatformChange(
+                            index,
+                            "title",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={5}>
+                      <TextField
+                        label="Description"
+                        variant="outlined"
+                        fullWidth
+                        value={platform.description}
+                        onChange={(e) =>
+                          handleBusinessPlatformChange(
+                            index,
+                            "description",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                      <IconButton
+                        onClick={() => removeBusinessPlatformSection(index)}
+                        color="error"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Box>
+              ))}
+              <Button
+                variant="outlined"
+                onClick={addBusinessPlatformSection}
+                disabled={formData.BusinessPlatformSection.length >= 4}
+              >
+                Add Business Platform
+              </Button>
             </Box>
           </DialogContent>
           <DialogActions>

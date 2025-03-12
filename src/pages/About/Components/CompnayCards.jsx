@@ -1,12 +1,14 @@
 /* eslint-disable react/prop-types */
 
+import { useLocation } from "react-router-dom";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
+import { useEffect } from "react";
 
 
 const Card = ({ image, title, description }) => {
     return (
 
-        <div className={`max-w-[280px] flex flex-col relative animation-on-scroll  overflow-hidden shadow-xl  border rounded-lg bg-primary-white`}>
+        <div className={`max-w-[350px] flex flex-col relative animation-on-scroll  overflow-hidden shadow-xl  border rounded-lg bg-primary-white`}>
             <img
                 src={image}
                 alt={title}
@@ -27,11 +29,17 @@ const Card = ({ image, title, description }) => {
 
 const CompnayCards = () => {
     const { offeringSection } = useUpdatePagesHook();
+    const location = useLocation(); // Get current URL
+    useEffect(() => {
+        if (location.hash === "#what-we-offer") {
+            document.getElementById("what-we-offer")?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [location]);
 
     return (
-        <div className="py-12 flex flex-col gap-8  content">
+        <div id="what-we-offer" className="py-12 flex flex-col gap-8  content">
             <h1 className="text-mobile/h1 text-center md:text-left text-black text-reveal-animation">{offeringSection?.heading} </h1>
-            <div className="flex justify-center md:justify-evenly  flex-wrap gap-10 hotelSelection">
+            <div className="flex justify-center md:justify-between  flex-wrap gap-10 hotelSelection">
                 {offeringSection?.offers?.map((card, index) => (
                     <Card
                         key={index}

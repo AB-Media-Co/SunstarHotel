@@ -1,6 +1,6 @@
+import { Helmet } from "react-helmet";
 import useUpdatePagesHook from "../../ApiHooks/useUpdatePagesHook";
 import BannerSection from "../../Components/BannerSection";
-import {  businessPlatformFeatures } from "../../Data/CoorporateBooking";
 import BusinessPlatform from "./Components/BusinessPlatform";
 import SunstarEnquiryForm from "./Components/SunstarEnquiryForm";
 
@@ -9,11 +9,17 @@ const CorporateBooking = () => {
 
   return (
     <div>
+         <Helmet>
+          <title>Coorporate Booking</title>
+          <meta name="" content={``} />
+          <meta name="" content={``} />
+        </Helmet>
       <BannerSection
         data={CoorporateBooking?.CoorporateBookingHeadContent}
         text="text-mobile/h2 md:text-desktop/h2"
         lineh="text-mobile/body/1 md:leading-[50px]"
         paddTop="pt-[80px]"
+        imgClass="px-10"
       />
       <BannerSection
         data={CoorporateBooking?.CoorporateBookingDescription}
@@ -23,9 +29,10 @@ const CorporateBooking = () => {
         lineh="text-mobile/body/1 md:leading-[50px]"
         bg="bg-primary-white"
         paddTop="pt-0"
+        imgClass="px-10"
       />
       <hr className="content" />
-      <BusinessPlatform features={businessPlatformFeatures} />
+      <BusinessPlatform features={CoorporateBooking?.BusinessPlatformSection} />
       <SunstarEnquiryForm />
     </div>
   );

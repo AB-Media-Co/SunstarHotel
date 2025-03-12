@@ -53,6 +53,20 @@ const OurValueModal = ({ open, handleClose, initialData, onSave }) => {
   };
 
   const handleSaveChanges = () => {
+    // Check hero section description word count
+    const heroWordCount = heroSectionDescription.trim().split(/\s+/).length;
+    
+    // Check value descriptions word count
+    const hasLongValueDesc = valueData.some(item => {
+      const wordCount = item.description.trim().split(/\s+/).length;
+      return wordCount > 50;
+    });
+
+    if (heroWordCount > 80 || hasLongValueDesc) {
+      alert('Hero section description should not exceed 80 words and value descriptions should not exceed 50 words');
+      return;
+    }
+
     const updatedData = { heading, valueData, heroSectionDescription };
     onSave(updatedData);
     handleClose();
@@ -60,23 +74,28 @@ const OurValueModal = ({ open, handleClose, initialData, onSave }) => {
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>Edit Our Core Values</DialogTitle>
+      <DialogTitle>Why Sunstar Page</DialogTitle>
       <DialogContent dividers>
-        <Box sx={{ my: 2 }}>
-          <TextField
-            label="Heading"
-            variant="outlined"
-            fullWidth
-            value={heading}
-            onChange={handleHeadingChange}
-            sx={{ mb: 3 }}
-          />
+        <Box sx={{}}>
+          <h1 className='text-desktop/h4 py-6'>Hero Section Description</h1>
+
           <TextField
             label="Hero Section Description"
             variant="outlined"
             fullWidth
             value={heroSectionDescription}
             onChange={handleDescriptionChange}
+            sx={{ mb: 3 }}
+            helperText={`${heroSectionDescription.trim().split(/\s+/).length}/80 words`}
+            error={heroSectionDescription.trim().split(/\s+/).length > 80}
+          />
+          <h1 className='text-desktop/h4 pb-10'>Our Value Section</h1>
+          <TextField
+            label="Heading"
+            variant="outlined"
+            fullWidth
+            value={heading}
+            onChange={handleHeadingChange}
             sx={{ mb: 3 }}
           />
 
@@ -96,6 +115,8 @@ const OurValueModal = ({ open, handleClose, initialData, onSave }) => {
                   value={item.description}
                   onChange={(e) => handleValueChange(index, 'description', e.target.value)}
                   sx={{ mr: 2, flex: 2 }}
+                  helperText={`${item.description.trim().split(/\s+/).length}/50 words`}
+                  error={item.description.trim().split(/\s+/).length > 50}
                 />
                 <IconButton
                   color="error"
@@ -157,7 +178,7 @@ const OurValue = () => {
     <div >
 
       <div className='myGlobalButton' onClick={handleOpenModal}>
-        Edit Core Values
+        Why Sunstar Page
       </div>
 
       {localData && (

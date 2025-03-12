@@ -65,7 +65,17 @@ const WhatWeOffering = () => {
     setError(null);
     setSuccess(null);
 
-    console.log("Data being submitted:", offerings); // Debugging: Check the data
+    // Check word count for each offering
+    const hasLongDescription = offerings.offers.some(offering => {
+      const wordCount = offering.description.trim().split(/\s+/).length;
+      return wordCount > 100;
+    });
+
+    if (hasLongDescription) {
+      setError('Description should not exceed 100 words');
+      setSubmitLoading(false);
+      return;
+    }
 
     try {
       if (updateOfferingSection) {
@@ -93,16 +103,16 @@ const WhatWeOffering = () => {
     <div>
       {/* This button opens the modal */}
       <div onClick={handleOpen} className="myGlobalButton">
-        Update What We Offers Section
+        What We Offers Section
       </div>
 
       {/* Wrap the entire dialog content in a form */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
         <Box component="form" onSubmit={handleSubmit}>
-          <DialogTitle>Update What We Offers Section</DialogTitle>
+          <DialogTitle>What We Offers Section</DialogTitle>
           <DialogContent>
             <Typography variant="h5" gutterBottom>
-              Update What We Offers Section
+              What We Offers Section
             </Typography>
             <TextField
               label="Heading"
@@ -144,6 +154,8 @@ const WhatWeOffering = () => {
                   rows={4}
                   value={offering.description}
                   onChange={(e) => handleFieldChange(index, 'description', e.target.value)}
+                  helperText={`${offering.description.trim().split(/\s+/).length}/100 words`}
+                  error={offering.description.trim().split(/\s+/).length > 100}
                 />
 
                 {/* Image preview */}

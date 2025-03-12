@@ -50,7 +50,7 @@ const ImageGallery = () => {
                         alt=""
                         className="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
                       />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300 rounded-xl" />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 transition-opacity duration-300 rounded-xl" />
                     </div>
                   </div>
                 );

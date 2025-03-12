@@ -7,7 +7,7 @@ const HeroSection = ({ title, highlightText, description, imageSrc }) => {
 
     return (
         <div className="w-full bg-[#6EC4C2] py-20 px-6 md:px-12 lg:px-20 relative overflow-hidden">
-            <div className="max-w-7xl mx-auto flex flex-col md:pt-20 lg:flex-row items-center justify-between gap-12">
+            <div className="max-w-7xl mx-auto flex flex-col md:pt-20 lg:flex-row items-center mt-6 md:mt-0 justify-between  md:gap-12">
                 {/* Left Text Section */}
                 <motion.div 
                     initial={{ opacity: 0, x: -50 }} 
@@ -36,7 +36,7 @@ const HeroSection = ({ title, highlightText, description, imageSrc }) => {
                             );
                         })}
                     </h1>
-                    <p className="text-mobile/body/2 md:text-desktop/body/large text-primary-white mb-6 whitespace-pre-line animation-on-scroll-Section1 leading-relaxed">
+                    <p className="text-mobile/body/2 text-start md:text-desktop/body/large text-primary-white mb-6 whitespace-pre-line animation-on-scroll-Section1 leading-relaxed">
                         {description}
                     </p>
                 </motion.div>

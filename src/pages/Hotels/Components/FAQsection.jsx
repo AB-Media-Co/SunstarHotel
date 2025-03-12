@@ -27,7 +27,7 @@ const FAQSection = ({ faqs }) => {
                     You need to come at least once in your life
                 </p>
                 {/* FAQ List */}
-                {faqs   ? (
+                {faqs ? (
                     <div className="flex flex-col gap-4">
                         {faqs.slice(0, showMore ? faqs.length : 5).map((faq, index) => (
                             <div
@@ -69,27 +69,27 @@ const FAQSection = ({ faqs }) => {
                                 </AnimatePresence>
                             </div>
                         ))}
-                        {faqs.length > 5 && (
+                        {/* {faqs.length > 5 && (
                             <button
                                 onClick={() => setShowMore(!showMore)}
                                 className="mt-4 text-blue-500 hover:underline"
                             >
                                 {showMore ? "Show Less" : "Show More"}
                             </button>
-                        )}
+                        )} */}
                     </div>
                 ) : (
                     <>No FAQs</>
                 )}
+                {faqs?.length > 5 && (
+                    <button
+                        onClick={handleViewMore}
+                        className="mx-auto md:mx-0 mt-4 px-4 py-2 bg-primary-green text-primary-white rounded  focus:outline-none"
+                    >
+                        {showMore ? "View Less" : "View More"}
+                    </button>
+                )}
             </div>
-            {faqs?.length > 5 && (
-                <button
-                    onClick={handleViewMore}
-                    className="mx-auto md:mx-0 mt-4 px-4 py-2 bg-primary-green text-primary-white rounded  focus:outline-none"
-                >
-                    {showMore ? "View Less" : "View More"}
-                </button>
-            )}
         </div >
     );
 };

@@ -23,7 +23,7 @@ export const useCreateOfferAndDeal = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['offersAndDeals']);
-      toast.success("Offer/Deal created successfully");
+      toast.success('Offer/Deal created successfully');
     },
   });
 };
@@ -37,7 +37,7 @@ export const useUpdateOfferAndDeal = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['offersAndDeals']);
-      toast.success("Offer/Deal updated successfully");
+      toast.success('Offer/Deal updated successfully');
     },
   });
 };
@@ -51,7 +51,7 @@ export const useDeleteOfferAndDeal = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['offersAndDeals']);
-      toast.success("Offer/Deal deleted successfully");
+      toast.success('Offer/Deal deleted successfully');
     },
   });
 };
@@ -61,7 +61,6 @@ export const getSingleOfferAndDealById = async (id) => {
   return response.data;
 };
 
-
 export const useOfferCodesForHotel = () => {
   return useMutation({
     mutationFn: async (hotelId) => {
@@ -69,35 +68,43 @@ export const useOfferCodesForHotel = () => {
       return response.data;
     },
     onSuccess: () => {
-    //   toast.success("Offer codes retrieved successfully");
+      // Optionally show toast or perform other actions
     },
   });
 };
 
+/**
+ * Updated hook to include `checkInDate` along with hotelId, rate, and offerCode.
+ * This supports the backend logic for last-minute/early-booker deals.
+ */
 export const useDiscountedRate = () => {
-    return useMutation({
-      mutationFn: async ({ hotelId, rate, offerCode }) => {
-        const response = await axiosInstance.post('/api/deals/discountedRate', { hotelId, rate, offerCode });
-        return response.data;
-      }
-    
-    });
-  };
-  
-  export const useSendOtp = () => {
-    return useMutation({
-      mutationFn: async (phone) => {
-        const response = await axiosInstance.post('/api/deals/sendOtp', { phone });
-        return response.data;
-      },
-    });
-  };
-  
-  export const useVerifyOtp = () => {
-    return useMutation({
-      mutationFn: async ({ phone, code }) => {
-        const response = await axiosInstance.post('/api/deals/verifyOtp', { phone, code });
-        return response.data;
-      },
-    });
-  };
+  return useMutation({
+    mutationFn: async ({ hotelId, rate, offerCode, checkInDate }) => {
+      const response = await axiosInstance.post('/api/deals/discountedRate', {
+        hotelId,
+        rate,
+        offerCode,
+        checkInDate, // Now required for eligibility checks on the backend
+      });
+      return response.data;
+    },
+  });
+};
+
+export const useSendOtp = () => {
+  return useMutation({
+    mutationFn: async (phone) => {
+      const response = await axiosInstance.post('/api/deals/sendOtp', { phone });
+      return response.data;
+    },
+  });
+};
+
+export const useVerifyOtp = () => {
+  return useMutation({
+    mutationFn: async ({ phone, code }) => {
+      const response = await axiosInstance.post('/api/deals/verifyOtp', { phone, code });
+      return response.data;
+    },
+  });
+};

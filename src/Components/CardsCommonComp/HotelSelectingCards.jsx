@@ -1,75 +1,67 @@
 /* eslint-disable react/prop-types */
-import { Star, Wifi, LocalParking, Restaurant, Pool, KingBed } from "@mui/icons-material";
-import Icon from "../Icons";
-import { Link } from "react-router-dom";
+import { Star } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGetHotels } from "../../ApiHooks/useHotelHook2";
+import Calendar from "../Calendar";
 
-// Updated getAmenityIcon function to support objects
-const getAmenityIcon = (amenity) => {
-  // Extract label if amenity is an object
-  const amenityLabel = typeof amenity === "object" && amenity !== null ? amenity.label : amenity;
-  const amenityMap = {
-    wifi: <Wifi fontSize="small" />,
-    parking: <LocalParking fontSize="small" />,
-    restaurant: <Restaurant fontSize="small" />,
-    pool: <Pool fontSize="small" />,
-    "king bed": <KingBed fontSize="small" />,
-  };
-
-  for (const [key, icon] of Object.entries(amenityMap)) {
-    if (amenityLabel.toLowerCase().includes(key)) {
-      return icon;
-    }
-  }
-
-  return null;
-};
-
-const HotelCard = ({ hotel }) => {
+const HotelCard = ({ hotel, close }) => {
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 1.3, ease: "easeInOut" } },
   };
+  const [openCalender, setOpenCalender] = useState(false);
+  const [, setCheckIn] = useState(null);
+  const [, setCheckOut] = useState(null);
 
-  // Ensure amenities are handled as objects
+
+  console.log("hi")
+  useEffect(() => {
+    const storedCheckIn = localStorage.getItem("checkInDate");
+    const storedCheckOut = localStorage.getItem("checkOutDate");
+    if (storedCheckIn && storedCheckOut) {
+      setCheckIn(storedCheckIn);
+      setCheckOut(storedCheckOut);
+    }
+  }, []);
+
   const visibleAmenities = hotel?.amenities?.slice(0, 3) || [];
   const remainingAmenitiesCount = (hotel?.amenities?.length || 0) - visibleAmenities.length;
 
+  // const navigate = useNavigate();
+  const handleClick = () => {
+    // navigate(`/hotels/${hotel.hotelCode}`, { replace: true });
+    localStorage.setItem("hotelInfo", JSON.stringify(hotel));
+    setOpenCalender(true).then(() => {
+      close()
+
+    });
+  };
+
   return (
     <motion.div
-      className="bg-primary-white rounded-2xl shadow-lg overflow-hidden w-full max-w-md transition-transform duration-300 hover:scale-105 flex flex-col"
+      className="bg-primary-white rounded-2xl shadow-lg overflow-hidden w-full h-full transition-transform duration-300 hover:scale-105 flex flex-col"
       variants={cardVariants}
       initial="hidden"
       animate="visible"
     >
       <img src={hotel?.images[0]} alt={hotel.name} className="w-full h-48 object-cover" />
-      <div className="p-4 flex flex-col gap-4 flex-grow">
-        <div className="flex justify-between flex-row items-start gap-4">
-          <div className="text-start flex flex-col gap-2 items-start">
+      <div className="p-4 flex flex-col flex-grow justify-between">
+        <div>
+          <div className="flex justify-between items-start gap-4">
             <h1 className="text-xl font-bold text-black">{hotel?.name}</h1>
-          
-          </div>
-          <div className="flex items-center space-x-2">
             <span className="bg-primary-green text-primary-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
               <Star className="text-primary-yellow text-sm mr-1" />
               {hotel.rating}
             </span>
           </div>
-        </div>
-
-        <div className="md:mt-2">
-          <ul className="flex items-center mt-2">
+          <ul className="flex items-center mt-2 flex-wrap">
             {visibleAmenities.length > 0 ? (
               visibleAmenities.map((amenity, index) => {
                 const label = typeof amenity === "object" ? amenity.value : amenity;
                 return (
-                  <li
-                    key={index}
-                    className="bg-gradient-to-r text-start from-primary-green to-primary-green text-primary-white text-xs px-3 py-2 rounded-full m-1 flex items-center gap-1"
-                  >
-                    {getAmenityIcon(amenity)}
+                  <li key={index} className="bg-gradient-to-r from-primary-green to-primary-green text-primary-white text-xs px-3 py-1 rounded-full m-1">
                     <span>{label}</span>
                   </li>
                 );
@@ -78,13 +70,12 @@ const HotelCard = ({ hotel }) => {
               <li>No amenities listed</li>
             )}
             {remainingAmenitiesCount > 0 && (
-              <li className="text-gray-600 text-xs">+{remainingAmenitiesCount} more</li>
+              <li className="text-gray-600 text-xs m-1">+{remainingAmenitiesCount} more</li>
             )}
           </ul>
         </div>
-
-        <div className="md:mt-4 w-full flex  flex-col gap-4  justify-between items-center">
-          <div className="text-start w-full">
+        <div className="mt-4 w-full">
+          <div className="text-start">
             <span className="text-2xl leading-none font-bold text-primary-green">
               ₹ {hotel?.price}
               <span className="text-gray-400 text-sm font-medium"> / night onwards</span>
@@ -93,19 +84,30 @@ const HotelCard = ({ hotel }) => {
             </span>
             <p className="text-primary-green text-[12px] font-semibold">Lowest Price, Guaranteed!</p>
           </div>
-          <Link
-            to={`/hotels/${hotel.hotelCode}`}
-            className="bg-primary-green w-full text-primary-white px-4 py-2 rounded-lg shadow-md flex justify-center items-center transition duration-300 hover:bg-primary-dark-green"
+          <button
+            onClick={handleClick}
+            className="bg-primary-green cursor-pointer w-full text-primary-white px-4 py-2 rounded-lg shadow-md flex justify-center items-center transition duration-300 hover:bg-primary-dark-green mt-4"
           >
             Select Hotel
-          </Link>
+          </button>
         </div>
       </div>
+
+      {openCalender && (
+        <div className="fixed inset-0 flex justify-center items-center z-50">
+          <Calendar
+            setCheckInDate={setCheckIn}
+            setCheckOutDate={setCheckOut}
+            setOpenCalender={setOpenCalender}
+            hotelCode={hotel.hotelCode}
+          />
+        </div>
+      )}
     </motion.div>
   );
 };
 
-const HotelSelectingCards = ({ data }) => {
+const HotelSelectingCards = ({ data, close }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const { data: hotelsFromHook } = useGetHotels();
@@ -114,13 +116,13 @@ const HotelSelectingCards = ({ data }) => {
   return (
     <motion.div
       ref={ref}
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6 p-6"
+      className="grid grid-cols-1 items-stretch bg-primary-white sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6 p-6"
       initial={{ opacity: 0 }}
       animate={isInView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 1.3, ease: "easeInOut" }}
     >
       {hotels?.hotels?.map((hotel, index) => (
-        <HotelCard key={index} hotel={hotel} />
+        <HotelCard key={index} hotel={hotel} close={close} />
       ))}
     </motion.div>
   );

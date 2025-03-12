@@ -1,28 +1,10 @@
 /* eslint-disable react/prop-types */
-import { Add, Delete, Edit, StarRate, LocationOn, KingBed, Wifi, LocalParking, Restaurant, Pool, AccessTime } from "@mui/icons-material";
+import { Add, Delete, Edit, StarRate,  AccessTime } from "@mui/icons-material";
 import { useGetHotels } from "../../../ApiHooks/useHotelHook2";
 import { useState } from "react";
 
 // Helper function to get icon for amenity
-const getAmenityIcon = (amenity) => {
-  const amenityLabel = typeof amenity === 'object' && amenity !== null ? amenity.label : amenity;
 
-  const amenityMap = {
-    "wifi": <Wifi fontSize="small" />,
-    "parking": <LocalParking fontSize="small" />,
-    "restaurant": <Restaurant fontSize="small" />,
-    "pool": <Pool fontSize="small" />,
-    "king bed": <KingBed fontSize="small" />,
-  };
-
-  for (const [key, icon] of Object.entries(amenityMap)) {
-    if (amenityLabel.toLowerCase().includes(key)) {
-      return icon;
-    }
-  }
-
-  return null; 
-};
 
 const Card = ({ item, type, onEdit, onDelete }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -52,14 +34,14 @@ const Card = ({ item, type, onEdit, onDelete }) => {
       </div>
 
       <div className="relative group">
-        {item.discountedPrice && (
+        {/* {item.discountedPrice && (
           <div className="absolute top-3 left-0 z-10 bg-gradient-to-r from-red-600 to-red-500 text-white text-xs font-bold px-3 py-1 rounded-r-lg shadow-md flex items-center">
             <span className="mr-1">SALE</span>
             <span className="text-lg font-bold">
               {Math.round((1 - item.discountedPrice / item.price) * 100)}%
             </span>
           </div>
-        )}
+        )} */}
         <div className="h-48 sm:h-56 overflow-hidden">
           <img
             src={item.images?.[0] || 'https://via.placeholder.com/300?text=No+Image'}
@@ -81,7 +63,7 @@ const Card = ({ item, type, onEdit, onDelete }) => {
           </div>
         </div>
 
-        <div className="mb-auto">
+        <div className="">
        
           {type === 'hotel' && (
             <div className="flex items-center mt-2">
@@ -97,9 +79,10 @@ const Card = ({ item, type, onEdit, onDelete }) => {
           <div className="flex items-center">
             {item.discountedPrice ? (
               <div className="flex flex-col">
-                <span className="line-through text-red-500 text-sm">₹{item.price.toLocaleString()}</span>
+                {/* <span className="line-through text-red-500 text-sm">₹{item.price.toLocaleString()}</span> */}
                 <span className="text-green-600 font-bold text-lg">
-                  ₹{item.discountedPrice.toLocaleString()}
+                  {/* ₹{item.discountedPrice.toLocaleString()} */}
+                  ₹{item.price.toLocaleString()}
                   <span className="text-xs text-gray-600 ml-1">/night</span>
                 </span>
               </div>
@@ -130,8 +113,7 @@ const Card = ({ item, type, onEdit, onDelete }) => {
                     key={index}
                     className="bg-indigo-50 text-indigo-700 text-xs px-3 py-1.5 rounded-full border border-indigo-100 flex items-center gap-1 transition-colors duration-200 hover:bg-indigo-100"
                   >
-                    {getAmenityIcon(amenity)}
-                    {typeof amenity === 'object' ? amenity.label : amenity}
+                    {typeof amenity === 'object' ? amenity.value : amenity}
                   </li>
                 ))}
                 {item.amenities.length > 3 && (

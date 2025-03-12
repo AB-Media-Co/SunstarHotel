@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
 import { useDiscountedRate, useOfferCodesForHotel, useSendOtp, useVerifyOtp } from '../../../ApiHooks/useOffersAndDealsHook';
 import toast from 'react-hot-toast';
@@ -84,7 +83,7 @@ export const OfferCode = ({ hotelDetail }) => {
       }
     });
   };
-  
+
 
   // Existing handlers remain unchanged
   const handleApplyCode = async () => {
@@ -141,72 +140,158 @@ export const OfferCode = ({ hotelDetail }) => {
   // If phone is not verified, show the verification UI only
   if (!phoneVerified) {
     return (
-      <div className="flex flex-col min-h-auto">
-        <div className="flex items-center mb-8">
-          <div
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-cyan-600 text-white mr-3"
-            style={{ backgroundColor: primaryColor }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-              <line x1="7" y1="7" x2="7.01" y2="7"></line>
-            </svg>
-          </div>
+      <div className="flex flex-col min-h-auto ">
+        <div className="flex items-center mb-6">
+          <div className="w-1 h-8 bg-primary-green rounded-full mr-3" style={{ backgroundColor: "#058FA2" }}></div>
           <h2 className="text-3xl font-bold text-gray-800">Exclusive Offers</h2>
         </div>
 
-        <button
-          onClick={() => setShowModal(true)}
-          className="px-4 py-2 text-start rounded-lg"
-        >
-          <span className="text-primary-green underline font-semibold">Click Here</span> Verify Number to Get Offers and Discounts
-        </button>
+        <div className="mb-6 p-4 bg-white rounded-lg shadow-sm border ">
+          <div className="flex items-center mb-4">
+            <div className="bg-cyan-100 p-2 rounded-full mr-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#058FA2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-semibold text-lg text-gray-800">Verify Your Phone Number</h3>
+              <p className="text-gray-600 text-sm">Unlock special discounts exclusive to verified users</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-4 my-4">
+            <div className="flex items-center flex-grow gap-2 bg-gray-50 p-2 rounded-lg">
+              <div className="h-10 w-10 bg-cyan-600 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </div>
+              <div className="ml-2">
+                <p className="text-sm font-medium text-gray-600">Exclusive Offers</p>
+                <p className="text-xs text-gray-500">Up to 25% off on bookings</p>
+              </div>
+            </div>
+
+            <div className="flex items-center flex-grow gap-2 bg-gray-50 p-2 rounded-lg">
+              <div className="h-10 w-10 bg-cyan-600 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+              <div className="ml-2">
+                <p className="text-sm font-medium text-gray-600">Secure Process</p>
+                <p className="text-xs text-gray-500">OTP verification for security</p>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setShowModal(true)}
+            className="w-full py-3 bg-primary-dark-green text-white font-semibold rounded-lg shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+            style={{ backgroundColor: "#058FA2" }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.94z"></path>
+            </svg>
+            Verify Phone Number
+          </button>
+        </div>
+
         {showModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded-lg w-80">
+            <div className="bg-white p-6 rounded-lg w-96 shadow-2xl">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-gray-800">Phone Verification</h2>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+
               {!showOTPSection ? (
                 <div>
-                  <h2 className="text-xl font-bold mb-4">Enter Your Phone Number</h2>
-                  <input
-                    type="text"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="Phone Number"
-                    className="w-full p-2 border border-gray-300 rounded mb-4"
-                  />
+                  <div className="mb-6 text-center">
+                    <div className="inline-block p-3 rounded-full bg-cyan-100 mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#058FA2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path>
+                      </svg>
+                    </div>
+                    <p className="text-gray-600 mb-4">Enter your phone number to receive a verification code</p>
+                  </div>
+
+                  <div className="relative mb-6">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <span className="text-gray-500">+91</span>
+                    </div>
+                    <input
+                      type="text"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      placeholder="Your phone number"
+                      className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all"
+                      maxLength="10"
+                    />
+                  </div>
+
                   <button
                     onClick={handleSendOTP}
-                    className="w-full px-4 py-2 bg-primary-dark-green text-white rounded"
+                    className="w-full py-3 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white font-semibold rounded-lg shadow hover:shadow-lg transition-all"
                   >
-                    Proceed
+                    Send Verification Code
                   </button>
+
+                  <p className="text-xs text-gray-500 text-center mt-4">
+                    By continuing, you agree to our Terms of Service and Privacy Policy
+                  </p>
                 </div>
               ) : (
                 <div>
-                  <h2 className="text-xl font-bold mb-4">Enter OTP</h2>
-                  <input
-                    type="text"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder="OTP"
-                    className="w-full p-2 border border-gray-300 rounded mb-4"
-                  />
+                  <div className="mb-6 text-center">
+                    <div className="inline-block p-3 rounded-full bg-cyan-100 mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#058FA2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0110 0v4"></path>
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Enter Verification Code</h3>
+                    <p className="text-gray-600 mb-4">We've sent a 6-digit code to +91 {phoneNumber}</p>
+                  </div>
+
+                  <div className="mb-6">
+                    <input
+                      type="text"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      placeholder="Enter 6-digit OTP"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg text-center text-lg tracking-widest focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all"
+                      maxLength="6"
+                    />
+                  </div>
+
                   <button
                     onClick={handleVerifyOTP}
-                    className="w-full px-4 py-2 bg-primary-dark-green text-white rounded"
+                    className="w-full py-3 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white font-semibold rounded-lg shadow hover:shadow-lg transition-all"
                   >
-                    Verify OTP
+                    Verify & Continue
                   </button>
+
+                  <div className="mt-4 text-center">
+                    <p className="text-gray-600 text-sm">
+                      Didn't receive the code?{" "}
+                      <button
+                        onClick={handleSendOTP}
+                        className="text-cyan-600 font-medium hover:underline"
+                      >
+                        Resend
+                      </button>
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
@@ -216,7 +301,6 @@ export const OfferCode = ({ hotelDetail }) => {
     );
   }
 
-  // Render the OfferCode UI once phone is verified
   return (
     <div className="flex flex-col bg-white w-full mx-auto">
       <div className="flex items-center mb-8">
@@ -225,7 +309,7 @@ export const OfferCode = ({ hotelDetail }) => {
           style={{ backgroundColor: primaryColor }}
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
+            xmlns="http://www.w3.org/2000/svg  "
             width="20"
             height="20"
             viewBox="0 0 24 24"
@@ -241,7 +325,6 @@ export const OfferCode = ({ hotelDetail }) => {
         </div>
         <h2 className="text-3xl font-bold text-gray-800">Exclusive Offers</h2>
       </div>
-
       {!appliedOffer && (
         <div className="relative mb-8">
           <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-3">
@@ -257,7 +340,7 @@ export const OfferCode = ({ hotelDetail }) => {
               />
               <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="http://www.w3.org/2000/svg  "
                   width="20"
                   height="20"
                   viewBox="0 0 24 24"
@@ -312,7 +395,7 @@ export const OfferCode = ({ hotelDetail }) => {
                     <span className="text-xs font-medium flex items-center" style={{ color: primaryColor }}>
                       Click to apply
                       <svg
-                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns="http://www.w3.org/2000/svg  "
                         width="16"
                         height="16"
                         viewBox="0 0 24 24"
@@ -346,7 +429,7 @@ export const OfferCode = ({ hotelDetail }) => {
               className="flex items-center text-sm px-4 py-2 bg-red-50 text-red-600 rounded-full hover:bg-red-100 transition-colors"
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="http://www.w3.org/2000/svg  "
                 width="16"
                 height="16"
                 viewBox="0 0 24 24"
@@ -390,7 +473,7 @@ export const OfferCode = ({ hotelDetail }) => {
             </div>
             <div className="mt-6 pt-4 border-t border-cyan-200 flex items-center">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="http://www.w3.org/2000/svg  "
                 width="20"
                 height="20"
                 viewBox="0 0 24 24"

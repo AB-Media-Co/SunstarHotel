@@ -1,6 +1,10 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '../services/axiosInstance';
 import toast from 'react-hot-toast';
+import Loader from '../Components/Loader';
+
+
 
 const fetchWebsiteData = async () => {
   const res = await axiosInstance.get('/api/websiteData');
@@ -13,9 +17,11 @@ const useUpdatePagesHook = () => {
   const { data: websiteData, isLoading, error } = useQuery({
     queryKey: ['websiteData'],
     queryFn: fetchWebsiteData,
-    staleTime: 1000 * 60, 
+    staleTime: 1000 * 60,
   });
 
+
+  // Mutations remain the same
   const addAmenityMutation = useMutation({
     mutationFn: async (amenity) => {
       const res = await axiosInstance.post('/api/websiteData/amenities', amenity);
@@ -44,7 +50,6 @@ const useUpdatePagesHook = () => {
     },
   });
 
-  // Delete an amenity
   const deleteAmenityMutation = useMutation({
     mutationFn: async (id) => {
       const res = await axiosInstance.delete(`/api/websiteData/amenities/${id}`);
@@ -58,9 +63,6 @@ const useUpdatePagesHook = () => {
       toast.error(`Failed to delete amenity: ${error.message}`);
     },
   });
-
-
-
 
   const addGalleryImagesMutation = useMutation({
     mutationFn: async (images) => {
@@ -76,7 +78,6 @@ const useUpdatePagesHook = () => {
     },
   });
 
-
   const whatMakesUsShineMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/shine', Data);
@@ -90,7 +91,6 @@ const useUpdatePagesHook = () => {
       toast.error(`Failed to add: ${error.message}`);
     },
   });
-
 
   const HeroSectionMutation = useMutation({
     mutationFn: async (Data) => {
@@ -190,7 +190,6 @@ const useUpdatePagesHook = () => {
     },
   });
 
-
   const updateContactUsDetailMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/contactUs', Data);
@@ -206,6 +205,14 @@ const useUpdatePagesHook = () => {
   });
 
 
+    // If loading, return the Loader component
+    if (isLoading) {
+      return {
+        loading: true,
+        Loader: Loader // Returning Loader component
+      };
+    }
+  
 
   return {
     websiteData,
@@ -220,8 +227,7 @@ const useUpdatePagesHook = () => {
     homePageDescription: websiteData?.homePageDescription || [],
     faqs: websiteData?.faqs || [],
     ContactUsDetail: websiteData?.ContactUsDetail || [],
-
-
+    
     loading: isLoading,
     error,
     addAmenity: addAmenityMutation.mutateAsync,

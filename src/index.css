@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* body {
+  font-family: 'Poppins', sans-serif;
+} */
 
 
 .content {
@@ -14,5 +17,5 @@ html {
 
 
 .myGlobalButton {
-  @apply bg-white my-2 w-full text-center py-4 px-2 cursor-pointer rounded-lg shadow-lg hover:shadow-xl font-semibold border text-2xl;
+  @apply h-[150px]  bg-white rounded-xl text-center shadow-lg hover:shadow-xl cursor-pointer font-semibold p-10 text-2xl;
 }

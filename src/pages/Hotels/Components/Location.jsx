@@ -14,6 +14,7 @@ const Location = ({ address }) => {
         restaurants,
         activities,
         nightlife,
+        city
     } = address || {};
 
     const zoom = 20;
@@ -277,7 +278,7 @@ const Location = ({ address }) => {
             {/* Top Section */}
             <div className="w-full mb-5 flex flex-col gap-1">
                 <h2 className="text-desktop/h3 font-bold mb-1">Location</h2>
-                <p className="text-primary-gray text-desktop/h6/medium">{hotelAddress}</p>
+                <p className="text-primary-gray text-desktop/h6/medium">{hotelAddress }</p>
                 <a
                     onClick={viewHotelLocationOnMap}
                     className="my-2 underline items-center text-primary-green font-bold text-lg cursor-pointer flex gap-2"
@@ -354,7 +355,7 @@ const Location = ({ address }) => {
                 </div>
 
                 {/* Right Side: Main Map Container */}
-                <div style={{ position: 'relative', height: '500px' }} className="md:w-[50%]">
+                <div style={{ position: 'relative', height: '510px' }} className="md:w-[50%]">
                     <div
                         ref={mapContainerRef}
                         style={{

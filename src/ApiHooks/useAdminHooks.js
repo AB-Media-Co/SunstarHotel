@@ -1,22 +1,25 @@
-// Updated React Query hooks for admin APIs
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   loginAdminAPI,
   registerAdminAPI,
   viewProfileApi,
-  allusersApi,
+  allUsersApi,
   editProfileApi,
   deleteProfileApi,
   editUserProfileByIdApi,
-  deleteUserProfileByIdApi
-} from '../Api/admin';
-
+  deleteUserProfileByIdApi,
+} from '../api/admin';
 
 // Login hook
 export const useAdminLogin = () => {
   return useMutation({
     mutationFn: loginAdminAPI,
+    onSuccess: (data) => {
+      localStorage.setItem('token', data.token); // Store token on successful login
+    },
+    onError: (error) => {
+      console.error('Login failed:', error.message);
+    },
   });
 };
 
@@ -24,87 +27,96 @@ export const useAdminLogin = () => {
 export const useAdminRegister = () => {
   return useMutation({
     mutationFn: registerAdminAPI,
+    onError: (error) => {
+      console.error('Registration failed:', error.message);
+    },
   });
 };
 
+// View admin profile hook
 export const useViewAdminProfile = () => {
   return useQuery({
     queryKey: ['adminProfile'],
     queryFn: viewProfileApi,
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    enabled: !!localStorage.getItem('token'), // Only run if token exists
+    onError: (error) => {
+      console.error('Failed to fetch profile:', error.message);
+    },
   });
 };
 
+// Fetch all users hook
 export const useFetchAllUsers = () => {
   return useQuery({
     queryKey: ['allUsers'],
-    queryFn: allusersApi,
+    queryFn: allUsersApi,
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    enabled: !!localStorage.getItem('token'), // Only run if token exists
+    onError: (error) => {
+      console.error('Failed to fetch all users:', error.message);
+    },
   });
 };
 
-// Hook to edit admin profile
+// Edit admin profile hook
 export const useEditAdminProfile = () => {
-  const queryClient = useQueryClient(); // Access query client
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: editProfileApi, // Function to send edit request
+    mutationFn: editProfileApi,
     onSuccess: () => {
-      // Invalidate the 'adminProfile' query to trigger a refetch
-      queryClient.invalidateQueries(['adminProfile']);
+      queryClient.invalidateQueries(['adminProfile']); // Refresh profile data
     },
     onError: (error) => {
-      console.error('Failed to update profile:', error.response?.data?.message || error.message);
+      console.error('Failed to update profile:', error.message);
     },
   });
 };
 
-
+// Delete admin profile hook
 export const useDeleteAdminProfile = () => {
-  const queryClient = useQueryClient(); // Access query client
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteProfileApi, // Function to send delete request
+    mutationFn: deleteProfileApi,
     onSuccess: () => {
-      // Optionally clear 'adminProfile' cache or handle logout flow
-      queryClient.removeQueries(['adminProfile']);
+      queryClient.removeQueries(['adminProfile']); // Clear profile cache
+      localStorage.removeItem('token'); // Remove token on self-deletion
     },
     onError: (error) => {
-      console.error('Failed to delete profile:', error.response?.data?.message || error.message);
+      console.error('Failed to delete profile:', error.message);
     },
   });
 };
 
-
-
-// Hook to edit a user profile by ID
+// Edit a user profile by ID hook
 export const useEditUserProfileById = () => {
-  const queryClient = useQueryClient(); // Access query client
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: editUserProfileByIdApi, // Function to send edit request
+    mutationFn: editUserProfileByIdApi,
     onSuccess: () => {
-      // Invalidate the 'allUsers' query to refresh the user list
-      queryClient.invalidateQueries(['allUsers']);
+      queryClient.invalidateQueries(['allUsers']); // Refresh all users list
+      queryClient.invalidateQueries(['adminProfile']); // Refresh current user's profile if modified
     },
     onError: (error) => {
-      console.error('Failed to update user profile:', error.response?.data?.message || error.message);
+      console.error('Failed to update user profile:', error.message);
     },
   });
 };
 
-// Hook to delete a user profile by ID
+// Delete a user profile by ID hook
 export const useDeleteUserProfileById = () => {
-  const queryClient = useQueryClient(); // Access query client
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteUserProfileByIdApi, // Function to send delete request
+    mutationFn: deleteUserProfileByIdApi,
     onSuccess: () => {
-      // Invalidate the 'allUsers' query to refresh the user list
-      queryClient.invalidateQueries(['allUsers']);
+      queryClient.invalidateQueries(['allUsers']); // Refresh all users list
     },
     onError: (error) => {
-      console.error('Failed to delete user profile:', error.response?.data?.message || error.message);
+      console.error('Failed to delete user profile:', error.message);
     },
   });
 };

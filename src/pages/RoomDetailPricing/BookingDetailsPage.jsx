@@ -10,6 +10,7 @@ import { AddToYourStayOptions } from "./BookingDetailPageComponent/AddToYourStay
 import { GuestDetailsForm } from "./BookingDetailPageComponent/GuestDetailsForm";
 import { HotelDetailsCard } from "./BookingDetailPageComponent/HotelDetailsCard";
 import { usePricing } from "../../Context/PricingContext";
+import { Helmet } from "react-helmet";
 
 const calculateDays = (checkIn, checkOut) => {
   if (!checkIn || !checkOut) return 0;
@@ -21,12 +22,16 @@ const calculateDays = (checkIn, checkOut) => {
 
 const BookingDetailsPage = () => {
   const { ContactUsDetail } = useUpdatePagesHook();
-  const { details, hotelData } = usePricing();
+  const { details, hotelData, setEditAddPricing,
+    setDetails,
+    setSelectedRooms,
+    setGuestDetails } = usePricing(); 
   const hotelDetail = details[0];
-
   const navigate = useNavigate();
 
-
+  const getHotelDataLocal  = localStorage.getItem("hotelInfo")
+  const getHotelData  =  JSON.parse(getHotelDataLocal)
+ 
 
   const checkIn = localStorage.getItem("checkInDate");
   const checkOut = localStorage.getItem("checkOutDate");
@@ -57,22 +62,33 @@ const BookingDetailsPage = () => {
     }
   }, [isPaymentVisible]);
 
-    useEffect(() => {
-      if (!details || details.length === 0 || !hotelDetail) {
-        navigate(`/hotels/${hotelData?.hotelCode}`);
-      }
-    }, [details, hotelData, hotelDetail, navigate]);
-  
+
+  useEffect(() => {
     if (!details || details.length === 0 || !hotelDetail) {
-      return null; // or a loading indicator, if preferred
+      navigate(`/hotels/${getHotelData?.hotelCode}`);
     }
+  }, [details, hotelData, hotelDetail, navigate,getHotelData]);
+
+  if (!details || details.length === 0 || !hotelDetail) {
+    return null; // or a loading indicator, if preferred
+  }
+  console.log(getHotelData,"hi")
+
+
+
 
   return (
     <div className="p-4 content md:flex gap-5">
       <div className="flex flex-col gap-8">
+        <Helmet>
+          <title>Booking Details</title>
+          <meta name="" content={``} />
+          <meta name="" content={``} />
+        </Helmet>
         <HotelDetailsCard />
         <GuestDetailsForm />
-        <AddToYourStayOptions data={hotelDetail} />
+        {hotelDetail.addToYourStay.length > 0 && <AddToYourStayOptions data={hotelDetail} />}
+
         <OfferCode hotelDetail={hotelDetail} />
 
         <div className="lg:hidden">

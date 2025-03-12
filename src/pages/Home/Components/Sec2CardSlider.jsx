@@ -4,6 +4,7 @@ import CommonSwiper from "../../../Components/CommonSlider";
 import { LocationOnSharp, Restaurant, SmokeFreeSharp } from "@mui/icons-material";
 import { CctvIcon } from "lucide-react";
 import { useGetHotels } from "../../../ApiHooks/useHotelHook2";
+import { useNavigate } from "react-router-dom";
 
 export default function SwiperComponent() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -26,12 +27,13 @@ export default function SwiperComponent() {
     { label: "CCTV", icon: CctvIcon },
     { label: "Restaurant", icon: Restaurant },
   ];
+  const navigate = useNavigate()
 
-  const renderCard = (card, index) => (
-    <div
-      className="relative w-full"
+  const renderCard = (card, index) => {
+   return <div
+      className="relative w-full md:px-4"
       data-aos="fade-up"
-      data-aos-delay={index * 100} // Adjust the multiplier (100ms here) as needed
+      data-aos-delay={index * 100} 
     >
       <div
         className=" h-60 bg-center rounded-t-lg z-10 bg-cover bg-no-repeat "
@@ -45,19 +47,18 @@ export default function SwiperComponent() {
       </div>
 
       <div className="absolute top-[100%] w-full shadow-lg p-4 pt-8 h-[150px] bg-primary-white border rounded-b-lg flex flex-col gap-2">
-        {/* Title */}
-        <h2 className="text-mobile/h5 md:text-desktop/h5 font-bold text-start">
+        <h2 onClick={()=>navigate(`hotels/${card?.hotelCode}`)} className="text-mobile/h5 cursor-pointer hover:text-primary-green md:text-desktop/h5 font-bold text-start">
           {card.name}
         </h2>
 
-        {/* Location */}
         <div className="flex items-end gap-1 text-mobile/body/2 text-[#707070] font-semibold">
           <LocationOnSharp className="text-[#4DB8B6]" style={{ fontSize: "18px" }} />
-          <span>{card.location?.hotelAddress}</span>
+          <span className="truncate max-w-[200px]">{card.location?.hotelAddress}</span>
+          {/* <span>...</span> */}
         </div>
 
         {/* Price Section */}
-        <div className="flex items-center justify-end gap-3 mt-2 text-[#707070] font-semibold">
+        <div className={`flex items-center ${hotels?.hotels?.length === 3 ? 'justify-between' : 'justify-end'} gap-3 mt-2 text-[#707070] font-semibold`}>
           <span className="text-mobile/body/2">Starting From</span>
           <p className="text-desktop/body/1 font-bold text-[#4DB8B6]">
             ₹{card.price}
@@ -65,7 +66,7 @@ export default function SwiperComponent() {
         </div>
       </div>
 
-      <div className="absolute left-[77%] md:left-[84%] top-[3rem] z-40 flex flex-col items-center gap-[2px] w-[80px] p-4 bg-[#4DB8B6] rounded-xl shadow-lg">
+      <div className="absolute left-[77%] md:left-[86%] top-[3rem] z-40 flex flex-col items-center gap-[2px] w-[80px] p-4 bg-[#4DB8B6] rounded-xl shadow-lg">
         {features.map((feature, index) => (
           <div key={index} className="flex flex-col items-center">
             {feature.icon && <feature.icon className="text-primary-white" />}
@@ -77,11 +78,10 @@ export default function SwiperComponent() {
         ))}
       </div>
     </div>
-  );
+  };
 
 
   const { data: hotels } = useGetHotels();
-  console.log(hotels)
 
 
   return (
@@ -92,8 +92,14 @@ export default function SwiperComponent() {
         slidesPerViewDesktop={isMobile ? 1 : 3.5}
         spaceBetween={30}
         loop={false}
-        className="mySwiper"
-        cssMode={true} // Add this for Safari
+        className={`mySwiper hotelCardsHome`}
+        cssMode={true}
+        onInit={(swiper) => {
+          const wrapper = swiper.wrapperEl;
+          if (hotels?.hotels?.length === 3) {
+            wrapper.setAttribute('data-cards', '3');
+          }
+        }}
       />
     </div>
   );

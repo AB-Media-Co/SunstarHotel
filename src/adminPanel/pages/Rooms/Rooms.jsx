@@ -1,5 +1,4 @@
-// src/pages/RoomsPage.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Box,
@@ -14,7 +13,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { useGetHotels } from '../../../ApiHooks/useHotelHook2';
-import { useRooms, useUpdateRoom } from '../../../ApiHooks/useRoomsHook';
+import { useRooms, useUpdateRoom, useCreateRoom } from '../../../ApiHooks/useRoomsHook';
 import RoomCard from './RoomCard';
 import EditRooms from './EditRooms';
 
@@ -24,7 +23,6 @@ const StyledContainer = styled(Container)(({ theme }) => ({
   paddingBottom: theme.spacing(4),
   backgroundColor: '#fff',
   borderRadius: theme.shape.borderRadius,
-
 }));
 
 const HeaderBox = styled(Box)(({ theme }) => ({
@@ -59,8 +57,9 @@ const RoomsGrid = styled(Grid)(({ theme }) => ({
 export const Rooms = () => {
   const [selectedHotel, setSelectedHotel] = useState('');
   const [authCode, setAuthCode] = useState('');
-  const { data: hotels } = useGetHotels();
+  const [roomSaving, setIsRoomSaving] = useState(false);
 
+  const { data: hotels } = useGetHotels();
   const filteredHotels = hotels?.hotels?.filter((hotel) => hotel.hotelCode);
 
   useEffect(() => {
@@ -82,21 +81,48 @@ export const Rooms = () => {
     fromDate,
     toDate
   );
-
-  const uniqueRoomTypes = rooms
-    ? Array.from(new Map(rooms.map((item) => [item.RoomTypeID, item])).values())
+  console.log('Full Rooms Response:', roomsLoading);
+  const roomArray = Array.isArray(rooms?.rooms) ? rooms?.rooms : [];
+  // Handle both array and single object cases for Source
+  const apiDataRooms = rooms?.apiData?.RES_Response?.RoomInfo?.Source
+    ? Array.isArray(rooms.apiData.RES_Response.RoomInfo.Source)
+      ? rooms.apiData.RES_Response.RoomInfo.Source
+      : [rooms.apiData.RES_Response.RoomInfo.Source] // Wrap single object in array
     : [];
 
   const [editingRoom, setEditingRoom] = useState(null);
 
-  
+  // Initialize both update and create hooks
   const updateRoomMutation = useUpdateRoom(selectedHotel, authCode, fromDate, toDate);
+  const createRoomMutation = useCreateRoom(selectedHotel, authCode, fromDate, toDate);
 
+  // The handleSaveRoom function now checks if the room has an _id
+  // If it does, it calls the update endpoint; if not, it calls the create endpoint.
   const handleSaveRoom = (updatedRoom) => {
-    updateRoomMutation.mutate(updatedRoom, {
-      onSuccess: () => setEditingRoom(null),
-      onError: (error) => console.error('Error updating room:', error),
-    });
+    setIsRoomSaving(true);
+    if (updatedRoom._id) {
+      updateRoomMutation.mutate(updatedRoom, {
+        onSuccess: () => {
+          setEditingRoom(null);
+          setIsRoomSaving(false);
+        },
+        onError: (error) => {
+          console.error('Error updating room:', error);
+          setIsRoomSaving(false);
+        },
+      });
+    } else {
+      createRoomMutation.mutate(updatedRoom, {
+        onSuccess: () => {
+          setEditingRoom(null);
+          setIsRoomSaving(false);
+        },
+        onError: (error) => {
+          console.error('Error creating room:', error);
+          setIsRoomSaving(false);
+        },
+      });
+    }
   };
 
   return (
@@ -153,20 +179,22 @@ export const Rooms = () => {
               </Grid>
             </Grid>
           </Grid>
-          {/* Right Section: Add Room Button */}
           <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'left', md: 'right' } }}>
             <AddRoomButton
               variant="contained"
-              // color="success"
+              disabled={!selectedHotel}
               onClick={() =>
                 setEditingRoom({
                   RoomTypeID: '',
+                  RateTypeID: '',
                   RoomName: '',
                   RoomDescription: '',
                   defaultRate: '',
                   discountRate: '',
                   Amenities: [],
                   RoomImage: [],
+                  HotelCode: selectedHotel,
+                  source: '',
                 })
               }
             >
@@ -183,14 +211,22 @@ export const Rooms = () => {
           </Box>
         ) : (
           <RoomsGrid container spacing={3}>
-            {rooms &&
-              rooms
-                .filter((room) => room.HotelCode && room.HotelCode === selectedHotel)
-                .map((room) => (
-                  <Grid item xs={12} sm={6} md={4} key={room._id}>
-                    <RoomCard room={room} onEdit={() => setEditingRoom(room)} />
-                  </Grid>
-                ))}
+            {roomArray
+              .filter((room) => room.HotelCode && room.HotelCode === selectedHotel)
+              .map((room) => (
+                <Grid item xs={12} sm={6} md={4} key={room._id}>
+                  <RoomCard
+                    room={room}
+                    onEdit={() =>
+                      setEditingRoom({
+                        ...room,
+                        HotelCode: room.HotelCode || selectedHotel,
+                        source: room.source || '',
+                      })
+                    }
+                  />
+                </Grid>
+              ))}
           </RoomsGrid>
         )}
       </Box>
@@ -198,9 +234,11 @@ export const Rooms = () => {
       {editingRoom && (
         <EditRooms
           room={editingRoom}
-          roomTypes={uniqueRoomTypes}
+          roomTypes={apiDataRooms}
           onClose={() => setEditingRoom(null)}
           onSave={handleSaveRoom}
+          isEdit={!!editingRoom._id}
+          roomSaving={roomSaving}
         />
       )}
     </StyledContainer>

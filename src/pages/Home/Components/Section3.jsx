@@ -11,7 +11,7 @@ const Section3 = () => {
       </div>
       {/* Content Section */}
       <div className="content pt-5 md:pt-[50px] z-10 relative">
-        <Sec3CardSlider sec3CardSliderData={sec3CardSliderData}/>
+        <Sec3CardSlider />
       </div>
     </div>
   );

@@ -12,7 +12,6 @@ import {
   Tabs,
   Tab,
   TextField,
-  Slider,
 } from "@mui/material";
 import { Edit, Delete, Save } from "lucide-react";
 
@@ -26,13 +25,23 @@ const Images = () => {
   
   const [editingContent, setEditingContent] = useState('');
   const [editingIndex, setEditingIndex] = useState(null);
-  const [hue, setHue] = useState(0);
-  const [saturation, setSaturation] = useState(100);
-  const [lightness, setLightness] = useState(50);
+  const [selectedColor, setSelectedColor] = useState('#ffffff');
 
+  // Predefined colors
+  const predefinedColors = [
+    '#4DB8B6', // Teal
+    '#4DD0E2', // Light Blue
+    '#C4C4C4', // Gray
+    '#FDD304', // Yellow
+    '#F1B300', // Golden Yellow
+    '#FFE566', // Light Yellow
+    '#FFE359', // Pale Yellow
+    '#00E0FF', // Cyan
+    '#BDD9D8', // Light Gray-Blue
+  ];
 
   useEffect(() => {
-    if ( galleryImages) {
+    if (galleryImages) {
       if (galleryImages.images) {
         setImages(galleryImages.images.map((img) => img));
       } else if (Array.isArray(galleryImages)) {
@@ -53,7 +62,6 @@ const Images = () => {
     try {
       const data = await uploadImagesAPIV2(selectedFiles);
       const uploadedUrls = Array.isArray(data) ? data : [data];
-      // Assuming your API returns an object with imageUrls as an array.
       const newImageUrls = uploadedUrls[0].imageUrls;
       setImages((prev) => [...prev, ...newImageUrls]);
       toast.success("Images uploaded successfully!");
@@ -82,13 +90,7 @@ const Images = () => {
   const resetContentForm = () => {
     setEditingIndex(null);
     setEditingContent('');
-    setHue(0);
-    setSaturation(100);
-    setLightness(50);
-  };
-
-  const getCurrentColor = () => {
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    setSelectedColor('#ffffff');
   };
 
   const handleAddOrUpdateContent = () => {
@@ -100,7 +102,7 @@ const Images = () => {
     const newItem = {
       type: "div",
       content: editingContent,
-      bg: getCurrentColor(),
+      bg: selectedColor,
     };
 
     if (editingIndex !== null) {
@@ -120,10 +122,7 @@ const Images = () => {
     const item = content[index];
     setEditingIndex(index);
     setEditingContent(item.content);
-    // Optionally, convert the bg color back into HSL values if needed.
-    setHue(0);
-    setSaturation(100);
-    setLightness(50);
+    setSelectedColor(item.bg);
   };
 
   const handleDeleteContent = (index) => {
@@ -133,14 +132,13 @@ const Images = () => {
 
   const handleSaveAll = async () => {
     try {
-      // Create the payload matching the backend schema.
       const massonaryGrid = {
-        images: images,     // Array of image URL strings
-        content: content,   // Array of grid items
+        images: images,
+        content: content,
       };
       const payload = { massonaryGrid };
   
-      console.log(payload); // Check the payload in the console
+      console.log(payload);
       await addGalleryImages(payload);
       toast.success("Gallery updated successfully!");
       handleClose();
@@ -149,8 +147,6 @@ const Images = () => {
       toast.error("Failed to update gallery");
     }
   };
-  
-  
 
   return (
     <div className="">
@@ -229,40 +225,23 @@ const Images = () => {
 
                     <div>
                       <Typography>Color</Typography>
-                      <div className="space-y-2">
-                        <div>
-                          <Typography variant="caption">Hue</Typography>
-                          <Slider
-                            value={hue}
-                            onChange={(e, value) => setHue(value)}
-                            min={0}
-                            max={360}
+                      <div className="flex gap-2 mt-2">
+                        {predefinedColors.map((color) => (
+                          <div
+                            key={color}
+                            className={`w-8 h-8 rounded-full cursor-pointer border-2 ${
+                              selectedColor === color ? 'border-black' : 'border-transparent'
+                            }`}
+                            style={{ backgroundColor: color }}
+                            onClick={() => setSelectedColor(color)}
                           />
-                        </div>
-                        <div>
-                          <Typography variant="caption">Saturation</Typography>
-                          <Slider
-                            value={saturation}
-                            onChange={(e, value) => setSaturation(value)}
-                            min={0}
-                            max={100}
-                          />
-                        </div>
-                        <div>
-                          <Typography variant="caption">Lightness</Typography>
-                          <Slider
-                            value={lightness}
-                            onChange={(e, value) => setLightness(value)}
-                            min={0}
-                            max={100}
-                          />
-                        </div>
+                        ))}
                       </div>
 
                       <div className="mt-4 flex items-center gap-4">
                         <div
                           className="w-24 h-24 rounded border"
-                          style={{ backgroundColor: getCurrentColor() }}
+                          style={{ backgroundColor: selectedColor }}
                         />
                         <div className="space-x-2">
                           <Button
@@ -292,7 +271,7 @@ const Images = () => {
                       {content.map((item, index) => (
                         <div
                           key={index}
-                          className={`p-4 rounded relative ${item.bg}`}
+                          className={`p-4 rounded relative`}
                           style={{ backgroundColor: item.bg }}
                         >
                           <p>{item.content}</p>

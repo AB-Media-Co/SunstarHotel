@@ -18,15 +18,14 @@ const Footer = () => {
                     {/* Navigation Links */}
                     <div className='flex justify-between md:justify-around w-full'>
                         <div className="flex flex-col space-y-2">
-                            <a href="#" className="cursor-pointer hover:underline">Contact</a>
-                            <a href="#" className="cursor-pointer hover:underline">Careers</a>
-                            <a href="#" className="cursor-pointer hover:underline">Blog & Buzz</a>
-                            <a href="#" className="cursor-pointer hover:underline">Hotels</a>
+                            <Link to='/contact' className="cursor-pointer hover:underline">Contact</Link>
+                            <Link to='/corporate-booking' className="cursor-pointer hover:underline">Coorporate Booking</Link>
+                            <Link to='/sunstar-blogs' className="cursor-pointer hover:underline">Blog & Buzz</Link>
                         </div>
                         <div className="flex flex-col space-y-2">
-                            <a href="#" className="cursor-pointer hover:underline">Why Sunstar</a>
-                            <a href="#" className="cursor-pointer hover:underline">Loyalty Program</a>
-                            <a href="#" className="cursor-pointer hover:underline">Developers & Owners</a>
+                            <Link to='/why-sunstar' className="cursor-pointer hover:underline">Why Sunstar</Link>
+                            <Link to='' className="cursor-pointer hover:underline">Loyalty Program</Link>
+                            <Link to='' className="cursor-pointer hover:underline">Developers & Owners</Link>
                         </div>
 
                     </div>
@@ -42,7 +41,7 @@ const Footer = () => {
                             <FacebookIcon className='border border-yellow-500 rounded-lg p-1' />
                             <span>Facebook</span>
                         </a>
-                        <a href="https://youtube.com/@travelwithpriya-mk1ko?si=xz0moIn6eGxVRvaI" className="flex items-center gap-3 hover:text-gray-200">
+                        <a href="#" className="flex items-center gap-3 hover:text-gray-200">
                             <YouTubeIcon className='border border-yellow-500 rounded-lg p-1' />
                             <span>YouTube</span>
                         </a>
@@ -58,16 +57,16 @@ const Footer = () => {
                 <div className="md:flex hidden md:flex-row gap-4 md:items-center justify-center">
                     <a href="#" className="hover:underline">©2024 Sunstar Hospitality  </a>
                     <hr className='bg-primary-white h-[20px] w-[1px]'/>
-                    <a href="#" className="hover:underline">Terms & Conditions </a>
+                    <Link to="/terms-conditions&cancellation" className="hover:underline">Terms & Conditions and Cancellation Policy </Link>
                     <hr className='bg-primary-white h-[20px] w-[1px]'/>
-                    <a href="#" className="hover:underline">Cancellation Policy </a>
-                    <hr className='bg-primary-white h-[20px] w-[1px]'/>
-                    <a href="#" className="hover:underline">Privacy & Cookie Policy</a>
+                    <Link to="/privacy-policies" className="hover:underline">Privacy Policy </Link>
+                    {/* <hr className='bg-primary-white h-[20px] w-[1px]'/>
+                    <a href="#" className="hover:underline">Privacy & Cookie Policy</a> */}
                 </div>
                 <div className="flex flex-col md:hidden  gap-4  mt-6 justify-center">
-                    <a href="#" className="hover:underline">Terms & Conditions </a>
-                    <a href="#" className="hover:underline">Cancellation Policy </a>
-                    <a href="#" className="hover:underline">Privacy & Cookie Policy</a>
+                    <a href="/terms-conditions&cancellation" className="hover:underline">Terms & Conditions and Cancellation Policy </a>
+                    <a href="/privacy-policies" className="hover:underline">Privacy Policy </a>
+                    {/* <a href="#" className="hover:underline">Privacy & Cookie Policy</a> */}
                 </div>
 
                 <div className="my-4  md:hidden">

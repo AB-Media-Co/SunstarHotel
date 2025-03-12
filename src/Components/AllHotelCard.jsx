@@ -6,6 +6,7 @@ import RoatinfImg from './RoatinfImg';
 import { motion } from 'framer-motion';
 
 const AllHotelCard = ({ isOpen, onClose }) => {
+
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : 'auto';
     return () => {
@@ -21,27 +22,29 @@ const AllHotelCard = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-primary-green flex justify-center items-center z-50">
-      <div className="flex hotelSelection flex-col w-full md:w-[1300px] gap-6 mt-[13rem] md:mt-52">
-        <RoatinfImg position='md:right-[-6rem] top-[-8rem] md:top-[9rem] right-[-6rem] z-0' />
+    <div className="fixed inset-0 bg-primary-green flex justify-center hotelSelection  overflow-y-auto items-start z-50">
+      <div className="flex hotelSelection flex-col w-full md:w-[1300px] gap-6 ">
+       
+          <RoatinfImg position='md:right-[-6rem] top-[2rem] md:top-[9rem] right-6 z-0 ' divClass='absolute' />
+
         <div className="flex justify-between items-center px-4 py-2 z-10">
-          <h2 className="text-[48px] font-semibold">Hotels</h2>
+          <h2 className="text-[48px] font-semibold text-white">Hotels</h2>
           <button
             className="text-White font-bold"
             onClick={onClose}
           >
-            <CloseOutlined style={{ height: "40px", width: "40px" }} />
+            <CloseOutlined style={{ height: "40px", width: "40px",color:"white" }} />
           </button>
         </div>
         <motion.div
-          className="text-center pb-[13rem] text-lg h-[110vh] z-10 hotelSelection overflow-y-auto"
+          className="text-center text-lg  z-10 "
           variants={sectionVariants}
           initial="hidden"
           animate="visible"
           exit="hidden"
         >
           <div className="rounded-t-[32px] bg-primary-white  md:py-12">
-            <HotelSelectingCards />
+            <HotelSelectingCards close={onClose} />
           </div>
         </motion.div>
       </div>

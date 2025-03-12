@@ -22,7 +22,7 @@ function HotelCard({ hotelData }) {
             )}
           </div>
         )}
-        <div className="p-6">
+        <div className="p-1">
           <div className="flex flex-col sm:flex-row justify-between items-start md:items-center ">
             {/* Hotel Name and Price Section */}
             <div className="flex flex-col sm:flex-row items-start md:items-center sm:space-x-5">
@@ -38,19 +38,21 @@ function HotelCard({ hotelData }) {
               </div>
               <div className="mt-3 sm:mt-0 flex flex-col items-center">
                 <div className="flex gap-4 items-center">
-                  {hotelData?.price && (
+                  {/* {hotelData?.price && (
                     <span className="text-sm md:text-base text-red-500 font-bold line-through">
                       ₹ {hotelData?.price}
                     </span>
-                  )}
+                  )} */}
                   <span className="text-teal-500 text-2xl font-bold">
-                    ₹ {hotelData?.discountedPrice}{" "}
+                    ₹ {hotelData?.price}{" "}
+                    <span className="text-xs md:hidden text-gray-500">Incl. taxes</span>
+
                     <span className="font-normal text-base text-gray-600">
                       / night
                     </span>
                   </span>
                 </div>
-                <p className="text-xs text-gray-500">Incl. taxes</p>
+                <p className="text-xs hidden md:block text-gray-500">Incl. taxes</p>
               </div>
             </div>
             {/* Check-In/Check-Out Section */}
@@ -70,11 +72,11 @@ function HotelCard({ hotelData }) {
           </div>
   
           {/* Optional Hotel Description */}
-          {hotelData?.description && (
+          {/* {hotelData?.description && (
             <div className="mt-4 text-gray-600 text-sm line-clamp-3">
               <p>{hotelData.description}</p>
             </div>
-          )}
+          )} */}
   
           {/* Divider */}
           <hr className="mt-4 border-gray-300" />

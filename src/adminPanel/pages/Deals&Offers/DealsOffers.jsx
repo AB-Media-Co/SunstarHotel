@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   FormControl,
   InputLabel,
@@ -35,18 +35,15 @@ import {
 const DAYS_LIST = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
 const DealsOffers = () => {
-  // Fetch hotels
   const { data: offershotels, isLoading: hotelsLoading, error: hotelsError } = useGetHotels();
   const hotels = offershotels?.hotels;
   
-  // Fetch deals/offers
   const { data: deals, isLoading: dealsLoading, error: dealsError } = useOffersAndDeals();
 
-  // Hooks for delete and update
   const deleteDealMutation = useDeleteOfferAndDeal();
   const updateDealMutation = useUpdateOfferAndDeal();
+  const createDealMutation = useCreateOfferAndDeal();
 
-  // State for create form
   const [selectedHotel, setSelectedHotel] = useState('');
   const [newDeal, setNewDeal] = useState({
     name: '',
@@ -59,16 +56,20 @@ const DealsOffers = () => {
     endDate: '',
     visibility: 'everyone',
     daysOfWeek: [...DAYS_LIST],
-    platform: 'mobileAndWeb'
-  });
-  
-  const createDealMutation = useCreateOfferAndDeal();
+    platform: 'mobileAndWeb',
 
-  // State for edit modal and editing deal
+    dealType: 'standard',
+    bookingRestrictionUnit: 'none',
+    minAdvance: '',
+    maxAdvance: '',
+    limitPromotionToHours: false,
+    startHour: '',
+    endHour: ''
+  });
+
   const [editingDeal, setEditingDeal] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(false);
 
-  // Handlers for create form
   const handleHotelChange = (event) => {
     setSelectedHotel(event.target.value);
   };
@@ -103,6 +104,7 @@ const DealsOffers = () => {
       dealData.hotels = [selectedHotel];
     }
     createDealMutation.mutate(dealData);
+
     setNewDeal({
       name: '',
       description: '',
@@ -114,12 +116,19 @@ const DealsOffers = () => {
       endDate: '',
       visibility: 'everyone',
       daysOfWeek: [...DAYS_LIST],
-      platform: 'mobileAndWeb'
+      platform: 'mobileAndWeb',
+
+      dealType: 'standard',
+      bookingRestrictionUnit: 'none',
+      minAdvance: '',
+      maxAdvance: '',
+      limitPromotionToHours: false,
+      startHour: '',
+      endHour: ''
     });
     setSelectedHotel('');
   };
 
-  // Handlers for editing
   const handleEditClick = (deal) => {
     setEditingDeal(deal);
     setOpenEditModal(true);
@@ -171,7 +180,6 @@ const DealsOffers = () => {
     deleteDealMutation.mutate(id);
   };
 
-  // If no hotel is selected, show all deals
   const dealsArray = Array.isArray(deals) ? deals : [];
   const filteredDeals = selectedHotel
     ? dealsArray.filter((deal) => {
@@ -195,6 +203,7 @@ const DealsOffers = () => {
               Create New Deal
             </Typography>
             <form onSubmit={handleSubmit}>
+              {/* Basic fields */}
               <TextField
                 label="Deal Name"
                 name="name"
@@ -271,6 +280,8 @@ const DealsOffers = () => {
                   />
                 </Grid>
               </Grid>
+
+              {/* Visibility */}
               <FormControl component="fieldset" sx={{ mt: 2 }}>
                 <FormLabel component="legend">
                   Who will be able to see this promotion?
@@ -285,6 +296,8 @@ const DealsOffers = () => {
                   <FormControlLabel value="secret" control={<Radio />} label="Secret (Members Only)" />
                 </RadioGroup>
               </FormControl>
+
+              {/* Days of Week */}
               <Box sx={{ mt: 2 }}>
                 <Typography variant="body1" sx={{ mb: 1 }}>
                   Which day(s) of the week would you like to include?
@@ -305,6 +318,8 @@ const DealsOffers = () => {
                   ))}
                 </FormGroup>
               </Box>
+
+              {/* Platform */}
               <FormControl component="fieldset" sx={{ mt: 2 }}>
                 <FormLabel component="legend">Platform (Mobile Rate)</FormLabel>
                 <RadioGroup
@@ -325,6 +340,131 @@ const DealsOffers = () => {
                   />
                 </RadioGroup>
               </FormControl>
+
+              {/* Bookable period */}
+              <Box sx={{ mt: 3, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  Bookable period
+                </Typography>
+
+                {/* Deal Type: lastMinute or earlyBooker or standard */}
+                <FormControl component="fieldset" sx={{ mb: 2 }}>
+                  <FormLabel component="legend" sx={{ fontWeight: 'bold' }}>
+                    How far in advance do customers need to book this promotion?
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    name="dealType"
+                    value={newDeal.dealType}
+                    onChange={handleInputChange}
+                  >
+                    <FormControlLabel
+                      value="lastMinute"
+                      control={<Radio />}
+                      label="Last Minute (days/hours or fewer)"
+                    />
+                    <FormControlLabel
+                      value="earlyBooker"
+                      control={<Radio />}
+                      label="Early Booker (days or more)"
+                    />
+                    <FormControlLabel
+                      value="standard"
+                      control={<Radio />}
+                      label="No Restriction"
+                    />
+                  </RadioGroup>
+                </FormControl>
+
+                {/* If lastMinute, show maxAdvance + bookingRestrictionUnit */}
+                {newDeal.dealType === 'lastMinute' && (
+                  <>
+                    <FormControl component="fieldset" sx={{ mb: 2 }}>
+                      <FormLabel component="legend">
+                        Select Days or Hours
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        name="bookingRestrictionUnit"
+                        value={newDeal.bookingRestrictionUnit}
+                        onChange={handleInputChange}
+                      >
+                        <FormControlLabel value="days" control={<Radio />} label="Days or fewer" />
+                        <FormControlLabel value="hours" control={<Radio />} label="Hours or fewer" />
+                      </RadioGroup>
+                    </FormControl>
+                    <TextField
+                      label="Maximum Advance (e.g., 3 for '3 days or fewer')"
+                      name="maxAdvance"
+                      type="number"
+                      value={newDeal.maxAdvance}
+                      onChange={handleInputChange}
+                      fullWidth
+                      margin="normal"
+                      variant="outlined"
+                    />
+                  </>
+                )}
+
+                {/* If earlyBooker, show minAdvance */}
+                {newDeal.dealType === 'earlyBooker' && (
+                  <TextField
+                    label="Minimum Advance (e.g., 30 for '30 days or more')"
+                    name="minAdvance"
+                    type="number"
+                    value={newDeal.minAdvance}
+                    onChange={handleInputChange}
+                    fullWidth
+                    margin="normal"
+                    variant="outlined"
+                  />
+                )}
+
+                {/* Do you want to limit this promotion to certain hours? */}
+                <Box sx={{ mt: 2 }}>
+                  <FormLabel component="legend" sx={{ fontWeight: 'bold', display: 'block' }}>
+                    Do you want to limit this promotion to certain hours?
+                  </FormLabel>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="limitPromotionToHours"
+                        checked={newDeal.limitPromotionToHours}
+                        onChange={handleInputChange}
+                      />
+                    }
+                    label={newDeal.limitPromotionToHours ? 'Yes' : 'No'}
+                  />
+                </Box>
+                {newDeal.limitPromotionToHours && (
+                  <Grid container spacing={2} sx={{ mt: 1 }}>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="Start Hour (0-23)"
+                        name="startHour"
+                        type="number"
+                        value={newDeal.startHour}
+                        onChange={handleInputChange}
+                        fullWidth
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="End Hour (0-23)"
+                        name="endHour"
+                        type="number"
+                        value={newDeal.endHour}
+                        onChange={handleInputChange}
+                        fullWidth
+                        variant="outlined"
+                      />
+                    </Grid>
+                  </Grid>
+                )}
+              </Box>
+
+              {/* Apply to All Hotels */}
               <FormControlLabel
                 control={
                   <Checkbox
@@ -497,7 +637,7 @@ const DealsOffers = () => {
                     label="Start Date (Optional)"
                     name="startDate"
                     type="date"
-                    value={editingDeal.startDate ? editingDeal.startDate.substring(0,10) : ''}
+                    value={editingDeal.startDate ? editingDeal.startDate.substring(0, 10) : ''}
                     onChange={handleEditInputChange}
                     fullWidth
                     margin="normal"
@@ -510,7 +650,7 @@ const DealsOffers = () => {
                     label="End Date (Optional)"
                     name="endDate"
                     type="date"
-                    value={editingDeal.endDate ? editingDeal.endDate.substring(0,10) : ''}
+                    value={editingDeal.endDate ? editingDeal.endDate.substring(0, 10) : ''}
                     onChange={handleEditInputChange}
                     fullWidth
                     margin="normal"
@@ -571,19 +711,140 @@ const DealsOffers = () => {
                   />
                 </RadioGroup>
               </FormControl>
-              {/* Add Apply to All Hotels checkbox in edit modal */}
+
+              {/* Bookable period for editing */}
+              <Box sx={{ mt: 3, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  Bookable period
+                </Typography>
+                <FormControl component="fieldset" sx={{ mb: 2 }}>
+                  <FormLabel component="legend" sx={{ fontWeight: 'bold' }}>
+                    How far in advance do customers need to book this promotion?
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    name="dealType"
+                    value={editingDeal.dealType || 'standard'}
+                    onChange={handleEditInputChange}
+                  >
+                    <FormControlLabel
+                      value="lastMinute"
+                      control={<Radio />}
+                      label="Last Minute (days/hours or fewer)"
+                    />
+                    <FormControlLabel
+                      value="earlyBooker"
+                      control={<Radio />}
+                      label="Early Booker (days or more)"
+                    />
+                    <FormControlLabel
+                      value="standard"
+                      control={<Radio />}
+                      label="No Restriction"
+                    />
+                  </RadioGroup>
+                </FormControl>
+
+                {/* If lastMinute, show maxAdvance + bookingRestrictionUnit */}
+                {editingDeal.dealType === 'lastMinute' && (
+                  <>
+                    <FormControl component="fieldset" sx={{ mb: 2 }}>
+                      <FormLabel component="legend">
+                        Select Days or Hours
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        name="bookingRestrictionUnit"
+                        value={editingDeal.bookingRestrictionUnit || 'none'}
+                        onChange={handleEditInputChange}
+                      >
+                        <FormControlLabel value="days" control={<Radio />} label="Days or fewer" />
+                        <FormControlLabel value="hours" control={<Radio />} label="Hours or fewer" />
+                        <FormControlLabel value="none" control={<Radio />} label="None" />
+                      </RadioGroup>
+                    </FormControl>
+                    <TextField
+                      label="Maximum Advance"
+                      name="maxAdvance"
+                      type="number"
+                      value={editingDeal.maxAdvance || ''}
+                      onChange={handleEditInputChange}
+                      fullWidth
+                      margin="normal"
+                      variant="outlined"
+                    />
+                  </>
+                )}
+
+                {/* If earlyBooker, show minAdvance */}
+                {editingDeal.dealType === 'earlyBooker' && (
+                  <TextField
+                    label="Minimum Advance"
+                    name="minAdvance"
+                    type="number"
+                    value={editingDeal.minAdvance || ''}
+                    onChange={handleEditInputChange}
+                    fullWidth
+                    margin="normal"
+                    variant="outlined"
+                  />
+                )}
+
+                <Box sx={{ mt: 2 }}>
+                  <FormLabel component="legend" sx={{ fontWeight: 'bold', display: 'block' }}>
+                    Do you want to limit this promotion to certain hours?
+                  </FormLabel>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="limitPromotionToHours"
+                        checked={editingDeal.limitPromotionToHours || false}
+                        onChange={handleEditInputChange}
+                      />
+                    }
+                    label={editingDeal.limitPromotionToHours ? 'Yes' : 'No'}
+                  />
+                </Box>
+                {editingDeal.limitPromotionToHours && (
+                  <Grid container spacing={2} sx={{ mt: 1 }}>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="Start Hour (0-23)"
+                        name="startHour"
+                        type="number"
+                        value={editingDeal.startHour || ''}
+                        onChange={handleEditInputChange}
+                        fullWidth
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="End Hour (0-23)"
+                        name="endHour"
+                        type="number"
+                        value={editingDeal.endHour || ''}
+                        onChange={handleEditInputChange}
+                        fullWidth
+                        variant="outlined"
+                      />
+                    </Grid>
+                  </Grid>
+                )}
+              </Box>
+
+              {/* Apply to All Hotels */}
               <FormControlLabel
                 control={
                   <Checkbox
                     name="applyToAllHotels"
-                    checked={editingDeal.applyToAllHotels}
+                    checked={editingDeal.applyToAllHotels || false}
                     onChange={handleEditInputChange}
                   />
                 }
                 label="Apply to All Hotels"
                 sx={{ mt: 2 }}
               />
-              {/* Only show the hotel dropdown if the deal does NOT apply to all hotels */}
               {!editingDeal.applyToAllHotels && hotels && hotels.length > 0 && (
                 <FormControl fullWidth variant="outlined" sx={{ mt: 2 }}>
                   <InputLabel id="edit-hotel-select-label">Select Hotel</InputLabel>
