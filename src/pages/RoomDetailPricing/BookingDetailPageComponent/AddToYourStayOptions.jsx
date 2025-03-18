@@ -22,7 +22,7 @@ export const AddToYourStayOptions = ({ data }) => {
       } else {
         return [...prevSelected, option];
       }
-    });
+    }); 
   };
 
   const isSelected = (id) => selectedOtherCharges.some((item) => item._id === id);

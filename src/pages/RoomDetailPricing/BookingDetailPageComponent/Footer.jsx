@@ -16,6 +16,6 @@ export const Footer = ({ ContactUsDetail }) => (
             <a href="#" className="md:text-lg font-semibold underline hover:text-gray-800">
                 Terms & Conditions
             </a>
-        </div>
+        </div> 
     </div>
 );

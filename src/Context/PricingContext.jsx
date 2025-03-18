@@ -14,18 +14,22 @@ export const PricingProvider = ({ children }) => {
     return saved === "true";
   });
 
-  const [maxRoomSelection, setMaxRoomSelection] = useState();
+  const [maxRoomSelection, setMaxRoomSelection] = useState(3); // Default to 3
 
   const [details, setDetails] = useState(() => {
     const storedDetails = localStorage.getItem("roomHotelDetails");
     return storedDetails ? JSON.parse(storedDetails) : [];
   });
 
+  console.log("det", details)
+
   const [selectedRooms, setSelectedRooms] = useState(() =>
     details.map((item) => ({
       roomName: item?.roomData?.RoomName || "",
       option: "roomOnly",
       price: item?.roomData?.discountRate || 0,
+      RoomTypeID: item?.roomData?.RoomTypeID,
+      RateTypeID: item?.roomData?.RateTypeID,
     }))
   );
 
@@ -40,11 +44,18 @@ export const PricingProvider = ({ children }) => {
   const [nights, setNights] = useState(1);
   const [baseFinalPrice, setBaseFinalPrice] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
+  const [phoneVerified, setPhoneVerified] = useState(false); // Add this line to manage phone verification state
 
   const [guestDetails, setGuestDetails] = useState(() => {
     const storedGuestDetails = localStorage.getItem("guestDetails");
     return storedGuestDetails ? JSON.parse(storedGuestDetails) : { rooms: 1 };
   });
+
+  const [isHotelModalOpen, setIsHotelModalOpen] = useState(false);
+
+  // Functions to control the Hotel Modal
+  const openHotelModal = () => setIsHotelModalOpen(true);
+  const closeHotelModal = () => setIsHotelModalOpen(false);
 
   // Confirmation Modal state
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -53,10 +64,7 @@ export const PricingProvider = ({ children }) => {
   const openConfirmationModal = () => setIsConfirmationModalOpen(true);
   const closeConfirmationModal = () => setIsConfirmationModalOpen(false);
 
-  // NEW: Hotel Modal state and functions
-  const [isHotelModalOpen, setIsHotelModalOpen] = useState(false);
-  const openHotelModal = () => setIsHotelModalOpen(true);
-  const closeHotelModal = () => setIsHotelModalOpen(false);
+  const resetMaxRoomSelection = () => setMaxRoomSelection(3);
 
   useEffect(() => {
     const daysFromStorage = localStorage.getItem("days");
@@ -97,7 +105,6 @@ export const PricingProvider = ({ children }) => {
     localStorage.setItem("guestDetails", JSON.stringify(guestDetails));
   }, [guestDetails]);
 
-  // Agar user kisi aise route pe jaye jahan details hon, to modal show kar de
   useEffect(() => {
     const routesToCheck = ["/", "/why-sunstar", "/corporate-booking", "/contact"];
     if (details.length > 0 && routesToCheck.includes(location.pathname)) {
@@ -116,7 +123,6 @@ export const PricingProvider = ({ children }) => {
 
   const handleCancel = () => {
     closeConfirmationModal();
-    // Yahan navigation rok sakte hain agar zarurat ho
   };
 
   const fetchRoomHotelDetails = async (roomId, hotelCode) => {
@@ -129,6 +135,7 @@ export const PricingProvider = ({ children }) => {
         roomData: {
           RoomName: response.data.room.RoomName,
           RoomTypeID: response.data.room.RoomTypeID,
+          RateTypeID: response.data.room.RateTypeID,
           discountRate: response.data.room.discountRate,
           maxGuests: response.data.room.maxGuests,
         },
@@ -142,6 +149,9 @@ export const PricingProvider = ({ children }) => {
           roomName: transformedData.roomData?.RoomName || "",
           option: "roomOnly",
           price: transformedData.roomData?.discountRate || 0,
+          RoomTypeID: response.data.room.RoomTypeID,
+          RateTypeID: response.data.room.RateTypeID,
+          maxGuests: response.data.room.maxGuests,
         },
       ]);
 
@@ -153,7 +163,6 @@ export const PricingProvider = ({ children }) => {
   };
 
   const removeRoom = (roomName) => {
-    // selectedRooms update karna
     setSelectedRooms((prev) => {
       const index = prev.findIndex((r) => r.roomName === roomName);
       if (index === -1) return prev;
@@ -162,7 +171,6 @@ export const PricingProvider = ({ children }) => {
       return newRooms;
     });
 
-    // details update karna
     setDetails((prev) => {
       const index = prev.findIndex((d) => d.roomData?.RoomName === roomName);
       if (index === -1) return prev;
@@ -186,13 +194,14 @@ export const PricingProvider = ({ children }) => {
         selectedOtherCharges,
         setSelectedOtherCharges,
         totalOtherCharges,
-        finalPrice, // Final price including discount or not
+        finalPrice,
         setFinalPrice,
-        baseFinalPrice, // Original calculated final price
+        baseFinalPrice,
         nights,
         setNights,
         maxRoomSelection,
         setMaxRoomSelection,
+        resetMaxRoomSelection, // Added reset function
         guestDetails,
         setGuestDetails,
         sethotelData,
@@ -204,6 +213,8 @@ export const PricingProvider = ({ children }) => {
         isHotelModalOpen,
         openHotelModal,
         closeHotelModal,
+        phoneVerified, // Add phoneVerified here
+        setPhoneVerified, // Add setPhoneVerified here
       }}
     >
       {children}

@@ -43,6 +43,9 @@ const TermsAndConditions = lazy(() => import(/* webpackChunkName: "roomsdetails"
 const CancellationPolicyPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/PrivacyPolicies'));
 const BlogsPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/Blogs'));
 const ReadBlogPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/ReadBlog'));
+const CorporateEventsPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/CorporateEventsPage'));
+const SocialEventsPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/SocialEventsPage'));
+const WeddingPreWeddingPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/WeddingPreWeddingPage'));
 
 const queryClient = new QueryClient();
 
@@ -112,6 +115,9 @@ function App() {
               <Route path="/privacy-policies" element={<CancellationPolicyPage />} />
               <Route path="/sunstar-blogs" element={<BlogsPage />} />
               <Route path="/sunstar-blogs/:slug" element={<ReadBlogPage />} />
+              <Route path="/coorporatevents" element={<CorporateEventsPage />} />
+              <Route path="/socialevents" element={<SocialEventsPage />} />
+              <Route path="/weddingpreWedding" element={<WeddingPreWeddingPage />} />
             </Route>
             <Route path="/room/details" element={<RoomsDetails />} />
           </Routes>

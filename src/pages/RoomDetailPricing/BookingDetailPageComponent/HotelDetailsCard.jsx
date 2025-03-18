@@ -4,6 +4,7 @@ import { usePricing } from "../../../Context/PricingContext";
 export const HotelDetailsCard = () => {
   const { details, setDetails, selectedRooms, setSelectedRooms } = usePricing();
 
+  console.log(details)
   const handleOptionChange = (index, newOption) => {
     setSelectedRooms((prevSelectedRooms) => {
       const updated = [...prevSelectedRooms];
@@ -52,6 +53,7 @@ export const HotelDetailsCard = () => {
         guestQty: currentQty,
         showMaxGuestAlert,
       };
+      console.log(updatedRooms)
 
       if (currentQty === 0) {
         updatedRooms.splice(index, 1);
@@ -71,7 +73,7 @@ export const HotelDetailsCard = () => {
           price: data?.roomData?.discountRate || 0,
           guestQty: 1,
           showMaxGuestAlert: false,
-        };
+        }; 
 
         if (roomSelection.guestQty === 0) {
           return null;
@@ -99,7 +101,7 @@ export const HotelDetailsCard = () => {
               <h2 className="text-2xl font-bold text-[#288592]">{data?.name}</h2>
               <p className="text-lg text-black font-semibold">{data?.roomData?.RoomName}</p>
               <p className="text-sm md:max-w-xs text-primary-gray font-normal">
-                {data?.name + ", " + data?.location?.hotelAddress}
+                {data?.name + ", " + data?.cityLocation?.name}
               </p>
               <p className="text-md font-semibold">Price: ₹{roomSelection.price}</p>
             </div>

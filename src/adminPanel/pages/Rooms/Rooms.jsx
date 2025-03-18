@@ -1,19 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
-import {
-  Container,
-  Box,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
-  Button,
-  CircularProgress,
-} from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Container, Box, Grid, FormControl, InputLabel, Select, MenuItem, TextField, CircularProgress } from '@mui/material';
 import { styled } from '@mui/system';
 import { useGetHotels } from '../../../ApiHooks/useHotelHook2';
-import { useRooms, useUpdateRoom, useCreateRoom } from '../../../ApiHooks/useRoomsHook';
+import { useRooms, useUpdateRoom } from '../../../ApiHooks/useRoomsHook';
 import RoomCard from './RoomCard';
 import EditRooms from './EditRooms';
 
@@ -40,14 +29,6 @@ const HotelSelect = styled(FormControl)(({ theme }) => ({
 const DateTextField = styled(TextField)(({ theme }) => ({
   width: '100%',
   marginBottom: theme.spacing(2),
-}));
-
-const AddRoomButton = styled(Button)(({ theme }) => ({
-  textAlign: 'right',
-  marginTop: theme.spacing(2),
-  [theme.breakpoints.down('md')]: {
-    textAlign: 'left',
-  },
 }));
 
 const RoomsGrid = styled(Grid)(({ theme }) => ({
@@ -81,23 +62,18 @@ export const Rooms = () => {
     fromDate,
     toDate
   );
-  console.log('Full Rooms Response:', roomsLoading);
-  const roomArray = Array.isArray(rooms?.rooms) ? rooms?.rooms : [];
-  // Handle both array and single object cases for Source
-  const apiDataRooms = rooms?.apiData?.RES_Response?.RoomInfo?.Source
-    ? Array.isArray(rooms.apiData.RES_Response.RoomInfo.Source)
-      ? rooms.apiData.RES_Response.RoomInfo.Source
-      : [rooms.apiData.RES_Response.RoomInfo.Source] // Wrap single object in array
+  const roomArray = Array.isArray(rooms?.rooms) ? rooms?.rooms : rooms?.rooms;
+
+  const apiDataRooms = rooms?.rateApiData?.RES_Response?.RoomInfo?.Source
+    ? Array.isArray(rooms.rateApiData.RES_Response.RoomInfo.Source)
+      ? rooms.rateApiData.RES_Response.RoomInfo.Source
+      : [rooms.rateApiData.RES_Response.RoomInfo.Source]
     : [];
 
   const [editingRoom, setEditingRoom] = useState(null);
 
-  // Initialize both update and create hooks
   const updateRoomMutation = useUpdateRoom(selectedHotel, authCode, fromDate, toDate);
-  const createRoomMutation = useCreateRoom(selectedHotel, authCode, fromDate, toDate);
 
-  // The handleSaveRoom function now checks if the room has an _id
-  // If it does, it calls the update endpoint; if not, it calls the create endpoint.
   const handleSaveRoom = (updatedRoom) => {
     setIsRoomSaving(true);
     if (updatedRoom._id) {
@@ -112,17 +88,25 @@ export const Rooms = () => {
         },
       });
     } else {
-      createRoomMutation.mutate(updatedRoom, {
-        onSuccess: () => {
-          setEditingRoom(null);
-          setIsRoomSaving(false);
-        },
-        onError: (error) => {
-          console.error('Error creating room:', error);
-          setIsRoomSaving(false);
-        },
-      });
+      // createRoomMutation.mutate(updatedRoom, {
+      //   onSuccess: () => {
+      //     setEditingRoom(null);
+      //     setIsRoomSaving(false);
+      //   },
+      //   onError: (error) => {
+      //     console.error('Error creating room:', error);
+      //     setIsRoomSaving(false);
+      //   },
+      // });
     }
+  };
+
+  const handleToggleShow = (roomId, newShowStatus) => {
+    // Update the room's show status in the state
+    const updatedRoom = roomArray.find((room) => room._id === roomId);
+    updatedRoom.show = newShowStatus;
+
+    updateRoomMutation.mutate(updatedRoom); // Call mutation to update in database
   };
 
   return (
@@ -179,28 +163,6 @@ export const Rooms = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'left', md: 'right' } }}>
-            <AddRoomButton
-              variant="contained"
-              disabled={!selectedHotel}
-              onClick={() =>
-                setEditingRoom({
-                  RoomTypeID: '',
-                  RateTypeID: '',
-                  RoomName: '',
-                  RoomDescription: '',
-                  defaultRate: '',
-                  discountRate: '',
-                  Amenities: [],
-                  RoomImage: [],
-                  HotelCode: selectedHotel,
-                  source: '',
-                })
-              }
-            >
-              Add Room
-            </AddRoomButton>
-          </Grid>
         </Grid>
       </HeaderBox>
 
@@ -211,22 +173,15 @@ export const Rooms = () => {
           </Box>
         ) : (
           <RoomsGrid container spacing={3}>
-            {roomArray
-              .filter((room) => room.HotelCode && room.HotelCode === selectedHotel)
-              .map((room) => (
-                <Grid item xs={12} sm={6} md={4} key={room._id}>
-                  <RoomCard
-                    room={room}
-                    onEdit={() =>
-                      setEditingRoom({
-                        ...room,
-                        HotelCode: room.HotelCode || selectedHotel,
-                        source: room.source || '',
-                      })
-                    }
-                  />
-                </Grid>
-              ))}
+            {roomArray.map((room) => (
+              <Grid item xs={12} sm={6} md={4} key={room._id}>
+                <RoomCard
+                  room={room}
+                  onToggleShow={handleToggleShow}  // Pass the toggle handler
+                  onEdit={() => setEditingRoom(room)}
+                />
+              </Grid>
+            ))}
           </RoomsGrid>
         )}
       </Box>

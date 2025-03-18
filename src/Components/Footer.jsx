@@ -41,7 +41,7 @@ const Footer = () => {
                             <FacebookIcon className='border border-yellow-500 rounded-lg p-1' />
                             <span>Facebook</span>
                         </a>
-                        <a href="#" className="flex items-center gap-3 hover:text-gray-200">
+                        <a href="https://www.youtube.com/@sunstaradmin6584" className="flex items-center gap-3 hover:text-gray-200">
                             <YouTubeIcon className='border border-yellow-500 rounded-lg p-1' />
                             <span>YouTube</span>
                         </a>

@@ -24,16 +24,16 @@ import { usePricing } from "../Context/PricingContext";
 const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const nextMonth = addMonths(currentMonth, 1);
-  const { closeHotelModal } = usePricing();  
+  const { closeHotelModal } = usePricing();
 
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
-  const [confirmClicked, ] = useState(false);
+  const [confirmClicked, setConfirmClicked] = useState(false);
 
   const hotelInfo = JSON.parse(localStorage.getItem("hotelInfo"));
-  
+
   const shouldFetchRooms = checkIn && checkOut && hotelInfo?.hotelCode && hotelInfo?.authKey;
-  
+
   const { data: rooms, isLoading } = useRooms(
     shouldFetchRooms ? hotelInfo.hotelCode : null,
     shouldFetchRooms ? hotelInfo.authKey : null,
@@ -60,7 +60,8 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
       setCheckOut(day);
     }
   };
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
 
   const handleConfirmClick = async () => {
     if (!checkIn || !checkOut) {
@@ -94,14 +95,14 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
           localStorage.setItem("roomsData", JSON.stringify(rooms));
         }
         navigate(`/hotels/${hotelCode}`);
-        closeHotelModal()
+        closeHotelModal();
         setOpenCalender(false);
       } catch (error) {
         console.error("Error handling confirmation:", error);
       }
     }
   };
-  
+
   const daysInWeek = ["S", "M", "T", "W", "T", "F", "S"];
 
   const renderCalendar = (month, showLeftArrow, showRightArrow) => {
@@ -161,16 +162,14 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
               return (
                 <div
                   key={index}
-                  className={`
-                    day-cell flex items-center justify-center h-8 sm:h-10 md:h-12 md:w-full 
+                  className={`day-cell flex items-center justify-center h-8 sm:h-10 md:h-12 md:w-full 
                     transition-colors duration-200 
                     ${isCurrent ? "current-month" : "other-month"} 
                     ${isRangeStart ? "range-start bg-primary-green text-primary-green rounded-l-full" : ""} 
                     ${isRangeEnd ? "range-end bg-primary-green text-primary-green rounded-r-full" : ""} 
                     ${inRange ? "in-range bg-primary-green text-primary-white" : ""} 
                     ${isPastDate ? "text-gray-400 cursor-not-allowed" : "text-gray-700 hover:bg-primary-green/20 cursor-pointer"} 
-                    rounded-md
-                  `}
+                    rounded-md`}
                   onClick={() => isCurrent && !isPastDate && handleDateClick(day)}
                 >
                   {isCurrent && (
@@ -216,8 +215,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
             ${isSameMonth(currentMonth, new Date())
               ? "bg-[#E5E5E5] text-gray-300 cursor-not-allowed"
               : "text-primary-white bg-primary-green hover:bg-primary-green/90 cursor-pointer"
-            }
-          `}
+            }`}
           disabled={isSameMonth(currentMonth, new Date())}
         >
           <ArrowBackIosNew style={{ width: "10px", height: "10px" }} />
@@ -258,7 +256,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
           <div className="flex flex-row items-center justify-evenly max-w-full w-full md:w-auto md:max-w-[50%] bg-white px-4 py-3 md:px-8 md:py-4 rounded-full gap-3 shadow-lg">
             <Icon name="calendar" className="w-5 h-5 md:w-6 md:h-6 text-primary-green" />
             <div className={`flex flex-col ${confirmClicked && !checkIn ? "text-red-500" : "text-gray-700"}`}>
-              <span className="font-semibold text-[8px]  md:text-base">
+              <span className="font-semibold text-[8px] md:text-base">
                 {checkIn ? format(checkIn, "dd MMM, EEEE") : "Check in"}
               </span>
             </div>
@@ -286,13 +284,12 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
                   <span className="ml-2">Loading...</span>
                 </div>
               ) : (
-                'Confirm'
+                "Confirm"
               )}
             </button>
           </div>
         </div>
       </div>
-
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import axiosInstance from '../services/axiosInstance';
-import { useQuery } from '@tanstack/react-query';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
+// Hook for fetching rooms
 export const useRooms = (hotelCode, authCode, fromDate, toDate) => {
   return useQuery({
     queryKey: ['rooms', hotelCode, authCode, fromDate, toDate],
@@ -14,29 +14,13 @@ export const useRooms = (hotelCode, authCode, fromDate, toDate) => {
     },
     staleTime: 30000, // Data is fresh for 30 seconds
     refetchOnWindowFocus: false,
-  });
-};
-
-export const useCreateRoom = (hotelCode, authCode, fromDate, toDate) => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (newRoom) => {
-      const response = await axiosInstance.post('/api/ezee/rooms', newRoom, {
-        params: { hotelCode, authCode, fromDate, toDate },
-      });
-      return response.data;
-    },
-    onSuccess: () => {
-      // Invalidate the rooms query so that data is refetched after creation.
-      queryClient.invalidateQueries(['rooms', hotelCode, authCode, fromDate, toDate]);
-      toast.success("Room created successfully");
-    },
     onError: (error) => {
-      toast.error("Error creating room: " + error.message);
+      toast.error("Error fetching rooms: " + error?.response?.data?.error || error.message);
     },
   });
 };
 
+// Hook for updating a room
 export const useUpdateRoom = (hotelCode, authCode, fromDate, toDate) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -54,36 +38,25 @@ export const useUpdateRoom = (hotelCode, authCode, fromDate, toDate) => {
       );
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       // Invalidate the rooms query so that data is refetched after update.
       queryClient.invalidateQueries(['rooms', hotelCode, authCode, fromDate, toDate]);
       toast.success("Room updated successfully");
     },
     onError: (error) => {
-      toast.error("Error updating room: " + error.message);
+      toast.error("Error updating room: " + error?.response?.data?.error || error.message);
     },
   });
 };
 
+// Fetch single room by ID
 export const getSingleRoomById = async (id) => {
-  const response = await axiosInstance.get(`/api/ezee/room/${id}`);
-  return response.data;
+  try {
+    const response = await axiosInstance.get(`/api/ezee/room/${id}`);
+    return response.data;
+  } catch (error) {
+    toast.error("Error fetching room: " + error?.response?.data?.error || error.message);
+    throw error; // Rethrow the error to let the calling code handle it
+  }
 };
 
-export const useDeleteRoom = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (roomId) => {
-      const response = await axiosInstance.delete(`/api/ezee/room/${roomId}`);
-      return response.data;
-    },
-    onSuccess: () => {
-      // Invalidate queries with key starting with 'rooms'
-      queryClient.invalidateQueries({ queryKey: ['rooms'] });
-      toast.success("Room deleted successfully");
-    },
-    onError: () => {
-      toast.error("Error deleting room");
-    },
-  });
-};

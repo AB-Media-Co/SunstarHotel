@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUpdatePagesHook from "../../ApiHooks/useUpdatePagesHook";
 import { Footer } from "./BookingDetailPageComponent/Footer";
-import { PaymentMethod } from "./BookingDetailPageComponent/PaymentMethod";
+import PaymentMethod from "./BookingDetailPageComponent/PaymentMethod";
 import { ReservationSummarySidebar } from "./BookingDetailPageComponent/ReservationSummarySidebar";
 import { OfferCode } from "./BookingDetailPageComponent/OfferCode";
 import { AddToYourStayOptions } from "./BookingDetailPageComponent/AddToYourStayOptions";
-import { GuestDetailsForm } from "./BookingDetailPageComponent/GuestDetailsForm";
+import GuestDetailsForm from "./BookingDetailPageComponent/GuestDetailsForm";
 import { HotelDetailsCard } from "./BookingDetailPageComponent/HotelDetailsCard";
 import { usePricing } from "../../Context/PricingContext";
 import { Helmet } from "react-helmet";
@@ -22,16 +22,12 @@ const calculateDays = (checkIn, checkOut) => {
 
 const BookingDetailsPage = () => {
   const { ContactUsDetail } = useUpdatePagesHook();
-  const { details, hotelData, setEditAddPricing,
-    setDetails,
-    setSelectedRooms,
-    setGuestDetails } = usePricing(); 
+  const { details, hotelData } = usePricing(); 
   const hotelDetail = details[0];
   const navigate = useNavigate();
 
-  const getHotelDataLocal  = localStorage.getItem("hotelInfo")
-  const getHotelData  =  JSON.parse(getHotelDataLocal)
- 
+  const getHotelDataLocal = localStorage.getItem("hotelInfo");
+  const getHotelData = JSON.parse(getHotelDataLocal);
 
   const checkIn = localStorage.getItem("checkInDate");
   const checkOut = localStorage.getItem("checkOutDate");
@@ -39,6 +35,9 @@ const BookingDetailsPage = () => {
 
   const [isPaymentVisible, setIsPaymentVisible] = useState(false);
   const [showButton, setShowButton] = useState(true);
+
+  // Create a ref for GuestDetailsForm
+  const guestFormRef = useRef();
 
   useEffect(() => {
     const paymentMethodElement = document.querySelector("#payment-method");
@@ -62,20 +61,15 @@ const BookingDetailsPage = () => {
     }
   }, [isPaymentVisible]);
 
-
   useEffect(() => {
     if (!details || details.length === 0 || !hotelDetail) {
       navigate(`/hotels/${getHotelData?.hotelCode}`);
     }
-  }, [details, hotelData, hotelDetail, navigate,getHotelData]);
+  }, [details, hotelData, hotelDetail, navigate, getHotelData]);
 
   if (!details || details.length === 0 || !hotelDetail) {
-    return null; // or a loading indicator, if preferred
+    return null; // or a loading indicator
   }
-  console.log(getHotelData,"hi")
-
-
-
 
   return (
     <div className="p-4 content md:flex gap-5">
@@ -86,11 +80,10 @@ const BookingDetailsPage = () => {
           <meta name="" content={``} />
         </Helmet>
         <HotelDetailsCard />
-        <GuestDetailsForm />
+        {/* Render GuestDetailsForm once and pass its ref */}
+        <GuestDetailsForm ref={guestFormRef} />
         {hotelDetail.addToYourStay.length > 0 && <AddToYourStayOptions data={hotelDetail} />}
-
         <OfferCode hotelDetail={hotelDetail} />
-
         <div className="lg:hidden">
           <ReservationSummarySidebar
             hotelDetail={hotelDetail}
@@ -101,7 +94,11 @@ const BookingDetailsPage = () => {
             isPaymentVisible={isPaymentVisible}
           />
         </div>
-        <PaymentMethod hotelDetail={hotelDetail} />
+        {/* Pass the guestFormRef to PaymentMethod */}
+        <PaymentMethod hotelDetail={hotelDetail} guestFormRef={guestFormRef} 
+          checkIn={checkIn}
+          checkOut={checkOut}
+        />
         <Footer ContactUsDetail={ContactUsDetail} />
       </div>
       <div className="hidden lg:block">

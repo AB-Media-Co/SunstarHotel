@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import {
   Dialog,
@@ -25,7 +25,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import MultipleImageUpload from '../../Components/MultipleImageUpload';
 import ImageUpload from '../../Components/ImageUpload';
-import { uploadImagesAPIV2, useGetHotels } from '../../../ApiHooks/useHotelHook2';
+import { uploadImagesAPIV2, } from '../../../ApiHooks/useHotelHook2';
 import useUpdatePagesHook from '../../../ApiHooks/useUpdatePagesHook';
 
 function TabPanel(props) {
@@ -68,62 +68,10 @@ const useAmenities = (amenities, roomAmenities) => {
   return { selectedAmenities, handleAmenitiesChange, setSelectedAmenities };
 };
 
-const useHotelSelection = (hotelsData, setFormData) => {
-  const availableHotels = useMemo(() => {
-    return hotelsData?.hotels?.filter((hotel) => hotel.hotelCode) || [];
-  }, [hotelsData]);
 
-  const handleHotelChange = useCallback(
-    (e) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    },
-    [setFormData]
-  );
 
-  return { availableHotels, handleHotelChange };
-};
+const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, amenities, selectedAmenities, handleAmenitiesChange }) => {
 
-const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, isEdit, roomTypes, amenities, selectedAmenities, handleAmenitiesChange }) => {
-  // Change this to always be "PMS"
-  const [selectedSource, setSelectedSource] = useState("OTA Common Pool = PMS");
-
-  // Filter room types based on selected source
-  const filteredRoomTypes = roomTypes
-    .filter((source) => source.$.name === selectedSource)
-    .flatMap((source, sourceIndex) => {
-      let rateTypes = source.RoomTypes?.RateType || [];
-      if (!Array.isArray(rateTypes)) rateTypes = [rateTypes];
-      return rateTypes.map((rt, rateIndex) => ({ ...rt, sourceIndex, rateIndex }));
-    });
-
-  useEffect(() => {
-    if (filteredRoomTypes.length > 0 && formData.RoomTypeID && selectedSource) {
-      const [roomTypeID, rateTypeID] = formData.RoomTypeID.split('-');
-      const selected = filteredRoomTypes.find((rt) => rt.RoomTypeID === roomTypeID && (!rateTypeID || rt.RateTypeID === rateTypeID));
-      if (selected) {
-        handleInputChange({
-          target: {
-            name: 'discountRate',
-            value: selected.RoomRate?.Base || '',
-          },
-        });
-        handleInputChange({
-          target: {
-            name: 'RateTypeID',
-            value: selected.RateTypeID,
-          },
-        });
-      } else {
-        handleInputChange({
-          target: { name: 'discountRate', value: '' },
-        });
-        handleInputChange({
-          target: { name: 'RateTypeID', value: '' },
-        });
-      }
-    }
-  }, [formData.RoomTypeID, selectedSource, handleInputChange, filteredRoomTypes]);
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -136,36 +84,11 @@ const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, isEdit
     },
   };
 
-  // Get unique source names
-  const sourceOptions = roomTypes.map((source) => source.$.name);
-
 
   return (
     <Box component="form" noValidate autoComplete="off">
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth>
-            <InputLabel id="source-label">Source</InputLabel>
-            <Select
-              labelId="source-label"
-              id="source"
-              name="source"
-              value="PMS"
-              label="Source"
-              disabled={true}
-              onChange={(e) => {
-                setSelectedSource(e.target.value);
-                handleInputChange(e);
-                handleInputChange({ target: { name: 'RoomTypeID', value: '' } });
-                handleInputChange({ target: { name: 'RateTypeID', value: '' } });
-                handleInputChange({ target: { name: 'RoomName', value: '' } });
-                handleInputChange({ target: { name: 'discountRate', value: '' } });
-              }}
-            >
-              <MenuItem value="PMS">PMS</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
+
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth>
             <InputLabel id="room-type-label">Room Type</InputLabel>
@@ -173,48 +96,19 @@ const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, isEdit
               labelId="room-type-label"
               id="RoomTypeID"
               name="RoomTypeID"
-              value={formData.RoomTypeID || ''} 
+              value={formData.RoomTypeID || ''}
               label="Room Type"
-              disabled={isEdit || !selectedSource}
               MenuProps={MenuProps}
-              onChange={(e) => {
-                const selectedValue = e.target.value;  // e.g. "ABC-1234"
-                // Split it into roomTypeID and rateTypeID
-                const [roomTypeID, rateTypeID] = selectedValue.split('-');
-              
-                // Update your form data:
-                handleInputChange({ target: { name: 'RoomTypeID', value: `${roomTypeID}-${rateTypeID}` } });
-                handleInputChange({ target: { name: 'RateTypeID', value: rateTypeID } });
-              
-                // Find the matching room in your array
-                const selectedRoom = filteredRoomTypes.find(
-                  (rt) => rt.RoomTypeID === roomTypeID && rt.RateTypeID === rateTypeID
-                );
-                if (selectedRoom) {
-                  handleInputChange({
-                    target: { name: 'RoomName', value: formData.RoomName || 'Default Room Name' },
-                  });
-                  handleInputChange({
-                    target: { name: 'discountRate', value: selectedRoom.RoomRate?.Base || '' },
-                  });
-                } else {
-                  handleInputChange({ target: { name: 'discountRate', value: '' } });
-                }
-              }}
-              
+              disabled
+
             >
               <MenuItem value="">
                 <em>Select Room Type</em>
               </MenuItem>
-              {filteredRoomTypes.map((rt, index) => (
-               <MenuItem
-               key={`${rt.RoomTypeID}-${rt.RateTypeID}-${index}`}
-               value={`${rt.RoomTypeID}-${rt.RateTypeID}`} // Use the combined ID
-             >
-               {rt.RoomTypeID} - Rate: {rt.RoomRate?.Base || 'N/A'}
-             </MenuItem>
-             
-              ))}
+
+              <MenuItem value={formData.RoomTypeID}>
+                {formData.RoomTypeID}
+              </MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -258,19 +152,7 @@ const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, isEdit
             onChange={handleInputChange}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={formData.available}
-                onChange={handleCheckboxChange}
-                name="available"
-                color="primary"
-              />
-            }
-            label="Room Available"
-          />
-        </Grid>
+       
         <Grid item xs={12}>
           <Autocomplete
             multiple
@@ -339,7 +221,7 @@ const AboutRoomTab = ({ aboutRoom, handleAboutChange }) => {
           <ImageUpload
             feature={aboutRoom}
             handleFeatureChange={handleAboutChange}
-            setImageUpload={() => {}}
+            setImageUpload={() => { }}
             index={0}
           />
         </Grid>
@@ -353,11 +235,10 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
   const [images, setImages] = useState(room.RoomImage || []);
   const [isUploading, setIsUploading] = useState(false);
   const { amenities } = useUpdatePagesHook();
-  const { data: hotelsData } = useGetHotels();
 
   const [formData, setFormData] = useState({
     HotelCode: room.HotelCode || '',
-    RoomTypeID: room.RoomTypeID && room.RateTypeID ? `${room.RoomTypeID}-${room.RateTypeID}` : '', // Use combined ID initially
+    RoomTypeID: room.RoomTypeID && room.RateTypeID ? `${room.RoomTypeID}` : '',
     RateTypeID: room.RateTypeID || '',
     RoomName: room.RoomName || '',
     RoomDescription: room.RoomDescription || '',
@@ -367,7 +248,7 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
     squareFeet: room.squareFeet || '',
     services: room.services ? room.services.join(', ') : '',
     available: room.available === 'no' ? false : true,
-    source: room.source || '',
+    source: room.source || 'PMS',
   });
 
   const [aboutRoom, setAboutRoom] = useState({
@@ -376,7 +257,6 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
   });
 
   const { selectedAmenities, handleAmenitiesChange } = useAmenities(amenities, room.Amenities);
-  const { availableHotels, handleHotelChange } = useHotelSelection(hotelsData, setFormData);
 
   const handleTabChange = useCallback((event, newValue) => {
     setActiveTab(newValue);
@@ -417,7 +297,6 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
       },
     };
     onSave(updatedRoom);
-    console(updatedRoom);
   }, [room, formData, images, selectedAmenities, aboutRoom, onSave]);
 
   const handleImagesUpload = useCallback(async (selectedFiles) => {
@@ -461,7 +340,7 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
           value={activeTab}
           onChange={handleTabChange}
           variant="fullWidth"
-          sx={{ mb: 2}}
+          sx={{ mb: 2 }}
         >
           <Tab label="Room Info" />
           <Tab label="Upload Images" />

@@ -13,10 +13,10 @@ export const OfferCode = ({ hotelDetail }) => {
   const primaryColor = '#058FA2';
   const { mutate: fetchOfferCodes, data } = useOfferCodesForHotel();
   const { mutateAsync: getDiscountAsync } = useDiscountedRate();
-  const { finalPrice, setFinalPrice, baseFinalPrice } = usePricing();
+  const { finalPrice, setFinalPrice, baseFinalPrice,phoneVerified, setPhoneVerified } = usePricing();
 
   // New states for phone verification flow
-  const [phoneVerified, setPhoneVerified] = useState(false);
+  // const [phoneVerified, setPhoneVerified] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
@@ -166,7 +166,7 @@ export const OfferCode = ({ hotelDetail }) => {
                   <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
                   <line x1="7" y1="7" x2="7.01" y2="7"></line>
                 </svg>
-              </div>
+              </div> 
               <div className="ml-2">
                 <p className="text-sm font-medium text-gray-600">Exclusive Offers</p>
                 <p className="text-xs text-gray-500">Up to 25% off on bookings</p>

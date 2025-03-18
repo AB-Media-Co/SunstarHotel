@@ -15,22 +15,38 @@ import Loader from "../../Components/Loader";
 import { AmenitiesList2 } from "../../Components/AmenitiesList2";
 import BottomRoomSticky from "../../Components/BottomRoomSticky";
 import { Helmet } from "react-helmet";
+import { useRooms } from "../../ApiHooks/useRoomsHook";
 
-const Hotels = () => { 
+import {
+  format,
+} from "date-fns";
+
+const Hotels = () => {
   const { hotelCode } = useParams();
   const [hotelData, setHotelData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openCalender, setOpenCalender] = useState(false);
-  const [initialLoad, setInitialLoad] = useState(true);
-console.log("lll")
-  const storedRoomsData = localStorage.getItem("roomsData");
-  const roomsData = storedRoomsData && storedRoomsData !== "undefined"
-    ? JSON.parse(storedRoomsData)
-    : [];
+  // const [initialLoad, setInitialLoad] = useState(true);
+  // const storedRoomsData = localStorage.getItem("roomsData");
+  // const roomsData = storedRoomsData && storedRoomsData !== "undefined"
+  //   ? JSON.parse(storedRoomsData)
+  //   : [];
 
-  const filteredRooms = roomsData?.rooms?.filter((room) => room?.HotelCode === hotelCode);
-console.log(filteredRooms)
+  
+  
+  const checkIn = localStorage.getItem("checkInDate");
+  const checkOut = localStorage.getItem("checkOutDate");
+  const shouldFetchRooms = checkIn && checkOut && hotelData?.hotelCode && hotelData?.authKey;
+
+  const { data: roomsData, isLoading } = useRooms(
+    shouldFetchRooms ? hotelData.hotelCode : null,
+    shouldFetchRooms ? hotelData.authKey : null,
+    shouldFetchRooms ? format(checkIn, "yyyy-MM-dd") : null,
+    shouldFetchRooms ? format(checkOut, "yyyy-MM-dd") : null
+  );
+  console.log("lll,roomsData", roomsData)
+
   // Memoize the API call to prevent multiple calls
   useEffect(() => {
     if (hotelCode && loading) {
@@ -39,7 +55,7 @@ console.log(filteredRooms)
       return () => controller.abort(); // Cleanup on unmount or hotelCode change
     }
   }, [hotelCode]);
-  
+
   const fetchHotel = useMemo(() => {
     return async (code, signal) => {
       try {
@@ -55,13 +71,13 @@ console.log(filteredRooms)
   useEffect(() => {
     const storedCheckIn = localStorage.getItem("checkInDate");
     const storedCheckOut = localStorage.getItem("checkOutDate");
-    setInitialLoad(false);
+  
     if (!storedCheckIn || !storedCheckOut) {
       setOpenCalender(true);
     }
   }, []);
 
-  if (loading) {
+  if (loading|| isLoading) {
     return <div><Loader /></div>;
   }
 
@@ -76,14 +92,14 @@ console.log(filteredRooms)
         <title>Hotels</title>
         <meta name="" content={``} />
         <meta name="" content={``} />
-      </Helmet> 
+      </Helmet>
       <Banner
         businessPlatformFeatures={hotelData?.images}
         openCalender={openCalender}
         setOpenCalender={setOpenCalender}
       />
       <HotelCard hotelData={hotelData} />
-      <RoomLayout rooms={filteredRooms} />
+      <RoomLayout rooms={roomsData?.rooms} />
       <AmenitiesList2 amenities={hotelData?.amenities} />
       <TestimonialSection
         Testimonials={hotelData?.testimonials}

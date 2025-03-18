@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import AllHotelCard from "../../../Components/AllHotelCard";
 import useUpdatePagesHook from '../../../ApiHooks/useUpdatePagesHook'
-import { usePricing } from "../../../Context/PricingContext";
 
 const Section1 = ({ section1Data }) => {
   const { heroSectionUpdate, loading, Loader } = useUpdatePagesHook();
@@ -12,7 +11,7 @@ const Section1 = ({ section1Data }) => {
   const [currentWord, setCurrentWord] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [delay, setDelay] = useState(false);
-  const { isHotelModalOpen, openHotelModal, closeHotelModal } = usePricing();  
+  const [hotelOpen, setHotelOpen] = useState(false);
 
   useEffect(() => {
     if (delay) {
@@ -75,7 +74,7 @@ const Section1 = ({ section1Data }) => {
           </p>
 
           <div
-            onClick={openHotelModal}
+            onClick={() => setHotelOpen(true)}
             className="mt-6 flex justify-between items-center lg:w-[490px] font-semibold cursor-pointer bg-primary-white rounded-full py-2 md:py-4 px-7 hover:bg-gray-50 transition-colors"
           >
             <div className="flex gap-2 items-center animation-on-scroll-Section1">
@@ -92,10 +91,9 @@ const Section1 = ({ section1Data }) => {
           </div>
         </div>
       </div>
-      <AllHotelCard isOpen={isHotelModalOpen} onClose={closeHotelModal} />
+      <AllHotelCard isOpen={hotelOpen} onClose={() => setHotelOpen(false)} />
     </div>
   );
 };
 
 export default Section1;
-

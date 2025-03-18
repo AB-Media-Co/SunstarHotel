@@ -30,6 +30,7 @@ export const ReservationSummarySidebar = ({
     baseFinalPrice,
     setNights,
   } = usePricing();
+  console.log(selectedRooms)
 
   useEffect(() => {
     if (days) {
@@ -107,7 +108,7 @@ export const ReservationSummarySidebar = ({
       <div className="flex justify-between text-sm text-gray-700">
         <p>Other Charges</p>
         <p className="font-medium text-gray-800">₹ {totalOtherCharges}</p>
-      </div>
+      </div> 
 
       {/* Price Breakdown */}
       <div className="border-t mt-2 pt-2">
