@@ -3,8 +3,6 @@ import { motion } from "framer-motion";
 
 const HeroSection = ({ title, highlightText, description, imageSrc }) => {
     const words = title.split(" ");
-
-
     return (
         <div className="w-full bg-[#6EC4C2] py-20 px-6 md:px-12 lg:px-20 relative overflow-hidden">
             <div className="max-w-7xl mx-auto flex flex-col md:pt-20 lg:flex-row items-center mt-6 md:mt-0 justify-between  md:gap-12">

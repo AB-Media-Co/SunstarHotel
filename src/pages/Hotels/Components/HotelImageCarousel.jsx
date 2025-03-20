@@ -38,7 +38,7 @@ const HotelIImageCarousel = ({ data }) => {
     }
   }, [prevIndex]);
 
-  const outgoingAnimationClass = direction === 'next' ? '-translate-x-full' : 'translate-x-full';
+  const outgoingAnimationClass = `${direction === 'next' ? '-translate-x-full' : 'translate-x-full'} transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]`;
 
   const handleTouchStart = (e) => {
     setTouchStart(e.touches[0].clientX);

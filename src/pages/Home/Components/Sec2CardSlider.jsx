@@ -39,11 +39,7 @@ export default function SwiperComponent() {
         className=" h-60 bg-center rounded-t-lg z-10 bg-cover bg-no-repeat "
         style={{ backgroundImage: `url(${card.images[0]})` }}
       >
-        {/* Rating Section */}
-        {/* <div className="absolute left-4 top-[90%] flex items-center space-x-1 px-4 py-[6px] bg-[#4DB8B6] text-primary-white rounded-full w-[140px] z-20">
-          <strong className="text-desktop/body/2">{card.rating}</strong>
-          <span className="text-mobile/body/2">({card.reviews} reviews)</span>
-        </div> */}
+   
       </div>
 
       <div className="absolute top-[100%] w-full shadow-lg p-4 pt-8 h-[150px] bg-primary-white border rounded-b-lg flex flex-col gap-2">

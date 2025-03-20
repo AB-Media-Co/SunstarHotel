@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import TestimonialSection from '../../Components/TestimonialSection';
 import { testimonialData } from '../../Data/AboutSectionData';
 import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
@@ -41,7 +40,7 @@ const CorporateEventsPage = () => {
             {/* Hero Section */}
             <header className="relative">
                 <img
-                    src="/images/Sunstar other page Images/Coorporate events/cambridge-corporate-photographer-io-2016-003 1.png"
+                    src="/images/Sunstar other page Images/Coorporate events/corporate-events 1.png"
                     alt="Corporate Event"
                     className="w-full h-[100vh] object-cover"
                 />

@@ -15,10 +15,10 @@ import SunstarEnquiryForm from '../CorporateBooking/Components/SunstarEnquiryFor
 const WeddingPreWeddingPage = () => {
   // Wedding & Pre-wedding packages
   const weddingPackages = [
-    { title: 'Wedding & Reception', image: '/images/WeddingPreWedding/1.jpeg' },
-    { title: 'Cocktail', image: '/images/WeddingPreWedding/2.jpeg' },
-    { title: 'Roka & Sagan', image: '/images/WeddingPreWedding/3.jpeg' },
-    { title: 'Haldi & Mehndi', image: '/images/WeddingPreWedding/4.jpeg' },
+    { title: 'Wedding & Reception', image: '/images/Sunstar other page Images/wedding Events/Best-wedding-photographers-India-Top-5-destination-wedding-photographers-Indian-weddings-2 1.png' },
+    { title: 'Cocktail', image: '/images/Sunstar other page Images/Cocktail party/66e34f06fdf6067368073ce7_3 1.png' },
+    { title: 'Roka & Sagan', image: '/images/Sunstar other page Images/ROKA & SAGAN/1551853541_TN2ndJan_534 1.png' },
+    { title: 'Haldi & Mehndi', image: '/images/Sunstar other page Images/Haldi & Mehndi/272647847_666139464740883_5764307683696030625_n-1024x1019 1.png' },
   ];
 
   const whyChooseUsFeatures = [
@@ -39,7 +39,7 @@ const WeddingPreWeddingPage = () => {
       {/* Hero Section */}
       <header className="relative">
         <img
-          src="/images/WeddingPreWedding/WeddingHero.jpg"
+          src="/images/Sunstar other page Images/Pre-wedding Events/64ba509fcaed286aa8d090d2_1689931935431 1.png"
           alt="Wedding & Pre-wedding"
           className="w-full h-[100vh] object-cover"
         />

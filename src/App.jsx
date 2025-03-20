@@ -46,6 +46,7 @@ const ReadBlogPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ '.
 const CorporateEventsPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/CorporateEventsPage'));
 const SocialEventsPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/SocialEventsPage'));
 const WeddingPreWeddingPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/WeddingPreWeddingPage'));
+const BookingForm = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/BookingForm'));
 
 const queryClient = new QueryClient();
 
@@ -118,6 +119,7 @@ function App() {
               <Route path="/coorporatevents" element={<CorporateEventsPage />} />
               <Route path="/socialevents" element={<SocialEventsPage />} />
               <Route path="/weddingpreWedding" element={<WeddingPreWeddingPage />} />
+              <Route path="/booking-form" element={<BookingForm />} />
             </Route>
             <Route path="/room/details" element={<RoomsDetails />} />
           </Routes>

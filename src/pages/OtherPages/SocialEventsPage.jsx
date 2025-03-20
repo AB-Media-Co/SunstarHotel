@@ -15,17 +15,17 @@ const SocialEventsPage = () => {
 
     // Social events categories
     const socialEventsTypes = [
-        { title: 'Birthday Celebrations', image: '/images/SocialEvents/1.jpeg' },
-        { title: 'Anniversary', image: '/images/SocialEvents/2.jpeg' },
-        { title: 'Kitty Party', image: '/images/SocialEvents/3.jpeg' },
-        { title: 'Baby Shower', image: '/images/SocialEvents/4.jpeg' },
+        { title: 'Birthday Celebrations', image: '/images/Sunstar other page Images/Birthday Celebrations/BD-1024x731.jpg 1.png' },
+        { title: 'Anniversary', image: '/images/Sunstar other page Images/Anniversary/LINE_ALBUM_TCH-Happy-Anniversary_240717_4 1.png' },
+        { title: 'Kitty Party', image: '/images/Sunstar other page Images/Kitty party/kitty-party-planning-ideas-main 1.png' },
+        { title: 'Baby Shower', image: '/images/Sunstar other page Images/Baby shower/Carlton-all-edits-35-1920x1283 1.png' },
     ];
 
     const personalisedExperiences = [
-        { title: 'Candle Light Dinner', image: '/images/SocialEvents/5.jpeg' },
-        { title: 'Bachelor Party', image: '/images/SocialEvents/6.jpeg' },
-        { title: 'Marriage Proposal', image: '/images/SocialEvents/7.jpeg' },
-        { title: 'Group Party', image: '/images/SocialEvents/8.jpeg' },
+        { title: 'Candle Light Dinner', image: '/images/Sunstar other page Images/candle light dinner/20eac2f6-570e-4697-8a39-d34b14ae254c_large 1.png' },
+        { title: 'Bachelor Party', image: '/images/Sunstar other page Images/Bachelor Party/Bachelor-Party-Trip-Total-Advantage-Destination-Weddings 1.png' },
+        { title: 'Marriage Proposal', image: '/images/Sunstar other page Images/Marriage Proposal/Agia-Pelagia-Proposal-Will-you-marry-me-letters-Crete-Marriage-Proposal-1 1.png' },
+        { title: 'Group Party', image: '/images/Sunstar other page Images/Social event/48489934797_1b1fb859e6_k 1.png' },
     ];
 
     const whyChooseUsFeatures = [
@@ -46,7 +46,7 @@ const SocialEventsPage = () => {
             {/* Hero Section */}
             <header className="relative">
                 <img
-                    src="/images/SocialEvents/header.jpg"
+                    src="/images/Sunstar other page Images/Social event/web_zurich_venues_umweltarena-spreitenbach_pt_2194 2.png"
                     alt="Social Event"
                     className="w-full h-[100vh] object-cover"
                 />

@@ -46,6 +46,9 @@ const Hotels = () => {
     shouldFetchRooms ? format(checkOut, "yyyy-MM-dd") : null
   );
   console.log("lll,roomsData", roomsData)
+  if (roomsData) {
+    localStorage.setItem("roomsData", JSON.stringify(roomsData));
+  }
 
   // Memoize the API call to prevent multiple calls
   useEffect(() => {

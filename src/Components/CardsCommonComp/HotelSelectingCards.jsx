@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { Star } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useGetHotels } from "../../ApiHooks/useHotelHook2";
@@ -14,9 +13,6 @@ const HotelCard = ({ hotel, close }) => {
   const [openCalender, setOpenCalender] = useState(false);
   const [, setCheckIn] = useState(null);
   const [, setCheckOut] = useState(null);
-
-
-  console.log("hi")
   useEffect(() => {
     const storedCheckIn = localStorage.getItem("checkInDate");
     const storedCheckOut = localStorage.getItem("checkOutDate");

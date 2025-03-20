@@ -1,15 +1,19 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { usePricing } from "../../../Context/PricingContext";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import { useMakeBooking } from "../../../ApiHooks/useCreateBookingHook";
 
 export const PaymentMethod = ({ hotelDetail, guestFormRef, checkIn, checkOut }) => {
   const { selectedRooms } = usePricing();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
-
-  // Call the useMakeBooking hook
-  const { mutate: makeBooking, isLoading } = useMakeBooking(hotelDetail?.hotelCode, hotelDetail?.authKey, checkIn, checkOut, selectedRooms);
+  const { mutate: makeBooking, isLoading } = useMakeBooking(
+    hotelDetail?.hotelCode,
+    hotelDetail?.authKey,
+    checkIn,
+    checkOut,
+    selectedRooms
+  );
 
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
@@ -18,62 +22,44 @@ export const PaymentMethod = ({ hotelDetail, guestFormRef, checkIn, checkOut }) 
   const ContinueBtnClick = async () => {
     // Validate guest form first
     if (guestFormRef.current && !guestFormRef.current.validateForm()) {
+      toast.error("Please fill all required guest information");
       return;
     }
-
-    // Get guest details from the form
+  
     const guestDetails = guestFormRef.current.getGuestDetails();
-console.log(selectedRooms)
-    const roomData = {
-      Room_Details: selectedRooms.reduce((acc, room, index) => {
-        acc[`Room_${index + 1}`] = {
-          Rateplan_Id: room.rateplanId || "",
-          Ratetype_Id: room.RateTypeID || "",
-          Roomtype_Id: room.RoomTypeID || "",
-          baserate: room.price || "",
-          extradultrate: room.extraAdultRate || "",
-          extrachildrate: room.extraChildRate || "",
-          number_adults: room.guestQty || 1,
-          number_children: room.childrenQty || 0,
-          ExtraChild_Age: room.childAge || "",
-          Title: room?.roomName,
-          First_Name: guestDetails.firstName || "",
-          Last_Name: guestDetails.lastName || "",
-          Gender: guestDetails.gender || "",
-          SpecialRequest: guestDetails.specialRequest || ""
-        };
-        return acc;
-      }, {}),
-      check_in_date: checkIn,
-      check_out_date: checkOut,
-      Booking_Payment_Mode: selectedPaymentMethod,
-      Email_Address: guestDetails.email || "",
-      Source_Id: "",
-      MobileNo: guestDetails.phoneNumber || "",
-      Address: "",
-      State: "",
-      Country: "",
-      City: "",
-      Zipcode: "",
-      Fax: "",
-      Device: "",
-      Languagekey: "",
-      paymenttypeunkid: ""
-    };
-
-   console.log(roomData)
+    
+    // Validate essential information
+    if (!guestDetails.firstName || !guestDetails.lastName || !guestDetails.email) {
+      toast.error("Please provide name and email information");
+      return;
+    }
+    
+    // Add payment method to guest details
+    guestDetails.paymentMethod = selectedPaymentMethod;
+  
     try {
-      await makeBooking(roomData);
+      // Call the makeBooking mutation with the guest details
+      const result = await makeBooking(guestDetails);
+      
+      // If the booking was successful and we have a reservation number
+      if (result?.ReservationNo) {
+        toast.success(`Booking confirmed! Reservation #${result.ReservationNo}`);
+        // You can add navigation logic here if needed
+        // For example: navigate(`/booking-confirmation/${result.ReservationNo}`);
+      }
     } catch (error) {
-      console.error("Error making booking:", error);
-      toast.error("Failed to make booking. Please try again.");
+      // Error handling is already in the hook, but we can add specific UI feedback here
+      console.error("Booking failed:", error);
     }
   };
 
   return (
     <div id="payment-method" className="flex flex-col bg-white mt-6">
       <div className="flex items-center mb-6">
-        <div className="w-1 h-8 bg-teal-500 rounded-full mr-3" style={{ backgroundColor: "#058FA2" }}></div>
+        <div
+          className="w-1 h-8 bg-teal-500 rounded-full mr-3"
+          style={{ backgroundColor: "#058FA2" }}
+        ></div>
         <h2 className="text-3xl font-bold text-gray-800">Payment Method</h2>
       </div>
       <div className="flex flex-col gap-4">
@@ -92,7 +78,9 @@ console.log(selectedRooms)
             />
             <div>
               <h3 className="text-lg font-medium">Pay at Hotel</h3>
-              <p className="text-sm text-gray-500">Reserve now and pay directly at the hotel upon check-in.</p>
+              <p className="text-sm text-gray-500">
+                Reserve now and pay directly at the hotel upon check-in.
+              </p>
             </div>
           </label>
         )}
@@ -110,10 +98,14 @@ console.log(selectedRooms)
           />
           <div>
             <h3 className="text-lg font-medium">UPI</h3>
-            <p className="text-sm text-gray-500">Pay securely using UPI (Google Pay, PhonePe, etc.).</p>
+            <p className="text-sm text-gray-500">
+              Pay securely using UPI (Google Pay, PhonePe, etc.).
+            </p>
           </div>
         </label>
       </div>
+
+      {/* Conditional rendering of the Continue button */}
       {selectedPaymentMethod && (
         <div className="w-full flex justify-end">
           <button
