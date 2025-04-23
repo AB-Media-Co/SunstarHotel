@@ -1,6 +1,10 @@
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 
 const PrivacyPolicies = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
     return (
         <>
             <Helmet>
@@ -14,7 +18,7 @@ const PrivacyPolicies = () => {
                         Sunstar Hotel Privacy Policy
                     </h1>
                 </div>
-                <div className="bg-white px-6">
+                <div className="bg-white md:px-6">
                     <div className="content py-10 flex flex-col gap-8">
                         {/* Privacy Note */}
                         <section>

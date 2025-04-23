@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-
   Paper,
   TextField,
   Button,
@@ -9,20 +8,39 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import useUpdatePagesHook from '../../../../ApiHooks/useUpdatePagesHook';
+import { useAddMultipleFAQs, useGetFAQsByPage } from '../../../../ApiHooks/useFaqsHooks';
 
 const Faq = () => {
-  const { faqs, updateFaq } = useUpdatePagesHook();
   const [localFaqs, setLocalFaqs] = useState([]);
   const [open, setOpen] = useState(false);
+  const [selectedPage, setSelectedPage] = useState('Day Stays Rooms'); // Default page to select
+ 
+  const pages = [
+    'Day Stays Rooms',
+    'Events & Conference',
+    // 'Corporate Events',
+    // 'Social Events',
+    // 'Wedding & Pre-Wedding',
+  ]; // List of pages to be shown in the dropdown
+
+  const { data:faqs, isLoading, error } = useGetFAQsByPage(selectedPage); // Fetch FAQs for the selected page
+  const { mutate: addMultipleFAQs } = useAddMultipleFAQs(); // Hook for adding multiple FAQs
 
   useEffect(() => {
     if (faqs && Array.isArray(faqs)) {
       setLocalFaqs(faqs);
     }
   }, [faqs]);
+
+  const handlePageChange = (e) => {
+    setSelectedPage(e.target.value); // Set the page when changed from dropdown
+  };
 
   const handleChange = (index, field, value) => {
     const updatedFaqs = [...localFaqs];
@@ -38,12 +56,11 @@ const Faq = () => {
     setLocalFaqs(localFaqs.filter((_, i) => i !== index));
   };
 
-  const handleUpdate = async () => {
-    try {
-      await updateFaq({ faqs: localFaqs });
-      setOpen(false);
-    } catch (error) {
-      console.error('Error updating FAQs:', error);
+  const handleBulkAdd = () => {
+    // Ensure that there is at least one FAQ to add
+    if (localFaqs.length > 0) {
+      addMultipleFAQs(localFaqs); // Call the hook to add multiple FAQs
+      setOpen(false); // Close modal after successful addition
     }
   };
 
@@ -53,17 +70,32 @@ const Faq = () => {
   return (
     <div>
       <div className="myGlobalButton" onClick={handleOpenModal}>
-        FAQs
+        Manage FAQs
       </div>
       <Dialog open={open} onClose={handleCloseModal} maxWidth="md" fullWidth>
         <DialogTitle>Manage FAQs</DialogTitle>
         <DialogContent dividers>
-          {localFaqs.map((faq, index) => (
-            <Paper
-              key={index}
-              sx={{ p: 2, mb: 2, position: 'relative' }}
-              elevation={3}
+          {/* Page Selection Dropdown */}
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Choose Page</InputLabel>
+            <Select
+              value={selectedPage}
+              onChange={handlePageChange}
+              label="Choose Page"
             >
+              {pages.map((page) => (
+                <MenuItem key={page} value={page}>
+                  {page}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* Display FAQs for the selected page */}
+          {isLoading && <p>Loading...</p>}
+          {error && <p>Error: {error.message}</p>}
+          {localFaqs.map((faq, index) => (
+            <Paper key={index} sx={{ p: 2, mb: 2, position: 'relative' }} elevation={3}>
               <IconButton
                 onClick={() => handleRemoveFaq(index)}
                 sx={{ position: 'absolute', top: 8, right: 8 }}
@@ -76,18 +108,14 @@ const Faq = () => {
                 fullWidth
                 margin="normal"
                 value={faq.question}
-                onChange={(e) =>
-                  handleChange(index, 'question', e.target.value)
-                }
+                onChange={(e) => handleChange(index, 'question', e.target.value)}
               />
               <TextField
                 label="Answer"
                 fullWidth
                 margin="normal"
                 value={faq.answer}
-                onChange={(e) =>
-                  handleChange(index, 'answer', e.target.value)
-                }
+                onChange={(e) => handleChange(index, 'answer', e.target.value)}
               />
             </Paper>
           ))}
@@ -97,8 +125,8 @@ const Faq = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseModal}>Cancel</Button>
-          <Button variant="contained" onClick={handleUpdate}>
-            Update FAQs
+          <Button variant="contained" onClick={handleBulkAdd}>
+            Add Multiple FAQs
           </Button>
         </DialogActions>
       </Dialog>

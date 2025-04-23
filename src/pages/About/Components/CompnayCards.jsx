@@ -8,7 +8,7 @@ import { useEffect } from "react";
 const Card = ({ image, title, description }) => {
     return (
 
-        <div className={`max-w-[350px] flex flex-col relative animation-on-scroll  overflow-hidden shadow-xl  border rounded-lg bg-primary-white`}>
+        <div className={`md:max-w-[350px] flex flex-col relative animation-on-scroll  overflow-hidden shadow-xl  border rounded-lg bg-primary-white`}>
             <img
                 src={image}
                 alt={title}
@@ -38,7 +38,7 @@ const CompnayCards = () => {
 
     return (
         <div id="what-we-offer" className="py-12 flex flex-col gap-8  content">
-            <h1 className="text-mobile/h1 text-center md:text-left text-black text-reveal-animation">{offeringSection?.heading} </h1>
+            <h1 className="text-mobile/h3 md:text-desktop/h3 font-bold text-reveal-animation">{offeringSection?.heading} </h1>
             <div className="flex justify-center md:justify-between  flex-wrap gap-10 hotelSelection">
                 {offeringSection?.offers?.map((card, index) => (
                     <Card

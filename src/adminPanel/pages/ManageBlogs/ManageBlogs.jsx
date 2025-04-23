@@ -113,6 +113,7 @@ const ImageUpload = ({ value, onChange, disabled }) => {
 
 const ManageBlogs = () => {
     const { data: blogs, isLoading, error } = useGetBlogs();
+    console.log(blogs)
     const addBlogMutation = useAddBlog();
     const updateBlogMutation = useUpdateBlog();
     const deleteBlogMutation = useDeleteBlog();
@@ -189,7 +190,6 @@ const ManageBlogs = () => {
                 { id: currentBlog.id, updateData: blogData },
                 {
                     onSuccess: () => {
-                        console.log('Blog updated successfully');
                         handleClose();
                     },
                     onError: (error) => console.error('Update failed:', error),
@@ -198,7 +198,6 @@ const ManageBlogs = () => {
         } else {
             addBlogMutation.mutate(blogData, {
                 onSuccess: () => {
-                    console.log('Blog added successfully');
                     handleClose();
                 },
                 onError: (error) => console.error('Add failed:', error),
@@ -209,7 +208,6 @@ const ManageBlogs = () => {
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this blog?")) {
             deleteBlogMutation.mutate(id, {
-                onSuccess: () => console.log('Blog deleted successfully'),
                 onError: (error) => console.error('Delete failed:', error),
             });
         }
@@ -230,6 +228,18 @@ const ManageBlogs = () => {
             </Container>
         );
     }
+
+    const StyledCard = styled(Card)(({ theme }) => ({
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        width: "350px",
+        transition: "transform 0.2s",
+        "&:hover": {
+            transform: "scale(1.02)",
+            boxShadow: theme.shadows[4],
+        },
+    }));
 
     return (
         <>
@@ -259,83 +269,69 @@ const ManageBlogs = () => {
                         <Grid container spacing={3}>
                             {blogs?.data?.map((blog) => (
                                 <Grid item xs={12} sm={6} md={4} key={blog._id}>
-                                    <Card sx={{
-                                        height: '480px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'space-between'
-                                    }}>
-                                        <CardContent sx={{ flexGrow: 1 }}>
-                                            <Typography variant="h5" component="div">
-                                                {blog.title}
+                                    <StyledCard>
+                                        <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+                                            <Typography variant="h6" component="div" sx={{ mb: 1, fontWeight: "bold" }}>
+                                                {/* {blog.title} */}
+                                                {blog.title.split(' ').length > 5
+                                                    ? blog.title.split(' ').slice(0, 5).join(' ') + '...'
+                                                    : blog.title
+                                                }
                                             </Typography>
                                             <Typography
                                                 variant="body2"
                                                 color="text.secondary"
                                                 sx={{
-                                                    overflow: 'hidden',
-                                                    textOverflow: 'ellipsis',
-                                                    display: '-webkit-box',
+                                                    flexGrow: 1,
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                    display: "-webkit-box",
                                                     WebkitLineClamp: 3,
-                                                    WebkitBoxOrient: 'vertical'
+                                                    WebkitBoxOrient: "vertical",
                                                 }}
                                             >
-                                                {blog.description}
+                                                {/* {blog.description} */}
+                                                {blog.description.split(' ').length > 50
+                                                    ? blog.description.split(' ').slice(0, 50).join(' ') + '...'
+                                                    : blog.description
+                                                }
                                             </Typography>
                                             {blog.image && (
-                                                <img
-                                                    src={blog.image}
-                                                    alt={blog.title}
-                                                    style={{
-                                                        width: "100%",
-                                                        height: "200px",
-                                                        objectFit: "cover",
-                                                        marginTop: "1rem",
-                                                    }}
-                                                    onError={(e) => (e.target.src = "/fallback-image.jpg")}
-                                                />
+                                                <Box sx={{ mt: 2, mb: 1 }}>
+                                                    <img
+                                                        src={blog.image}
+                                                        alt={blog.title}
+                                                        style={{
+                                                            width: "100%",
+                                                            height: "150px",
+                                                            objectFit: "cover",
+                                                            borderRadius: "4px",
+                                                        }}
+                                                        onError={(e) => (e.target.src = "/fallback-image.jpg")}
+                                                    />
+                                                </Box>
                                             )}
-                                            <Typography
-                                                variant="caption"
-                                                color="text.secondary"
-                                                sx={{ mt: 1, display: 'block' }}
-                                            >
+                                            <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
                                                 Slug: {blog.slug}
                                             </Typography>
-                                            <Typography
-                                                variant="caption"
-                                                color="text.secondary"
-                                                sx={{ mt: 0.5, display: 'block' }}
-                                            >
+                                            <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
                                                 Category: {blog.category}
                                             </Typography>
                                             {blog.keywords && blog.keywords.length > 0 && (
-                                                <Typography
-                                                    variant="caption"
-                                                    color="text.secondary"
-                                                    sx={{ mt: 0.5, display: 'block' }}
-                                                >
-                                                    Keywords: {blog.keywords.join(', ')}
+                                                <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
+                                                    Keywords: {blog.keywords.join(", ")}
                                                 </Typography>
                                             )}
                                         </CardContent>
-                                        <CardActions>
-                                            <Button
-                                                size="small"
-                                                color="primary"
-                                                onClick={() => handleOpen(blog)}
-                                            >
+                                        <CardActions sx={{ justifyContent: "space-between", p: 2 }}>
+                                            <Button size="small" color="primary" onClick={() => handleOpen(blog)}>
                                                 Edit
                                             </Button>
-                                            <Button
-                                                size="small"
-                                                color="error"
-                                                onClick={() => handleDelete(blog._id)}
-                                            >
+                                            <Button size="small" color="error" onClick={() => handleDelete(blog._id)}>
                                                 Delete
                                             </Button>
                                         </CardActions>
-                                    </Card>
+                                    </StyledCard>
                                 </Grid>
                             ))}
                         </Grid>
@@ -375,13 +371,36 @@ const ManageBlogs = () => {
                                         margin="normal"
                                         required
                                         disabled={addBlogMutation.isLoading || updateBlogMutation.isLoading}
+                                        SelectProps={{
+                                            MenuProps: {
+                                                PaperProps: {
+                                                    style: {
+                                                        maxHeight: 250
+                                                    }
+                                                }
+                                            }
+                                        }}
                                     >
-                                        <MenuItem value="Leisure Travel">Leisure Travel</MenuItem>
-                                        <MenuItem value="Weekend Getaway">Weekend Getaway</MenuItem>
-                                        <MenuItem value="Near By Attractions">Near By Attractions</MenuItem>
+                                        <MenuItem value="Hospitality">Hospitality</MenuItem>
+                                        <MenuItem value="First-Time Visitors">First-Time Visitors</MenuItem>
+                                        <MenuItem value="Location & Access">Location & Access</MenuItem>
+                                        <MenuItem value="Hotel Features">Hotel Features</MenuItem>
                                         <MenuItem value="Travel Tips">Travel Tips</MenuItem>
-                                        <MenuItem value="Nightlife">Nightlife</MenuItem>
+                                        <MenuItem value="Nearby Tours">Nearby Tours</MenuItem>
                                         <MenuItem value="Shopping">Shopping</MenuItem>
+                                        <MenuItem value="Wellness">Wellness</MenuItem>
+                                        <MenuItem value="Guest Stories">Guest Stories</MenuItem>
+                                        <MenuItem value="Dining">Dining</MenuItem>
+                                        <MenuItem value="Tourism & Culture">Tourism & Culture</MenuItem>
+                                        <MenuItem value="Day Trips">Day Trips</MenuItem>
+                                        <MenuItem value="Events & Festivities">Events & Festivities</MenuItem>
+                                        <MenuItem value="International Travel">International Travel</MenuItem>
+                                        <MenuItem value="Local Life">Local Life</MenuItem>
+                                        <MenuItem value="Behind the Scenes">Behind the Scenes</MenuItem>
+                                        <MenuItem value="Luxury on Budget">Luxury on Budget</MenuItem>
+                                        <MenuItem value="Sustainability">Sustainability</MenuItem>
+                                        <MenuItem value="Travel Essentials">Travel Essentials</MenuItem>
+                                        <MenuItem value="Scam Awareness">Scam Awareness</MenuItem>
                                     </TextField>
                                     {/* Keywords input */}
                                     <TextField

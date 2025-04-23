@@ -10,11 +10,13 @@ export const useRooms = (hotelCode, authCode, fromDate, toDate) => {
       const response = await axiosInstance.get('/api/ezee/syncedRooms', {
         params: { hotelCode, authCode, fromDate, toDate },
       });
+      console.log(response.data)
       return response.data;
     },
-    staleTime: 30000, // Data is fresh for 30 seconds
-    refetchOnWindowFocus: false,
+    // staleTime: 30000, // Data is fresh for 30 seconds
+    refetchOnWindowFocus: true,
     onError: (error) => {
+      console.log(error)
       toast.error("Error fetching rooms: " + error?.response?.data?.error || error.message);
     },
   });
@@ -38,7 +40,7 @@ export const useUpdateRoom = (hotelCode, authCode, fromDate, toDate) => {
       );
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Invalidate the rooms query so that data is refetched after update.
       queryClient.invalidateQueries(['rooms', hotelCode, authCode, fromDate, toDate]);
       toast.success("Room updated successfully");
@@ -58,5 +60,26 @@ export const getSingleRoomById = async (id) => {
     toast.error("Error fetching room: " + error?.response?.data?.error || error.message);
     throw error; // Rethrow the error to let the calling code handle it
   }
+};
+
+// Fetch single room by ID
+export const getDayUseRooms = async () => {
+  try {
+    const response = await axiosInstance.get(`/api/day-use-rooms`);
+    return response?.data;
+  } catch (error) {
+    const errorMessage = error?.response?.data?.error || error.message;
+    toast.error(`Error fetching day use rooms: ${errorMessage}`);
+    throw error;
+  }
+};
+
+export const useDayUseRooms = () => {
+  return useQuery({
+    queryKey: ['dayUseRooms'],
+    queryFn: getDayUseRooms,
+    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
+    retry: 2, // Retry failed requests twice
+  });
 };
 

@@ -1,112 +1,205 @@
-import TestimonialSection from '../../Components/TestimonialSection';
 import { testimonialData } from '../../Data/AboutSectionData';
+import OtherPageLayout from './OtherPageLayout';
 import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import SettingsIcon from '@mui/icons-material/Settings';
-import GroupIcon from '@mui/icons-material/Group';
-import LocalDiningIcon from '@mui/icons-material/LocalDining';
-import VideocamIcon from '@mui/icons-material/Videocam';
-import ContentPasteIcon from '@mui/icons-material/ContentPaste';
-import HotelIcon from '@mui/icons-material/Hotel';
-import LocalParkingIcon from '@mui/icons-material/LocalParking';
-import SunstarEnquiryForm from '../CorporateBooking/Components/SunstarEnquiryForm';
+import { Helmet } from 'react-helmet';
+import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
+import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 
 const CorporateEventsPage = () => {
-    const { Testimonials } = useUpdatePagesHook();
-
-    const eventTypes = [
-        { title: 'Training & Development', image: '/images/Sunstar other page Images/Training & Development/VET 1.png' },
-        { title: 'Conference', image: '/images/Sunstar other page Images/Conference/hauser_partner_Event 1.png' },
-        { title: 'Gala Dinner', image: '/images/Sunstar other page Images/Gala Dinner/8c30c532c44ad2bab6b62d288164acef 1.png' },
-        { title: 'Awards Ceremony', image: '/images/Sunstar other page Images/Awards Ceremony/Hotelier-Awards-2021-20_11817772-1024x768-1 1.png' },
-    ];
-
-    // Enhanced Why Choose Us data with MUI icons for a more engaging UI
-    const whyChooseUsFeatures = [
-        { title: 'On Time', icon: <AccessTimeIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'System Driven', icon: <SettingsIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'Conference Sitting', icon: <GroupIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'Buffet', icon: <LocalDiningIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'Projector & Mike', icon: <VideocamIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'Stationery', icon: <ContentPasteIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'Stay', icon: <HotelIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'Valet Parking', icon: <LocalParkingIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-    ];
+  const { Testimonials } = useUpdatePagesHook();
+  const { mutate, isLoading } = useEnquiryForm();
 
 
 
-    return (
-        <div className="bg-primary-white text-primary-dark-green">
-            {/* Hero Section */}
-            <header className="relative">
-                <img
-                    src="/images/Sunstar other page Images/Coorporate events/corporate-events 1.png"
-                    alt="Corporate Event"
-                    className="w-full h-[100vh] object-cover"
-                />
-                <div className="absolute inset-0 bg-black opacity-60"></div>
-                <div className="absolute inset-0 content flex flex-col items-center justify-center text-center px-4">
-                    <h1 className="text-4xl md:text-5xl font-bold text-primary-white">
-                        Corporate Events at Sunstar Hotels
-                    </h1>
-                    <p className="mt-4 text-lg md:text-xl text-primary-white">
-                        Introducing Sunstar Hotels, the ideal destination for corporate events. Our cutting-edge meeting rooms and event spaces
-                        accommodate groups of all sizes. Enjoy personalized menus featuring fresh, local ingredients alongside comfortable
-                        accommodations with workspaces and high-speed internet for business travellers.
-                    </p>
-                </div>
-            </header>
+  const eventTypes = [
+    { title: 'Training & Development', image: '/images/OtherPageImages/Training.jpg' },
+    { title: 'Conference', image: '/images/OtherPageImages/Conference.jpg' },
+    { title: 'Gala Dinner', image: '/images/OtherPageImages/GalaDinner.jpg' },
+    { title: 'Awards Ceremony', image: '/images/OtherPageImages/AwardCeremony.webp' },
+  ];
 
-            {/* MICE & Corporate Events Intro */}
-            <section className="py-12 px-4 content">
-                <h2 className="text-3xl font-bold text-center">MICE & Corporate Events</h2>
-                <p className="mt-4 text-center text-primary-gray max-w-2xl mx-auto">
-                    At Sunstar Hotels, we are committed to delivering exceptional service and support, ensuring the success of your corporate event.
-                </p>
-            </section>
+  const whyChooseUsFeatures = [
+    { title: 'On Time', icon: '/images/othericons/Ontime.svg' },
+    { title: 'System Driven', icon: '/images/othericons/systemdriven.svg' },
+    { title: 'Conference Sitting', icon: '/images/othericons/ConferenceSitting.svg' },
+    { title: 'Buffet', icon: '/images/othericons/buffet.svg' },
+    { title: 'Projector & Mike', icon: '/images/othericons/projectormike.svg' },
+    { title: 'Stationery', icon: '/images/othericons/stationary.svg' },
+    { title: 'Stay', icon: '/images/othericons/stay.svg' },
+    { title: 'Valet Parking', icon: '/images/othericons/valetParking.svg' },
+  ];
 
-            {/* Event Types Section */}
-            <section className="py-12 px-4">
-                <div className="grid content grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {eventTypes.map((event, index) => (
-                        <div key={index} className="bg-primary-white shadow-md rounded overflow-hidden flex flex-col">
-                            <img src={event.image} alt={event.title} className="w-full h-48 object-cover" />
-                            <div className="p-4 flex flex-col flex-grow">
-                                <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                                <p className="text-primary-gray mb-4 flex-grow">
-                                    Starting at competitive prices.
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+  const venueData = [
+    {
+      id: 1,
+      name: 'Venue1',
+      location: 'Rajendra Place, Delhi',
+      pricePerPlate: 600,
+      capacity: '30 to 200',
+      rating: 4.6,
+      image: '/images/OtherPageImages/CoorporateEvents.webp'
+    },
+    {
+      id: 2,
+      name: 'Venue2',
+      location: 'Karol Bagh, Delhi',
+      pricePerPlate: 650,
+      capacity: '50 to 700',
+      rating: 4.9,
+      image: '/images/OtherPageImages/Conference.jpg'
+    },
+    {
+      id: 3,
+      name: 'Venue3',
+      location: 'Patel Nagar, Delhi',
+      pricePerPlate: 550,
+      capacity: '40 to 300',
+      rating: 4.4,
+      image: '/images/OtherPageImages/GalaDinner.jpg'
+    },
+    {
+      id: 4,
+      name: 'Venue4',
+      location: 'Pusa Road, Delhi',
+      pricePerPlate: 580,
+      capacity: '30 to 250',
+      rating: 4.5,
+      image: '/images/OtherPageImages/AwardCeremony.webp'
+    }
+  ];
 
-            {/* Enhanced Why Choose Us Section */}
-            <section className="py-12 px-4 bg-primary-green">
-                <h2 className="text-3xl font-bold  text-center text-primary-white">Why Choose Us</h2>
-                <div className="mt-8 grid grid-cols-1 content sm:grid-cols-2 md:grid-cols-4 gap-6">
-                    {whyChooseUsFeatures.map((feature, index) => (
-                        <div
-                            key={index}
-                            className="bg-primary-white p-6 rounded-lg shadow-lg flex flex-col items-center justify-center transform hover:scale-105 transition-all duration-300"
-                        >
-                            <div className="mb-4">{feature.icon}</div>
-                            <p className="text-lg font-semibold text-primary-dark-green">{feature.title}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
 
-            <TestimonialSection
-                Testimonials={Testimonials}
-                backgroundImage={testimonialData.backgroundImage}
-            />
 
-            <SunstarEnquiryForm />
 
-        </div>
-    );
+
+  const introText = (
+    <>
+      Introducing Sunstar Hotels, the ideal destination for corporate events. Our cutting-edge meeting rooms and event spaces accommodate groups of all sizes. With personalised menus featuring fresh, local ingredients, our catering team caters to diverse preferences and dietary restrictions.
+      {/* <br /> */}
+      <p className='my-4'>
+        Enjoy comfortable accommodations with workspaces and high-speed internet for business travellers. Conveniently located near businesses and attractions, Sunstar Hotels offer the perfect balance of work and leisure. Experience exceptional service and support.
+      </p>
+      {/* <br /> */}
+      Our commitment to exceptional service and support sets us apart. Our experienced staff will assist you throughout the planning process, ensuring the success of your corporate event. Contact us today to explore our meeting spaces, catering services, and amenities, and let Sunstar Hotels be the host for your next memorable corporate event.
+    </>
+  );
+
+
+
+
+
+  const eventFormFields = [
+    {
+      name: "name",
+      type: "text",
+      placeholder: "Your Name",
+      colSpan: "col-span-2",
+    },
+    {
+      name: "email",
+      type: "email",
+      placeholder: "Email Address",
+      colSpan: "md:col-span-1",
+    },
+    {
+      name: "phone",
+      type: "tel",
+      placeholder: "Phone Number",
+      colSpan: "md:col-span-1",
+    },
+    {
+      name: "company",
+      placeholder: "Company Name",
+    },
+    {
+      name: "date",
+      placeholder: "Date of event",
+      type: "date",
+  },
+    {
+      name: "eventType",
+      type: "dropdown",
+      placeholder: "Select Event Type",
+      colSpan: "md:col-span-1",
+      options: [
+        { value: "corporate", label: "Corporate Event" },
+        { value: "wedding", label: "Wedding & Pre-Wedding" },
+        { value: "social", label: "Social Event" },
+        { value: "birthday", label: "Birthday Celebration" },
+        { value: "conference", label: "Conference" },
+        { value: "other", label: "Other" },
+      ],
+    }
+
+
+  ];
+
+
+  const handleSubmit = (formData, callbacks) => {
+
+    mutate({
+      page: "Coorporte Event",
+      name: formData?.name,
+      companyName: formData?.company,
+      email: formData?.email,
+      address: formData?.specialRequirements,
+      phone: formData?.phone,
+      enquiry: formData?.eventType,
+      date: formData?.date,
+      gid: [1303810786],
+      submittedAt: new Date().toISOString(),
+    }, callbacks); 
+  };
+
+  return (
+    <>
+      <Helmet>
+        <title>Corporate Events - Host Professional Events at Hotel Sunstar Group</title>
+        <meta name="description" content="Plan your next corporate event at Hotel Sunstar Group. From conferences and training sessions to gala dinners and award ceremonies, we offer state-of-the-art facilities and professional event management." />
+        <meta name="keywords" content="corporate events, business meetings, conferences, training sessions, gala dinners, award ceremonies, Hotel Sunstar Group, Delhi corporate venues" />
+      </Helmet>
+      <OtherPageLayout
+        // Page type for SEO
+        pageType="Corporate Events - Host Professional Events at Hotel Sunstar Group"
+
+        // Hero section
+        heroImage="/images/OtherPageImages/CoorporateEvents.webp"
+        heroTitle="Introducing Sunstar Hotels,"
+        heroHighlightedText="the ideal destination for corporate events"
+
+        // Intro section
+        introText={introText}
+
+        // Section titles
+        sectionMainTitle="MICE & Corporate Events"
+        sectionSubtitle="At Sunstar Hotels, we are committed to delivering exceptional service and support, ensuring the success of your corporate event."
+
+        // Event types grid
+        eventTypes={eventTypes}
+
+        // Venues slider
+        venueData={venueData}
+
+        // Features grid
+        featureItems={whyChooseUsFeatures}
+
+        // Testimonials and form
+        testimonials={Testimonials}
+        testimonialBackgroundImage={testimonialData.backgroundImage}
+        formImage="/images/OtherPageImages/formImg1.webp"
+      />
+
+
+      <CommonUseEnquiryForm
+        title="TALK WITH US?"
+        subtitle="Sunstar Offers The Perfect Corporate Events Packages Designed To Make Your Experience Truly Magical"
+        fields={eventFormFields}
+        onSubmit={handleSubmit}
+        buttonLabel="Submit Enquiry"
+        containerClassName=""
+      />
+    </>
+  );
 };
 
 export default CorporateEventsPage;

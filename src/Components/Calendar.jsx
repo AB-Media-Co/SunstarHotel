@@ -22,7 +22,7 @@ import { usePricing } from "../Context/PricingContext";
 const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const nextMonth = addMonths(currentMonth, 1);
-  const { closeHotelModal } = usePricing();
+  const { closeHotelModal, setNights } = usePricing();
 
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
@@ -98,7 +98,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
     if (hotelCode || hotelInfo?.hotelCode) {
       try {
         // Wait for the rooms data to be fetched
-        await new Promise(resolve => {
+        new Promise(resolve => {
           const checkData = () => {
             if (rooms) {
               resolve();
@@ -216,10 +216,14 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
   const calculateNights = () => {
     if (checkIn && checkOut) {
       const nights = differenceInCalendarDays(checkOut, checkIn);
+      setNights(nights)
+
       return nights === 1 ? "1 Night" : `${nights} Nights`;
     }
     return "";
   };
+
+
 
   // Add useEffect for popup animation
   useEffect(() => {
@@ -376,9 +380,9 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
 
           <button
             onClick={handleConfirmClick}
-            disabled={!checkIn || !checkOut || (shouldFetchRooms && isLoading)}
+            disabled={showLongStayPopup}
             className={`w-full md:w-auto font-bold text-white px-6 py-3 md:py-4 rounded-xl shadow-lg transition-all duration-300 
-              ${(!checkIn || !checkOut)
+              ${(!checkIn || !checkOut|| showLongStayPopup)
                 ? "bg-gray-300 cursor-not-allowed"
                 : "bg-primary-dark-green hover:bg-primary-green transform hover:scale-105"}`}
           >

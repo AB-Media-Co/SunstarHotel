@@ -3,6 +3,7 @@ import { ExternalLink } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
+// eslint-disable-next-line react/prop-types
 const Location = ({ address }) => {
     // Destructure the passed object
     const {
@@ -16,6 +17,7 @@ const Location = ({ address }) => {
         nightlife,
         city
     } = address || {};
+    // console.log(address)
 
     const zoom = 20;
     const mapContainerRef = useRef(null);
@@ -91,6 +93,7 @@ const Location = ({ address }) => {
                     'Nightlife': nightlife,
                 };
 
+                // console.log("hi",categories);
                 Object.entries(categories).forEach(([label, places]) => {
                     if (places && places.length > 0) {
                         Promise.all(
@@ -274,11 +277,11 @@ const Location = ({ address }) => {
     };
 
     return (
-        <div className="content my-5">
+        <div className="content my-5"  id='location'>
             {/* Top Section */}
             <div className="w-full mb-5 flex flex-col gap-1">
-                <h2 className="text-desktop/h3 font-bold mb-1">Location</h2>
-                <p className="text-primary-gray text-desktop/h6/medium">{hotelAddress }</p>
+                <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold mb-1">Location</h2>
+                <p className="text-primary-gray text-mobile/body/2 md:text-desktop/body/1">{hotelAddress }</p>
                 <a
                     onClick={viewHotelLocationOnMap}
                     className="my-2 underline items-center text-primary-green font-bold text-lg cursor-pointer flex gap-2"

@@ -169,7 +169,6 @@ const OurValue = () => {
   };
 
   const handleSave = (updatedData) => {
-    console.log('Updated Value Section Data:', updatedData);
     updateWhySunstarValueection(updatedData);
     setLocalData(updatedData);
   };

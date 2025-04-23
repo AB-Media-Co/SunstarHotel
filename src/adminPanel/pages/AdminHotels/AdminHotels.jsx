@@ -55,7 +55,6 @@ export const AdminHotels = () => {
 
   // Updated: When editing, navigate to the edit page and pass the hotel data via state.
   const handleEdit = (item) => {
-    console.log(item)
     navigate(`/admin/hotels/edit/${item.hotelCode}`, { state: { hotel: item } });
   };
 

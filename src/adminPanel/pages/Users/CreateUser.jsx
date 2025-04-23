@@ -1,10 +1,25 @@
 import { useState } from 'react';
-import { useAdminRegister } from '../../../ApiHooks/useAdminHooks'; // Adjust path
+import { useAdminRegister } from '../../../ApiHooks/useAdminHooks';
+import { useGetHotels } from '../../../ApiHooks/useHotelHook2';
 import toast from 'react-hot-toast';
+import { 
+  Container, Box, Grid, TextField, Select, MenuItem, FormControl, 
+  InputLabel, Button, Typography, Divider, CircularProgress,
+  Paper, Stepper, Step, StepLabel, Card, CardContent, Avatar, 
+  Chip, Tooltip, IconButton
+} from '@mui/material';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
+import BadgeIcon from '@mui/icons-material/Badge';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 export const CreateUser = () => {
+  const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
-    name: '',
     username: '',
     email: '',
     phone: '',
@@ -13,14 +28,29 @@ export const CreateUser = () => {
     role: '',
     password: '',
     allowedCities: '',
-    allowedHotels: '',
+    allowedHotels: [],
   });
 
+  const { data: hotels } = useGetHotels();
   const { mutate: register, isLoading } = useAdminRegister();
+
+  const steps = ['Basic Information', 'Personal Details', 'Role & Security', 'Access Control'];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === 'allowedHotels') {
+      setFormData({ ...formData, [name]: typeof value === 'string' ? value.split(',') : value });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleNext = () => {
+    setActiveStep((prevStep) => prevStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevStep) => prevStep - 1);
   };
 
   const handleSubmit = (e) => {
@@ -28,14 +58,13 @@ export const CreateUser = () => {
     const submissionData = {
       ...formData,
       allowedCities: formData.allowedCities ? formData.allowedCities.split(',').map((city) => city.trim()) : [],
-      allowedHotels: formData.allowedHotels ? formData.allowedHotels.split(',').map((hotel) => hotel.trim()) : [],
+      allowedHotels: formData.allowedHotels || [],
     };
 
     register(submissionData, {
       onSuccess: () => {
         toast.success('User created successfully');
         setFormData({
-          name: '',
           username: '',
           email: '',
           phone: '',
@@ -44,8 +73,9 @@ export const CreateUser = () => {
           role: '',
           password: '',
           allowedCities: '',
-          allowedHotels: '',
+          allowedHotels: [],
         });
+        setActiveStep(0);
       },
       onError: (error) => {
         toast.error(error.message || 'User creation failed');
@@ -53,178 +83,315 @@ export const CreateUser = () => {
     });
   };
 
-  return (
-    <div className="h-[100vh] mt-14 bg-gray-100 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-lg w-full max-w-3xl p-8">
-        <h2 className="text-2xl font-bold text-gray-700 mb-6 text-center">Create User</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Full Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter full name"
-                required
-                disabled={isLoading}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Username</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter username"
-                required
-                disabled={isLoading}
-              />
-            </div>
-          </div>
+  const renderBasicInfo = () => (
+    <Card elevation={0} sx={{ p: 2 }}>
+      <CardContent>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+          <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
+            <ContactMailIcon />
+          </Avatar>
+          <Typography variant="h6">Basic Information</Typography>
+        </Box>
+        
+        <TextField
+          fullWidth
+          label="Username"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          placeholder="Enter username"
+          required
+          disabled={isLoading}
+          variant="outlined"
+          sx={{ mb: 3 }}
+        />
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter email address"
-                required
-                disabled={isLoading}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Phone Number</label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter phone number"
-                required
-                disabled={isLoading}
-              />
-            </div>
-          </div>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter email address"
+              required
+              disabled={isLoading}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="Phone Number"
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Enter phone number"
+              required
+              disabled={isLoading}
+              variant="outlined"
+            />
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Gender</label>
-              <select
+  const renderPersonalDetails = () => (
+    <Card elevation={0} sx={{ p: 2 }}>
+      <CardContent>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+          <Avatar sx={{ bgcolor: 'secondary.main', mr: 2 }}>
+            <BadgeIcon />
+          </Avatar>
+          <Typography variant="h6">Personal Details</Typography>
+        </Box>
+        
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12}>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Gender</InputLabel>
+              <Select
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                label="Gender"
                 required
                 disabled={isLoading}
               >
-                <option value="" disabled>Select gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Age</label>
-              <input
-                type="number"
-                name="age"
-                value={formData.age}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter age"
-                required
-                min="18"
-                max="100"
-                disabled={isLoading}
-              />
-            </div>
-          </div>
+                <MenuItem value="" disabled>Select gender</MenuItem>
+                <MenuItem value="male">Male</MenuItem>
+                <MenuItem value="female">Female</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <TextField
+              fullWidth
+              label="Age"
+              type="number"
+              name="age"
+              value={formData.age}
+              onChange={handleChange}
+              placeholder="Enter age"
+              required
+              disabled={isLoading}
+              variant="outlined"
+              InputProps={{
+                inputProps: { min: 18, max: 100 }
+              }}
+            />
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Role</label>
-              <select
+  const renderRoleAndSecurity = () => (
+    <Card elevation={0} sx={{ p: 2 }}>
+      <CardContent>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+          <Avatar sx={{ bgcolor: 'error.main', mr: 2 }}>
+            <VpnKeyIcon />
+          </Avatar>
+          <Typography variant="h6">Role & Security</Typography>
+        </Box>
+        
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Role</InputLabel>
+              <Select
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                label="Role"
                 required
                 disabled={isLoading}
               >
-                <option value="" disabled>Select role</option>
-                <option value="superadmin">SuperAdmin</option>
-                <option value="admin">Admin</option>
-                <option value="manager">Manager</option>
-                <option value="contentManager">Content Manager</option>
-                <option value="cityManager">City Manager</option>
-                <option value="hotelManager">Hotel Manager</option>
-                <option value="digitalMarketer">Digital Marketer</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter password"
-                required
-                disabled={isLoading}
-              />
-            </div>
-          </div>
+                <MenuItem value="" disabled>Select role</MenuItem>
+                <MenuItem value="superadmin">SuperAdmin</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="manager">Manager</MenuItem>
+                <MenuItem value="contentManager">Content Manager</MenuItem>
+                <MenuItem value="cityManager">City Manager</MenuItem>
+                <MenuItem value="hotelManager">Hotel Manager</MenuItem>
+                <MenuItem value="digitalMarketer">Digital Marketer</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="Password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter password"
+              required
+              disabled={isLoading}
+              variant="outlined"
+            />
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Allowed Cities (comma-separated)</label>
-              <input
-                type="text"
-                name="allowedCities"
-                value={formData.allowedCities}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="e.g., city1, city2"
-                disabled={isLoading}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">Allowed Hotels (comma-separated)</label>
-              <input
-                type="text"
+  const renderAccessControl = () => (
+    <Card elevation={0} sx={{ p: 2 }}>
+      <CardContent>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+          <Avatar sx={{ bgcolor: 'success.main', mr: 2 }}>
+            <LocationCityIcon />
+          </Avatar>
+          <Typography variant="h6">Access Control</Typography>
+        </Box>
+        
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="Allowed Cities"
+              name="allowedCities"
+              value={formData.allowedCities}
+              onChange={handleChange}
+              placeholder="e.g., city1, city2"
+              disabled={isLoading}
+              variant="outlined"
+              helperText="Enter cities separated by commas"
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Allowed Hotels</InputLabel>
+              <Select
+                multiple
                 name="allowedHotels"
                 value={formData.allowedHotels}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="e.g., hotel1, hotel2"
+                label="Allowed Hotels"
                 disabled={isLoading}
-              />
-            </div>
-          </div>
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => {
+                      const hotel = hotels?.hotels?.find(h => h._id === value);
+                      return (
+                        <Chip 
+                          key={value} 
+                          label={hotel?.name || value} 
+                          size="small" 
+                          color="primary" 
+                          variant="outlined"
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
+              >
+                {hotels?.hotels?.map((hotel) => (
+                  <MenuItem key={hotel._id} value={hotel._id}>
+                    {hotel.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
 
-          <div>
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-400"
-              disabled={isLoading}
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return renderBasicInfo();
+      case 1:
+        return renderPersonalDetails();
+      case 2:
+        return renderRoleAndSecurity();
+      case 3:
+        return renderAccessControl();
+      default:
+        return 'Unknown step';
+    }
+  };
+
+  const isStepValid = (step) => {
+    switch (step) {
+      case 0:
+        return formData.username && formData.email && formData.phone;
+      case 1:
+        return formData.gender && formData.age;
+      case 2:
+        return formData.role && formData.password;
+      case 3:
+        return true; // Optional fields
+      default:
+        return false;
+    }
+  };
+
+  return (
+    <Container maxWidth="lg" sx={{ mt: 15, mb: 5, minHeight: '80vh' }}>
+      <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+          <PersonAddIcon fontSize="large" sx={{ color: 'primary.main', mr: 2 }} />
+          <Typography variant="h4" component="h1" color="primary.main" fontWeight="500">
+            Create New User
+          </Typography>
+        </Box>
+
+        <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          {getStepContent(activeStep)}
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+            <Button
+              variant="outlined"
+              disabled={activeStep === 0 || isLoading}
+              onClick={handleBack}
+              startIcon={<ArrowBackIcon />}
             >
-              {isLoading ? 'Creating...' : 'Create User'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+              Back
+            </Button>
+            
+            {activeStep === steps.length - 1 ? (
+              <Button
+                type="submit"
+                variant="contained"
+                color="success"
+                disabled={isLoading || !isStepValid(activeStep)}
+                endIcon={isLoading ? <CircularProgress size={20} /> : <CheckCircleIcon />}
+              >
+                {isLoading ? 'Creating...' : 'Create User'}
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                onClick={handleNext}
+                disabled={!isStepValid(activeStep)}
+                endIcon={<ArrowForwardIcon />}
+              >
+                Next
+              </Button>
+            )}
+          </Box>
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 

@@ -168,9 +168,10 @@ const HotelForm = ({ initialData = null }) => {
   const [testimonialInput, setTestimonialInput] = useState({
     name: '',
     location: '',
-    description: '',
     heading: '',
+    description: ''
   });
+
   const [newSectionHeading, setNewSectionHeading] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
@@ -201,31 +202,28 @@ const HotelForm = ({ initialData = null }) => {
     }));
   };
 
-  const handleTestimonialChange = e => {
-    const { name, value } = e.target;
-    setTestimonialInput(prev => ({ ...prev, [name]: value }));
-  };
+  // const handleTestimonialChange = e => {
+  //   const { name, value } = e.target;
+  //   setTestimonialInput(prev => ({ ...prev, [name]: value }));
+  // };
   const handleAddTestimonial = () => {
-    const { name, location, description, heading } = testimonialInput;
-    if (name.trim() && location.trim() && description.trim() && heading.trim()) {
-      setFormData(prev => ({
-        ...prev,
-        testimonials: [
-          ...prev.testimonials,
-          { name: name.trim(), location: location.trim(), description: description.trim(), heading: heading.trim() }
-        ]
-      }));
-      setTestimonialInput({ name: '', location: '', description: '', heading: '' });
-    } else {
-      toast.error('Please fill in all testimonial fields');
-    }
+    const newTestimonial = { ...testimonialInput };
+    setFormData(prev => ({
+      ...prev,
+      testimonials: [...prev.testimonials, newTestimonial]
+    }));
+    setTestimonialInput({
+      name: '',
+      location: '',
+      heading: '',
+      description: ''
+    }); // Clear input fields
   };
-  const handleRemoveTestimonial = index => {
-    setFormData(prev => {
-      const newTestimonials = [...prev.testimonials];
-      newTestimonials.splice(index, 1);
-      return { ...prev, testimonials: newTestimonials };
-    });
+
+
+  const handleRemoveTestimonial = (index) => {
+    const updatedTestimonials = formData.testimonials.filter((_, i) => i !== index);
+    setFormData(prev => ({ ...prev, testimonials: updatedTestimonials }));
   };
 
   // FAQ Handlers
@@ -483,14 +481,14 @@ const HotelForm = ({ initialData = null }) => {
 
         {/* Tab Navigation */}
         <div className="flex justify-center mb-6 border-b">
-          {['details', 'aboutUs', 'location', 'images', 'multipleImages', 'testimonials', 'faqs', 'addToYourStay'].map(tab => (
+          {['details', 'aboutUs', 'location', 'headerImages', 'hotelImages', 'testimonials', 'faqs', 'addToYourStay'].map(tab => (
             <button
               key={tab}
               onClick={() => handleTabChange(tab)}
               className="relative text-xl px-4 py-2 mx-2 font-medium focus:outline-none transition-colors duration-300"
             >
               <span className={currentTab === tab ? 'text-blue-500' : 'text-gray-500 hover:text-blue-500'}>
-                {tab === 'multipleImages' ? 'Multiple Images' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab === 'hotelImages' ? 'Hotel Images' : tab.charAt(0).toUpperCase() + tab.slice(1)}
               </span>
               <span className={`absolute left-0 bottom-0 h-0.5 bg-blue-500 transition-all duration-300 ${currentTab === tab ? 'w-full' : 'w-0'}`}></span>
             </button>
@@ -523,7 +521,7 @@ const HotelForm = ({ initialData = null }) => {
             />
           )}
 
-          {currentTab === 'images' && (
+          {currentTab === 'headerImages' && (
             <ImagesTab
               formData={formData}
               isUploading={isUploading}
@@ -532,7 +530,7 @@ const HotelForm = ({ initialData = null }) => {
             />
           )}
 
-          {currentTab === 'multipleImages' && (
+          {currentTab === 'hotelImages' && (
             <MultipleImagesTab
               formData={formData}
               isUploading={isUploading}
@@ -549,14 +547,14 @@ const HotelForm = ({ initialData = null }) => {
           )}
 
           {currentTab === 'testimonials' && (
-            <TestimonialsTab
-              formData={formData}
-              setFormData={setFormData}
-              testimonialInput={testimonialInput}
-              handleTestimonialChange={handleTestimonialChange}
-              handleAddTestimonial={handleAddTestimonial}
-              handleRemoveTestimonial={handleRemoveTestimonial}
-            />
+          <TestimonialsTab
+          formData={formData}
+          setFormData={setFormData}
+          testimonialInput={testimonialInput}
+          setTestimonialInput={setTestimonialInput}
+          handleAddTestimonial={handleAddTestimonial}
+          handleRemoveTestimonial={handleRemoveTestimonial}
+        />
           )}
 
           {currentTab === 'aboutUs' && (

@@ -1,33 +1,101 @@
-import { useState, forwardRef, useImperativeHandle, useRef } from "react";
+import { useState, forwardRef, useImperativeHandle, useRef, useEffect } from "react";
+import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { useSendOtp, useVerifyOtp } from "../../../ApiHooks/useOffersAndDealsHook";
 import { usePricing } from "../../../Context/PricingContext";
+import {  useCreateBooking } from "../../../ApiHooks/useCreateBookingHook";
+import { useUserBookings } from "../../../ApiHooks/useEnquiryFormHook";
 
 const GuestDetailsForm = forwardRef((props, ref) => {
   const { phoneVerified, setPhoneVerified } = usePricing();
 
-  // New state variables for the additional required fields
+  // State variables for user details and OTP flow
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [showModal, setShowModal] = useState(false);
 
-  // Ref for scrolling into view when validation fails
+  // Get hotel info from localStorage (if needed for booking)
+  const localdata = localStorage.getItem("hotelInfo");
+  const hotelData = localdata ? JSON.parse(localdata) : null;
+
+
+  const SavedEmail = Cookies.get("userEmail");
+  let SavedPhone = Cookies.get("userPhone");
+  
+  // Normalize phone number for consistency (remove +91, spaces, dashes)
+  if (SavedPhone) {
+    SavedPhone = SavedPhone.replace(/[^0-9]/g, "").replace(/^91/, "");
+  }
+  
+  const { data: userBookings } = useUserBookings(SavedEmail?.toLowerCase(), SavedPhone);
+  
+
+
+  useEffect(() => {
+    if (userBookings?.length > 0) {
+      console.log("User booking history:", userBookings);
+    }
+  }, [userBookings]);
+
+  // Ref for scrolling into view on validation errors
   const formRef = useRef(null);
 
   const { mutate: sendOtp } = useSendOtp();
   const { mutate: verifyOtp } = useVerifyOtp();
+  const { mutate: createBooking } = useCreateBooking();
+
+  // On mount, check if the user has already verified (via cookie) and load stored info.
+  useEffect(() => {
+    const verified = Cookies.get("phoneVerified");
+    const storedPhone = Cookies.get("userPhone");
+    const storedUserInfo = localStorage.getItem("userInfo");
+
+    if (verified === "true" && storedPhone) {
+      setPhoneVerified(true);
+      setPhoneNumber(storedPhone);
+      if (storedUserInfo) {
+        const { firstName, lastName, email } = JSON.parse(storedUserInfo);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setEmail(email);
+      }
+      toast.success("Welcome back! Your information is loaded.");
+    }
+  }, [setPhoneVerified]);
+
+  const validateFields = () => {
+    if (!firstName.trim()) {
+      toast.error("Please enter your first name");
+      return false;
+    }
+    if (!lastName.trim()) {
+      toast.error("Please enter your last name");
+      return false;
+    }
+    if (!email.trim()) {
+      toast.error("Please enter your email address");
+      return false;
+    }
+    if (!phoneNumber.trim()) {
+      toast.error("Please enter your phone number");
+      return false;
+    }
+    return true;
+  };
 
   const handleVerifyClick = () => {
-    if (!phoneNumber.trim()) {
-      toast.error("Please enter a valid phone number");
+    if (!validateFields()) {
       return;
     }
     sendOtp(`+91${phoneNumber}`, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        // Store the session ID returned from the API
+        if (data && data.sessionId) {
+          localStorage.setItem('otpSessionId', data.sessionId);
+        }
         setShowModal(true);
         toast.success("OTP sent to your phone");
       },
@@ -42,26 +110,50 @@ const GuestDetailsForm = forwardRef((props, ref) => {
       toast.error("Please enter the OTP");
       return;
     }
-  
+
     let formattedPhone = phoneNumber.trim();
     if (!formattedPhone.startsWith("+91")) {
       formattedPhone = "+91" + formattedPhone;
     }
-  
-    verifyOtp({ phone: formattedPhone, code: otp }, {
+
+    const sessionId = localStorage.getItem('otpSessionId');
+    if (!sessionId) {
+      toast.error("Session expired. Please request a new OTP");
+      return;
+    }
+
+    verifyOtp({
+      phone: formattedPhone,
+      code: otp,
+      sessionId: sessionId,
+      firstName,
+      lastName,
+      email
+    }, {
       onSuccess: (data) => {
-        console.log("Verification Check Response:", data);
-        if (data && (data.status === "approved" || data.valid === true)) {
+        if (data && (data.status === "OTP Matched" || data.valid === true)) {
           setPhoneVerified(true);
           setShowModal(false);
-          setOtp('');
+          setOtp("");
+          Cookies.set("phoneVerified", "true", { expires: 30 });
+          Cookies.set("userPhone", formattedPhone, { expires: 30 });
+          Cookies.set("userEmail", email, { expires: 30 });
+          localStorage.setItem("userInfo", JSON.stringify({ firstName, lastName, email }));
           toast.success("Phone number verified");
+
+          createBooking({
+            name: `${firstName} ${lastName}`,
+            email: email,
+            mobileNumber: formattedPhone,
+            hotelcode: hotelData?.hotelCode || "",
+            authcode: hotelData?.authKey || "",
+            roomDetails: []
+          });
         } else {
           toast.error("Invalid OTP");
         }
       },
       onError: (error) => {
-        console.log("OTP Verification Error:", error);
         if (error?.response?.data?.message) {
           toast.error(`OTP verification failed: ${error.response.data.message}`);
         } else {
@@ -101,7 +193,7 @@ const GuestDetailsForm = forwardRef((props, ref) => {
     return true;
   };
 
-  // Expose the validateForm method to the parent component via ref
+  // Expose the validateForm method and guest details to the parent component via ref
   useImperativeHandle(ref, () => ({
     validateForm,
     getGuestDetails: () => ({
@@ -113,54 +205,40 @@ const GuestDetailsForm = forwardRef((props, ref) => {
   }));
 
   return (
-    <div ref={formRef} className="flex flex-col gap-6 bg-white">
-      <div className="flex items-center mb-6">
-        <div className="w-1 h-8 bg-primary-green rounded-full mr-3" style={{ backgroundColor: "#058FA2" }}></div>
-        <h2 className="text-3xl font-bold text-gray-800">Enter Your Details</h2>
+    <div ref={formRef} className="flex flex-col gap-8 bg-white  rounded-lg shadow-sm">
+      <div className="flex items-center mb-2">
+        <div className="w-1.5 h-10 bg-primary-green rounded-full mr-4" style={{ backgroundColor: "#058FA2" }}></div>
+        <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Enter Your Details</h2>
       </div>
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <form className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {[
           { id: "firstName", label: "First Name *", placeholder: "John", type: "text" },
           { id: "lastName", label: "Last Name *", placeholder: "Smith", type: "text" },
           { id: "email", label: "Email Address *", placeholder: "abc@example.com", type: "email" },
-          { id: "mobile", label: "Mobile Number", placeholder: "1234567896", type: "tel" }
+          { id: "mobile", label: "Mobile Number *", placeholder: "1234567896", type: "tel" }
         ].map(({ id, label, placeholder, type }) => (
-          <div key={id} className="flex flex-col gap-2">
-            <label htmlFor={id} className="block text-lg font-medium text-gray-700">{label}</label>
+          <div key={id} className="flex flex-col gap-3">
+            <label htmlFor={id} className="block text-base font-semibold text-gray-800 tracking-wide">{label}</label>
             <div className="flex">
               <input
                 type={type}
                 id={id}
                 placeholder={placeholder}
-                className="w-full h-[50px] shadow-sm border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-primary-green focus:border-primary-green"
-                value={
-                  id === "mobile"
-                    ? phoneNumber
-                    : id === "firstName"
-                      ? firstName
-                      : id === "lastName"
-                        ? lastName
-                        : id === "email"
-                          ? email
-                          : undefined
-                }
+                className="w-full h-[54px] shadow-sm border border-gray-300 rounded-lg py-2.5 px-4 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent transition-all duration-200"
+                value={id === "mobile" ? phoneNumber : id === "firstName" ? firstName : id === "lastName" ? lastName : id === "email" ? email : undefined}
                 onChange={(e) => {
-                  if (id === "mobile") {
-                    setPhoneNumber(e.target.value);
-                  } else if (id === "firstName") {
-                    setFirstName(e.target.value);
-                  } else if (id === "lastName") {
-                    setLastName(e.target.value);
-                  } else if (id === "email") {
-                    setEmail(e.target.value);
-                  }
+                  if (id === "mobile") setPhoneNumber(e.target.value);
+                  else if (id === "firstName") setFirstName(e.target.value);
+                  else if (id === "lastName") setLastName(e.target.value);
+                  else if (id === "email") setEmail(e.target.value);
                 }}
               />
               {id === "mobile" && !phoneVerified && (
                 <button
                   type="button"
                   onClick={handleVerifyClick}
-                  className="ml-2 px-4 py-2 bg-cyan-600 text-white rounded-md"
+                  className={`ml-3 px-6 py-2 rounded-lg font-medium transition-all duration-200 ${firstName.trim() && lastName.trim() && email.trim() && phoneNumber.trim() ? 'bg-cyan-600 hover:bg-cyan-700 text-white' : 'bg-gray-400 cursor-not-allowed text-white'}`}
+                  disabled={!firstName.trim() || !lastName.trim() || !email.trim() || !phoneNumber.trim()}
                 >
                   Verify
                 </button>
@@ -202,7 +280,7 @@ const GuestDetailsForm = forwardRef((props, ref) => {
               onClick={handleVerifyOTP}
               className="w-full py-3 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white font-semibold rounded-lg shadow hover:shadow-lg transition-all"
             >
-              Verify & Continue
+              Verify &amp; Continue
             </button>
             <div className="mt-4 text-center">
               <p className="text-gray-600 text-sm">
@@ -217,8 +295,13 @@ const GuestDetailsForm = forwardRef((props, ref) => {
       )}
 
       {phoneVerified && (
-        <div className="mt-6 text-green-600 font-semibold">
-          Phone number verified! Offer codes are now active.
+        <div className="mt-4 py-3 px-4 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-green-700 font-medium flex items-center">
+            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Phone number verified successfully
+          </p>
         </div>
       )}
     </div>
@@ -226,5 +309,4 @@ const GuestDetailsForm = forwardRef((props, ref) => {
 });
 
 GuestDetailsForm.displayName = "GuestDetailsForm";
-
 export default GuestDetailsForm;

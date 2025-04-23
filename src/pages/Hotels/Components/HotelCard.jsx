@@ -27,7 +27,7 @@ function HotelCard({ hotelData }) {
             {/* Hotel Name and Price Section */}
             <div className="flex flex-col sm:flex-row items-start md:items-center sm:space-x-5">
               <div>
-                <h2 className="  text-3xl md:text-3xl font-bold text-gray-800">
+                <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-800">
                   {hotelData?.name}
                 </h2>
                 <div className="text-sm text-teal-500">

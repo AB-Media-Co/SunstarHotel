@@ -86,7 +86,6 @@ const ShineSectionUpdate = () => {
             return;
         }
 
-        console.log('Updated Shine Section Data:', shineData);
         whatMakesUsShine(shineData);
     };
 

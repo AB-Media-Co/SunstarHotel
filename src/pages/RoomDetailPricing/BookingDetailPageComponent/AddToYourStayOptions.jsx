@@ -28,16 +28,16 @@ export const AddToYourStayOptions = ({ data }) => {
   const isSelected = (id) => selectedOtherCharges.some((item) => item._id === id);
 
   return (
-    <div className="bg-white w-full mx-auto">
-      <div className="flex items-center mb-6">
+    <div className="bg-white w-full mx-auto p-6">
+      <div className="flex items-center mb-8">
         <div
-          className="w-1 h-8 bg-primary-green rounded-full mr-3"
+          className="w-1 h-8 bg-primary-green rounded-full mr-4"
           style={{ backgroundColor: "#058FA2" }}
         ></div>
-        <h2 className="text-3xl font-bold text-gray-800">Add To Your Stay</h2>
+        <h2 className="text-3xl font-bold text-gray-800 tracking-tight">Add To Your Stay</h2>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {options.map((option) => (
           <div
             key={option._id}
@@ -52,10 +52,10 @@ export const AddToYourStayOptions = ({ data }) => {
             }}
           >
             <div
-              className="flex w-full items-center justify-between p-4 cursor-pointer"
+              className="flex w-full items-center justify-between p-5 cursor-pointer"
               onClick={() => toggleDescription(option._id)}
             >
-              <div className="flex items-center gap-4 flex-1">
+              <div className="flex items-center gap-5 flex-1">
                 <div
                   className={`w-6 h-6 rounded-md border flex items-center justify-center cursor-pointer transition-colors ${
                     isSelected(option._id)
@@ -86,19 +86,19 @@ export const AddToYourStayOptions = ({ data }) => {
                   )}
                 </div>
 
-                <div className="flex gap-3 items-center flex-1">
+                <div className="flex gap-4 items-center flex-1">
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-lg">{option.heading}</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 leading-tight">{option.heading}</h3>
                       <div className="flex items-center">
                         <span
-                          className="text-teal-600 font-medium mr-3"
+                          className="text-lg font-medium mr-4 text-teal-600"
                           style={{ color: "#058FA2" }}
                         >
-                          ₹ {option.rate?.amount} {option.rate?.period || ""}
+                          ₹ {option.rate?.amount} <span className="text-base">{option.rate?.period || ""}</span>
                         </span>
                         <button
-                          className={`w-6 h-6 flex items-center justify-center rounded-full transition-colors ${
+                          className={`w-7 h-7 flex items-center justify-center rounded-full transition-colors text-lg ${
                             expanded[option._id]
                               ? "bg-teal-100 text-teal-600"
                               : "bg-gray-100 text-gray-500"
@@ -120,11 +120,11 @@ export const AddToYourStayOptions = ({ data }) => {
             </div>
 
             {expanded[option._id] && (
-              <div className="px-14 pb-4 pt-0 text-gray-600 border-t border-gray-100">
-                <p className="text-sm">{option.description}</p>
+              <div className="px-16 pb-5 pt-1 text-gray-600 border-t border-gray-100">
+                <p className="text-base leading-relaxed">{option.description}</p>
                 {isSelected(option._id) && (
                   <div
-                    className="mt-3 text-xs bg-teal-100 text-primay-green py-2 px-3 rounded-md inline-block"
+                    className="mt-4 text-sm font-medium bg-teal-100 text-primay-green py-2 px-4 rounded-md inline-block"
                     style={{
                       backgroundColor: "#e6f7f9",
                       color: "#058FA2",

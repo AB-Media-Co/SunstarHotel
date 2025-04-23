@@ -1,23 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import { useGetBlogs } from "../../ApiHooks/useBlogHooks";
 import SearchIcon from '@mui/icons-material/Search';
 const categories = [
-  "Leisure Travel",
-  "Weekend Getaway",
-  "Near By Attractions",
+  "Hospitality",
+  "First-Time Visitors",
+  "Location & Access",
+  "Hotel Features",
   "Travel Tips",
-  "Nightlife",
+  "Nearby Tours",
   "Shopping",
+  "Wellness",
+  "Guest Stories",
+  "Dining",
+  "Tourism & Culture",
+  "Day Trips",
+  "Events & Festivities",
+  "International Travel",
+  "Local Life",
+  "Behind the Scenes",
+  "Luxury on Budget",
+  "Sustainability",
+  "Travel Essentials",
+  "Scam Awareness"
 ];
 
 const Blogs = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-
-  // Pass searchQuery and selectedCategory to the hook
-  const { data: blogs, isLoading, error } = useGetBlogs(searchQuery, selectedCategory);
+  const [selectedCategories, setSelectedCategories] = useState([]); 
+  
+  // First, get all blogs to determine available categories
+  const { data: allBlogs, isLoading: loadingAllBlogs } = useGetBlogs("", "");
+  
+  // Then, get filtered blogs based on search and selected categories
+  const { data: filteredBlogs, isLoading: loadingFilteredBlogs, error } = useGetBlogs(
+    searchQuery, 
+    selectedCategories.join(',')
+  );
+  
+  // Use either the filtered blogs or all blogs for display
+  const displayBlogs = selectedCategories.length > 0 || searchQuery ? filteredBlogs : allBlogs;
+  const isLoading = loadingAllBlogs || loadingFilteredBlogs;
+  
   const navigate = useNavigate();
 
   const handleCardClick = (slug) => {
@@ -26,27 +55,19 @@ const Blogs = () => {
 
   // Handle category button click
   const handleCategoryClick = (cat) => {
-    // If the same category is clicked twice, toggle it off
-    if (selectedCategory === cat) {
-      setSelectedCategory("");
-    } else {
-      setSelectedCategory(cat);
-    }
+    setSelectedCategories(prev => {
+      if (prev.includes(cat)) {
+        return prev.filter(c => c !== cat);
+      } else {
+        return [...prev, cat];
+      }
+    });
   };
 
-  // Handle search form submission (optional)
+  // Handle search form submission
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    // The actual search happens automatically via the hook
   };
-
-  // if (isLoading) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-  //       <Loader />
-  //     </div>
-  //   );
-  // }
 
   if (error) {
     return (
@@ -57,6 +78,11 @@ const Blogs = () => {
       </div>
     );
   }
+
+  // Extract available categories from ALL blogs data
+  const availableCategories = Array.from(
+    new Set(allBlogs?.data?.map((b) => b.category).filter(Boolean))
+  );
 
   return (
     <>
@@ -69,65 +95,59 @@ const Blogs = () => {
       {/* Hero Section */}
       <section className="bg-primary-green text-white pt-28 pb-10">
         <div className="content flex flex-col gap-12 mx-auto px-4 w-full">
-          <div className="flex justify-between items-center w-full">
+          <div className="flex justify-between flex-col md:flex-row gap-4 items-center w-full">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-down">
-               Blogs & Buzz
+              <h1 className="text-mobile/h3 md:text-desktop/h3 mb-4 animate-fade-in-down">
+                Blogs & Buzz
               </h1>
-              <p className="text-lg md:text-xl max-w-2xl animate-fade-in-up">
+              <p className="text-mobile/body/2 md:text-desktop/body/1 animate-fade-in-up">
                 Discover our latest stories, travel tips, and hotel experiences
               </p>
-
             </div>
             <form onSubmit={handleSearchSubmit} className="relative w-full max-w-lg">
-            <button
+              <button
                 type="submit"
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"
               >
-                
-               <SearchIcon/>
+                <SearchIcon />
               </button>
               <input
                 type="text"
                 placeholder="Search by keyword, city, delhi, yoga, leisure travel"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg px-4 py-4 pl-12 border  focus:outline-none text-black"
+                className="w-full rounded-lg px-4 py-4 pl-12 border focus:outline-none text-black"
                 style={{ maxWidth: "100%" }}
               />
-              
             </form>
-
           </div>
 
-          {/* Category buttons */}
+          {/* Always show all available categories from allBlogs */}
           <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => handleCategoryClick(cat)}
-                className={`px-4 py-2 rounded-full transition-colors duration-300  
-                  ${selectedCategory === cat
-                    ? "bg-primary-dark-green text-white"
-                    : " text-white hover:bg-primary-dark-green hover:text-white hover:border-0 border border-white"
-                  }`}
-              >
-                {cat}
-              </button>
-            ))}
+            {categories
+              .filter(cat => availableCategories?.includes(cat))
+              .map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => handleCategoryClick(cat)}
+                  className={`px-4 py-2 rounded-full transition-colors duration-300  
+                    ${selectedCategories.includes(cat)
+                      ? "bg-primary-dark-green text-white"
+                      : "text-white hover:bg-primary-dark-green hover:text-white hover:border-0 border border-white"
+                    }`}
+                >
+                  {cat}
+                </button>
+              ))}
           </div>
         </div>
-
-
       </section>
 
-
-
       {/* Cards Section */}
-      <div className="bg-gray-100">
+      <div className="bg-white">
         <section className="py-16 content mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogs?.data?.map((blog) => (
+            {displayBlogs?.data?.map((blog) => (
               <div
                 key={blog._id}
                 className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group"
@@ -155,12 +175,18 @@ const Blogs = () => {
           </div>
 
           {/* If no blogs */}
-          {(!blogs?.data || blogs.data.length === 0) && (
-            <div className="text-center py-12">
-              <p className="text-gray-600 text-lg">
-                No blogs available at the moment. Check back later!
-              </p>
+          {isLoading ? (
+            <div className="mx-auto flex w-full justify-center items-center">
+              <img src="/images/Logo/spinner.svg" alt="" />
             </div>
+          ) : (
+            (!displayBlogs?.data || displayBlogs.data.length === 0) && (
+              <div className="text-center py-12">
+                <p className="text-gray-600 text-lg">
+                  No blogs available at the moment. Check back later!
+                </p>
+              </div>
+            )
           )}
         </section>
       </div>

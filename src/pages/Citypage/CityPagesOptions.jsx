@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import RoatinfImg from '../../Components/RoatinfImg';
 import { useGetLocations } from '../../ApiHooks/useLocationHook';
 import Loader from '../../Components/Loader'
+
 const CityPagesOptions = ({ isOpen }) => {
   const navigate = useNavigate();
   const { data: locations, isLoading, isError, error } = useGetLocations();

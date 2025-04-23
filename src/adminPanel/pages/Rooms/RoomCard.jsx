@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -10,26 +9,81 @@ import Box from '@mui/material/Box';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
-import { Switch } from '@mui/material'; // Import Switch component
+import { Switch } from '@mui/material';
+import { keyframes } from '@mui/system';
+import { styled } from '@mui/material/styles';
+import Loader from '../../../Components/Loader';
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const OverlayContainer = styled(Box)(({ theme }) => ({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: 'linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9))',
+  backdropFilter: 'blur(5px)',
+  color: 'white',
+  zIndex: 9999,
+  animation: `${fadeIn} 0.3s ease-in-out`,
+}));
 
 const RoomCard = ({ room, onEdit, onToggleShow }) => {
-  const [isChecked, setIsChecked] = useState(room.show); // Track the 'show' state of the room
-  
-  const truncateDescription = (text, wordLimit) => {
-    if (!text) return '';
-    const words = text.split(' ');
-    return words.length <= wordLimit
-      ? text
-      : words.slice(0, wordLimit).join(' ') + '...';
-  };
+  const [isChecked, setIsChecked] = useState(room.show);
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [countdown, setCountdown] = useState(5);
+  let timer;
+
+  if (showOverlay) {
+    timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          setShowOverlay(false);
+          return 5;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }
+
+  useEffect(() => {
+    return () => clearInterval(timer);
+  }, [showOverlay]);
 
   const handleToggleChange = () => {
-    setIsChecked(!isChecked);  // Toggle the local state
-    onToggleShow(room._id, !isChecked);  // Call the parent handler to update the 'show' property in DB
+    setIsChecked(!isChecked);
+    setShowOverlay(true);
+    setCountdown(5);
+    onToggleShow(room._id, !isChecked);
   };
 
+  const truncateDescription = (description, limit = 15) => {
+    if (!description) return '';
+    const words = description.split(' ');
+    if (words.length <= limit) return description;
+    return words.slice(0, limit).join(' ') + '...';
+  };
+  
+
   return (
-    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Card
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        position: 'relative',
+        width: '300px', // Adjust width for card size
+        margin: '10px', // Space between cards
+      }}
+    >
       {/* Toggle Button to Control Room Visibility */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 1 }}>
         <Typography variant="body2" color="text.secondary">
@@ -37,6 +91,18 @@ const RoomCard = ({ room, onEdit, onToggleShow }) => {
         </Typography>
         <Switch checked={isChecked} onChange={handleToggleChange} />
       </Box>
+
+      {showOverlay && (
+        <OverlayContainer>
+          <Loader />
+          <Typography variant="h6" sx={{ mb: 1 }}>
+            {isChecked ? 'Showing Room' : 'Hiding Room'}
+          </Typography>
+          <Typography variant="body1">
+            Please wait {countdown} seconds...
+          </Typography>
+        </OverlayContainer>
+      )}
 
       {/* Image Section */}
       <Box sx={{ height: 180, backgroundColor: 'grey.300' }}>
@@ -121,4 +187,19 @@ const RoomCard = ({ room, onEdit, onToggleShow }) => {
   );
 };
 
-export default RoomCard;
+const RoomCardList = ({ room, onEdit, onToggleShow }) => {
+  console.log(room)
+  return (
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+     
+      <RoomCard
+        key={room._id}
+        room={room}
+        onEdit={onEdit}
+        onToggleShow={onToggleShow}
+      />
+    </Box>
+  );
+};
+
+export default RoomCardList;

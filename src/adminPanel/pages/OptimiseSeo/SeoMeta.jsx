@@ -37,10 +37,13 @@ const SeoMeta = () => {
         'rooms',
         'privacy policy',
         'blogs',
-        'terms and condition',
-        'cancellation policies',
+        'T&C and Cancellation policies',
+        'Privacy policies',
         'Loyalty Program',
-        'Developers & Owners',
+        'Coorporate Events',
+        'Social Events',
+        'Wedding Pre Wedding Events',
+        // 'Coorporat Events',
     ];
 
     // Fetch existing meta entries
@@ -130,7 +133,6 @@ const SeoMeta = () => {
         }
     };
 
-    console.log(availablePages)
     return (
         <Container sx={{ mt: 4 }}>
             <Typography variant="h4" gutterBottom>

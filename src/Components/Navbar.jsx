@@ -16,20 +16,45 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isHotelModalOpen, openHotelModal, closeHotelModal } = usePricing();  
-  const [active, setActive] = useState("/");
+  const [active, setActive] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Updated navItems using context function for Hotels
+  const navItems = [
+    { name: "Home", icon: <HomeIcon />, route: "/" },
+    { name: "Why Sunstar?", icon: <InfoIcon />, route: "/why-sunstar" },
+    { 
+      name: "Hotels", 
+      icon: <HotelIcon />, 
+      action: openHotelModal 
+    },
+    { name: "Corporate Booking", icon: <BusinessIcon />, route: "/corporate-booking" },
+    { name: "Day Use Room", icon: <BusinessIcon />, route: "/dayuseroom" },
+    { name: "Contact", icon: <ContactMailIcon />, route: "/contact" },
+  ];
+
   useEffect(() => {
-    const currentPath =
-      location.pathname === "/"
-        ? "Home"
-        : location.pathname.startsWith("/hotels")
-          ? "Hotels"
-          : location.pathname
-              .replace("/", "")
-              .replace(/-/g, " ")
-              .replace(/\b\w/g, (char) => char.toUpperCase());
-    setActive(currentPath);
+    // Improved active tab detection logic
+    if (location.pathname === "/") {
+      setActive("Home");
+    } else if (location.pathname.startsWith("/hotels")) {
+      setActive("Hotels");
+    } else if (location.pathname === "/why-sunstar") {
+      setActive("Why Sunstar?");  
+    } else if (location.pathname === "/corporate-booking") {
+      setActive("Corporate Booking");
+    } else if (location.pathname === "/dayuseroom") {
+      setActive("Day Use Room");
+    } else if (location.pathname === "/contact") {
+      setActive("Contact");
+    } else {
+      // For any other path, extract and format the name from the path
+      const pathName = location.pathname
+        .replace("/", "")
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+      setActive(pathName);
+    }
   }, [location.pathname]);
 
   const toggleMobileMenu = () => {
@@ -39,19 +64,6 @@ const Navbar = () => {
   const closeMobileMenu = () => {
     setIsMenuOpen(false);
   };
-
-  // Updated navItems using context function for Hotels
-  const navItems = [
-    { name: "Home", icon: <HomeIcon />, route: "/" },
-    { name: "Why Sunstar", icon: <InfoIcon />, route: "/why-sunstar" },
-    { 
-      name: "Hotels", 
-      icon: <HotelIcon />, 
-      action: openHotelModal 
-    },
-    { name: "Corporate Booking", icon: <BusinessIcon />, route: "/corporate-booking" },
-    { name: "Contact", icon: <ContactMailIcon />, route: "/contact" },
-  ];
 
   return (
     <>
@@ -79,10 +91,12 @@ const Navbar = () => {
                         navigate(route);
                       }
                     }}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name ? "text-primary-yellow" : "hover:text-primary-yellow"}`}
+                    className={`flex items-center px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${
+                      active === name ? "text-primary-yellow" : "hover:text-primary-yellow"
+                    }`}
                   >
-                    {icon}
-                    <span className="text-mobile/body/2 md:text-desktop/body/1">{name}</span>
+                    {/* {icon} */}
+                    <span className="text-mobile/body/2 md:text-desktop/body/1 md:font-semibold">{name}</span>
                   </button>
                 </li>
               ))}
@@ -107,7 +121,9 @@ const Navbar = () => {
           {/* Mobile Menu (Slide-in Sidebar) */}
           <div
             id="mobile-menu"
-            className={`fixed top-0 md:hidden left-0 h-screen overflow-hidden bg-primary-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
+            className={`fixed top-0 md:hidden left-0 h-screen overflow-hidden bg-primary-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${
+              isMenuOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
           >
             {/* Header with Logo and Close Button */}
             <div className="flex justify-between p-4 border-b border-gray-200">
@@ -140,7 +156,9 @@ const Navbar = () => {
                         }
                         closeMobileMenu();
                       }}
-                      className={`flex items-center space-x-2 w-full text-left px-4 py-2 rounded-lg transition-colors duration-300 ${active === name ? "text-primary-yellow bg-gray-100" : "hover:text-primary-yellow"}`}
+                      className={`flex items-center space-x-2 w-full text-left px-4 py-2 rounded-lg transition-colors duration-300 ${
+                        active === name ? "text-primary-yellow bg-gray-100" : "hover:text-primary-yellow"
+                      }`}
                     >
                       {icon}
                       <span className="text-mobile/body/2">{name}</span>

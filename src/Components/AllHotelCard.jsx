@@ -87,8 +87,9 @@ const AllHotelCard = ({ isOpen, onClose }) => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.3, ease: [0.34, 1.56, 0.64, 1] }}
+              className=' hidden md:block'
             >
-              <RoatinfImg position="md:right-[-6rem] top-[2rem] md:top-[9rem] right-6 z-0" divClass="absolute" />
+              <RoatinfImg position="md:right-[-6rem]  top-[2rem] md:top-[9rem] right-6 z-0" divClass="absolute " />
             </motion.div>
 
             <motion.div

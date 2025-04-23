@@ -27,9 +27,12 @@ const Section6Testimonials = ({testimonials}) => {
       <CommonSwiper
         items={testimonials}
         renderItem={renderTestimonial}
-        slidesPerView={3}
-        spaceBetween={30}
-        loop={false}
+        spaceBetween={20}
+        slidesPerViewDesktop={3}
+        slidesPerViewTablet={2}
+        loop={true}
+        arrow="mt-8"
+        autoplayDelay={4000}
       />
     </div>
   );

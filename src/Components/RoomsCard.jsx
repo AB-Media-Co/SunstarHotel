@@ -12,6 +12,7 @@ const RoomsCard = ({ room }) => {
   const { fetchRoomHotelDetails, selectedRooms, removeRoom, maxRoomSelection, setMaxRoomSelection } = usePricing();
   const [hotelData, setHotelData] = useState(null);
   const [showMaxAlert, setShowMaxAlert] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const roomCount = selectedRooms.filter((r) => r.roomName === room.RoomName).length;
 
@@ -56,14 +57,28 @@ const RoomsCard = ({ room }) => {
 
   return (
     <div className="bg-primary-white shadow-md rounded-lg overflow-hidden relative">
-      <div className="relative">
-        <img
-          src={room?.RoomImage[0] || "placeholder-image-url"}
-          alt={room.RoomName || "Room"}
-          className="w-full h-64 object-cover"
+      <div 
+        className="relative h-64 overflow-hidden"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div
+          className="absolute inset-0 bg-center bg-cover transition-all duration-700 ease-in-out"
+          onClick={() => navigate(`/room/${room._id}`)}
+          style={{ 
+            backgroundImage: `url(${room?.RoomImage[0] || "placeholder-image-url"})`,
+            transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+          }}
         />
+        <div 
+        onClick={() => navigate(`/room/${room._id}`)}
+          className={`absolute cursor-pointer inset-0 bg-black transition-opacity duration-200 ease-in-out ${
+            isHovered ? 'opacity-20' : 'opacity-0'
+          }`}
+        />
+        
         {room?.Availability > 0 && room?.Availability <= 3 && (
-          <span className="absolute top-6 right-0 bg-red-500 text-primary-white text-mobile/caption md:text-desktop/caption font-bold px-2 py-1 rounded-l-xl">
+          <span className="absolute top-6 right-0 bg-red-500 text-primary-white text-mobile/caption md:text-desktop/caption font-bold px-2 py-1 rounded-l-xl z-10">
             {room.Availability === 1 ? "1 Room Left" : `${room.Availability} Rooms Left`}
           </span>
         )}
@@ -110,9 +125,9 @@ const RoomsCard = ({ room }) => {
               Sold Out
             </button>
           ) : (
-            <div className="flex items-center border border-primary-green rounded-lg px-3 py-1 gap-2">
+            <div className="flex items-center border border-primary-green rounded-lg px-2 py-1 gap-4">
               <button
-                className={`text-mobile/button md:text-2xl font-bold rounded text-primary-green ${
+                className={`font-bold  text-primary-green ${
                   roomCount === 0 ? "opacity-50 cursor-not-allowed" : "hover:text-primary-dark-green"
                 }`}
                 onClick={handleRemoveRoom}
@@ -120,11 +135,11 @@ const RoomsCard = ({ room }) => {
               >
                 <RemoveIcon />
               </button>
-              <span className="text-mobile/h5 md:text-lg font-semibold text-primary-dark-green">
+              <span className="font-semibold w-[65px] text-primary-dark-green">
                 {roomCount} {roomCount === 1 ? "Room" : "Rooms"}
               </span>
               <button
-                className="text-mobile/button md:text-2xl font-bold rounded text-primary-green hover:text-primary-dark-green"
+                className=" font-bold  text-primary-green hover:text-primary-dark-green"
                 onClick={handleAddRoom}
               >
                 <AddIcon />

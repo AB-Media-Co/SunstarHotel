@@ -11,8 +11,10 @@ import { getSingleHotelWithCode } from "../../ApiHooks/useHotelHook2"
 import Loader from "../../Components/Loader"
 import BottomRoomSticky from "../../Components/BottomRoomSticky"
 import { Helmet } from "react-helmet"
+import { useGetMetas } from "../../ApiHooks/useMetaHook"
 
 const Rooms = () => {
+  const { data: metas } = useGetMetas();
   const id = useParams()
 
   const [roomData, setroomData] = useState(null);
@@ -62,14 +64,15 @@ const Rooms = () => {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
+  const roomsMeta = metas?.find(meta => meta.page === 'rooms');
 
   return (
     <div>
          <Helmet>
-          <title>Rooms</title>
-          <meta name="" content={``} />
-          <meta name="" content={``} />
-        </Helmet>
+      <title>{roomsMeta?.metaTitle || 'Rooms & Suites - Sunstar Hotels'}</title>
+      <meta name="description" content={roomsMeta?.metaDescription || ''} />
+      <meta name="keywords" content={roomsMeta?.metaKeywords?.join(', ') || ''} />
+    </Helmet>
       <RoomsBanner businessPlatformFeatures={roomData} hotelDetail={otherRoomData} />
       <RoomPriceSection roomData={roomData} />
       <hr className="content h-[2px] bg-gray-400" />

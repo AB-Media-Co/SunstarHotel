@@ -1,124 +1,200 @@
-import React from 'react';
-import TestimonialSection from '../../Components/TestimonialSection';
 import { testimonialData } from '../../Data/AboutSectionData';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import LocalBarIcon from '@mui/icons-material/LocalBar';
-import HotelIcon from '@mui/icons-material/Hotel';
-import LocalParkingIcon from '@mui/icons-material/LocalParking';
+import OtherPageLayout from './OtherPageLayout';
 import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
-import SunstarEnquiryForm from '../CorporateBooking/Components/SunstarEnquiryForm';
-
+import { Helmet } from 'react-helmet';
+import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
+import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 const WeddingPreWeddingPage = () => {
-  // Wedding & Pre-wedding packages
-  const weddingPackages = [
-    { title: 'Wedding & Reception', image: '/images/Sunstar other page Images/wedding Events/Best-wedding-photographers-India-Top-5-destination-wedding-photographers-Indian-weddings-2 1.png' },
-    { title: 'Cocktail', image: '/images/Sunstar other page Images/Cocktail party/66e34f06fdf6067368073ce7_3 1.png' },
-    { title: 'Roka & Sagan', image: '/images/Sunstar other page Images/ROKA & SAGAN/1551853541_TN2ndJan_534 1.png' },
-    { title: 'Haldi & Mehndi', image: '/images/Sunstar other page Images/Haldi & Mehndi/272647847_666139464740883_5764307683696030625_n-1024x1019 1.png' },
+  const { Testimonials } = useUpdatePagesHook();
+  const { mutate, isLoading } = useEnquiryForm();
+
+  const eventTypes = [
+    { title: 'Wedding & Reception', image: '/images/OtherPageImages/Varmala.webp' },
+    { title: 'Cocktail', image: '/images/OtherPageImages/party.webp' },
+    { title: 'Roka & Sagan', image: '/images/OtherPageImages/shadi.webp' },
+    { title: 'Haldi & Mehndi', image: '/images/OtherPageImages/haldi.webp' },
   ];
 
   const whyChooseUsFeatures = [
-    { title: 'On time every time', icon: <AccessTimeIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-    { title: 'System Driven', icon: <SettingsIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-    { title: 'Decoration', icon: <LocalFloristIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-    { title: 'Buffet', icon: <RestaurantMenuIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-    { title: 'DJ & Music', icon: <MusicNoteIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-    { title: 'Cocktail', icon: <LocalBarIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-    { title: 'Stay', icon: <HotelIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-    { title: 'Parking & Valet Service', icon: <LocalParkingIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
+    { title: 'On Time', icon: '/images/othericons/Ontime.svg' },
+    { title: 'System Driven', icon: '/images/othericons/systemdriven.svg' },
+    { title: 'Decoration', icon: '/images/othericons/stunningvenue.svg' },
+    { title: 'Buffet', icon: '/images/othericons/buffet.svg' },
+    { title: 'DJ & Music', icon: '/images/othericons/Dj.svg' },
+    { title: 'Coctail', icon: '/images/othericons/coctail.svg' },
+    { title: 'Stay', icon: '/images/othericons/stay.svg' },
+    { title: 'Parking', icon: '/images/othericons/valetParking.svg' },
   ];
 
-  const { Testimonials } = useUpdatePagesHook();
+  const venueData = [
+    {
+      id: 1,
+      name: 'Venue1',
+      location: 'Rajendra Place, Delhi',
+      pricePerPlate: 600,
+      capacity: '30 to 200',
+      rating: 4.6,
+      image: '/images/OtherPageImages/CoorporateEvents.webp'
+    },
+    {
+      id: 2,
+      name: 'Venue2',
+      location: 'Karol Bagh, Delhi',
+      pricePerPlate: 650,
+      capacity: '50 to 700',
+      rating: 4.9,
+      image: '/images/OtherPageImages/Conference.jpg'
+    },
+    {
+      id: 3,
+      name: 'Venue3',
+      location: 'Patel Nagar, Delhi',
+      pricePerPlate: 550,
+      capacity: '40 to 300',
+      rating: 4.4,
+      image: '/images/OtherPageImages/GalaDinner.jpg'
+    },
+    {
+      id: 4,
+      name: 'Venue4',
+      location: 'Pusa Road, Delhi',
+      pricePerPlate: 580,
+      capacity: '30 to 250',
+      rating: 4.5,
+      image: '/images/OtherPageImages/AwardCeremony.webp'
+    }
+  ];
+
+
+  const introText = (
+    <>
+      Our hotel offers a range of beautiful and unique event spaces, each of which can be customised to suit your needs and preferences. Our event planning team will work with you to create a personalised event that reflects your style and vision, from selecting the perfect venue to choosing the décor, setting and the menu.      
+      {/* <br /> */}
+      <p className='my-4'>
+        In addition to our beautiful and specially curated event spaces and exceptional catering, we offer a range of additional services to enhance your personalised event experience. These include floral arrangements, professional photography, and customised party favours, to name just a few.
+      </p>
+      {/* <br /> */}
+      Unforgettable Social Experiences Tailored to Perfection <br />
+      At Sunstar Hotels our team specialises in creating unforgettable social events that leave a lasting impression.     </>
+  );
+
+
+  const heroTitle = (
+    <>
+      <h1 className='text-mobile/h2 md:text-desktop/h3  font-bold text-primary-white max-w-full md:max-w-[680px]'>
+        Celebrate love  at <span className='text-[#FDD304]'>Sunstar Hotels</span>   weddings & pre-weddings made magical.
+      </h1>
+      <p className='py-4 text-mobile/body/2 md:text-desktop/body/2/regular md:max-w-[600px] text-white'>
+        Whether you are planning a birthday party, anniversary celebration, candle light dinner, baby shower, marriage proposal, or any other special occasion, we are excited to help make your personal event a truly unforgettable experience.
+      </p>
+    </>
+  )
+
+
+
+  const eventFormFields = [
+    {
+        name: "name",
+        type: "text",
+        placeholder: "Your Name",
+        colSpan: "col-span-2",
+    },
+    {
+        name: "email",
+        type: "email",
+        placeholder: "Email Address",
+        colSpan: "md:col-span-1",
+    },
+    {
+        name: "phone",
+        type: "tel",
+        placeholder: "Phone Number",
+        colSpan: "md:col-span-1",
+    },
+    {
+      name: "company",
+      placeholder: "Company Name",
+    },
+    {
+      name: "date",
+      placeholder: "Date of event",
+      type: "date",
+  },
+    {
+        name: "eventType",
+        type: "dropdown",
+        placeholder: "Select Event Type",
+        colSpan: "md:col-span-1",
+        options: [
+            { value: "corporate", label: "Corporate Event" },
+            { value: "wedding", label: "Wedding & Pre-Wedding" },
+            { value: "social", label: "Social Event" },
+            { value: "birthday", label: "Birthday Celebration" },
+            { value: "conference", label: "Conference" },
+            { value: "other", label: "Other" },
+        ],
+    }
+
+ 
+];
+
+
+  const handleSubmit = (formData,callbacks) => {
+
+    mutate({
+        page:"Wedding And Conference",
+        name: formData?.name,
+        companyName: formData?.company,
+        email: formData?.email,
+        address: formData?.specialRequirements,
+        phone: formData?.phone,
+        enquiry: formData?.eventType,
+        date: formData?.date,
+        gid:[1220661421],
+        submittedAt: new Date().toISOString(),
+    }, callbacks);
+};
 
   return (
-    <div className="bg-primary-white text-primary-dark-green">
-      {/* Hero Section */}
-      <header className="relative">
-        <img
-          src="/images/Sunstar other page Images/Pre-wedding Events/64ba509fcaed286aa8d090d2_1689931935431 1.png"
-          alt="Wedding & Pre-wedding"
-          className="w-full h-[100vh] object-cover"
-        />
-        <div className="absolute inset-0 bg-black opacity-60"></div>
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary-white">
-            Wedding & Pre-wedding Events at Sunstar Hotels
-          </h1>
-          <p className="mt-4 text-lg md:text-xl text-primary-white content">
-            Our wedding packages are designed to suit a variety of budgets and preferences, and our team will work with you to create a customised experience that reflects your unique style and vision.
-          </p>
-          <p className="mt-4 text-lg md:text-xl text-primary-white content">
-            From the moment you contact us to the moment you say “I do,” we will be there to guide you every step of the way. Our packages include everything you need for a perfect ceremony and reception – from floral arrangements, centrepieces, and table settings to a delicious menu featuring the finest, locally sourced ingredients.
-          </p>
-          <p className="mt-4 text-lg md:text-xl text-primary-white content">
-            We are thrilled that you are considering us for your special day. Let us help you create your dream wedding and pre-wedding event.
-          </p>
-        </div>
-      </header>
-
-      {/* Introduction Section */}
-      <section className="py-12 px-4">
-        <p className="text-start text-black content mx-auto">
-          Our wedding packages are designed to suit a variety of budgets and preferences. Our dedicated team will work with you to create a customised experience that reflects your unique style and vision.
-        </p>
-        <p className="mt-6 text-start text-black content mx-auto">
-          From floral arrangements and centrepieces to table settings and catering with the finest locally sourced ingredients, we provide everything for a perfect ceremony and reception.
-        </p>
-        <p className="mt-6 text-start text-black content mx-auto font-semibold">
-          Your Special Day
-        </p>
-        <p className="mt-2 text-start text-black content mx-auto">
-          We are thrilled that you are considering us for your special day. Our hotel is the perfect venue to host your dream wedding and pre-wedding events.
-        </p>
-      </section>
-
-      {/* Wedding Packages Section */}
-      <section className="py-12 px-4">
-        <h2 className="text-3xl font-bold text-center mb-8">Our Wedding & Pre-wedding Packages</h2>
-        <div className="grid grid-cols-1 content md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {weddingPackages.map((event, index) => (
-            <div key={index} className="bg-primary-white shadow-md rounded overflow-hidden flex flex-col">
-              <img src={event.image} alt={event.title} className="w-full h-48 object-cover" />
-              <div className="p-4 flex flex-col flex-grow">
-                <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                <p className="text-primary-gray mb-4 flex-grow">
-                  Packages starting at attractive rates.
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Why Choose Us Section */}
-      <section className="py-12 px-4 bg-primary-green">
-        <h2 className="text-3xl font-bold text-center text-primary-white">Why Choose Us</h2>
-        <div className="mt-8 grid grid-cols-1 content sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {whyChooseUsFeatures.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-primary-white p-6 rounded-lg shadow-lg flex flex-col items-center justify-center transform hover:scale-105 transition-all duration-300"
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <p className="text-lg font-semibold text-primary-dark-green text-center">{feature.title}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <TestimonialSection
-        Testimonials={Testimonials}
-        backgroundImage={testimonialData.backgroundImage}
+    <>
+      <Helmet>
+        <title>Wedding & Pre-Wedding Events - Create Magical Moments at Hotel Sunstar Group</title>
+        <meta name="description" content="Make your wedding celebrations extraordinary at Hotel Sunstar Group. From intimate ceremonies to grand receptions, we offer customized venues and services for all your wedding and pre-wedding events." />
+        <meta name="keywords" content="wedding venues, pre-wedding events, wedding reception, cocktail party, roka ceremony, mehendi ceremony, Hotel Sunstar Group, Delhi wedding venues" />
+      </Helmet>
+      <OtherPageLayout
+        // Page type for SEO
+        pageType="Wedding & Pre-Wedding Events - Create Magical Moments at Hotel Sunstar Group"
+        // Hero section
+        heroImage="/images/OtherPageImages/weddinghead.webp"
+        anotherText={heroTitle}
+        // heroHighlightedText="the ideal destination for corporate events"
+        // Intro section
+        introText={introText}
+        // Section titles
+        sectionMainTitle="Your Special Days"
+        // Event types grid
+        eventTypes={eventTypes}
+        // Venues slider
+        venueData={venueData}
+        // Features grid
+        featureItems={whyChooseUsFeatures}
+        // Testimonials and form
+        testimonials={Testimonials}
+        testimonialBackgroundImage={testimonialData.backgroundImage}
+        formImage="/images/OtherPageImages/formImg3.webp"
       />
 
-      {/* Enquiry Capture Form */}
-      <SunstarEnquiryForm />
-    </div>
+
+      <CommonUseEnquiryForm
+        title="TALK WITH US?"
+        subtitle="Sunstar Offers The Perfect Corporate Events Packages Designed To Make Your Experience Truly Magical"
+        fields={eventFormFields}
+        onSubmit={handleSubmit}
+        buttonLabel="Submit Enquiry"
+        containerClassName=""
+      />
+    </>
   );
 };
 

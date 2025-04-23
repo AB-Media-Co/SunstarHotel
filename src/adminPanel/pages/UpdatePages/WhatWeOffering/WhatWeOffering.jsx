@@ -84,7 +84,6 @@ const WhatWeOffering = () => {
         // Optionally update local state with the returned data.
         setOfferings(updatedData.whatWeOffers);
       } else {
-        console.log('Submitted Data:', offerings);
         setSuccess('Offerings updated successfully! (dummy)');
       }
     } catch (err) {

@@ -74,8 +74,8 @@ const RoomPriceSection = ({ roomData}) => {
       <div className="flex flex-col md:flex-row justify-between items-start gap-6">
         {/* Left Section: Room Title and Pricing */}
         <div className="flex flex-col gap-4 text-[#058FA2]">
-          <h1 className="text-2xl md:text-4xl font-bold">{roomData?.RoomName}</h1>
-          <p className="text-base md:text-lg">Book Direct for Lowest Prices!</p>
+          <h1 className="text-mobile/h3 md:text-desktop/h3">{roomData?.RoomName}</h1>
+          <p className="text-mobile/body/2 md:text-desktop/body/1">Book Direct for Lowest Prices!</p>
           <div className="flex items-center gap-4">
             {roomData?.defaultRate && (
               <span className="text-sm md:text-base text-red-500 font-bold line-through">
@@ -115,10 +115,10 @@ const RoomPriceSection = ({ roomData}) => {
         </div> */}
       </div>
 
-      <hr className="my-6 border-gray-200" />
+      {/* <hr className="my-6 border-gray-200" /> */}
 
       {/* Tabs Section */}
-      <div className="flex flex-wrap justify-center md:justify-between gap-6">
+      {/* <div className="flex flex-wrap justify-center md:justify-between gap-6">
         {[
           { id: "rooms", iconName: "roundedbed", label: "Rooms", link: "#rooms" },
           { id: "amenities", iconName: "lamp", label: "Amenities", link: "#amenities" },
@@ -134,7 +134,7 @@ const RoomPriceSection = ({ roomData}) => {
             <span className="font-semibold text-sm md:text-base">{tab.label}</span>
           </button>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

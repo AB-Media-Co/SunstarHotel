@@ -29,8 +29,8 @@ const InstagramData = () => {
       <div className="content mx-auto">
         {/* Header */}
         <div className="text-start mb-8">
-          <h1 className=" text-mobile/h2 md:text-desktop/h3 font-bold text-gray-800 mb-4">Instagram Feed</h1>
-          <p className="text-mobile/title md:text-desktop/subtitle text-gray-600">
+          <h1 className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-800 mb-4">Instagram Feed</h1>
+          <p className="text-mobile/body/2 md:text-desktop/body/1 text-gray-600">
             Latest posts from our Instagram account
           </p>
         </div>

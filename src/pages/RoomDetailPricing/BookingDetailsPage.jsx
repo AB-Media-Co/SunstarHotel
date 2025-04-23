@@ -83,7 +83,7 @@ const BookingDetailsPage = () => {
         {/* Render GuestDetailsForm once and pass its ref */}
         <GuestDetailsForm ref={guestFormRef} />
         {hotelDetail.addToYourStay.length > 0 && <AddToYourStayOptions data={hotelDetail} />}
-        <OfferCode hotelDetail={hotelDetail} />
+        <OfferCode hotelDetail={hotelDetail}  checkIn={checkIn} />
         <div className="lg:hidden">
           <ReservationSummarySidebar
             hotelDetail={hotelDetail}

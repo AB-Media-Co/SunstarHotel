@@ -14,17 +14,17 @@ const Banner = () => {
         transition={{ duration: 0.6 }}
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/images/ContctUsImg/ContactUsBanner.jpg')",
+          backgroundImage: "url('/images/ContctUsImg/ContactUsBanner.png')",
         }}
       />
 
       {/* Content */}
-      <div className="relative z-10 content h-full flex flex-col justify-end px-6 pb-6 md:px-12 ">
+      <div className="relative z-10 content h-full flex flex-col justify-end px-6 pb-6 md:px-0 ">
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-primary-white text-3xl md:text-5xl font-bold drop-shadow-xl mb-4"
+          className="text-primary-white text-mobile/h3 md:text-desktop/h3 font-bold drop-shadow-xl mb-4"
         >
           Get in Touch with Us  ?
         </motion.h1>
@@ -69,7 +69,7 @@ const Banner = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-primary-white text-sm md:text-base mt-6 drop-shadow"
+          className="text-primary-white text-mobile/body/2 md:text-desktop/body/1 mt-6 drop-shadow"
         >
           For further support, reach out via email, and we'll get back to you promptly.
           <a href={ContactUsDetail?.emailId} className="underline font-semibold ml-1">

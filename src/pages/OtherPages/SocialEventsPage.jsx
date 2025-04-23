@@ -1,148 +1,225 @@
-import React, { useState } from 'react';
-import TestimonialSection from '../../Components/TestimonialSection';
+
 import { testimonialData } from '../../Data/AboutSectionData';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import HotelIcon from '@mui/icons-material/Hotel';
-import LocalParkingIcon from '@mui/icons-material/LocalParking';
+import OtherPageLayout from './OtherPageLayout';
 import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
-import SunstarEnquiryForm from '../CorporateBooking/Components/SunstarEnquiryForm';
+import { Helmet } from 'react-helmet';
+import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
+import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 
 const SocialEventsPage = () => {
+    const { Testimonials } = useUpdatePagesHook();
+    const { mutate, isLoading } = useEnquiryForm();
 
-    // Social events categories
-    const socialEventsTypes = [
-        { title: 'Birthday Celebrations', image: '/images/Sunstar other page Images/Birthday Celebrations/BD-1024x731.jpg 1.png' },
-        { title: 'Anniversary', image: '/images/Sunstar other page Images/Anniversary/LINE_ALBUM_TCH-Happy-Anniversary_240717_4 1.png' },
-        { title: 'Kitty Party', image: '/images/Sunstar other page Images/Kitty party/kitty-party-planning-ideas-main 1.png' },
-        { title: 'Baby Shower', image: '/images/Sunstar other page Images/Baby shower/Carlton-all-edits-35-1920x1283 1.png' },
+    const eventTypes = [
+        { title: 'Birthday Celebrations', image: '/images/OtherPageImages/Bdy.webp' },
+        { title: 'Anniversary', image: '/images/OtherPageImages/Aniv.webp' },
+        { title: 'Kitty Party', image: '/images/OtherPageImages/celeb.webp' },
+        { title: 'Baby Shower', image: '/images/OtherPageImages/bbyshower.webp' },
     ];
 
-    const personalisedExperiences = [
-        { title: 'Candle Light Dinner', image: '/images/Sunstar other page Images/candle light dinner/20eac2f6-570e-4697-8a39-d34b14ae254c_large 1.png' },
-        { title: 'Bachelor Party', image: '/images/Sunstar other page Images/Bachelor Party/Bachelor-Party-Trip-Total-Advantage-Destination-Weddings 1.png' },
-        { title: 'Marriage Proposal', image: '/images/Sunstar other page Images/Marriage Proposal/Agia-Pelagia-Proposal-Will-you-marry-me-letters-Crete-Marriage-Proposal-1 1.png' },
-        { title: 'Group Party', image: '/images/Sunstar other page Images/Social event/48489934797_1b1fb859e6_k 1.png' },
+    const eventTypesexp = [
+        { title: 'Candle Light Dinner', image: '/images/OtherPageImages/Cld.webp' },
+        { title: 'Bachelor Party', image: '/images/OtherPageImages/bechlorsp.webp' },
+        { title: 'Marriage Proposal', image: '/images/OtherPageImages/prpposal.webp' },
+        { title: 'Group Party', image: '/images/OtherPageImages/groupP.webp' },
     ];
 
     const whyChooseUsFeatures = [
-        { title: 'On Time', icon: <AccessTimeIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'System Driven', icon: <SettingsIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'Decoration', icon: <LocalFloristIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'Buffet', icon: <RestaurantMenuIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'DJ & Music', icon: <MusicNoteIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'Stay', icon: <HotelIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
-        { title: 'Parking', icon: <LocalParkingIcon sx={{ fontSize: 50, color: '#5BBEBC' }} /> },
+        { title: 'On Time', icon: '/images/othericons/Ontime.svg' },
+        { title: 'System Driven', icon: '/images/othericons/systemdriven.svg' },
+        { title: 'Decoration', icon: '/images/othericons/stunningvenue.svg' },
+        { title: 'Buffet', icon: '/images/othericons/buffet.svg' },
+        { title: 'DJ & Music', icon: '/images/othericons/Dj.svg' },
+        // { title: 'Stationery', icon: '/images/othericons/stationary.svg' },
+        { title: 'Stay', icon: '/images/othericons/stay.svg' },
+        { title: 'Parking', icon: '/images/othericons/valetParking.svg' },
     ];
 
-    const { Testimonials } = useUpdatePagesHook();
+    const venueData = [
+        {
+            id: 1,
+            name: 'Venue1',
+            location: 'Rajendra Place, Delhi',
+            pricePerPlate: 600,
+            capacity: '30 to 200',
+            rating: 4.6,
+            image: '/images/OtherPageImages/CoorporateEvents.webp'
+        },
+        {
+            id: 2,
+            name: 'Venue2',
+            location: 'Karol Bagh, Delhi',
+            pricePerPlate: 650,
+            capacity: '50 to 700',
+            rating: 4.9,
+            image: '/images/OtherPageImages/Conference.jpg'
+        },
+        {
+            id: 3,
+            name: 'Venue3',
+            location: 'Patel Nagar, Delhi',
+            pricePerPlate: 550,
+            capacity: '40 to 300',
+            rating: 4.4,
+            image: '/images/OtherPageImages/GalaDinner.jpg'
+        },
+        {
+            id: 4,
+            name: 'Venue4',
+            location: 'Pusa Road, Delhi',
+            pricePerPlate: 580,
+            capacity: '30 to 250',
+            rating: 4.5,
+            image: '/images/OtherPageImages/AwardCeremony.webp'
+        }
+    ];
 
+
+
+    const introText = (
+        <>
+            Our hotel offers a range of beautiful and unique event spaces, each of which can be customised to suit your needs and preferences. Our event planning team will work with you to create a personalised event that reflects your style and vision, from selecting the perfect venue to choosing the décor, setting and the menu.
+            <p className='my-4'>
+                In addition to our beautiful and specially curated event spaces and exceptional catering, we offer a range of additional services to enhance your personalised event experience. These include floral arrangements, professional photography, and customised party favours, to name just a few.            </p>
+            {/* <br /> */}
+            Unforgettable Social Experiences Tailored to Perfection <br />
+            At Sunstar Hotels our team specialises in creating unforgettable social events that leave a lasting impression.
+        </>
+    );
+
+
+    const heroTitle = (
+        <>
+            <h1 className='text-mobile/h3 md:text-desktop/h3  font-bold text-primary-white max-w-[650px]'>
+                Welcome to the personalised events at <span className='text-[#FDD304]'>Sunstar Hotels !</span>
+            </h1>
+            <p className='py-4 text-mobile/body/2 md:text-desktop/body/1 max-w-[600px] text-white'>
+                Whether you are planning a birthday party, anniversary celebration, candle light dinner, baby shower, marriage proposal, or any other special occasion, we are excited to help make your personal event a truly unforgettable experience.
+
+            </p>
+
+        </>
+    )
+
+
+
+    const eventFormFields = [
+        {
+            name: "name",
+            type: "text",
+            placeholder: "Your Name",
+            colSpan: "col-span-2",
+        },
+        {
+            name: "email",
+            type: "email",
+            placeholder: "Email Address",
+            colSpan: "md:col-span-1",
+        },
+        {
+            name: "phone",
+            type: "tel",
+            placeholder: "Phone Number",
+            colSpan: "md:col-span-1",
+        },
+        {
+            name: "company",
+            placeholder: "Company Name",
+          },
+        {
+            name: "date",
+            placeholder: "Date of event",
+            type: "date",
+        },
+        {
+            name: "eventType",
+            type: "dropdown",
+            placeholder: "Select Event Type",
+            colSpan: "md:col-span-1",
+            options: [
+                { value: "corporate", label: "Corporate Event" },
+                { value: "wedding", label: "Wedding & Pre-Wedding" },
+                { value: "social", label: "Social Event" },
+                { value: "birthday", label: "Birthday Celebration" },
+                { value: "conference", label: "Conference" },
+                { value: "other", label: "Other" },
+            ],
+        }
+
+
+    ];
+
+
+
+
+    const handleSubmit = (formData, callbacks) => {
+
+        mutate({
+            page: "Social Event",
+            name: formData?.name,
+            companyName: formData?.company,
+            email: formData?.email,
+            address: formData?.specialRequirements,
+            phone: formData?.phone,
+            enquiry: formData?.eventType,
+            date: formData?.date,
+            gid: [280180929],
+            submittedAt: new Date().toISOString(),
+        }, callbacks);
+    };
 
     return (
-        <div className="bg-primary-white text-primary-dark-green">
-            {/* Hero Section */}
-            <header className="relative">
-                <img
-                    src="/images/Sunstar other page Images/Social event/web_zurich_venues_umweltarena-spreitenbach_pt_2194 2.png"
-                    alt="Social Event"
-                    className="w-full h-[100vh] object-cover"
-                />
-                <div className="absolute inset-0 bg-black opacity-60"></div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                    <h1 className="text-4xl md:text-5xl font-bold text-primary-white">
-                        Personalised Social Events at Sunstar Hotels
-                    </h1>
-                    <p className="mt-4 text-lg md:text-xl text-primary-white max-w-2xl">
-                        Welcome to the personalised events page of Sunstar Hotels! Whether you are planning a birthday party, anniversary celebration, candle light dinner, baby shower, marriage proposal, or any other special occasion, we are excited to help make your personal event a truly unforgettable experience.
-                    </p>
-                </div>
-            </header>
+        <>
+            <Helmet>
+                <title>Social Events - Celebrate Special Moments at Hotel Sunstar Group</title>
+                <meta name="description" content="Create unforgettable social events at Hotel Sunstar Group. Perfect for birthdays, anniversaries, kitty parties, baby showers, and intimate celebrations with personalized planning and elegant venues." />
+                <meta name="keywords" content="social events, birthday parties, anniversaries, kitty parties, baby showers, Hotel Sunstar Group, Delhi event venues, celebration venues" />
+            </Helmet>
+            <OtherPageLayout
+                // Page type for SEO
+                pageType="Social Events"
 
-            {/* Introduction Section */}
-            <section className="py-12 px-4">
-                <p className="text-start text-black content mx-auto">
-                    Our hotel offers a range of beautiful and unique event spaces, each of which can be customised to suit your needs and preferences. Our event planning team will work with you to create a personalised event that reflects your style and vision, from selecting the perfect venue to choosing the décor, setting and the menu.
-                </p>
-                <p className="mt-6 text-start text-black content mx-auto">
-                    In addition to our beautiful and specially curated event spaces and exceptional catering, we offer a range of additional services to enhance your personalised event experience. These include floral arrangements, professional photography, and customised party favours, to name just a few.
-                </p>
-                <p className="mt-6 text-start text-black content mx-auto font-semibold">
-                    Unforgettable Social Experiences Tailored to Perfection
-                </p>
-                <p className="mt-2 text-start text-black content mx-auto">
-                    At Sunstar Hotels our team specialises in creating unforgettable social events that leave a lasting impression. From corporate gatherings to milestone celebrations, our dedicated team brings expertise, creativity, and meticulous attention to detail to curate extraordinary experiences.
-                </p>
-            </section>
+                // Hero section
+                heroImage="/images/OtherPageImages/socialeventhead.webp"
+                anotherText={heroTitle}
+                // heroHighlightedText="the ideal destination for corporate events"
 
-                 {/* Personalised Experiences Section */}
-                 <section className="py-12 px-4 bg-primary-gray bg-opacity-10">
-                <h2 className="text-3xl font-bold text-center mb-8">Personalised Experiences</h2>
-                <div className="grid content grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {personalisedExperiences.map((event, index) => (
-                        <div key={index} className="bg-primary-white shadow-md rounded overflow-hidden flex flex-col">
-                            <img src={event.image} alt={event.title} className="w-full h-48 object-cover" />
-                            <div className="p-4 flex flex-col flex-grow">
-                                <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                                <p className="text-primary-gray mb-4 flex-grow">
-                                    Packages starting at competitive rates.
-                                </p>
+                // Intro section
+                introText={introText}
 
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                // Section titles
+                sectionMainTitle="Personalised Celebration"
+                // sectionSubtitle="At Sunstar Hotels, we are committed to delivering exceptional service and support, ensuring the success of your corporate event."
 
-            {/* Social Events Section */}
-            <section className="py-12 px-4">
-                <h2 className="text-3xl font-bold text-center mb-8">Social Events</h2>
-                <div className="grid grid-cols-1 content md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {socialEventsTypes.map((event, index) => (
-                        <div key={index} className="bg-primary-white shadow-md rounded overflow-hidden flex flex-col">
-                            <img src={event.image} alt={event.title} className="w-full h-48 object-cover" />
-                            <div className="p-4 flex flex-col flex-grow">
-                                <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                                <p className="text-primary-gray mb-4 flex-grow">
-                                    Starting at attractive prices.
-                                </p>
 
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                // Event types grid
+                eventTypes={eventTypes}
 
-       
+                sectionMainTitleexp='Personalised Experiences'
+                sectionSubtitleexp='Our hotel offers a variety of beautiful and unique event spaces that can be tailored to your needs and preferences.'
+                eventTypesexp={eventTypesexp}
 
-            {/* Why Choose Us Section */}
-            <section className="py-12 px-4 bg-primary-green">
-                <h2 className="text-3xl font-bold text-center text-primary-white">Why Choose Us</h2>
-                <div className="mt-8 grid content grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                    {whyChooseUsFeatures.map((feature, index) => (
-                        <div
-                            key={index}
-                            className="bg-primary-white p-6 rounded-lg shadow-lg flex flex-col items-center justify-center transform hover:scale-105 transition-all duration-300"
-                        >
-                            <div className="mb-4">{feature.icon}</div>
-                            <p className="text-lg font-semibold text-primary-dark-green">{feature.title}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                // Venues slider
+                venueData={venueData}
 
-            {/* Testimonials Section */}
+                // Features grid
+                featureItems={whyChooseUsFeatures}
 
-            <TestimonialSection
-                Testimonials={Testimonials}
-                backgroundImage={testimonialData.backgroundImage}
+                // Testimonials and form
+                testimonials={Testimonials}
+                testimonialBackgroundImage={testimonialData.backgroundImage}
+                formImage="/images/OtherPageImages/formImg2.webp"
             />
 
-            <SunstarEnquiryForm/>
-
-        </div>
+            <CommonUseEnquiryForm
+                title="TALK WITH US?"
+                subtitle="Sunstar Offers The Perfect Corporate Events Packages Designed To Make Your Experience Truly Magical"
+                fields={eventFormFields}
+                onSubmit={handleSubmit}
+                buttonLabel="Submit Enquiry"
+                containerClassName=""
+            />
+        </>
     );
 };
 

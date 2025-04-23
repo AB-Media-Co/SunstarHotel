@@ -2,12 +2,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useGetBlogs, useGetBlogBySlug } from "../../ApiHooks/useBlogHooks";
 import Loader from "../../Components/Loader";
 import { Helmet } from "react-helmet";
+import { useEffect } from "react";
 
 const ReadBlog = () => {
   const { slug } = useParams();
   const { data: blog, isLoading: blogLoading, error: blogError } = useGetBlogBySlug(slug);
   const { data: blogs, isLoading: blogsLoading } = useGetBlogs();
   const navigate = useNavigate();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (blogLoading || blogsLoading) {
     return (

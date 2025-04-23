@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import axiosInstance from '../services/axiosInstance';
+import { useQuery,  useQueryClient } from '@tanstack/react-query';
 
 // Hook for making the booking
 export const useMakeBooking = (hotelCode, authKey, checkIn, checkOut, selectedRooms) => {
@@ -65,3 +66,55 @@ export const useMakeBooking = (hotelCode, authKey, checkIn, checkOut, selectedRo
     },
   });
 };
+
+
+// Get all bookings
+export const useGetBookings = () => {
+  return useQuery({
+    queryKey: ['bookings'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/api/newBooking/createBooking');
+      return response.data;
+    },
+    staleTime: 30000, // 30 seconds
+    refetchOnWindowFocus: false,
+  });
+};
+
+// Create a new booking
+export const useCreateBooking = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (newBooking) => {
+      const response = await axiosInstance.post('/api/newBooking/createBooking', newBooking);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      // toast.success('Booking created successfully');
+    },
+    onError: (error) => {
+      toast.error(`Failed to create booking: ${error.response?.data?.message || error.message}`);
+    },
+  });
+};
+
+// Update an existing booking
+export const useUpdateBooking = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ bookingId, updateData }) => {
+      const response = await axiosInstance.put(`/api/newBooking/updateBooking/${bookingId}`, updateData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      toast.success('Booking updated successfully');
+    },
+    onError: (error) => {
+      toast.error(`Failed to update booking: ${error.response?.data?.message || error.message}`);
+    },
+  });
+};
+
+

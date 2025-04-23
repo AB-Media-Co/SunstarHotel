@@ -1,20 +1,48 @@
-/* eslint-disable react/prop-types */
+import { useState, useEffect, useRef } from "react";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 import CommonSwiper from "../../../Components/CommonSlider";
 import { useNavigate } from "react-router-dom";
 
+const LazyImage = ({ src, alt = "", className = "" }) => {
+  const ref = useRef();
+  const [loaded, setLoaded] = useState(false);
 
-const Card = ({ image, title, description }) => {
-  const navigate = useNavigate()
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setLoaded(true);
+        observer.disconnect();
+      }
+    });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="rounded-[10px] overflow-hidden cursor-pointer h-full" onClick={() => {
-      navigate("/why-sunstar#what-we-offer");
-      setTimeout(() => {
-        document.getElementById("what-we-offer")?.scrollIntoView({ behavior: "smooth" });
-      }, 100); 
-    }}>
-      <img
+    <img
+      ref={ref}
+      src={loaded ? src.replace('/upload/', '/upload/f_auto,q_auto,w_800/') : ""}
+      alt={alt}
+      className={className}
+      loading="lazy"
+    />
+  );
+};
+
+const Card = ({ image, title, description }) => {
+  const navigate = useNavigate();
+
+  return (
+    <div
+      className="rounded-[10px] overflow-hidden cursor-pointer h-full"
+      onClick={() => {
+        navigate("/why-sunstar#what-we-offer");
+        setTimeout(() => {
+          document.getElementById("what-we-offer")?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }}
+    >
+      <LazyImage
         src={image}
         alt={title}
         className="h-[250px] w-full object-cover"
@@ -34,32 +62,32 @@ const Card = ({ image, title, description }) => {
 const Section5 = () => {
   const { offeringSection } = useUpdatePagesHook();
 
-  const renderCard = (card, index) => (
-    <div data-aos="fade-up" data-aos-delay={index * 100}>
-      <Card
-        key={index}
-        image={card?.image}
-        title={card?.title}
-        description={card?.description}
-
-      />
-    </div>
-  );
+  const renderCard = (card, index) => {
+    return (
+      <div data-aos="fade-up" data-aos-delay={index * 100}>
+        <Card
+          key={index}
+          image={card?.image}
+          title={card?.title}
+          description={card?.description}
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="swiper-container bg-[#BAE9EF]">
-      <div className="py-12 p-5 content" >
-        <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-left mb-8"
-        >
+      <div className="py-12 p-5 content">
+        <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-left mb-8">
           {offeringSection?.heading}
         </h2>
         <CommonSwiper
           items={offeringSection?.offers}
           renderItem={renderCard}
-          slidesPerViewDesktop={3.5}  // Changed from slidesPerView
+          slidesPerViewDesktop={3.5}
           spaceBetween={30}
-          loop={false}
-        />
+          loop={true}
+                  />
       </div>
     </div>
   );

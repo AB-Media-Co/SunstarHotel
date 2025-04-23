@@ -5,6 +5,7 @@ import { useGetHotels } from '../../../ApiHooks/useHotelHook2';
 import { useRooms, useUpdateRoom } from '../../../ApiHooks/useRoomsHook';
 import RoomCard from './RoomCard';
 import EditRooms from './EditRooms';
+import Loader from '../../../Components/Loader';
 
 // Styled Components
 const StyledContainer = styled(Container)(({ theme }) => ({
@@ -51,8 +52,8 @@ export const Rooms = () => {
     }
   }, [filteredHotels, selectedHotel]);
 
-  const today = new Date().toISOString().split('T')[0];
-  const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+  const today = new Date()?.toISOString()?.split('T')[0];
+  const tomorrow = new Date(Date.now() + 86400000)?.toISOString()?.split('T')[0];
   const [fromDate, setFromDate] = useState(today);
   const [toDate, setToDate] = useState(tomorrow);
 
@@ -62,12 +63,13 @@ export const Rooms = () => {
     fromDate,
     toDate
   );
-  const roomArray = Array.isArray(rooms?.rooms) ? rooms?.rooms : rooms?.rooms;
+  const roomArray = Array?.isArray(rooms?.rooms) ? rooms?.rooms : rooms?.rooms;
+  console.log('roomArray', roomArray);
 
   const apiDataRooms = rooms?.rateApiData?.RES_Response?.RoomInfo?.Source
-    ? Array.isArray(rooms.rateApiData.RES_Response.RoomInfo.Source)
-      ? rooms.rateApiData.RES_Response.RoomInfo.Source
-      : [rooms.rateApiData.RES_Response.RoomInfo.Source]
+    ? Array?.isArray(rooms?.rateApiData?.RES_Response?.RoomInfo?.Source)
+      ? rooms?.rateApiData?.RES_Response?.RoomInfo?.Source
+      : [rooms?.rateApiData?.RES_Response?.RoomInfo?.Source]
     : [];
 
   const [editingRoom, setEditingRoom] = useState(null);
@@ -133,7 +135,7 @@ export const Rooms = () => {
                     }}
                   >
                     {filteredHotels &&
-                      filteredHotels.map((hotel) => (
+                      filteredHotels?.map((hotel) => (
                         <MenuItem key={hotel._id} value={String(hotel.hotelCode)}>
                           {hotel.name}
                         </MenuItem>
@@ -168,12 +170,12 @@ export const Rooms = () => {
 
       <Box>
         {roomsLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-            <CircularProgress />
-          </Box>
+         <div className='flex justify-center items-center mx-auto'>
+          <img src="/images/Logo/spinner.svg" alt="" />
+         </div>
         ) : (
           <RoomsGrid container spacing={3}>
-            {roomArray.map((room) => (
+            {roomArray?.map((room) => (
               <Grid item xs={12} sm={6} md={4} key={room._id}>
                 <RoomCard
                   room={room}

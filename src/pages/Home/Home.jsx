@@ -1,46 +1,62 @@
-// import { useState } from 'react'
-import { Helmet } from 'react-helmet'
-import { HomePageSection5cards, section1Data, section2HotelData } from '../../Data/HomePageData'
-import Section1 from './Components/Section1'
-import Section2Hotel from './Components/Section2Hotel'
-import Section3 from './Components/Section3'
-import Section4 from './Components/Section4'
-import Section5 from './Components/Section5'
-import TestimonialSection from '../../Components/TestimonialSection'
-import { testimonialData } from '../../Data/AboutSectionData'
-import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook'
-// import CityPagesOptions from '../Citypage/CityPagesOptions'
-// import Section6Testimonials from './Components/Section6Testimonials'
+// ✅ Updated Home.jsx with lazy-loaded sections and preloaded hero images
+import { Helmet } from 'react-helmet';
+import { HomePageSection5cards, section1Data, section2HotelData } from '../../Data/HomePageData';
+import Section1 from './Components/Section1';
+import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
+import { useGetMetas } from '../../ApiHooks/useMetaHook';
+import { lazy, Suspense } from 'react';
+
+const Section2Hotel = lazy(() => import('./Components/Section2Hotel'));
+const Section3 = lazy(() => import('./Components/Section3'));
+const Section4 = lazy(() => import('./Components/Section4'));
+const Section5 = lazy(() => import('./Components/Section5'));
+const TestimonialSection = lazy(() => import('../../Components/TestimonialSection'));
 
 const Home = () => {
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  const {  Testimonials } = useUpdatePagesHook();
+  const { Testimonials } = useUpdatePagesHook();
+  const { data: metas } = useGetMetas();
+  const homeMeta = metas?.find(meta => meta.page === 'home');
+
 
 
   return (
     <div>
       <Helmet>
-        <title>Sunstar</title>
-        <meta name="" content={``} />
-        <meta name="" content={``} />
+        <title>{homeMeta?.metaTitle || 'Sunstar Hotels'}</title>
+        <meta name="description" content={homeMeta?.metaDescription || ''} />
+        <meta name="keywords" content={homeMeta?.metaKeywords?.join(', ') || ''} />
+
+        {/* ✅ Preload critical hero images */}
+        <link rel="preload" as="image" href="/images/HomepageImages/Section1Main.webp" />
+        <link rel="preload" as="image" href="/images/HomepageImages/mobileHeroSec.webp" />
       </Helmet>
+
       <Section1 section1Data={section1Data} />
-      {/* <div className='cursor-pointer content' onClick={() => setIsModalOpen(true)}>
-        CityOpen
-      </div> */}
-      {/* {isModalOpen && <CityPagesOptions isOpen={isModalOpen} />} */}
 
-      <Section2Hotel section2HotelData={section2HotelData} />
-      <Section3 />
-      <Section4 />
-      <Section5 cards={HomePageSection5cards} />
-      {/* <Section6Testimonials testimonials={HomePagetestimonials}/> */}
-      <TestimonialSection
-        Testimonials={Testimonials}
-        // backgroundImage={testimonialData.backgroundImage}
-      />
+     
+
+      {/* ✅ Lazy load sections below the fold */}
+      <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
+        <Section2Hotel section2HotelData={section2HotelData} />
+      </Suspense>
+
+      <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
+        <Section3 />
+      </Suspense>
+
+      <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
+        <Section4 />
+      </Suspense>
+
+      <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
+        <Section5 cards={HomePageSection5cards} />
+      </Suspense>
+
+      <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
+        <TestimonialSection Testimonials={Testimonials} />
+      </Suspense>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

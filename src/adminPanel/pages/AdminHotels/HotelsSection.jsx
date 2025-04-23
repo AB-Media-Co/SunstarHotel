@@ -1,108 +1,100 @@
 /* eslint-disable react/prop-types */
-import { Add, Delete, Edit, StarRate,  AccessTime } from "@mui/icons-material";
-import { useGetHotels } from "../../../ApiHooks/useHotelHook2";
+import { Add, Delete, Edit, StarRate, AccessTime } from "@mui/icons-material";
+import Switch from '@mui/material/Switch';
+import { useGetHotels, useEditHotel } from "../../../ApiHooks/useHotelHook2";
 import { useState } from "react";
 
-// Helper function to get icon for amenity
-
-
-const Card = ({ item, type, onEdit, onDelete }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
+// Card component
+const Card = ({ item, type, onEdit, onDelete, onToggle }) => {
   return (
     <div
       key={item._id}
       className="bg-white shadow-lg rounded-xl overflow-hidden relative border border-gray-200 transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 h-full flex flex-col"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className={`absolute top-3 right-3 flex gap-2 z-10 transition-opacity duration-200 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+      <div
+        className="justify-end items-center py-4 px-2 flex gap-2 z-10 transition-opacity duration-200"
+      >
         <button
           onClick={() => onEdit(item)}
-          className="bg-white p-2 rounded-full shadow-md hover:bg-blue-100 transition-colors duration-200"
+          className="p-2 px-4 rounded-full shadow-md hover:bg-blue-100 transition-colors duration-200"
           title="Edit"
         >
           <Edit fontSize="small" className="text-blue-600" />
         </button>
         <button
           onClick={() => onDelete(item.hotelCode)}
-          className="bg-white p-2 rounded-full shadow-md hover:bg-red-100 transition-colors duration-200"
+          className="p-2 px-4 rounded-full shadow-md hover:bg-red-100 transition-colors duration-200"
           title="Delete"
         >
           <Delete fontSize="small" className="text-red-600" />
         </button>
+        <div className="flex items-center">
+          <Switch
+            checked={item.active}
+            onChange={() => onToggle(item, 'active')}
+            color="primary"
+          />
+          <span className="text-sm text-gray-700">
+            {item.active ? "Active" : "Inactive"}
+          </span>
+        </div>
+        <div className="flex items-center">
+          <Switch
+            checked={item.isDayUseRoom}
+            onChange={() => onToggle(item, 'dayUseRoom', !item.isDayUseRoom)}
+            color="primary"
+          />
+          <span className="text-sm text-gray-700">Day Use Room</span>
+        </div>
       </div>
-
+      {/* Rest of the Card component remains unchanged */}
       <div className="relative group">
-        {/* {item.discountedPrice && (
-          <div className="absolute top-3 left-0 z-10 bg-gradient-to-r from-red-600 to-red-500 text-white text-xs font-bold px-3 py-1 rounded-r-lg shadow-md flex items-center">
-            <span className="mr-1">SALE</span>
-            <span className="text-lg font-bold">
-              {Math.round((1 - item.discountedPrice / item.price) * 100)}%
-            </span>
-          </div>
-        )} */}
         <div className="h-48 sm:h-56 overflow-hidden">
           <img
-            src={item.images?.[0] || 'https://via.placeholder.com/300?text=No+Image'}
-            alt={type === 'hotel' ? item.name : item.roomType}
+            src={item.images?.[0] || "https://via.placeholder.com/300本土化?text=No+Image"}
+            alt={type === "hotel" ? item.name : item.roomType}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
       </div>
-
       <div className="p-5 flex-grow flex flex-col">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-xl font-bold text-gray-800 line-clamp-1 hover:text-blue-600 transition-colors duration-200">
-            {type === 'hotel' ? item.name : `${item.roomType} - Room ${item.roomNumber}`}
+            {type === "hotel" ? item.name : `${item.roomType} - Room ${item.roomNumber}`}
           </h3>
           <div className="flex items-center bg-yellow-50 px-2 py-1 rounded-md border border-yellow-100">
             <StarRate fontSize="small" className="text-yellow-500" />
-            <span className="ml-1 text-gray-700 font-semibold">{item.rating || 'N/A'}</span>
+            <span className="ml-1 text-gray-700 font-semibold">{item.rating || "N/A"}</span>
           </div>
         </div>
-
-        <div className="">
-       
-          {type === 'hotel' && (
-            <div className="flex items-center mt-2">
-              <AccessTime fontSize="small" className="text-gray-500 mr-1" />
-              <span className="text-gray-700 text-sm">
-                Check In: {item.checkIn || 'N/A'} | Check Out: {item.checkOut || 'N/A'}
-              </span>
-            </div>
-          )}
-        </div>
-
+        {type === "hotel" && (
+          <div className="flex items-center mt-2">
+            <AccessTime fontSize="small" className="text-gray-500 mr-1" />
+            <span className="text-gray-700 text-sm">
+              Check In: {item.checkIn || "N/A"} | Check Out: {item.checkOut || "N/A"}
+            </span>
+          </div>
+        )}
         <div className="flex items-center justify-between mt-4 mb-4">
           <div className="flex items-center">
             {item.discountedPrice ? (
               <div className="flex flex-col">
-                {/* <span className="line-through text-red-500 text-sm">₹{item.price.toLocaleString()}</span> */}
                 <span className="text-green-600 font-bold text-lg">
-                  {/* ₹{item.discountedPrice.toLocaleString()} */}
                   ₹{item.price.toLocaleString()}
                   <span className="text-xs text-gray-600 ml-1">/night</span>
                 </span>
               </div>
             ) : (
               <div>
-                <span className="text-gray-700 font-bold text-lg">₹{item.price.toLocaleString()}</span>
+                <span className="text-gray-700 font-bold text-lg">
+                  ₹{item.price.toLocaleString()}
+                </span>
                 <span className="text-xs text-gray-600 ml-1">/night</span>
               </div>
             )}
           </div>
-          {/*           
-          {type === 'hotel' && (
-            <div className="bg-blue-50 px-3 py-1 rounded-lg border border-blue-100">
-              <span className="text-blue-700 text-sm font-medium">
-                {item.roomCount || 0} Rooms
-              </span>
-            </div>
-          )} */}
         </div>
-
         <div>
           <span className="block font-bold text-gray-800 mb-3">Amenities:</span>
           <ul className="flex flex-wrap gap-1.5">
@@ -113,7 +105,7 @@ const Card = ({ item, type, onEdit, onDelete }) => {
                     key={index}
                     className="bg-indigo-50 text-indigo-700 text-xs px-3 py-1.5 rounded-full border border-indigo-100 flex items-center gap-1 transition-colors duration-200 hover:bg-indigo-100"
                   >
-                    {typeof amenity === 'object' ? amenity.value : amenity}
+                    {typeof amenity === "object" ? amenity.value : amenity}
                   </li>
                 ))}
                 {item.amenities.length > 3 && (
@@ -127,18 +119,94 @@ const Card = ({ item, type, onEdit, onDelete }) => {
             )}
           </ul>
         </div>
-
       </div>
     </div>
   );
 };
 
-export default Card;
-
+// Section component
 export const Section = ({ title, type, onEdit, onDelete, onAdd }) => {
-  const { data: hotels, isLoading, isError, error } = useGetHotels();
+  const { data: hotels, isLoading, isError, error, refetch } = useGetHotels();
+  const { mutate: editHotel } = useEditHotel();
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [updateMessage, setUpdateMessage] = useState("");
+  const [countdown, setCountdown] = useState(5);
 
-  if (isLoading)
+  const handleToggle = async (item, toggleType = 'active', newStatus = !item.active) => {
+    setIsUpdating(true);
+    setCountdown(5);
+    setUpdateMessage(
+      toggleType === 'active'
+        ? newStatus
+          ? `Activating ${item.name}`
+          : `Deactivating ${item.name}`
+        : newStatus
+          ? `Enabling Day Use Room for ${item.name}`
+          : `Disabling Day Use Room for ${item.name}`
+    );
+
+    try {
+      if (toggleType === 'active') {
+        await editHotel(
+          { hotelCode: item.hotelCode, hotelData: { active: newStatus } },
+          { onSuccess: () => refetch() }
+        );
+      } else if (toggleType === 'dayUseRoom') {
+        if (newStatus) {
+          // Fetch all hotels to ensure we have the latest data
+          const otherHotels = hotels?.hotels?.filter(
+            (hotel) => hotel.isDayUseRoom && hotel.hotelCode !== item.hotelCode
+          ) || [];
+
+          // Batch update: disable day use room for other hotels
+          const updatePromises = otherHotels.map((hotel) =>
+            editHotel({ hotelCode: hotel.hotelCode, hotelData: { isDayUseRoom: false } })
+          );
+
+          // Update the current hotel
+          updatePromises.push(
+            editHotel({ hotelCode: item.hotelCode, hotelData: { isDayUseRoom: true } })
+          );
+
+          // Execute all updates concurrently
+          await Promise.all(updatePromises);
+        } else {
+          // Only update the current hotel to false
+          await editHotel({ hotelCode: item.hotelCode, hotelData: { isDayUseRoom: false } });
+        }
+
+        // Refetch data to sync UI
+        await refetch();
+      }
+    } catch (err) {
+      console.error("Error updating hotel:", err);
+      setUpdateMessage("Failed to update. Please try again.");
+      setTimeout(() => {
+        setIsUpdating(false);
+        setCountdown(5);
+      }, 3000);
+      return;
+    }
+
+    // Start countdown
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    // Clear overlay after countdown
+    setTimeout(() => {
+      setIsUpdating(false);
+      setCountdown(5);
+    }, 5000);
+  };
+
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-64px)]">
         <div className="flex flex-col items-center">
@@ -147,8 +215,9 @@ export const Section = ({ title, type, onEdit, onDelete, onAdd }) => {
         </div>
       </div>
     );
+  }
 
-  if (isError)
+  if (isError) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-64px)]">
         <div className="bg-red-50 p-6 rounded-lg max-w-md border border-red-100 shadow-md">
@@ -168,24 +237,28 @@ export const Section = ({ title, type, onEdit, onDelete, onAdd }) => {
             Error loading data
           </p>
           <p className="text-gray-700">{error.message}</p>
-          <button className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200 shadow-sm">
+          <button
+            onClick={() => refetch()}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200 shadow-sm"
+          >
             Retry
           </button>
         </div>
       </div>
     );
+  }
 
   const isEmpty = !hotels?.hotels?.length;
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-[calc(100vh-64px)] bg-gradient-to-b from-gray-50 to-white relative">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-800 mb-2">{title}</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            {type === 'hotel'
-              ? 'Manage your hotel inventory, update details, and add new properties.'
-              : 'Manage your room inventory, update details, and add new accommodations.'}
+            {type === "hotel"
+              ? "Manage your hotel inventory, update details, and add new properties."
+              : "Manage your room inventory, update details, and add new accommodations."}
           </p>
           <div className="mt-6">
             <button
@@ -193,11 +266,10 @@ export const Section = ({ title, type, onEdit, onDelete, onAdd }) => {
               className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm"
             >
               <Add fontSize="small" className="mr-1" />
-              Add New {type === 'hotel' ? 'Hotel' : 'Room'}
+              Add New {type === "hotel" ? "Hotel" : "Room"}
             </button>
           </div>
         </div>
-
         {isEmpty ? (
           <div className="bg-white p-8 rounded-xl shadow-md text-center max-w-md mx-auto">
             <div className="text-gray-400 mb-4">
@@ -216,7 +288,9 @@ export const Section = ({ title, type, onEdit, onDelete, onAdd }) => {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">No {type}s found</h3>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              No {type}s found
+            </h3>
             <p className="text-gray-600 mb-6">
               Start adding your first {type} to manage your inventory.
             </p>
@@ -224,19 +298,44 @@ export const Section = ({ title, type, onEdit, onDelete, onAdd }) => {
               onClick={onAdd}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-sm"
             >
-              Add New {type === 'hotel' ? 'Hotel' : 'Room'}
+              Add New {type === "hotel" ? "Hotel" : "Room"}
             </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {hotels?.hotels?.map((item) => (
               <div key={item._id} className="h-full">
-                <Card item={item} type={type} onEdit={onEdit} onDelete={onDelete} />
+                <Card
+                  item={item}
+                  type={type}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onToggle={handleToggle}
+                />
               </div>
             ))}
           </div>
         )}
       </div>
+      {isUpdating && (
+        <div className="fixed inset-0 bg-gradient-to-br from-black/70 to-gray-900/70 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn">
+          <div className="bg-white/90 p-8 rounded-2xl shadow-2xl transform transition-all duration-500 animate-slideUp">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin border-t-blue-600"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  <p className="text-2xl font-bold text-blue-600 animate-pulse">{countdown}</p>
+                </div>
+              </div>
+              <p className="text-xl font-semibold text-gray-800 animate-pulse">
+                {updateMessage}...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
+export default Card;

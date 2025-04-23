@@ -24,10 +24,14 @@ export const useAddHotel = () => {
 };
 
 export const useEditHotel = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ hotelCode, hotelData }) => {
       const response = await axiosInstance.put(`/api/ezee/edit/hotel/${hotelCode}`, hotelData);
       return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hotels'] });
     },
   });
 };
@@ -56,6 +60,22 @@ export const uploadImagesAPIV2 = async (images) => {
 
   return response.data;
 };
+
+export const uploadSingleImagesAPIV2 = async (images) => {
+  const formData = new FormData();
+  images.forEach((image) => formData.append('images', image));
+
+  const response = await axiosInstance.post('/api/images/upload-single', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+  return response.data;
+};
+
+
+
+
+
 
 export const getSingleHotelWithCode = async (hotelCode) => {
   const response = await axiosInstance.get(`/api/ezee/hotels/${hotelCode}`);

@@ -16,6 +16,7 @@ import { AmenitiesList2 } from "../../Components/AmenitiesList2";
 import BottomRoomSticky from "../../Components/BottomRoomSticky";
 import { Helmet } from "react-helmet";
 import { useRooms } from "../../ApiHooks/useRoomsHook";
+import { useGetMetas } from "../../ApiHooks/useMetaHook";
 
 import {
   format,
@@ -27,14 +28,16 @@ const Hotels = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openCalender, setOpenCalender] = useState(false);
+  const { data: metas } = useGetMetas();
+  const hotelsMeta = metas?.find(meta => meta.page === "hotels");
   // const [initialLoad, setInitialLoad] = useState(true);
   // const storedRoomsData = localStorage.getItem("roomsData");
   // const roomsData = storedRoomsData && storedRoomsData !== "undefined"
   //   ? JSON.parse(storedRoomsData)
   //   : [];
 
-  
-  
+
+
   const checkIn = localStorage.getItem("checkInDate");
   const checkOut = localStorage.getItem("checkOutDate");
   const shouldFetchRooms = checkIn && checkOut && hotelData?.hotelCode && hotelData?.authKey;
@@ -45,7 +48,6 @@ const Hotels = () => {
     shouldFetchRooms ? format(checkIn, "yyyy-MM-dd") : null,
     shouldFetchRooms ? format(checkOut, "yyyy-MM-dd") : null
   );
-  console.log("lll,roomsData", roomsData)
   if (roomsData) {
     localStorage.setItem("roomsData", JSON.stringify(roomsData));
   }
@@ -74,13 +76,13 @@ const Hotels = () => {
   useEffect(() => {
     const storedCheckIn = localStorage.getItem("checkInDate");
     const storedCheckOut = localStorage.getItem("checkOutDate");
-  
+
     if (!storedCheckIn || !storedCheckOut) {
       setOpenCalender(true);
     }
   }, []);
 
-  if (loading|| isLoading) {
+  if (loading || isLoading) {
     return <div><Loader /></div>;
   }
 
@@ -92,9 +94,9 @@ const Hotels = () => {
   return (
     <div>
       <Helmet>
-        <title>Hotels</title>
-        <meta name="" content={``} />
-        <meta name="" content={``} />
+        <title>{hotelsMeta?.metaTitle || 'Hotels'}</title>
+        <meta name="description" content={hotelsMeta?.metaDescription || ''} />
+        <meta name="keywords" content={hotelsMeta?.metaKeywords?.join(', ') || ''} />
       </Helmet>
       <Banner
         businessPlatformFeatures={hotelData?.images}
@@ -104,18 +106,21 @@ const Hotels = () => {
       <HotelCard hotelData={hotelData} />
       <RoomLayout rooms={roomsData?.rooms} />
       <AmenitiesList2 amenities={hotelData?.amenities} />
-      <TestimonialSection
-        Testimonials={hotelData?.testimonials}
-        backgroundImage={OurClientsData.backgroundImage}
-      />
+      <div id="reviews">
+        <TestimonialSection
+          Testimonials={hotelData?.testimonials}
+          backgroundImage={OurClientsData.backgroundImage}
+        />
+
+      </div>
       <Location address={hotelData?.location} city={hotelData?.cityLocation?.name} />
       {hotelData?.imageSections && <HotelImageCarousel data={hotelData?.imageSections} />}
       <BannerSection
         data={hotelData?.aboutUs}
-        text='text-[26px] md:text-desktop/h2'
+        text='text-mobile/h3 md:text-desktop/h3'
         imgClass="rounded-[20px] max-h-[350px]"
         textC="black"
-        ptext=' text-[14px] md:text-[18px]'
+        ptext='text-mobile/body/2 md:text-desktop/body/1'
         lineh='[60px]'
         bg='bg-primary-white'
         paddTop='0 items-start gap-10'

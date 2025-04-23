@@ -53,7 +53,7 @@ const OtherEnquiries = () => {
                 </p>
                 <a
                   href={`mailto:${enquiry.email}`}
-                  className="underline text-[#848484] font-bold hover:underline text-xl"
+                  className="underline text-[#848484] font-bold hover:underline md:text-xl"
                 >
                   {enquiry.email}
                 </a>

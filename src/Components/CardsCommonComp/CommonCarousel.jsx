@@ -104,13 +104,13 @@ function Carousel({
                 {features.length > 1 && (
                     <>
                         <button
-                            className={`absolute top-1/2 ${className} left-0 transform -translate-y-1/2 bg-[${buttonColor}] text-primary-white p-2 rounded-full`}
+                            className={`absolute top-1/2 ${className} left-0 md:left-20 transform -translate-y-1/2 bg-[${buttonColor}] text-primary-white p-2 rounded-full`}
                             onClick={handlePrevious}
                         >
                             <Icon name="leftIcon" className={iconSize} />
                         </button>
                         <button
-                            className={`absolute top-1/2 ${className} right-0 transform -translate-y-1/2 bg-[${buttonColor}] text-primary-white p-2 rounded-full`}
+                            className={`absolute top-1/2 ${className} right-0 md:right-20 transform -translate-y-1/2 bg-[${buttonColor}] text-primary-white p-2 rounded-full`}
                             onClick={handleNext}
                         >
                             <Icon name="rightIcon" className={iconSize} />

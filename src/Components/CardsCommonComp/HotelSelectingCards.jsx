@@ -31,7 +31,6 @@ const HotelCard = ({ hotel, close }) => {
     localStorage.setItem("hotelInfo", JSON.stringify(hotel));
     setOpenCalender(true).then(() => {
       close()
-
     });
   };
 
@@ -42,11 +41,11 @@ const HotelCard = ({ hotel, close }) => {
       initial="hidden"
       animate="visible"
     >
-      <img src={hotel?.images[0]} alt={hotel.name} className="w-full h-48 object-cover" />
+      <img src={hotel?.images[0]} alt={hotel.name} onClick={handleClick} className="w-full h-48 object-cover cursor-pointer transition-transform duration-500 ease-in-out hover:scale-110" />
       <div className="p-4 flex flex-col flex-grow justify-between">
         <div>
           <div className="flex justify-between items-start gap-4">
-            <h1 className="text-xl font-bold text-black">{hotel?.name}</h1>
+            <h1 className="text-xl  text-start font-bold text-black cursor-pointer hover:text-primary-green   transition-colors duration-300"  onClick={handleClick}>{hotel?.name}</h1>
             <span className="bg-primary-green text-primary-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
               <Star className="text-primary-yellow text-sm mr-1" />
               {hotel.rating}
@@ -117,9 +116,12 @@ const HotelSelectingCards = ({ data, close }) => {
       animate={isInView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 1.3, ease: "easeInOut" }}
     >
-      {hotels?.hotels?.map((hotel, index) => (
-        <HotelCard key={index} hotel={hotel} close={close} />
-      ))}
+
+      {hotels?.hotels?.map((hotel, index) => 
+        hotel?.active&& (
+          <HotelCard key={index} hotel={hotel} close={close} />
+        )
+      )}
     </motion.div>
   );
 };

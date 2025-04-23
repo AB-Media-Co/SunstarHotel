@@ -1,20 +1,27 @@
 import { Helmet } from "react-helmet"
 import { useGetHotels } from "../../ApiHooks/useHotelHook2"
+import { useGetMetas } from "../../ApiHooks/useMetaHook"
 import { enquiries, hotels } from "../../Data/ContactUsData"
 import Banner from "./Components/Banner"
 import HotelsInfo from "./Components/HotelsInfo"
 import InstagramData from "./Components/InstagramData"
 import OtherEnquiries from "./Components/OtherEnquiries"
+import { useEffect } from "react"
 
 const ContactUs = () => {
     const { data: hotels } = useGetHotels();
+    const { data: metas } = useGetMetas();
+    const contactUsMeta = metas?.find(meta => meta.page === "contactus");
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <div>
             <Helmet>
-                <title>Contact Us</title>
-                <meta name="" content={``} />
-                <meta name="" content={``} />
+                <title>{contactUsMeta?.metaTitle || 'Contact Us'}</title>
+                <meta name="description" content={contactUsMeta?.metaDescription || ''} />
+                <meta name="keywords" content={contactUsMeta?.metaKeywords?.join(', ') || ''} />
             </Helmet>
             <Banner />
             <HotelsInfo hotels={hotels} />

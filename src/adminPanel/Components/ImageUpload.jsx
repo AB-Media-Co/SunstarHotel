@@ -7,7 +7,7 @@ import {
     CircularProgress,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { uploadImagesAPIV2 } from '../../ApiHooks/useHotelHook2';
+import { uploadSingleImagesAPIV2 } from '../../ApiHooks/useHotelHook2';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const Input = styled('input')({
@@ -17,6 +17,7 @@ const Input = styled('input')({
 const ImageUpload = ({ feature, handleFeatureChange, setImageUpload, index }) => {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadError, setUploadError] = useState(null);
+    const [fileTypeError, setFileTypeError] = useState(null); // New state for file type error
 
     // Create unique ID for each upload input
     const inputId = `contained-button-file-${index}`;
@@ -25,11 +26,18 @@ const ImageUpload = ({ feature, handleFeatureChange, setImageUpload, index }) =>
         const file = event.target.files[0];
         if (!file) return;
 
+        // Check file type
+        if (!file.type.match('image/jpeg') && !file.type.match('image/png')) {
+            setFileTypeError('Please upload JPG or PNG files only.');
+            return;
+        }
+
+        setFileTypeError(null); // Clear file type error if valid file is selected
         setUploadError(null);
         setIsUploading(true);
 
         try {
-            const response = await uploadImagesAPIV2([file]);
+            const response = await uploadSingleImagesAPIV2([file]);
             const imageUrl = response?.imageUrls[0];
             handleFeatureChange('image', imageUrl);
             setIsUploading(false);
@@ -70,7 +78,7 @@ const ImageUpload = ({ feature, handleFeatureChange, setImageUpload, index }) =>
                     component="span"
                     startIcon={<CloudUploadIcon />}
                     disabled={isUploading}
-                    style={{marginBottom: 10}}
+                    style={{ marginBottom: 10 }}
                 >
                     Upload Image
                 </Button>
@@ -88,6 +96,12 @@ const ImageUpload = ({ feature, handleFeatureChange, setImageUpload, index }) =>
             {uploadError && (
                 <Typography variant="body2" color="error" mt={1}>
                     {uploadError}
+                </Typography>
+            )}
+
+            {fileTypeError && ( // Display file type error message
+                <Typography variant="body2" color="error" mt={1}>
+                    {fileTypeError}
                 </Typography>
             )}
         </Box>

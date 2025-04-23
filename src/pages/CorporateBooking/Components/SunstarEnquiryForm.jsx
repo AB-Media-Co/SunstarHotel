@@ -8,7 +8,7 @@ const InputField = ({ type = "text", placeholder, value, onChange, additionalCla
     placeholder={placeholder}
     value={value}
     onChange={onChange}
-    className={`w-full p-4 rounded-xl border border-gray-200 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#058FA2] focus:border-transparent shadow-sm ${additionalClasses}`}
+    className={`w-full p-4 rounded-xl border border-gray-200 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#058FA2] focus:border-transparent shadow-sm placeholder-primary-green ${additionalClasses}`}
   />
 );
 
@@ -18,7 +18,7 @@ const TextAreaField = ({ placeholder, rows, value, onChange, additionalClasses =
     rows={rows}
     value={value}
     onChange={onChange}
-    className={`w-full p-4 rounded-xl border border-gray-200 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#058FA2] focus:border-transparent shadow-sm ${additionalClasses}`}
+    className={`w-full p-4 rounded-xl border border-gray-200 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#058FA2] focus:border-transparent shadow-sm placeholder-primary-green ${additionalClasses}`}
   ></textarea>
 );
 
@@ -32,7 +32,7 @@ const Button = ({ label, onClick, additionalClasses = "" }) => (
   </button>
 );
 
-const SunstarEnquiryForm = () => {
+const SunstarEnquiryForm = ({page='Sunstar Enquiry', gid =[0]}) => {
   // State hooks for each field
   const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
@@ -50,12 +50,14 @@ const SunstarEnquiryForm = () => {
 
     // Build the payload including a timestamp
     const payload = {
+      page,
       companyName,
       email,
       address,
       decisionMaker,
       phone,
       enquiry,
+      gid,
       submittedAt: new Date().toISOString(),
     };
 

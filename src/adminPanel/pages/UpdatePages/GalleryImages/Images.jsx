@@ -138,7 +138,6 @@ const Images = () => {
       };
       const payload = { massonaryGrid };
   
-      console.log(payload);
       await addGalleryImages(payload);
       toast.success("Gallery updated successfully!");
       handleClose();

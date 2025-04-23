@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { usePricing } from '../../../Context/PricingContext';
 import Cookies from 'js-cookie';
 
-export const OfferCode = ({ hotelDetail }) => {
+export const OfferCode = ({ hotelDetail ,checkIn}) => {
   // Existing states
   const [inputValue, setInputValue] = useState('');
   const [appliedOffer, setAppliedOffer] = useState(null);
@@ -13,10 +13,9 @@ export const OfferCode = ({ hotelDetail }) => {
   const primaryColor = '#058FA2';
   const { mutate: fetchOfferCodes, data } = useOfferCodesForHotel();
   const { mutateAsync: getDiscountAsync } = useDiscountedRate();
-  const { finalPrice, setFinalPrice, baseFinalPrice,phoneVerified, setPhoneVerified } = usePricing();
+  const { finalPrice, setFinalPrice, baseFinalPrice, phoneVerified, setPhoneVerified } = usePricing();
 
   // New states for phone verification flow
-  // const [phoneVerified, setPhoneVerified] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [otp, setOtp] = useState('');
@@ -47,10 +46,13 @@ export const OfferCode = ({ hotelDetail }) => {
     }
     sendOtp(`+91${phoneNumber}`, {
       onSuccess: (data) => {
-        setShowOTPSection(true);
+        if (data && data.sessionId) {
+          localStorage.setItem('otpSessionId', data.sessionId);
+        }
+        setShowModal(true);
         toast.success("OTP sent to your phone");
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Error sending OTP");
       }
     });
@@ -66,11 +68,17 @@ export const OfferCode = ({ hotelDetail }) => {
     if (!formattedPhone.startsWith('+91')) {
       formattedPhone = '+91' + formattedPhone;
     }
-    verifyOtp({ phone: formattedPhone, code: otp }, {
+
+
+    const sessionId = localStorage.getItem('otpSessionId');
+    if (!sessionId) {
+      toast.error("Session expired. Please request a new OTP");
+      return;
+    }
+    verifyOtp({ phone: formattedPhone, code: otp, sessionId: sessionId }, {
       onSuccess: (data) => {
-        if (data && data.status === 'approved') {
-          // Save the verification status in a cookie (set expiry as needed, here 7 days)
-          Cookies.set('phoneVerified', 'true', { expires: 7 });
+        if (data && data.status === 'OTP Matched') {
+          Cookies.set('phoneVerified', 'true', { expires: 30 });
           setPhoneVerified(true);
           setShowModal(false);
           toast.success("Phone number verified");
@@ -78,12 +86,11 @@ export const OfferCode = ({ hotelDetail }) => {
           toast.error("Invalid OTP");
         }
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("OTP verification failed");
       }
     });
   };
-
 
   // Existing handlers remain unchanged
   const handleApplyCode = async () => {
@@ -92,7 +99,8 @@ export const OfferCode = ({ hotelDetail }) => {
       const result = await getDiscountAsync({
         hotelId: hotelDetail._id,
         rate: finalPrice,
-        offerCode: inputValue.trim()
+        offerCode: inputValue.trim(),
+        checkInDate:checkIn
       });
       setOfferResult(result);
       if (result.discountedRate) {
@@ -121,7 +129,8 @@ export const OfferCode = ({ hotelDetail }) => {
       const result = await getDiscountAsync({
         hotelId: hotelDetail._id,
         rate: finalPrice,
-        offerCode: offer.offerCode
+        offerCode: offer.offerCode,
+        checkInDate:checkIn
       });
       setOfferResult(result);
       if (result.discountedRate) {
@@ -140,46 +149,46 @@ export const OfferCode = ({ hotelDetail }) => {
   // If phone is not verified, show the verification UI only
   if (!phoneVerified) {
     return (
-      <div className="flex flex-col min-h-auto ">
+      <div className="flex flex-col font-sans">
         <div className="flex items-center mb-6">
-          <div className="w-1 h-8 bg-primary-green rounded-full mr-3" style={{ backgroundColor: "#058FA2" }}></div>
+          <div className="w-1 h-8 rounded-full mr-3" style={{ backgroundColor: primaryColor }}></div>
           <h2 className="text-3xl font-bold text-gray-800">Exclusive Offers</h2>
         </div>
 
-        <div className="mb-6 p-4 bg-white rounded-lg shadow-sm border ">
+        <div className="mb-6 p-6 bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center mb-4">
             <div className="bg-cyan-100 p-2 rounded-full mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#058FA2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={primaryColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path>
               </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-lg text-gray-800">Verify Your Phone Number</h3>
+              <h3 className="font-semibold text-xl text-gray-800">Verify Your Phone Number</h3>
               <p className="text-gray-600 text-sm">Unlock special discounts exclusive to verified users</p>
             </div>
           </div>
 
           <div className="flex flex-col md:flex-row items-center gap-4 my-4">
-            <div className="flex items-center flex-grow gap-2 bg-gray-50 p-2 rounded-lg">
+            <div className="flex items-center flex-grow gap-2 bg-gray-50 p-3 rounded-lg">
               <div className="h-10 w-10 bg-cyan-600 rounded-full flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
                   <line x1="7" y1="7" x2="7.01" y2="7"></line>
                 </svg>
-              </div> 
-              <div className="ml-2">
+              </div>
+              <div>
                 <p className="text-sm font-medium text-gray-600">Exclusive Offers</p>
                 <p className="text-xs text-gray-500">Up to 25% off on bookings</p>
               </div>
             </div>
 
-            <div className="flex items-center flex-grow gap-2 bg-gray-50 p-2 rounded-lg">
+            <div className="flex items-center flex-grow gap-2 bg-gray-50 p-3 rounded-lg">
               <div className="h-10 w-10 bg-cyan-600 rounded-full flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
               </div>
-              <div className="ml-2">
+              <div>
                 <p className="text-sm font-medium text-gray-600">Secure Process</p>
                 <p className="text-xs text-gray-500">OTP verification for security</p>
               </div>
@@ -188,8 +197,8 @@ export const OfferCode = ({ hotelDetail }) => {
 
           <button
             onClick={() => setShowModal(true)}
-            className="w-full py-3 bg-primary-dark-green text-white font-semibold rounded-lg shadow-md hover:shadow-lg flex items-center justify-center gap-2"
-            style={{ backgroundColor: "#058FA2" }}
+            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all"
+            style={{ backgroundColor: primaryColor }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.94z"></path>
@@ -218,7 +227,7 @@ export const OfferCode = ({ hotelDetail }) => {
                 <div>
                   <div className="mb-6 text-center">
                     <div className="inline-block p-3 rounded-full bg-cyan-100 mb-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#058FA2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={primaryColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path>
                       </svg>
                     </div>
@@ -254,7 +263,7 @@ export const OfferCode = ({ hotelDetail }) => {
                 <div>
                   <div className="mb-6 text-center">
                     <div className="inline-block p-3 rounded-full bg-cyan-100 mb-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#058FA2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={primaryColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                         <path d="M7 11V7a5 5 0 0110 0v4"></path>
                       </svg>
@@ -302,23 +311,13 @@ export const OfferCode = ({ hotelDetail }) => {
   }
 
   return (
-    <div className="flex flex-col bg-white w-full mx-auto">
+    <div className="flex flex-col bg-white w-full mx-auto font-sans">
       <div className="flex items-center mb-8">
         <div
           className="w-10 h-10 flex items-center justify-center rounded-full bg-cyan-600 text-white mr-3"
           style={{ backgroundColor: primaryColor }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg  "
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
             <line x1="7" y1="7" x2="7.01" y2="7"></line>
           </svg>
@@ -339,17 +338,7 @@ export const OfferCode = ({ hotelDetail }) => {
                 onChange={(e) => setInputValue(e.target.value)}
               />
               <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg  "
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                   <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
                   <line x1="12" y1="22.08" x2="12" y2="12"></line>
@@ -388,14 +377,14 @@ export const OfferCode = ({ hotelDetail }) => {
                       className="text-sm font-semibold px-3 py-1 rounded-full text-white"
                       style={{ backgroundColor: primaryColor }}
                     >
-                      {offer.discountPercent} %
+                      {offer.discountPercent}%
                     </span>
                   </div>
                   <div className="mt-3 flex justify-end">
                     <span className="text-xs font-medium flex items-center" style={{ color: primaryColor }}>
                       Click to apply
                       <svg
-                        xmlns="http://www.w3.org/2000/svg  "
+                        xmlns="http://www.w3.org/2000/svg"
                         width="16"
                         height="16"
                         viewBox="0 0 24 24"
@@ -429,7 +418,7 @@ export const OfferCode = ({ hotelDetail }) => {
               className="flex items-center text-sm px-4 py-2 bg-red-50 text-red-600 rounded-full hover:bg-red-100 transition-colors"
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg  "
+                xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
                 viewBox="0 0 24 24"
@@ -451,7 +440,7 @@ export const OfferCode = ({ hotelDetail }) => {
           >
             <div className="absolute top-0 right-0 w-24 h-24 transform translate-x-8 -translate-y-8">
               <div
-                className="absolute transform rotate-45 text-white font-bold py-1 right-0 top-0 w-32 text-center text-xs"
+                className="absolute transform rotate-45 text-white font-bold py-1 w-32 text-center text-xs"
                 style={{ backgroundColor: primaryColor }}
               >
                 APPLIED
@@ -463,17 +452,14 @@ export const OfferCode = ({ hotelDetail }) => {
                 <div className="text-gray-600 mt-2">{appliedOffer.description}</div>
               </div>
               <div className="mt-4 sm:mt-0">
-                <span
-                  className="text-lg font-semibold px-4 py-2 rounded-full text-white"
-                  style={{ backgroundColor: primaryColor }}
-                >
-                  {appliedOffer.discountPercent} %
+                <span className="text-lg font-semibold px-4 py-2 rounded-full text-white" style={{ backgroundColor: primaryColor }}>
+                  {appliedOffer.discountPercent}%
                 </span>
               </div>
             </div>
             <div className="mt-6 pt-4 border-t border-cyan-200 flex items-center">
               <svg
-                xmlns="http://www.w3.org/2000/svg  "
+                xmlns="http://www.w3.org/2000/svg"
                 width="20"
                 height="20"
                 viewBox="0 0 24 24"

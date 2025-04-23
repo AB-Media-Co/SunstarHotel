@@ -34,24 +34,13 @@ const ImageGallery = () => {
     <div className="relative z-10 w-full md:h-[40rem] h-[600px] overflow-hidden">
       <Marquee gradient={false} speed={50}>
         <div className="ps-2 sm:ps-4 w-full">
-          {/* Responsive columns:
-              - On mobile (base): 2 columns for a Pinterest-like feel
-              - On small screens: still 2 columns
-              - On medium screens: 3 columns
-              - On large screens: 4 columns */}
+
           <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
             {shuffledItems.map((item, index) => {
               if (item.type === "image") {
                 return (
-                  <div key={`image-${index}`} className="break-inside-avoid mb-4">
-                    <div className="relative group">
-                      <img
-                        src={item.src}
-                        alt=""
-                        className="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 transition-opacity duration-300 rounded-xl" />
-                    </div>
+                  <div key={`image-${index}`} className="break-inside-avoid mb-4 overflow-hidden">
+                    <img src={item.src} className="w-full rounded-2xl scale-[0.99] h-full object-cover bg-white" />
                   </div>
                 );
               }
@@ -59,9 +48,9 @@ const ImageGallery = () => {
               if (item.type === "div") {
                 return (
                   <div key={item._id} className="break-inside-avoid mb-4">
-                    <div 
+                    <div
                       className={`${item.bg} p-4 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 text-primary-white font-bold flex items-center justify-center`}
-                      style={{ 
+                      style={{
                         backgroundColor: item.bg,
                         minHeight: index % 2 === 0 ? '16rem' : '20rem'
                       }}
@@ -78,6 +67,9 @@ const ImageGallery = () => {
           </div>
         </div>
       </Marquee>
+
+
+   
     </div>
   );
 };

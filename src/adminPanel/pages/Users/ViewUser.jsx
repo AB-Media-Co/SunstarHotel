@@ -38,11 +38,12 @@ const ViewUser = () => {
     );
   }
 
-  const { name, email, phone, role, gender, age, allowedCities, allowedHotels, createdAt, updatedAt } = adminProfile.data;
+  const { username, email, phone, role, gender, age, allowedCities, allowedHotels, createdAt, updatedAt } = adminProfile.data;
+  console.log(adminProfile);
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
-    setFormData({ name, email, phone, gender, age, allowedCities: allowedCities.join(','), allowedHotels: allowedHotels.join(',') });
+    setFormData({ username, email, phone, gender, age, allowedCities: allowedCities.join(','), allowedHotels: allowedHotels.join(',') });
   };
 
   const handleChange = (e) => {
@@ -51,7 +52,12 @@ const ViewUser = () => {
 
   const handleSave = () => {
     const updatedData = {
-      ...formData,
+      // ...formData,
+      username: formData?.username,
+      email: formData?.email,
+      phone: formData?.phone,
+      gender: formData?.gender,
+      age: formData?.age,
       allowedCities: formData.allowedCities ? formData.allowedCities.split(',').map((city) => city.trim()) : [],
       allowedHotels: formData.allowedHotels ? formData.allowedHotels.split(',').map((hotel) => hotel.trim()) : [],
     };
@@ -85,17 +91,18 @@ const ViewUser = () => {
     <div className="flex items-center justify-center min-h-screen pt-16 bg-gray-50 px-4">
       <div className="w-full max-w-2xl relative flex flex-col bg-white rounded-lg shadow-md border border-gray-200">
         <div className="bg-gray-100 px-8 py-6 text-center">
-          <div className="w-20 h-20 mx-auto rounded-full bg-gray-200 flex items-center justify-center text-4xl font-semibold text-gray-700">
-            {name[0].toUpperCase()}
+          <div className="w-20 h-20 capitalize mx-auto rounded-full bg-gray-200 flex items-center justify-center text-4xl font-semibold text-gray-700">
+            {/* {username} */}
+            {username[0].toUpperCase()}
           </div>
-          <h2 className="text-2xl font-semibold mt-4 text-gray-800">{name}</h2>
+          <h2 className="text-2xl font-semibold mt-4 text-gray-800">{username}</h2>
           <p className="text-sm font-medium text-gray-500 capitalize">{role}</p>
         </div>
 
         <div className="p-8 flex flex-col w-full gap-6 bg-gray-50">
           {isEditing ? (
             <>
-              <InputField label="Name" name="name" value={formData.name} onChange={handleChange} />
+              <InputField label="Name" name="username" value={formData.username} onChange={handleChange} />
               <InputField label="Email" name="email" value={formData.email} onChange={handleChange} />
               <InputField label="Phone" name="phone" value={formData.phone} onChange={handleChange} />
               <InputField label="Gender" name="gender" value={formData.gender} onChange={handleChange} />
@@ -105,7 +112,7 @@ const ViewUser = () => {
             </>
           ) : (
             <>
-              <InfoRow label="Name" value={name} />
+              <InfoRow label="Name" value={username} />
               <InfoRow label="Email" value={email} />
               <InfoRow label="Phone" value={phone} />
               <InfoRow label="Gender" value={gender} />
@@ -144,13 +151,13 @@ const ViewUser = () => {
               >
                 <EditIcon fontSize="small" />
               </button>
-              <button
+              {/* <button
                 onClick={handleDelete}
                 disabled={isDeletingProfile}
                 className={`px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center ${isDeletingProfile ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <DeleteIcon fontSize="small" />
-              </button>
+              </button> */}
             </>
           )}
         </div>

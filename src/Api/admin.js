@@ -1,6 +1,16 @@
 import axiosInstance from '../services/axiosInstance';
 
-// Login API
+// Helper to build the Authorization header
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+/**
+ * Login API call.
+ * @param {object} userData
+ * @returns {Promise<object>}
+ */
 export const loginAdminAPI = async (userData) => {
   try {
     const response = await axiosInstance.post('/api/admin/login', userData);
@@ -10,14 +20,15 @@ export const loginAdminAPI = async (userData) => {
   }
 };
 
-// Register API
+/**
+ * Register Admin API call.
+ * @param {object} userData
+ * @returns {Promise<object>}
+ */
 export const registerAdminAPI = async (userData) => {
   try {
-    const token = localStorage.getItem('token');
     const response = await axiosInstance.post('/api/admin/register', userData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
@@ -25,14 +36,14 @@ export const registerAdminAPI = async (userData) => {
   }
 };
 
-// View single admin profile API
+/**
+ * View Admin Profile API call.
+ * @returns {Promise<object>}
+ */
 export const viewProfileApi = async () => {
   try {
-    const token = localStorage.getItem('token');
     const response = await axiosInstance.get('/api/admin/profile', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
@@ -40,14 +51,15 @@ export const viewProfileApi = async () => {
   }
 };
 
-// Edit single admin profile API
+/**
+ * Edit Admin Profile API call.
+ * @param {object} updatedData
+ * @returns {Promise<object>}
+ */
 export const editProfileApi = async (updatedData) => {
   try {
-    const token = localStorage.getItem('token');
     const response = await axiosInstance.put('/api/admin/profile', updatedData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
@@ -55,14 +67,14 @@ export const editProfileApi = async (updatedData) => {
   }
 };
 
-// Delete single admin profile API
+/**
+ * Delete Admin Profile API call.
+ * @returns {Promise<object>}
+ */
 export const deleteProfileApi = async () => {
   try {
-    const token = localStorage.getItem('token');
     const response = await axiosInstance.delete('/api/admin/profile', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
@@ -70,14 +82,14 @@ export const deleteProfileApi = async () => {
   }
 };
 
-// View all users API
+/**
+ * Fetch All Users API call.
+ * @returns {Promise<object>}
+ */
 export const allUsersApi = async () => {
   try {
-    const token = localStorage.getItem('token');
     const response = await axiosInstance.get('/api/admin/profiles', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
@@ -85,14 +97,15 @@ export const allUsersApi = async () => {
   }
 };
 
-// Edit a user profile by ID API
+/**
+ * Edit User Profile By ID API call.
+ * @param {object} params - Object containing id and updatedData.
+ * @returns {Promise<object>}
+ */
 export const editUserProfileByIdApi = async ({ id, updatedData }) => {
   try {
-    const token = localStorage.getItem('token');
     const response = await axiosInstance.put(`/api/admin/profiles/${id}`, updatedData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
@@ -100,17 +113,36 @@ export const editUserProfileByIdApi = async ({ id, updatedData }) => {
   }
 };
 
-// Delete a user profile by ID API
+/**
+ * Delete User Profile By ID API call.
+ * @param {string} id
+ * @returns {Promise<object>}
+ */
 export const deleteUserProfileByIdApi = async (id) => {
   try {
-    const token = localStorage.getItem('token');
     const response = await axiosInstance.delete(`/api/admin/profiles/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
     throw error.response?.data || { success: false, message: 'Error deleting user profile' };
+  }
+};
+
+/**
+ * Change Password API call.
+ * For a regular user, provide { currentPassword, newPassword }.
+ * For SuperAdmin, provide { userId, newPassword } to change another user's password.
+ * @param {object} passwordData
+ * @returns {Promise<object>}
+ */
+export const changePasswordAPI = async (passwordData) => {
+  try {
+    const response = await axiosInstance.post('/api/admin/change-password', passwordData, {
+      headers: getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { success: false, message: 'Error changing password' };
   }
 };

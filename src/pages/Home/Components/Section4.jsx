@@ -9,8 +9,6 @@ const Section4 = () => {
         <RoatinfImg position='md:left-0 top-[-60px] md:top-0 left-[-60px] ' />
       </div>
         <ImageGallery items={HomePageImgGallery.items} />
-     
-    
     </div>
   );
 };

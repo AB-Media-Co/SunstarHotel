@@ -19,13 +19,37 @@ import {
   Typography,
   Autocomplete,
   Grid,
-  Checkbox,
   FormControlLabel,
+  Checkbox,
+  Paper,
+  Divider,
+  Chip,
+  Stack,
+  Tooltip,
+  LinearProgress,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  useTheme,
+  useMediaQuery,
+  Card,
+  CardMedia,
+  CardContent,
+  Avatar
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import BedIcon from '@mui/icons-material/Bed';
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import GroupIcon from '@mui/icons-material/Group';
+import PriceChangeIcon from '@mui/icons-material/PriceChange';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ImageIcon from '@mui/icons-material/Image';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import PercentIcon from '@mui/icons-material/Percent';
 import MultipleImageUpload from '../../Components/MultipleImageUpload';
 import ImageUpload from '../../Components/ImageUpload';
-import { uploadImagesAPIV2, } from '../../../ApiHooks/useHotelHook2';
+import { uploadImagesAPIV2 } from '../../../ApiHooks/useHotelHook2';
 import useUpdatePagesHook from '../../../ApiHooks/useUpdatePagesHook';
 
 function TabPanel(props) {
@@ -56,7 +80,7 @@ const useAmenities = (amenities, roomAmenities) => {
   }, [amenities, roomAmenities]);
 
   const handleAmenitiesChange = useCallback((event, newValue) => {
-    const transformed = newValue.map((item) => {
+    const transformed = newValue?.map((item) => {
       if (typeof item === 'string') {
         return { value: item, label: item };
       }
@@ -68,11 +92,7 @@ const useAmenities = (amenities, roomAmenities) => {
   return { selectedAmenities, handleAmenitiesChange, setSelectedAmenities };
 };
 
-
-
 const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, amenities, selectedAmenities, handleAmenitiesChange }) => {
-
-
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -84,148 +104,305 @@ const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, amenit
     },
   };
 
-
   return (
     <Box component="form" noValidate autoComplete="off">
-      <Grid container spacing={2}>
+      <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: 'rgba(0, 0, 0, 0.02)', borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 500 }}>
+          Basic Information
+        </Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <InputLabel id="room-type-label">Room Type</InputLabel>
+              <Select
+                labelId="room-type-label"
+                id="RoomTypeID"
+                name="RoomTypeID"
+                value={formData.RoomTypeID || ''}
+                label="Room Type"
+                MenuProps={MenuProps}
+                disabled
+                sx={{ bgcolor: 'background.paper' }}
+              >
+                <MenuItem value="">
+                  <em>Select Room Type</em>
+                </MenuItem>
+                <MenuItem value={formData.RoomTypeID}>
+                  {formData?.RoomTypeID}
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Room Name"
+              name="RoomName"
+              value={formData.RoomName}
+              onChange={handleInputChange}
+              sx={{ bgcolor: 'background.paper' }}
+              placeholder="Enter distinctive room name"
+              required
+            />
+          </Grid>
+        </Grid>
+      </Paper>
 
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth>
-            <InputLabel id="room-type-label">Room Type</InputLabel>
-            <Select
-              labelId="room-type-label"
-              id="RoomTypeID"
-              name="RoomTypeID"
-              value={formData.RoomTypeID || ''}
-              label="Room Type"
-              MenuProps={MenuProps}
+      <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: 'rgba(0, 0, 0, 0.02)', borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 500 }}>
+          Room Details
+        </Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Room Description"
+              name="RoomDescription"
+              value={formData.RoomDescription}
+              onChange={handleInputChange}
+              multiline
+              rows={3}
+              sx={{ bgcolor: 'background.paper' }}
+              placeholder="Describe the unique features and benefits of this room"
+              required
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Max Guests"
+              name="maxGuests"
+              type="number"
+              value={formData.maxGuests}
+              onChange={handleInputChange}
+              sx={{ bgcolor: 'background.paper' }}
+              InputProps={{
+                startAdornment: <GroupIcon color="action" sx={{ mr: 1 }} />,
+              }}
+              placeholder="e.g., 2"
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Square Feet"
+              name="squareFeet"
+              type="number"
+              value={formData.squareFeet}
+              onChange={handleInputChange}
+              sx={{ bgcolor: 'background.paper' }}
+              InputProps={{
+                startAdornment: <SquareFootIcon color="action" sx={{ mr: 1 }} />,
+              }}
+              placeholder="e.g., 450"
+            />
+          </Grid>
+        </Grid>
+      </Paper>
+
+      <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: 'rgba(0, 0, 0, 0.02)', borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 500 }}>
+          Amenities
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Autocomplete
+              multiple
+              freeSolo
+              options={amenities || []}
+              value={selectedAmenities}
+              onChange={handleAmenitiesChange}
+              getOptionLabel={(option) => option.label || ''}
+              renderInput={(params) => (
+                <TextField 
+                  {...params} 
+                  label="Amenities" 
+                  placeholder="Select amenities" 
+                  sx={{ bgcolor: 'background.paper' }}
+                />
+              )}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip
+                    variant="outlined"
+                    label={option.label}
+                    {...getTagProps({ index })}
+                    color="primary"
+                    size="small"
+                    sx={{ borderRadius: 1 }}
+                  />
+                ))
+              }
+            />
+          </Grid>
+        </Grid>
+      </Paper>
+
+      <Paper elevation={0} sx={{ p: 2, bgcolor: 'rgba(0, 0, 0, 0.02)', borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 500 }}>
+          Pricing
+        </Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Default Rate"
+              name="defaultRate"
+              type="number"
+              value={formData.defaultRate}
+              onChange={handleInputChange}
+              sx={{ bgcolor: 'background.paper' }}
+              InputProps={{
+                startAdornment: <PriceChangeIcon color="action" sx={{ mr: 1 }} />,
+              }}
+              placeholder="Base price per night"
+              required
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Discount Rate"
+              name="discountRate"
+              type="number"
+              value={formData.discountRate}
               disabled
-
-            >
-              <MenuItem value="">
-                <em>Select Room Type</em>
-              </MenuItem>
-
-              <MenuItem value={formData.RoomTypeID}>
-                {formData.RoomTypeID}
-              </MenuItem>
-            </Select>
-          </FormControl>
+              sx={{ bgcolor: 'background.paper', opacity: 0.8 }}
+              InputProps={{
+                startAdornment: <PercentIcon color="action" sx={{ mr: 1 }} />,
+              }}
+              helperText="Managed by pricing system"
+            />
+          </Grid>
+          
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.available !== "no"}
+                  onChange={handleCheckboxChange}
+                  color="primary"
+                />
+              }
+              label="Room is available for booking"
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Room Name"
-            name="RoomName"
-            value={formData.RoomName}
-            onChange={handleInputChange}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Room Description"
-            name="RoomDescription"
-            value={formData.RoomDescription}
-            onChange={handleInputChange}
-            multiline
-            rows={3}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Max Guests"
-            name="maxGuests"
-            type="number"
-            value={formData.maxGuests}
-            onChange={handleInputChange}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Square Feet"
-            name="squareFeet"
-            type="number"
-            value={formData.squareFeet}
-            onChange={handleInputChange}
-          />
-        </Grid>
-       
-        <Grid item xs={12}>
-          <Autocomplete
-            multiple
-            freeSolo
-            options={amenities || []}
-            value={selectedAmenities}
-            onChange={handleAmenitiesChange}
-            getOptionLabel={(option) => option.label || ''}
-            renderInput={(params) => (
-              <TextField {...params} label="Amenities" placeholder="Select amenities" />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Discount Rate"
-            name="discountRate"
-            type="number"
-            value={formData.discountRate}
-            disabled
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Default Rate"
-            name="defaultRate"
-            type="number"
-            value={formData.defaultRate}
-            onChange={handleInputChange}
-          />
-        </Grid>
-      </Grid>
+      </Paper>
     </Box>
   );
 };
 
 const UploadImagesTab = ({ images, onUploadSuccess, onRemoveImageUrl, isUploading }) => {
   return (
-    <MultipleImageUpload
-      imagesUrls={images}
-      onUploadSuccess={onUploadSuccess}
-      onRemoveImageUrl={onRemoveImageUrl}
-      isUploading={isUploading}
-    />
+    <Box>
+      <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: 'rgba(0, 0, 0, 0.02)', borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 500 }}>
+          Room Images
+        </Typography>
+        <Typography variant="body2" color="text.secondary" paragraph>
+          Upload high-quality images that showcase your room. We recommend at least 3 images from different angles.
+        </Typography>
+        
+        {isUploading && (
+          <Box sx={{ width: '100%', mb: 2 }}>
+            <LinearProgress />
+          </Box>
+        )}
+        
+        <MultipleImageUpload
+          imagesUrls={images}
+          onUploadSuccess={onUploadSuccess}
+          onRemoveImageUrl={onRemoveImageUrl}
+          isUploading={isUploading}
+        />
+        
+        {images.length > 0 && (
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              Current Images ({images.length})
+            </Typography>
+            <Grid container spacing={2}>
+              {images.map((url, index) => (
+                <Grid item xs={6} sm={4} md={3} key={index}>
+                  <Card sx={{ position: 'relative' }}>
+                    <CardMedia
+                      component="img"
+                      height="120"
+                      image={url}
+                      alt={`Room image ${index + 1}`}
+                      sx={{ objectFit: 'cover' }}
+                    />
+                    <IconButton
+                      size="small"
+                      sx={{
+                        position: 'absolute',
+                        top: 5,
+                        right: 5,
+                        bgcolor: 'rgba(255, 255, 255, 0.8)',
+                        '&:hover': {
+                          bgcolor: 'rgba(255, 255, 255, 0.95)',
+                        },
+                      }}
+                      onClick={() => onRemoveImageUrl(url)}
+                    >
+                      <DeleteOutlineIcon fontSize="small" />
+                    </IconButton>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        )}
+      </Paper>
+    </Box>
   );
 };
 
 const AboutRoomTab = ({ aboutRoom, handleAboutChange }) => {
   return (
     <Box component="form" noValidate autoComplete="off">
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="About Room Description"
-            name="aboutDescription"
-            value={aboutRoom.description}
-            onChange={(e) => handleAboutChange('description', e.target.value)}
-            multiline
-            rows={3}
-          />
+      <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: 'rgba(0, 0, 0, 0.02)', borderRadius: 2 }}>
+        <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 500 }}>
+          About This Room
+        </Typography>
+        <Typography variant="body2" color="text.secondary" paragraph>
+          Provide detailed information about what makes this room special. This will be displayed prominently on booking pages.
+        </Typography>
+        
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="About Room Description"
+              name="aboutDescription"
+              value={aboutRoom.description}
+              onChange={(e) => handleAboutChange('description', e.target.value)}
+              multiline
+              rows={4}
+              sx={{ bgcolor: 'background.paper' }}
+              placeholder="Describe unique features, views, or experiences guests can expect"
+            />
+          </Grid>
+          
+          <Grid item xs={12}>
+            <Typography variant="subtitle2" gutterBottom>
+              Featured Image
+            </Typography>
+            <Box sx={{ p: 2, border: '1px dashed', borderColor: 'divider', borderRadius: 1 }}>
+              <ImageUpload
+                feature={aboutRoom}
+                handleFeatureChange={handleAboutChange}
+                setImageUpload={() => {}}
+                index={0}
+              />
+            </Box>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <ImageUpload
-            feature={aboutRoom}
-            handleFeatureChange={handleAboutChange}
-            setImageUpload={() => { }}
-            index={0}
-          />
-        </Grid>
-      </Grid>
+      </Paper>
     </Box>
   );
 };
@@ -235,6 +412,8 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
   const [images, setImages] = useState(room.RoomImage || []);
   const [isUploading, setIsUploading] = useState(false);
   const { amenities } = useUpdatePagesHook();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [formData, setFormData] = useState({
     HotelCode: room.HotelCode || '',
@@ -277,9 +456,9 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
 
   const handleSave = useCallback(() => {
     const updatedServices = formData.services
-      .split(',')
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
+      ?.split(',')
+      ?.map((s) => s.trim())
+      ?.filter((s) => s.length > 0);
 
     const updatedRoom = {
       ...room,
@@ -323,72 +502,236 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
     setImages((prev) => prev.filter((img) => img !== url));
   }, []);
 
+  const validateForm = () => {
+    const requiredFields = ['RoomName', 'RoomDescription', 'defaultRate'];
+    return requiredFields.every(field => formData[field]);
+  };
+
+  // Mobile view uses a stepper instead of tabs
+  const renderMobileView = () => (
+    <>
+      <Box sx={{ mb: 2 }}>
+        <Stepper activeStep={activeTab} orientation="vertical">
+          <Step>
+            <StepLabel>Room Info</StepLabel>
+            <StepContent>
+              <RoomInfoTab
+                formData={formData}
+                handleInputChange={handleInputChange}
+                handleCheckboxChange={handleCheckboxChange}
+                roomTypes={roomTypes}
+                amenities={amenities}
+                selectedAmenities={selectedAmenities}
+                handleAmenitiesChange={handleAmenitiesChange}
+                isEdit={isEdit}
+              />
+              <Box sx={{ mt: 2 }}>
+                <Button
+                  variant="contained"
+                  onClick={() => setActiveTab(1)}
+                  sx={{ mr: 1 }}
+                >
+                  Continue
+                </Button>
+                <Button onClick={onClose} variant="text">
+                  Cancel
+                </Button>
+              </Box>
+            </StepContent>
+          </Step>
+          <Step>
+            <StepLabel>Upload Images</StepLabel>
+            <StepContent>
+              <UploadImagesTab
+                images={images}
+                onUploadSuccess={handleImagesUpload}
+                onRemoveImageUrl={handleRemoveImageUrl}
+                isUploading={isUploading}
+              />
+              <Box sx={{ mt: 2 }}>
+                <Button
+                  variant="contained"
+                  onClick={() => setActiveTab(2)}
+                  sx={{ mr: 1 }}
+                >
+                  Continue
+                </Button>
+                <Button onClick={() => setActiveTab(0)} variant="text">
+                  Back
+                </Button>
+              </Box>
+            </StepContent>
+          </Step>
+          <Step>
+            <StepLabel>About Room</StepLabel>
+            <StepContent>
+              <AboutRoomTab
+                aboutRoom={aboutRoom}
+                handleAboutChange={handleAboutChange}
+              />
+              <Box sx={{ mt: 2 }}>
+                <Button
+                  variant="contained"
+                  onClick={handleSave}
+                  disabled={roomSaving || !validateForm()}
+                  sx={{ mr: 1 }}
+                >
+                  {roomSaving ? 'Saving...' : 'Save Room'}
+                </Button>
+                <Button onClick={() => setActiveTab(1)} variant="text">
+                  Back
+                </Button>
+              </Box>
+            </StepContent>
+          </Step>
+        </Stepper>
+      </Box>
+    </>
+  );
+
+  // Desktop view uses tabs
+  const renderDesktopView = () => (
+    <>
+      <Tabs
+        value={activeTab}
+        onChange={handleTabChange}
+        variant="fullWidth"
+        sx={{
+          mb: 2,
+          '& .MuiTab-root': {
+            borderBottom: 1,
+            borderColor: 'divider',
+          },
+          '& .Mui-selected': {
+            fontWeight: 'bold',
+          }
+        }}
+      >
+        <Tab 
+          label="Room Info" 
+          icon={<BedIcon />} 
+          iconPosition="start" 
+        />
+        <Tab 
+          label="Upload Images" 
+          icon={<ImageIcon />}
+          iconPosition="start"
+        />
+        <Tab 
+          label="About Room" 
+          icon={<CheckCircleOutlineIcon />}
+          iconPosition="start"
+        />
+      </Tabs>
+
+      <TabPanel value={activeTab} index={0}>
+        <RoomInfoTab
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleCheckboxChange={handleCheckboxChange}
+          roomTypes={roomTypes}
+          amenities={amenities}
+          selectedAmenities={selectedAmenities}
+          handleAmenitiesChange={handleAmenitiesChange}
+          isEdit={isEdit}
+        />
+      </TabPanel>
+
+      <TabPanel value={activeTab} index={1}>
+        <UploadImagesTab
+          images={images}
+          onUploadSuccess={handleImagesUpload}
+          onRemoveImageUrl={handleRemoveImageUrl}
+          isUploading={isUploading}
+        />
+      </TabPanel>
+
+      <TabPanel value={activeTab} index={2}>
+        <AboutRoomTab
+          aboutRoom={aboutRoom}
+          handleAboutChange={handleAboutChange}
+        />
+      </TabPanel>
+    </>
+  );
+
   return (
-    <Dialog open onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle sx={{ m: 0, p: 2 }}>
+    <Dialog 
+      open 
+      onClose={onClose} 
+      fullWidth 
+      maxWidth="md"
+      PaperProps={{ 
+        sx: { 
+          borderRadius: 2,
+          overflow: 'hidden' 
+        } 
+      }}
+      fullScreen={isMobile}
+    >
+      <DialogTitle sx={{ 
+        m: 0, 
+        p: 3, 
+        bgcolor: 'primary.main', 
+        color: 'primary.contrastText',
+      }}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Typography variant="h5" color="primary">
-            {room._id ? 'Edit Room' : 'Add Room'}
-          </Typography>
-          <IconButton onClick={onClose} aria-label="close">
+          <Box display="flex" alignItems="center">
+            <Avatar sx={{ bgcolor: 'background.paper', color: 'primary.main', mr: 2 }}>
+              <BedIcon />
+            </Avatar>
+            <Typography variant="h5" fontWeight="medium">
+              {room._id ? 'Edit Room' : 'Add Room'}
+            </Typography>
+          </Box>
+          <IconButton onClick={onClose} aria-label="close" sx={{ color: 'primary.contrastText' }}>
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent dividers>
-        <Tabs
-          value={activeTab}
-          onChange={handleTabChange}
-          variant="fullWidth"
-          sx={{ mb: 2 }}
-        >
-          <Tab label="Room Info" />
-          <Tab label="Upload Images" />
-          <Tab label="About Room" />
-        </Tabs>
-
-        <TabPanel value={activeTab} index={0}>
-          <RoomInfoTab
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleCheckboxChange={handleCheckboxChange}
-            roomTypes={roomTypes}
-            amenities={amenities}
-            selectedAmenities={selectedAmenities}
-            handleAmenitiesChange={handleAmenitiesChange}
-            isEdit={isEdit}
-          />
-        </TabPanel>
-
-        <TabPanel value={activeTab} index={1}>
-          <UploadImagesTab
-            images={images}
-            onUploadSuccess={handleImagesUpload}
-            onRemoveImageUrl={handleRemoveImageUrl}
-            isUploading={isUploading}
-          />
-        </TabPanel>
-
-        <TabPanel value={activeTab} index={2}>
-          <AboutRoomTab
-            aboutRoom={aboutRoom}
-            handleAboutChange={handleAboutChange}
-          />
-        </TabPanel>
+      
+      <DialogContent dividers sx={{ p: isMobile ? 2 : 3, bgcolor: 'background.default' }}>
+        {isMobile ? renderMobileView() : renderDesktopView()}
       </DialogContent>
-      <DialogActions sx={{ p: 2 }}>
-        <Button onClick={onClose} variant="outlined" color="secondary">
-          Cancel
-        </Button>
-        <Button
-          onClick={handleSave}
-          variant="contained"
-          color="primary"
-          disabled={roomSaving}
-        >
-          {roomSaving ? 'Saving...' : 'Save'}
-        </Button>
-      </DialogActions>
+      
+      {!isMobile && (
+        <DialogActions sx={{ px: 3, py: 2, bgcolor: 'background.paper' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <Box>
+              <Button 
+                onClick={() => setActiveTab(Math.max(0, activeTab - 1))} 
+                disabled={activeTab === 0}
+                sx={{ ml: 1 }}
+              >
+                Previous
+              </Button>
+              <Button 
+                variant="contained" 
+                color="primary"
+                onClick={() => setActiveTab(Math.min(2, activeTab + 1))}
+                disabled={activeTab === 2}
+                sx={{ ml: 1 }}
+              >
+                Next
+              </Button>
+            </Box>
+            <Box>
+              <Button onClick={onClose} variant="outlined" color="secondary">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSave}
+                variant="contained"
+                color="primary"
+                disabled={roomSaving || !validateForm()}
+                sx={{ ml: 2 }}
+              >
+                {roomSaving ? 'Saving...' : 'Save Room'}
+              </Button>
+            </Box>
+          </Box>
+        </DialogActions>
+      )}
     </Dialog>
   );
 };

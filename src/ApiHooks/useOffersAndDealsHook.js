@@ -91,6 +91,7 @@ export const useDiscountedRate = () => {
   });
 };
 
+// Updated to match backend expectation (phone parameter)
 export const useSendOtp = () => {
   return useMutation({
     mutationFn: async (phone) => {
@@ -100,10 +101,20 @@ export const useSendOtp = () => {
   });
 };
 
+// Updated to match backend expectation (sessionId, otp, phone)
 export const useVerifyOtp = () => {
   return useMutation({
     mutationFn: async ({ phone, code }) => {
-      const response = await axiosInstance.post('/api/deals/verifyOtp', { phone, code });
+      // Extract sessionId from the app's state management if available
+      // If not available in props, you might need to store it after sending OTP
+      const sessionId = localStorage.getItem('otpSessionId');
+      
+      const response = await axiosInstance.post('/api/deals/verifyOtp', {
+        sessionId,   // This is required by your backend
+        otp: code,   // Renamed from 'code' to 'otp' to match backend
+        phone        // Phone number
+      });
+      
       return response.data;
     },
   });

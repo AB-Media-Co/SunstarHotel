@@ -139,16 +139,16 @@ const ShineSection = () => {
                             className={`flex flex-col-reverse flex-wrap items-center lg:items-start gap-6 lg:gap-16 md:justify-between  lg:flex-row ${index % 2 === 1 ? "lg:flex-row-reverse md:gap-10" : ""
                                 }`}
                         >
-                            <div className="pe-6 w-[250px] md:w-[320px] h-[182px] md:h-[282px] lg:w-[560px] flex flex-col gap-5 justify-center animation-on-scroll">
+                            <div className="pe-6 w-full md:w-[320px] h-auto md:h-[282px] lg:w-[560px] flex flex-col gap-5 justify-center animation-on-scroll">
                                 <h3 className="lg:w-[580px] text-mobile/h3 md:text-desktop/h3 text-primary-white">{item.title}</h3>
-                                <p className="text-justify text-mobile/body/2 md:text-desktop/body/1 text-primary-white lowercase">
+                                <p className=" text-md text-mobile/body/2 md:text-desktop/body/1 text-primary-white ">
                                     {item.description}
                                 </p>
                             </div>
                             <img
                                 src={item.image}
                                 alt={item.title}
-                                className="w-[250px] md:w-[320px] h-[282px] lg:w-[560px] rounded-2xl lg:h-[350px] object-cover animation-on-scroll"
+                                className="w-full md:w-[320px] h-[282px] lg:w-[560px] rounded-2xl lg:h-[350px] object-cover animation-on-scroll"
                             />
                         </div>
                     ))}

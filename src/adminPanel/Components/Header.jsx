@@ -1,7 +1,7 @@
 import { Logout, Person } from "@mui/icons-material";
 import { removeToken } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-hot-toast";
 export const Header = () => {
   const toggleDropdown = () => {
     navigate('/admin/view-user')
@@ -24,7 +24,7 @@ export const Header = () => {
             onClick={() => {
               removeToken();
               navigate('/admin/login')
-
+              toast.success('Logged out successfully')
             }}
             className="text-red-500"
           />

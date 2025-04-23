@@ -4,16 +4,16 @@ import { motion } from "framer-motion";
 const HeroSection = ({ title, highlightText, description, imageSrc }) => {
     const words = title.split(" ");
     return (
-        <div className="w-full bg-[#6EC4C2] py-20 px-6 md:px-12 lg:px-20 relative overflow-hidden">
-            <div className="max-w-7xl mx-auto flex flex-col md:pt-20 lg:flex-row items-center mt-6 md:mt-0 justify-between  md:gap-12">
+        <div className="w-full bg-[#6EC4C2] py-20 px-0 md:px-12 lg:px-20 relative overflow-hidden">
+            <div className="content mx-auto flex flex-col md:pt-20 lg:flex-row items-center mt-6 md:mt-0 justify-between  md:gap-12">
                 {/* Left Text Section */}
                 <motion.div 
                     initial={{ opacity: 0, x: -50 }} 
                     animate={{ opacity: 1, x: 0 }} 
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="lg:w-1/2 text-center lg:text-left"
+                    className="lg:w-1/2 text-left lg:text-left"
                 >
-                    <h1 className="text-mobile/h2 md:text-desktop/h2 md:text-[47px]  text-primary-white  mb-6">
+                    <h1 className="text-mobile/h2 md:text-desktop/h2 font-bold md:text-[47px]  text-primary-white  mb-6">
                         {words.map((word, index) => {
                             const shouldHighlight = highlightText?.includes(word);
                             return (

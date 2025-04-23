@@ -6,10 +6,10 @@ const ValuesSection = ({ title, values }) => {
   const { whysunstarValue } = useUpdatePagesHook();
 
   return (
-    <div className="w-full bg-primary-white py-12 px-4 md:px-8 lg:px-16"  >
-      <div className="max-w-7xl mx-auto">
+    <div className="w-full bg-primary-white py-6 md:py-8  md:px-8 lg:px-16"  >
+      <div className="content mx-auto">
         <h2
-          data-aos="fade-up" className="text-mobile/h3 md:text-desktop/h2 font-bold text-gray-900 mb-8 text-reveal-animation text-start">
+          data-aos="fade-up" className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-900 mb-8 text-reveal-animation text-start">
           {whysunstarValue?.heading}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

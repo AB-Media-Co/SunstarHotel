@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
-import { Suspense, lazy, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import {lazy, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { Sidebar, SidebarItem } from './adminPanel/Components/Sidebar';
 import { Header } from './adminPanel/Components/Header';
 import { getToken } from './adminPanel/utils/auth';
-import Loader from './Components/Loader';
 
 import { Rooms } from './adminPanel/pages/Rooms/Rooms';
 import { AdminHotels } from './adminPanel/pages/AdminHotels/AdminHotels';
@@ -28,6 +27,9 @@ import DealsOffers from './adminPanel/pages/Deals&Offers/DealsOffers';
 import { PricingProvider } from './Context/PricingContext';
 import ManageBlogs from './adminPanel/pages/ManageBlogs/ManageBlogs';
 import SeoMeta from './adminPanel/pages/OptimiseSeo/SeoMeta';
+import EventandConference from './pages/OtherPages/EventandConference';
+import ComingSoonPage from './pages/OtherPages/ComingSoonPage';
+// import PhoneAuth from './pages/PhoneAuth';
 
 
 const Layout = lazy(() => import(/* webpackChunkName: "layout" */ './Components/Layout'));
@@ -47,6 +49,8 @@ const CorporateEventsPage = lazy(() => import(/* webpackChunkName: "roomsdetails
 const SocialEventsPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/SocialEventsPage'));
 const WeddingPreWeddingPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/WeddingPreWeddingPage'));
 const BookingForm = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/BookingForm'));
+const DevelopersOwners = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/DevelopersAndOwners/DevelopersOwners'));
+const DayUseRoom = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/DayUseRoom/DayUseRoom'));
 
 const queryClient = new QueryClient();
 
@@ -70,33 +74,11 @@ function PrivateRoute({ children }) {
   );
 }
 
-// function LoaderWrapper({ children }) {
-//   const location = useLocation();
-//   const [loading, setLoading] = useState(false);
-
-//   useEffect(() => {
-//     const currentPath = location.pathname;
-//     const prevPath = sessionStorage.getItem('currentPath');
-//     if (prevPath !== currentPath) {
-//       setLoading(true);
-//       const timer = setTimeout(() => setLoading(false), 200);
-//       sessionStorage.setItem('currentPath', currentPath);
-//       return () => clearTimeout(timer);
-//     }
-//   }, [location]);
-
-//   if (loading) {
-//     return <Loader />;
-//   }
-
-//   return children;
-// }
-
 function App() {
   useEffect(() => {
     AOS.init({
       duration: 1000,
-      once: false,
+      once: true,
     });
   }, []);
   return (
@@ -120,8 +102,14 @@ function App() {
               <Route path="/socialevents" element={<SocialEventsPage />} />
               <Route path="/weddingpreWedding" element={<WeddingPreWeddingPage />} />
               <Route path="/booking-form" element={<BookingForm />} />
+              <Route path="/developers&owners" element={<DevelopersOwners />} />
+              <Route path="/eventandconference" element={<EventandConference />} />
+              <Route path="/dayuseroom" element={<DayUseRoom />} />
+              <Route path="/career" element={<ComingSoonPage />} />
+              <Route path="/loyalty-program" element={<ComingSoonPage />} />
             </Route>
             <Route path="/room/details" element={<RoomsDetails />} />
+              {/* <Route path="/otp" element={<PhoneAuth />} /> */}
           </Routes>
         </PricingProvider>
 

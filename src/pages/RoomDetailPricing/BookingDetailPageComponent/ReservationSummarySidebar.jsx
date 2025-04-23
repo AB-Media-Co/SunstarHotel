@@ -30,13 +30,11 @@ export const ReservationSummarySidebar = ({
     baseFinalPrice,
     setNights,
   } = usePricing();
-  console.log(selectedRooms)
 
   useEffect(() => {
     if (days) {
       setNights(days);
       localStorage.setItem("days", days);
-
     }
   }, [days, setNights]);
 
@@ -47,9 +45,9 @@ export const ReservationSummarySidebar = ({
   };
 
   return (
-    <div className="p-4 bg-primary-white sticky top-4 border-2 rounded-lg w-full md:w-[24rem] mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Reservation Summary</h2>
-      <div className="flex flex-col gap-4 border-2 p-4 rounded-lg">
+    <div className="p-4 bg-primary-white sticky top-4 border-2 rounded-lg w-full md:w-[24rem] mx-auto font-sans">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Reservation Summary</h2>
+      <div className="flex flex-col gap-4 border border-gray-200 p-4 rounded-lg">
         <div className="flex justify-between items-start">
           <div>
             <h3 className="text-sm font-medium text-gray-700">Check-In</h3>
@@ -76,40 +74,32 @@ export const ReservationSummarySidebar = ({
             Total Length Of Stay:
             <span className="ml-2 font-semibold text-gray-800">{days} Days</span>
           </p>
-          <p className="text-sm text-gray-700 mt-2">
-       
-            <div
-              onClick={handelChangeClick}
-              className="text-sm cursor-pointer text-orange-600 underline"
-            >
-              Change Your Selection
-            </div>
-          </p>
+          <div
+            onClick={handelChangeClick}
+            className="mt-2 text-sm cursor-pointer text-orange-600 underline hover:text-orange-500 transition-colors"
+          >
+            Change Your Selection
+          </div>
         </div>
       </div>
       <div className="pt-4">
-        <h3 className="text-sm font-medium text-gray-700 mb-2">
-          Your Price Summary
-        </h3>
-
-
-        {selectedRooms && selectedRooms.length > 0 && selectedRooms.map((room, index) => {
-          return <div key={index} className="flex justify-between text-sm text-gray-700">
-            <p>
-              {room.roomName} (
-              {room.option === "roomOnly" ? "Room Only" : "Continental Plan"}) X {days} Night
-            </p>
-            <p className="font-medium text-gray-800">
-              ₹ {room.price * days}
-            </p>
-          </div>
-        })}
+        <h3 className="text-sm font-medium text-gray-700 mb-2">Your Price Summary</h3>
+        {selectedRooms &&
+          selectedRooms.length > 0 &&
+          selectedRooms.map((room, index) => (
+            <div key={index} className="flex justify-between text-sm text-gray-700">
+              <p>
+                {room.roomName} (
+                {room.option === "roomOnly" ? "Room Only" : "Continental Plan"}) X {days} Night
+              </p>
+              <p className="font-medium text-gray-800">₹ {room.price * days}</p>
+            </div>
+          ))}
       </div>
-      <div className="flex justify-between text-sm text-gray-700">
+      <div className="flex justify-between text-sm text-gray-700 mt-4">
         <p>Other Charges</p>
         <p className="font-medium text-gray-800">₹ {totalOtherCharges}</p>
-      </div> 
-
+      </div>
       {/* Price Breakdown */}
       <div className="border-t mt-2 pt-2">
         <div className="flex justify-between text-sm text-gray-700">
@@ -125,12 +115,12 @@ export const ReservationSummarySidebar = ({
           <p className="text-primary-green">₹ {finalPrice}</p>
         </div>
       </div>
-
       <a href="#payment-method" className="hidden lg:block">
         {showButton && (
           <button
-            className={`mt-6 w-full bg-primary-dark-green text-primary-white font-semibold py-3 rounded transition-opacity duration-300 ${isPaymentVisible ? "opacity-0" : "opacity-100"
-              }`}
+            className={`mt-6 w-full bg-primary-dark-green text-primary-white font-semibold py-3 rounded transition-opacity duration-300 ${
+              isPaymentVisible ? "opacity-0" : "opacity-100"
+            }`}
           >
             See Payment Options
           </button>

@@ -1,3 +1,6 @@
+import Aos from "aos";
+import { useEffect } from "react";
+
 /* eslint-disable react/prop-types */
 const BannerSection = ({
     data,
@@ -11,18 +14,25 @@ const BannerSection = ({
     ctaText,
     ctaLink,
 }) => {
+
+    useEffect(() => {
+        Aos.init({
+          duration: 1000,
+          once: true,
+        });
+      }, []);
     return (
-        <div className={`w-full ${bg} py-8 md:py-12 lg:py-20 px-4 md:px-8 lg:px-16 `}>
+        <div className={`w-full ${bg} py-8 md:py-12 lg:py-20  md:px-8 lg:px-16 `}>
             <div className={`content flex flex-col lg:flex-row justify-between items-center max-w-7xl mx-auto gap-8 lg:gap-12 ${paddTop}`}>
                 {/* Text Section */}
-                <div className="lg:w-1/2 text-center lg:text-left" data-aos="fade-up" data-aos-delay="100">
+                <div className="lg:w-1/2 " data-aos="fade-up" data-aos-delay="100" >
                     <h1
-                        className={`${text} ${lineh} animate-fade-in font-bold text-${textC} mb-2 md:mb-6 tracking-tight max-w-2xl`}
+                        className={`${text} ${lineh} animate-fade-in font-bold text-${textC} mb-2 md:mb-6 tracking-tight `}
                     >
                         {data?.title ?? "About Us"}
                     </h1>
                     <p
-                        className={`text-${textC} ${ptext} animate-fade-in text-justify leading-relaxed tracking-wide max-w-xl `}
+                        className={`text-${textC} ${ptext} animate-fade-in  leading-relaxed tracking-wide  `}
                         // style={{ animationDelay: "200ms" }}
                     >
                         {data?.description ?? "We are a company dedicated to excellence."}
@@ -38,10 +48,11 @@ const BannerSection = ({
                 </div>
 
                 {/* Image Section */}
-                <div className="lg:w-1/2 flex justify-center items-center mt-6 lg:mt-0" data-aos="fade-up" >
+                <div className="lg:w-1/2 flex justify-center items-center mt-6 lg:mt-0  " data-aos="fade-up" data-aos-delay="100"   >
                     <img
                         src={data?.image? data?.image:data?.img}
                         alt={data?.title ?? "Corporate Booking Banner"}
+                       
                         className={`w-full max-h-[400px] ${imgClass} rounded-xl transition-transform duration-300  `}
                     />
                 </div>

@@ -120,7 +120,6 @@ const MapGoogle = ({ locationData }) => {
   const handleViewOnMap = (location) => {
     if (map) {
       map.panTo(location);
-      console.log("Panning to: ", location);
       map.setZoom(18);
     }
   };

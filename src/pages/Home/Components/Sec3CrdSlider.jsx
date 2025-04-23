@@ -1,7 +1,35 @@
-/* eslint-disable react/prop-types */
+import { useState, useEffect, useRef } from "react";
 import CommonSwiper from "../../../Components/CommonSlider";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 import { useNavigate } from "react-router-dom";
+
+const LazyBackground = ({ src, className }) => {
+  const ref = useRef();
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setLoaded(true);
+        observer.disconnect();
+      }
+    });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        backgroundImage: loaded ? `url(${src})` : "none",
+      }}
+      role="img"
+      aria-label="Feature image"
+    />
+  );
+};
 
 const truncateText = (text, wordLimit) => {
   if (!text) return "";
@@ -12,7 +40,7 @@ const truncateText = (text, wordLimit) => {
 const Sec3CardSlider = () => {
   const { shineSection } = useUpdatePagesHook();
   const { heading, description, features } = shineSection || {};
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const renderItem = (item, index) => (
     <div
@@ -26,14 +54,12 @@ const Sec3CardSlider = () => {
         }, 100);
       }}
     >
-      <div
-        className="h-[300px] md:h-[280px] bg-cover rounded-lg bg-center "
-        style={{ backgroundImage: `url(${item.image})` }}
-        role="img"
-        aria-label={item.title || "Feature image"}
-      ></div>
-      <div className="py-4  w-fullgap-2 h-[150px] md:h-[180px] w-full text-left flex flex-col">
-        <h3 className="text-mobile/h4 md:text-desktop/h4 md:font-semibold mb-2 ">
+      <LazyBackground
+        src={item.image?.replace('/upload/', '/upload/f_auto,q_auto,w_800/')}
+        className="h-[300px] md:h-[280px] bg-cover rounded-lg bg-center"
+      />
+      <div className="py-4 w-full gap-2 h-[150px] md:h-[180px] text-left flex flex-col">
+        <h3 className="text-mobile/h4 md:text-desktop/h4 md:font-semibold mb-2">
           {item.title}
         </h3>
         <p className="text-mobile/body/2 md:text-desktop/body/1">
@@ -45,12 +71,11 @@ const Sec3CardSlider = () => {
 
   if (!features || features.length === 0) {
     return (
-      <div className="px-4 sm:px-6 text-primary-white pb-5">
+      <div className=" md:px-6 text-primary-white pb-5">
         <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-left mb-4">
           {heading || "No Heading Available"}
         </h2>
         <p className="text-mobile/body/2 md:text-desktop/body/1 text-left mb-4 md:mb-8">
-          {/* {description || "No Description Available"} */}
           {truncateText(description, 15)}
         </p>
         <p className="text-mobile/body/2 md:text-desktop/body/2">
@@ -61,7 +86,7 @@ const Sec3CardSlider = () => {
   }
 
   return (
-    <div className="px-4 sm:px-6 text-primary-white pb-5">
+    <div className=" md:px-6 text-primary-white pb-5">
       <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-left mb-4">
         {heading}
       </h2>
@@ -72,12 +97,12 @@ const Sec3CardSlider = () => {
         items={features}
         renderItem={renderItem}
         slidesPerView={{
-          default: 1, // 1 slide for small screens
-          768: 2.5,   // 2.5 slides for tablets
-          1024: 4,    // 4 slides for desktops
+          default: 1,
+          768: 2.5,
+          1024: 4,
         }}
-        spaceBetween={16} // Adjust spacing dynamically
-        loop={false}
+        spaceBetween={16}
+        loop={true}
         className="mySwiper"
         arrow="hidden"
       />

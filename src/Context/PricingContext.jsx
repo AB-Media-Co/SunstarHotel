@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import axiosInstance from "../services/axiosInstance";
 import ConfirmationModal from "./ConfirmationModal";
 
@@ -7,7 +7,6 @@ const PricingContext = createContext();
 
 export const PricingProvider = ({ children }) => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [editAddPricing, setEditAddPricing] = useState(() => {
     const saved = localStorage.getItem("editAddPricing");
@@ -21,7 +20,6 @@ export const PricingProvider = ({ children }) => {
     return storedDetails ? JSON.parse(storedDetails) : [];
   });
 
-  console.log("det", details)
 
   const [selectedRooms, setSelectedRooms] = useState(() =>
     details.map((item) => ({

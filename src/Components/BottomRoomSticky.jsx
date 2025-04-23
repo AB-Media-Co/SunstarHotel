@@ -31,24 +31,24 @@ const BottomRoomSticky = () => {
         isVisible ? "wipe-up" : "wipe-down"
       }`}
     >
-      <div className="content items-center flex gap-2 justify-between px-4">
+      <div className="flex items-center justify-between gap-2 px-4 sm:px-6 md:px-8">
         <div className="flex flex-col">
           <div className="flex items-center gap-4">
-            <span className="text-primary-dark-green text-desktop/h5">
-              ₹ {totalPrice}
+            <span className="text-primary-dark-green text-sm sm:text-base md:text-xl font-bold">
+              ₹ {totalPrice} x <span className="text-primary-gray font-medium text-xs sm:text-sm">{days} Night</span>
             </span>
-            <h1 className="font-bold text-primary-gray text-sm">
+            <h1 className="font-bold text-primary-gray text-xs sm:text-sm md:text-base">
               {selectedRooms.length} {selectedRooms.length === 1 ? "Room" : "Rooms"}
             </h1>
           </div>
-          <p className="text-primary-gray text-sm md:text-lg font-semibold">
+          <p className="text-primary-gray text-xs sm:text-sm md:text-base">
             {details[0]?.name || "Hotel"} - {details[0]?.cityLocation?.name || "Location"}
           </p>
         </div>
 
         <div
           onClick={onContinueClick}
-          className="bg-primary-green text-xs text-center md:text-lg flex py-2 px-4 rounded-lg text-white font-medium cursor-pointer hover:bg-primary-dark-green transition-colors"
+          className="bg-primary-green text-xs sm:text-sm md:text-lg py-2 px-4 rounded-lg text-white font-medium cursor-pointer hover:bg-primary-dark-green transition-colors"
         >
           Continue Booking
         </div>

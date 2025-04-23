@@ -1,6 +1,10 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
 const TermsAndConditions = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
     return (
         <>
             <Helmet>
@@ -14,7 +18,7 @@ const TermsAndConditions = () => {
                     Terms & Conditions and Cancellation Policy
                     </h1>
                 </div>
-                <div className="bg-white px-6">
+                <div className="bg-white md:px-6">
                     <div className="content py-10">
                         <p className="mb-6">
                             Welcome to Sunstar Hotel! These Terms and Conditions govern the use of our website, services, and hotel stays.

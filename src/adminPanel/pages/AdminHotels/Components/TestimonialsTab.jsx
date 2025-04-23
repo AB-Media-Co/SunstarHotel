@@ -150,9 +150,10 @@ export const TestimonialsTab = ({
               type="text"
               name="name"
               value={testimonialInput.name}
-              onChange={(e) =>
-                setTestimonialInput(prev => ({ ...prev, name: e.target.value }))
-              }
+              onChange={(e) => {
+                const { value } = e.target;
+                setTestimonialInput(prev => ({ ...prev, name: value }));
+              }}
               placeholder="Enter name"
               className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
             />
@@ -163,9 +164,10 @@ export const TestimonialsTab = ({
               type="text"
               name="location"
               value={testimonialInput.location}
-              onChange={(e) =>
-                setTestimonialInput(prev => ({ ...prev, location: e.target.value }))
-              }
+              onChange={(e) => {
+                const { value } = e.target;
+                setTestimonialInput(prev => ({ ...prev, location: value }));
+              }}
               placeholder="Enter location"
               className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
             />
@@ -176,9 +178,10 @@ export const TestimonialsTab = ({
               type="text"
               name="heading"
               value={testimonialInput.heading}
-              onChange={(e) =>
-                setTestimonialInput(prev => ({ ...prev, heading: e.target.value }))
-              }
+              onChange={(e) => {
+                const { value } = e.target;
+                setTestimonialInput(prev => ({ ...prev, heading: value }));
+              }}
               placeholder="Enter heading"
               className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
             />
@@ -188,9 +191,10 @@ export const TestimonialsTab = ({
             <textarea
               name="description"
               value={testimonialInput.description}
-              onChange={(e) =>
-                setTestimonialInput(prev => ({ ...prev, description: e.target.value }))
-              }
+              onChange={(e) => {
+                const { value } = e.target;
+                setTestimonialInput(prev => ({ ...prev, description: value }));
+              }}
               placeholder="Enter testimonial description"
               className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
             ></textarea>

@@ -1,7 +1,7 @@
 import Amenities from "./Amenities/Amenities";
 import ContactUsPage from "./ContactUs/ContactUsPage";
 import CoorporateBooking from "./CoorporateBooking/CoorporateBooking";
-// import Faq from "./Faq/Faq";
+import Faq from "./Faq/Faq";
 import Images from "./GalleryImages/Images";
 import EditHomePageData from "./HeroSection/EditHomePageData";
 import OurValue from "./OurValue/OurValue";
@@ -28,7 +28,7 @@ const UpdatePage = () => {
         <ShineSectionUpdate />
         <WhatWeOffering />
         <Testimonials />
-        {/* <Faq /> */}
+        <Faq />
 
       </div>
     </div>

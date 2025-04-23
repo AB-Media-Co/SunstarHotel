@@ -10,11 +10,16 @@ import { useNavigate } from "react-router-dom";
 import { usePricing } from "../../../Context/PricingContext";
 import { ArrowRightAlt } from "@mui/icons-material";
 
+import {
+  format,
+} from "date-fns";
+
 function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
   const [openCalender, setOpenCalender] = useState(false);
   const [bookingError, setBookingError] = useState(false);
+  const { selectedRooms } = usePricing();
 
   const navigate = useNavigate();
 
@@ -27,14 +32,12 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
       setCheckOut(storedCheckOut);
     }
   }, []);
-
+ 
   const handleBooking = async () => {
-    if (!checkIn || !checkOut) {
-      setBookingError(true);
-      return;
+    if (selectedRooms?.length>0 ) {
+      navigate("/room/details")
     } else {
       setBookingError(false);
-      console.log(hotelDetail)
       await fetchRoomHotelDetails(businessPlatformFeatures?._id, hotelDetail?.hotelCode);
 
       navigate("/room/details");
@@ -76,44 +79,29 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
         <div
           className={`flex justify-center flex-col md:flex-row items-center w-full space-y-4 md:space-y-0 space-x-0 md:space-x-4`}
         >
-          {/* <div
-            onClick={() => setOpenCalender(true)}
-            className={`flex flex-wrap w-full justify-center items-center border rounded-full px-6 py-3 hover:shadow-lg ease-in-out transition-all cursor-pointer space-x-2 shadow-sm ${bookingError ? "border-red-500" : "border-[#006167]"
-              }`}
-          >
-            <Icon name="calendar" className="h-6 w-6 text-[#006167]" />
-            <span className="text-[#006167] font-semibold text-base sm:text-lg md:text-[24px]">
-              {checkIn ? checkIn : "Check In"}{" "}
-              <span className="text-yellow-500">→</span>{" "}
-              {checkOut ? checkOut : "Check Out"}
-            </span>
-            {checkIn && checkOut && (
-              <span className="text-[#006167] text-xs sm:text-sm flex">
-                ({calculateNights()})
-              </span>
-            )}
-          </div> */}
 
 
           <div onClick={() => setOpenCalender(true)} className="flex flex-row cursor-pointer items-center justify-evenly border max-w-full w-full   px-4 py-3 md:px-8 md:py-4 rounded-full gap-3 shadow-md">
             <Icon name="calendar" className="w-5 h-5 md:w-6 md:h-6 text-primary-green" />
-            <div className={`flex flex-col text-gray-700`}>
-              <span className="font-semibold text-[12px]  md:text-base">
-                {checkIn ? checkIn : "Check In"}{" "}
+            <div className={`flex flex-col`}>
+              <span className="font-semibold text-[8px] text-gray-700 md:text-base">
+                {checkIn ? format(checkIn, "dd MMM, EEEE") : "Check in"}
               </span>
             </div>
             <ArrowRightAlt className="text-yellow-500" />
-            <div className={`flex flex-col  text-gray-700`}>
-              <span className="font-semibold text-[12px] md:text-base">
-                {checkOut ? checkOut : "Check Out"}
+            <div className={`flex flex-col`}>
+              <span className="font-semibold text-[8px] text-gray-700 md:text-base">
+                {checkOut ? format(checkOut, "dd MMM, EEEE") : "Check-out"}
               </span>
             </div>
             {checkIn && checkOut && (
-              <span className="flex items-center justify-center text-[8px] md:text-base text-black rounded-full border border-gray-300 px-3 md:py-1">
+              <span className="flex items-center text-gray-700 justify-center text-[8px] md:text-base rounded-full border border-gray-300 px-3 md:py-1">
                 {calculateNights()}
               </span>
             )}
           </div>
+
+
 
           <div className="flex items-center justify-end gap-4 w-full">
             {/* <GuestsDropdown classBg="bg-transparant" /> */}

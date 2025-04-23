@@ -179,7 +179,7 @@ const EditHomePageData = () => {
             />
 
             {/* Image Preview & Upload */}
-            {imagePreview && (
+            {/* {imagePreview && (
               <Box sx={{ mt: 2, mb: 2, textAlign: 'start', }}>
                 <Typography variant="subtitle2" gutterBottom>
                   Image Preview:
@@ -197,13 +197,13 @@ const EditHomePageData = () => {
                   }}
                 />
               </Box>
-            )}
-            <ImageUpload
+            )} */}
+            {/* <ImageUpload
               feature={heroFormData}
               handleFeatureChange={handleFeatureChange}
               setImageUpload={setImageUpload}
               setImageFile={setImageFile} // pass this if your ImageUpload component accepts it
-            />
+            /> */}
           </Box>
 
           <Divider />

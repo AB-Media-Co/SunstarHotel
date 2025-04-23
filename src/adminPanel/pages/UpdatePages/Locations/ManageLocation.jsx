@@ -52,7 +52,6 @@ const ManageLocation = () => {
 
     const handleDeleteLocation = async (id) => {
         try {
-            console.log('Deleting location with ID:', id);  // Log the ID being passed
             await deleteLocation(id);  // Delete the location by ID
         } catch (error) {
             console.error('Error deleting location:', error);  // Log any errors

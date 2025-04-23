@@ -8,18 +8,25 @@ import CompnayCards from './Components/CompnayCards';
 import { useGetHotels } from '../../ApiHooks/useHotelHook2';
 import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
 import { Helmet } from 'react-helmet';
+import { useGetMetas } from '../../ApiHooks/useMetaHook';
+import { useEffect } from 'react';
 
 const AboutUs = () => {
-  const { data: hotels } = useGetHotels();
+  // const { data: hotels } = useGetHotels();
   const { whysunstarValue, Testimonials } = useUpdatePagesHook();
+  const { data: metas } = useGetMetas();
+  const whySunstarMeta = metas?.find(meta => meta.page === "whysunstar");
+  useEffect(() => {
+    window.scrollTo(0, 0);
+}, []);
 
-  return (
+  return ( 
     <div className="font-sans ">
-      <Helmet>
-        <title>Why Sunstar</title>
-        <meta name="" content={``} />
-        <meta name="" content={``} />
-      </Helmet> 
+       <Helmet>
+        <title>{whySunstarMeta?.metaTitle ||  'WhySunstar'}</title>
+        <meta name="description" content={whySunstarMeta?.metaDescription || ''} />
+        <meta name="keywords" content={whySunstarMeta?.metaKeywords?.join(', ') || ''} />
+      </Helmet>
       <HeroSection
         title={heroData?.title}
         highlightText={heroData?.highlightText}
@@ -30,7 +37,7 @@ const AboutUs = () => {
       />
       <ValuesSection />
       <ShineSection />
-      <CompnayCards cards={AboutUsSection5cards} />
+      <CompnayCards  />
 
 
       <TestimonialSection
