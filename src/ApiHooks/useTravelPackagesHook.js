@@ -40,7 +40,6 @@ export const usePackagesByState = (state) => {
     queryKey: ['packagesByState', state],
     queryFn: async () => {
       const response = await axiosInstance.get(`/api/packages/state/${state}`);
-      console.log(response); // Log the response data t
       return response.data;
     },
     enabled: !!state,

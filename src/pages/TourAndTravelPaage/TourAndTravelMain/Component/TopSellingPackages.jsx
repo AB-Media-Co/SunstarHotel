@@ -1,8 +1,12 @@
-import { useTopSellingPackages } from "../../../../ApiHooks/useTravelPackagesHook";
+import { useState } from "react";
+import { usePackageById, useTopSellingPackages } from "../../../../ApiHooks/useTravelPackagesHook";
 import { Link } from "react-router-dom";
 
 const TopSellingPackages = () => {
     const { data: packages = [] } = useTopSellingPackages();
+    const [selectedPackage, setSelectedPackage] = useState(null);
+    const { data, isLoading, isError, error } = usePackageById(selectedPackage);
+    console.log(data);
 
     return (
         <section className="py-14  bg-white">
@@ -31,12 +35,13 @@ const TopSellingPackages = () => {
                                 <h3 className="text-md font-semibold text-primary-green uppercase mb-3">
                                     {pkg.title}
                                 </h3>
-                                <Link
-                                    to={`/packages/${pkg._id}`}
+                                <div
+                                    // to={`/packages/${pkg._id}`}
+                                    onClick={() => setSelectedPackage(pkg._id)}
                                     className="inline-block w-full rounded-full  bg-[#47c5b4] text-white font-medium px-5 py-2  text-sm hover:bg-[#3bb0a1] transition"
                                 >
                                     VIEW DETAILS
-                                </Link>
+                                </div>
                             </div>
                         </div>
                     ))}

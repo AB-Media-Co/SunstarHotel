@@ -8,14 +8,12 @@ const PopularDestination = () => {
   const { data: packages = [] } = useStatesWithSummary();
   console.log(packages)
   const [selectedState, setSelectedState] = useState('');
-  console.log(selectedState);
-  const { data, isLoading, isError, error } = usePackageById(selectedState);
+  const { data, isLoading, isError, error } = usePackagesByState(selectedState);
   console.log(data)
-
-  const renderCard = (item) => ( 
+  const renderCard = (item) => (
     <div
       to={`/destination/${item._id}`} // route to destination detail
-      onClick={()=> setSelectedState(item?._id)}
+      onClick={() => setSelectedState(item?.name)}
       className="group rounded-2xl overflow-hidden my-10 bg-white shadow-md transition hover:shadow-xl block"
     >
       <div className="overflow-hidden rounded-2xl">
@@ -67,7 +65,7 @@ const PopularDestination = () => {
             autoplayDelay={4000}
             enableAutoplay={true}
             showPagination={true}
-            
+
           />
         </div>
       </div>
