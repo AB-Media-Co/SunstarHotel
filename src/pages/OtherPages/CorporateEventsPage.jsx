@@ -191,8 +191,8 @@ const CorporateEventsPage = () => {
 
 
       <CommonUseEnquiryForm
-        title="TALK WITH US?"
-        subtitle="Sunstar Offers The Perfect Corporate Events Packages Designed To Make Your Experience Truly Magical"
+        title="Corporate Event Booking"
+        subtitle="Organize seamless corporate events with our expert assistance."
         fields={eventFormFields}
         onSubmit={handleSubmit}
         buttonLabel="Submit Enquiry"

@@ -48,11 +48,11 @@ const steps = [
             ))}
           </div>
   
-          <div className="mt-12 flex flex-col items-center">
+          <a href="#form" className="mt-12 flex flex-col items-center">
             <button className="bg-yellow-400 text-white px-6 py-3 flex gap-4 rounded-full font-semibold hover:bg-yellow-300 transition">
              <img src="/images/Dev&Owwners/pencil.svg" alt="" /> Partner With Us
             </button>
-          </div>
+          </a>
         </div>
       </div>
     );

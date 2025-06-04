@@ -162,7 +162,7 @@ export const PricingProvider = ({ children }) => {
 
   const removeRoom = (roomName) => {
     setSelectedRooms((prev) => {
-      const index = prev.findIndex((r) => r.roomName === roomName);
+      const index = prev?.findIndex((r) => r.roomName === roomName);
       if (index === -1) return prev;
       const newRooms = [...prev];
       newRooms.splice(index, 1);
@@ -170,7 +170,7 @@ export const PricingProvider = ({ children }) => {
     });
 
     setDetails((prev) => {
-      const index = prev.findIndex((d) => d.roomData?.RoomName === roomName);
+      const index = prev?.findIndex((d) => d.roomData?.RoomName === roomName);
       if (index === -1) return prev;
       const newDetails = [...prev];
       newDetails.splice(index, 1);

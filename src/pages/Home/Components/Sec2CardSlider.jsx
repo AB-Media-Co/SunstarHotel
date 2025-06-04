@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import WifiIcon from "@mui/icons-material/Wifi";
 import CommonSwiper from "../../../Components/CommonSlider";
-import { LocationOnSharp, Restaurant, SmokeFreeSharp } from "@mui/icons-material";
+import { Star, LocationOnSharp, Restaurant, SmokeFreeSharp } from "@mui/icons-material";
 import { CctvIcon } from "lucide-react";
 import { useGetHotels } from "../../../ApiHooks/useHotelHook2";
 import { useNavigate } from "react-router-dom";
@@ -58,6 +58,30 @@ export default function SwiperComponent() {
   const navigate = useNavigate();
   const { data: hotels } = useGetHotels();
 
+
+
+  const renderRatingStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating - fullStars >= 0.5;
+
+    return (
+      <div className="flex items-center">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={`${i < fullStars
+              ? 'text-yellow-400'
+              : (i === fullStars && hasHalfStar)
+                ? 'text-yellow-400 opacity-60'
+                : 'text-gray-300'}`}
+            style={{ fontSize: "16px" }}
+          />
+        ))}
+        {/* <span className="ml-1 text-sm font-medium text-gray-700">{rating}</span> */}
+      </div>
+    );
+  }; 
+
   const renderCard = (card, index) => {
     return (
       <>
@@ -68,7 +92,7 @@ export default function SwiperComponent() {
             data-aos-delay={index * 100}
           >
             <div
-              className="relative h-60 overflow-hidden rounded-t-lg z-10"
+              className="relative h-60 overflow-hidden rounded-t-lg z-10 "
               onMouseEnter={() => setHoveredCard(index)}
               onMouseLeave={() => setHoveredCard(null)}
               onClick={() => navigate(`hotels/${card?.hotelCode}`)}
@@ -85,7 +109,12 @@ export default function SwiperComponent() {
               />
             </div>
 
-            <div className="absolute top-[100%] w-full shadow-lg p-4 pt-8 h-[150px] bg-primary-white border rounded-b-lg flex flex-col gap-2">
+            <div className="absolute top-[100%] w-full shadow-lg p-4 pt-8 h-[180px] bg-primary-white border rounded-b-lg flex flex-col gap-2">
+
+              <div className="mt-1 mb-1">
+                {renderRatingStars(card.rating)}
+                {/* <span className="">({card.reviews} reviews)</span> */}
+              </div>
               <h2
                 onClick={() => navigate(`hotels/${card?.hotelCode}`)}
                 className="text-mobile/h5/medium cursor-pointer hover:text-primary-green md:text-desktop/h5 font-bold text-start transition-colors duration-300"
@@ -97,6 +126,8 @@ export default function SwiperComponent() {
                 <LocationOnSharp className="text-[#4DB8B6]" style={{ fontSize: "18px" }} />
                 <span className="truncate max-w-[200px]">{card.location?.hotelAddress}</span>
               </div>
+
+
 
               <div
                 className={`flex items-center ${hotels?.hotels?.length === 3 ? "justify-between" : "justify-end"} gap-3 mt-2 text-[#707070] font-semibold`}
@@ -133,7 +164,8 @@ export default function SwiperComponent() {
         slidesPerViewDesktop={isMobile ? 1 : 3}
         spaceBetween={30}
         loop={true}
-        className={`mySwiper hotelCardsHome`}
+        className={`mySwiper hotelCardsHome pb-10`}
+        swiperh={'h-[28rem]'}
         cssMode={true}
         onInit={(swiper) => {
           const wrapper = swiper.wrapperEl;

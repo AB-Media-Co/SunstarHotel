@@ -216,12 +216,11 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
   const calculateNights = () => {
     if (checkIn && checkOut) {
       const nights = differenceInCalendarDays(checkOut, checkIn);
-      setNights(nights)
-
       return nights === 1 ? "1 Night" : `${nights} Nights`;
     }
     return "";
   };
+
 
 
 
@@ -261,17 +260,17 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
   }, []);
 
   return (
-    <div className="calendar-container flex flex-col justify-end relative">
+    <div className="calendar-container flex flex-col justify-start md:justify-end relative">
       {/* Main Calendar */}
-      <div className="flex flex-col h-[75vh] overflow-y-auto md:rounded-t-xl md:h-auto Calender max-h-[85vh] bg-white lg:w-[95%] w-full md:p-6 lg:flex-row gap-6 shadow-lg">
+      <div className="flex flex-col  overflow-y-auto md:rounded-t-xl md:h-auto Calender max-h-[85vh] bg-white lg:w-[95%] w-full md:p-6 lg:flex-row gap-6 shadow-lg">
         {/* Long Stay Popup */}
         {showLongStayPopup && (
           <div
             ref={popupRef}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 
               bg-white rounded-xl shadow-xl p-5 md:p-6 max-w-[90%] w-[320px] md:w-[360px]"
           >
-            <div className="flex flex-col items-center text-center">
+            <div className="flex flex-col items-center text-start">
               <div className="w-12 h-12 md:w-14 md:h-14 bg-primary-green/10 rounded-full flex items-center justify-center mb-3">
                 <Icon name="calendar" className="w-6 h-6 md:w-7 md:h-7 text-primary-green" />
               </div>
@@ -280,19 +279,29 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
                 Currently, we don't support online bookings for more than 30 nights.
                 However, you can tell us about your plans and we'll make it happen.
               </p>
-              <button
-                className="bg-primary-dark-green hover:bg-primary-green text-white font-bold px-6 py-3 rounded-lg 
-                  transition-all duration-300 shadow-md w-full"
-                onClick={() => window.location.href = "/booking-form"}
-              >
-                Get in touch
-              </button>
-              <button
-                className="mt-3 text-gray-500 hover:text-gray-700 text-sm font-medium"
-                onClick={() => setShowLongStayPopup(false)}
-              >
-                Continue with selection
-              </button>
+              <div className="flex justify-between w-full items-center">
+
+                <div
+                  className="text-primary-yellow  w-full cursor-pointer  font-bold  
+                  transition-all duration-300  "
+                  onClick={() => window.location.href = "/booking-form"}
+                >
+                  Get in touch
+                </div>
+                <div
+                  className=" text-gray-500 hover:text-gray-700 w-full cursor-pointer  text-sm font-medium"
+                  onClick={() => {
+                    localStorage.removeItem("checkInDate");
+                    localStorage.removeItem("checkOutDate");
+                    setCheckIn(null);
+                    setCheckOut(null);
+                    setShowLongStayPopup(false);
+                  }}
+                  
+                >
+                  Continue selection
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -300,7 +309,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
         {/* Overlay for popup */}
         {showLongStayPopup && (
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm z-20"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm z-40"
             onClick={() => setShowLongStayPopup(false)}
           ></div>
         )}
@@ -346,50 +355,51 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
       </button>
 
       {/* Footer */}
-      <div className="footer border-t border-gray-200 bg-white w-full py-4 md:py-6 sticky bottom-0 shadow-lg ">
-        <div className="flex flex-col md:flex-row justify-between gap-4 items-center px-4 md:px-8">
-          {/* Dates & Nights */}
-          <div className="flex flex-row items-center justify-between w-full md:w-auto md:max-w-[60%] bg-gray-50 px-4 py-3 md:px-6 md:py-4 rounded-xl gap-3 shadow-md">
-            <div className="flex items-center">
-              <Icon name="calendar" className="w-5 h-5 md:w-6 md:h-6 text-primary-green mr-2" />
-              <div className={`flex flex-col ${confirmClicked && !checkIn ? "text-red-500" : "text-gray-700"}`}>
-                <span className="text-xs text-gray-500 font-medium">Check in</span>
-                <span className="font-semibold text-[10px] md:text-base">
-                  {checkIn ? format(checkIn, "EEE, MMM d") : "Select date"}
-                </span>
-              </div>
+      <div className="footer bg-white w-full py-4 md:py-6 shadow-lg
+  fixed md:sticky bottom-0 left-0 z-40 
+  px-4 md:px-8
+  flex flex-col md:flex-row justify-between gap-4 items-center ">
+
+        <div className="flex flex-row items-center justify-between w-full md:w-auto md:max-w-[60%] bg-gray-50 px-4 py-3 md:px-6 md:py-4 rounded-xl gap-3 shadow-md">
+          <div className="flex items-center">
+            <Icon name="calendar" className="w-5 h-5 md:w-6 md:h-6 text-primary-green mr-2" />
+            <div className={`flex flex-col ${confirmClicked && !checkIn ? "text-red-500" : "text-gray-700"}`}>
+              <span className="text-xs text-gray-500 font-medium">Check in</span>
+              <span className="font-semibold text-[10px] md:text-base">
+                {checkIn ? format(checkIn, "EEE, MMM d") : "Select date"}
+              </span>
             </div>
-
-            <ArrowRightAlt className="text-primary-green mx-1 md:mx-2" />
-
-            <div className="flex items-center">
-              <div className={`flex flex-col ${confirmClicked && !checkOut ? "text-red-500" : "text-gray-700"}`}>
-                <span className="text-xs text-gray-500 font-medium">Check out</span>
-                <span className="font-semibold text-[10px] md:text-base">
-                  {checkOut ? format(checkOut, "EEE, MMM d") : "Select date"}
-                </span>
-              </div>
-            </div>
-
-            {checkIn && checkOut && (
-              <div className="flex items-center justify-center text-xs md:text-sm font-medium text-primary-green bg-primary-green/10 rounded-full px-3 py-1 ml-2">
-                {calculateNights()}
-              </div>
-            )}
           </div>
 
-          <button
-            onClick={handleConfirmClick}
-            disabled={showLongStayPopup}
-            className={`w-full md:w-auto font-bold text-white px-6 py-3 md:py-4 rounded-xl shadow-lg transition-all duration-300 
-              ${(!checkIn || !checkOut|| showLongStayPopup)
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-primary-dark-green hover:bg-primary-green transform hover:scale-105"}`}
-          >
+          <ArrowRightAlt className="text-primary-green mx-1 md:mx-2" />
 
-            Confirm Dates
-          </button>
+          <div className="flex items-center">
+            <div className={`flex flex-col ${confirmClicked && !checkOut ? "text-red-500" : "text-gray-700"}`}>
+              <span className="text-xs text-gray-500 font-medium">Check out</span>
+              <span className="font-semibold text-[10px] md:text-base">
+                {checkOut ? format(checkOut, "EEE, MMM d") : "Select date"}
+              </span>
+            </div>
+          </div>
+
+          {checkIn && checkOut && (
+            <div className="flex items-center justify-center text-xs md:text-sm font-medium text-primary-green bg-primary-green/10 rounded-full px-3 py-1 ml-2">
+              {calculateNights()}
+            </div>
+          )}
         </div>
+
+        <button
+          onClick={handleConfirmClick}
+          disabled={showLongStayPopup}
+          className={`w-full md:w-auto font-bold text-white px-6 py-3 md:py-4 rounded-xl shadow-lg transition-all duration-300 
+              ${(!checkIn || !checkOut || showLongStayPopup)
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-primary-dark-green hover:bg-primary-green transform hover:scale-105"}`}
+        >
+
+          Confirm Dates
+        </button>
       </div>
     </div>
   );

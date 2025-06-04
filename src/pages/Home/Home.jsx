@@ -15,9 +15,10 @@ const TestimonialSection = lazy(() => import('../../Components/TestimonialSectio
 const Home = () => {
   const { Testimonials } = useUpdatePagesHook();
   const { data: metas } = useGetMetas();
-  const homeMeta = metas?.find(meta => meta.page === 'home');
 
-
+  const homeMeta = Array.isArray(metas)
+  ? metas.find(meta => meta.page === "home")
+  : null;
 
   return (
     <div>

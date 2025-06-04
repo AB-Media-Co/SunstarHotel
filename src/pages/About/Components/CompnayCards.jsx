@@ -18,7 +18,7 @@ const Card = ({ image, title, description }) => {
                 <h3 className="text-mobile/h5 bg-[#6BC0BE] md:text-desktop/h5/medium font-bold text-primary-white rounded-lg p-2 px-4 left-2  shadow-2xl absolute top-56 mx-auto">
                     {title}
                 </h3>
-                <p className="mt-2 text-mobile/body/2 md:text-desktop/body/1 text-[#A4A4A4]">
+                <p className="mt-2 whitespace-pre-line text-mobile/body/2 md:text-desktop/body/1 text-[#A4A4A4]">
                     {description}
                 </p>
             </div>

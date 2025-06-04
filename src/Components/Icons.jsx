@@ -65,10 +65,10 @@ const Icon = ({ name, className = 'w-6 h-6',styleCss={} }) => {
     email: '/images/Icons/email@.svg',
     rotatePhone: '/images/Icons/rotatePhone.svg',
     marketing: '/images/Icons/marketing.svg',
-    Group: '/images/Icons/Group.svg',
+    Group: '/images/Icons/corporate.svg',
     generalChat: '/images/Icons/generalChat.svg',
     corporate: '/images/Icons/corporate.svg',
-    builders: '/images/Icons/builders.svg',
+    builders: '/images/Icons/hoteldev.svg',
     discount: '/images/Icons/discount.svg',
     rest: '/images/Icons/rest.svg',
     planeH: '/images/Icons/planeH.svg',
@@ -81,8 +81,11 @@ const Icon = ({ name, className = 'w-6 h-6',styleCss={} }) => {
     Reataurents: '/images/MapIcons/Airport.svg',
     NightLife: '/images/MapIcons/Airport.svg',
     Activities: '/images/MapIcons/Airport.svg',
+    Reservation: '/images/Icons/reservation.svg',
+    TravelAgent: '/images/Icons/travelagent.svg',
+    Career: '/images/Icons/career.svg',
   };
-
+ 
   const iconPath = icons[name];
 
   if (!iconPath) {

@@ -1,6 +1,5 @@
 import RoatinfImg from "../../../Components/RoatinfImg";
 import ImageGallery from "../../../Components/ImageGallery";
-import { HomePageImgGallery } from "../../../Data/HomePageData";
 
 const Section4 = () => {
   return (
@@ -8,7 +7,7 @@ const Section4 = () => {
       <div className="absolute top-0 left-0 z-0 w-full h-full">
         <RoatinfImg position='md:left-0 top-[-60px] md:top-0 left-[-60px] ' />
       </div>
-        <ImageGallery items={HomePageImgGallery.items} />
+        <ImageGallery />
     </div>
   );
 };

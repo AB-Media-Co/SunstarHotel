@@ -220,6 +220,7 @@ const HotelForm = ({ initialData = null }) => {
     }); // Clear input fields
   };
 
+  console.log(formData)
 
   const handleRemoveTestimonial = (index) => {
     const updatedTestimonials = formData.testimonials.filter((_, i) => i !== index);

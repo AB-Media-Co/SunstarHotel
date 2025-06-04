@@ -11,9 +11,11 @@ import Rooms from "./Component/Rooms";
 const DayUseRoom = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);
+    }, []);
     const { data: metas } = useGetMetas();
-    const contactUsMeta = metas?.find(meta => meta.page === "dayuseroom");
+    const contactUsMeta = Array.isArray(metas)
+        ? metas.find(meta => meta.page === "dayuseroom")
+        : null;
     return (
         <div>
             <Helmet>
@@ -21,13 +23,13 @@ const DayUseRoom = () => {
                 <meta name="description" content={contactUsMeta?.metaDescription || ''} />
                 <meta name="keywords" content={contactUsMeta?.metaKeywords?.join(', ') || ''} />
             </Helmet>
-            <Banner/>
-            <Description/>
-            <BenefitsCard/>
-            <Rooms/>
-            <DayRoomTandC/>
+            <Banner />
+            <Description />
+            <BenefitsCard />
+            <Rooms />
+            <DayRoomTandC />
 
-            <DaysUseRoomFaq/>
+            <DaysUseRoomFaq />
 
         </div>
     )

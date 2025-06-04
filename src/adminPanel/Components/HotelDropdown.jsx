@@ -35,7 +35,10 @@ const HotelDropdown = () => {
 
   const handleSelectChange = (event) => {
     const hotelId = event.target.value;
-    const selectedHotel = hotels.find((hotel) => hotel.id === hotelId);
+    const selectedHotel = Array.isArray(hotels)
+    ? hotels.find((hotel) => hotel.id === hotelId)
+    : null;
+  
     setSelectedHotelId(hotelId);
     if (selectedHotel) {
       fetchHotelData(selectedHotel.id, selectedHotel.apiKey);

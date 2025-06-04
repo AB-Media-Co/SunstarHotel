@@ -4,19 +4,19 @@ const LiveBanner = () => {
     const stats = [
         {
             icon: "/images/othericons/Deals.svg",
-            number: 2000,
+            number: '0000',
             prefix: "Deal",
             status: "Revived",
         },
         {
             icon: "/images/othericons/rejected.svg",
-            number: 900,
+            number: '0000',
             prefix: "Deal",
             status: "Rejected",
         },
         {
             icon: "/images/othericons/DealApprove.svg",
-            number: 1500,
+            number: '0000',
             prefix: "Deal",
             status: "Approved",
         },
@@ -31,7 +31,8 @@ const LiveBanner = () => {
                             <img src={item.icon} alt={item.status} className="w-10 h-10 md:w-14 md:h-14" />
                             <div className="flex gap-1 md:gap-2 items-center leading-tight">
                                 <span className="text-white text-2xl md:text-4xl font-bold">
-                                    <CountUp start={100} end={item.number} duration={2} separator="," />
+                                    {/* <CountUp start={0} end={item.number} duration={2} separator="," /> */}
+                                    {item.number}
                                 </span>
                                 <div className="flex gap-1 mdd:gap-0  md:flex-col">
                                     <span className="text-white text-lg md:text-sm font-medium">{item.prefix}</span>

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import {lazy, useEffect } from 'react';
+import { lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -7,7 +7,6 @@ import { Toaster } from 'react-hot-toast';
 import { Sidebar, SidebarItem } from './adminPanel/Components/Sidebar';
 import { Header } from './adminPanel/Components/Header';
 import { getToken } from './adminPanel/utils/auth';
-
 import { Rooms } from './adminPanel/pages/Rooms/Rooms';
 import { AdminHotels } from './adminPanel/pages/AdminHotels/AdminHotels';
 import { AdminLogin } from './adminPanel/pages/AdminLogin';
@@ -29,6 +28,12 @@ import ManageBlogs from './adminPanel/pages/ManageBlogs/ManageBlogs';
 import SeoMeta from './adminPanel/pages/OptimiseSeo/SeoMeta';
 import EventandConference from './pages/OtherPages/EventandConference';
 import ComingSoonPage from './pages/OtherPages/ComingSoonPage';
+import CookieConsent from "./Components/CookieConsent"; // adjust path
+import CareerMain from './pages/SunstarCareer/CareerMain';
+import SunstarCareersFormComponent from './pages/SunstarCareer/SunstarCareersFormComponent';
+import TravelAgent from './pages/TravelAgent/TravelAgent';
+import TourAndTravel from './adminPanel/pages/TourAndTravel/TourAndTravel';
+
 // import PhoneAuth from './pages/PhoneAuth';
 
 
@@ -51,6 +56,7 @@ const WeddingPreWeddingPage = lazy(() => import(/* webpackChunkName: "roomsdetai
 const BookingForm = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/OtherPages/BookingForm'));
 const DevelopersOwners = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/DevelopersAndOwners/DevelopersOwners'));
 const DayUseRoom = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/DayUseRoom/DayUseRoom'));
+const TourAndTravelPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/TourAndTravelPaage/TourAndTravelMain/TourAndTravelPage'));
 
 const queryClient = new QueryClient();
 
@@ -87,12 +93,12 @@ function App() {
         <PricingProvider>
           <Routes>
             <Route element={<Layout />}>
+
               <Route path="/" element={<Home />} />
               <Route path="/why-sunstar" element={<AboutUs />} />
               <Route path="/corporate-booking" element={<Corporatebooking />} />
               <Route path="/hotels/:hotelCode" element={<Hotels />} />
               <Route path="/contact" element={<ContactUs />} />
-              <Route path="/room/:id" element={<HotelRooms />} />
               <Route path="/citypage/:cityName" element={<CityPage />} />
               <Route path="/terms-conditions&cancellation" element={<TermsAndConditions />} />
               <Route path="/privacy-policies" element={<CancellationPolicyPage />} />
@@ -105,11 +111,17 @@ function App() {
               <Route path="/developers&owners" element={<DevelopersOwners />} />
               <Route path="/eventandconference" element={<EventandConference />} />
               <Route path="/dayuseroom" element={<DayUseRoom />} />
-              <Route path="/career" element={<ComingSoonPage />} />
+              <Route path="/career" element={<CareerMain />} />
+              <Route path="/tour&travel" element={<TourAndTravelPage />} />
+              <Route path="/travel-agent" element={<TravelAgent />} />
+              <Route path="/in-the-media" element={<ComingSoonPage />} />
               <Route path="/loyalty-program" element={<ComingSoonPage />} />
+              <Route path="/career-form" element={  <SunstarCareersFormComponent/>} />
             </Route>
             <Route path="/room/details" element={<RoomsDetails />} />
-              {/* <Route path="/otp" element={<PhoneAuth />} /> */}
+            <Route path="/room/:id" element={<HotelRooms />} />
+
+            {/* <Route path="/otp" element={<PhoneAuth />} /> */}
           </Routes>
         </PricingProvider>
 
@@ -128,6 +140,7 @@ function App() {
             <Route path="/admin/hotel-locations" element={<PrivateRoute><HotelLocations /></PrivateRoute>} />
             <Route path="/admin/manage-blogs" element={<PrivateRoute><ManageBlogs /></PrivateRoute>} />
             <Route path="/admin/manage-seo" element={<PrivateRoute><SeoMeta /></PrivateRoute>} />
+            <Route path="/admin/tour&travel" element={<PrivateRoute><TourAndTravel /></PrivateRoute>} />
           </Routes>
         </AdminProvider>
         {/* <Suspense fallback={<Loader />}>
@@ -135,6 +148,7 @@ function App() {
           </LoaderWrapper>
         </Suspense> */}
       </Router>
+      <CookieConsent />
       <Toaster />
     </QueryClientProvider>
   );

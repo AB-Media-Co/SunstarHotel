@@ -126,29 +126,29 @@ const ShineSection = () => {
     return (
         <div id="what-make-us-shine" className="bg-primary-green py-12 relative text-primary-white" >
             <div className="content" data-aos="fade-up">
-                <h2 className="text-mobile/h3 md:text-desktop/h2 font-bold mb-4 text-reveal-animation">
+                <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold mb-4 text-reveal-animation">
                     {shineSection?.heading}
                 </h2>
-                <p className="text-mobile/body/2 md:text-desktop/body/large mb-12 animation-on-scroll">
+                <p className="text-mobile/body/2 md:text-desktop/body/1 whitespace-pre-line mb-12 animation-on-scroll">
                     {shineSection?.description}
                 </p>
                 <div className="flex flex-col gap-12 md:gap-10 ">
                     {shineSection?.features?.map((item, index) => (
                         <div
                             key={index}
-                            className={`flex flex-col-reverse flex-wrap items-center lg:items-start gap-6 lg:gap-16 md:justify-between  lg:flex-row ${index % 2 === 1 ? "lg:flex-row-reverse md:gap-10" : ""
+                            className={`flex flex-col-reverse  items-center lg:items-start gap-6 lg:gap-16 md:justify-between  lg:flex-row ${index % 2 === 1 ? "lg:flex-row-reverse md:gap-10" : ""
                                 }`}
                         >
-                            <div className="pe-6 w-full md:w-[320px] h-auto md:h-[282px] lg:w-[560px] flex flex-col gap-5 justify-center animation-on-scroll">
-                                <h3 className="lg:w-[580px] text-mobile/h3 md:text-desktop/h3 text-primary-white">{item.title}</h3>
-                                <p className=" text-md text-mobile/body/2 md:text-desktop/body/1 text-primary-white ">
+                            <div className="w-full md:w-[320px] h-auto md:h-[282px] lg:w-[48%] flex flex-col gap-5 justify-center animation-on-scroll">
+                                <h3 className="lg:w-full text-mobile/h3 md:text-desktop/h3 text-primary-white">{item.title}</h3>
+                                <p className=" text-md text-mobile/body/2 whitespace-pre-line md:text-desktop/body/1 text-primary-white ">
                                     {item.description}
                                 </p>
                             </div>
                             <img
                                 src={item.image}
                                 alt={item.title}
-                                className="w-full md:w-[320px] h-[282px] lg:w-[560px] rounded-2xl lg:h-[350px] object-cover animation-on-scroll"
+                                className="w-full md:w-[320px] h-[282px] lg:w-[48%] rounded-2xl lg:h-[350px] object-cover animation-on-scroll"
                             />
                         </div>
                     ))}

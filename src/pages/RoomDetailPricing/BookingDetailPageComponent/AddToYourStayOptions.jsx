@@ -16,8 +16,9 @@ export const AddToYourStayOptions = ({ data }) => {
   const toggleSelection = (option, event) => {
     event.stopPropagation();
     setSelectedOtherCharges((prevSelected) => {
-      const exists = prevSelected.find((item) => item._id === option._id);
-      if (exists) {
+      const exists = Array.isArray(prevSelected)
+      ? prevSelected.find((item) => item._id === option._id)
+      : null;      if (exists) {
         return prevSelected.filter((item) => item._id !== option._id);
       } else {
         return [...prevSelected, option];

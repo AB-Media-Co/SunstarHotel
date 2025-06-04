@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEnquiryForm } from "../../../ApiHooks/useEnquiryFormHook";
 import CommonUseEnquiryForm from "../../../Components/CommonUseEnquiryForm";
 
@@ -32,38 +33,41 @@ const EnquieryForm = ({ page = 'Dev & Owners', gid = [1824860371] }) => {
       placeholder: "Current Hotel Status",
       colSpan: "md:col-span-1",
       options: [
-          { value: "Operating", label: "Operating" },
-          { value: "new", label: "New Build" },
-          { value: "Conversion", label: "Conversion" },
+        { value: "Operating", label: "Operating" },
+        { value: "new", label: "New Build" },
+        { value: "Conversion", label: "Conversion" },
       ],
-  }
+    }
   ];
 
   const handleSubmit = (formData, callbacks) => {
     mutate({
       page,
-      name:formData?.firstName + formData?.lastName,
+      name: formData?.firstName + formData?.lastName,
       companyName: formData?.company,
-      email:formData?.email,
+      email: formData?.email,
       // address:formData?.hotelType,
-      phone:formData?.phone,
-      enquiry:formData?.hotelType,
+      phone: formData?.phone,
+      enquiry: formData?.hotelType,
       gid,
       submittedAt: new Date().toISOString(),
     }, callbacks);
     // , page, gid, type: 'basic' }, callbacks);
-};
+  };
 
-return (
-  <CommonUseEnquiryForm
-    title="Contact Information"
-    subtitle="Please provide your contact details"
-    fields={contactFields}
-    onSubmit={handleSubmit}
-    isLoading={isLoading}
-    buttonLabel="Submit"
-  />
-);
+  return (
+    <div id="form">
+      <CommonUseEnquiryForm
+        title="Partner With Us"
+        subtitle="Property owners and developers, let’s explore collaboration opportunities."
+        fields={contactFields}
+        onSubmit={handleSubmit}
+        isLoading={isLoading}
+        buttonLabel="Submit"
+      />
+
+    </div>
+  );
 };
 
 export default EnquieryForm;

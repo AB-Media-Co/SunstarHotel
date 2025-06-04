@@ -15,7 +15,10 @@ const AboutUs = () => {
   // const { data: hotels } = useGetHotels();
   const { whysunstarValue, Testimonials } = useUpdatePagesHook();
   const { data: metas } = useGetMetas();
-  const whySunstarMeta = metas?.find(meta => meta.page === "whysunstar");
+  const whySunstarMeta = Array.isArray(metas)
+  ? metas.find(meta => meta.page === "whysunstar")
+  : null;
+  
   useEffect(() => {
     window.scrollTo(0, 0);
 }, []);

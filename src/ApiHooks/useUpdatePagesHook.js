@@ -4,8 +4,6 @@ import axiosInstance from '../services/axiosInstance';
 import toast from 'react-hot-toast';
 import Loader from '../Components/Loader';
 
-
-
 const fetchWebsiteData = async () => {
   const res = await axiosInstance.get('/api/websiteData');
   return res.data;

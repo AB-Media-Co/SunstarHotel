@@ -11,7 +11,9 @@ import { useEffect } from "react"
 const ContactUs = () => {
     const { data: hotels } = useGetHotels();
     const { data: metas } = useGetMetas();
-    const contactUsMeta = metas?.find(meta => meta.page === "contactus");
+    const contactUsMeta = Array.isArray(metas)
+    ? metas.find(meta => meta.page === "contactus")
+    : null;
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);

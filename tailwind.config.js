@@ -19,7 +19,7 @@ export default {
 		  }],
 		  'desktop/h2': ['48px', {
 			lineHeight: '57.6px',
-			letterSpacing: '-1.92px',
+			letterSpacing: '1.92px',
 			fontWeight: '700'
 		  }],
 		  'desktop/h3': ['36px', {
@@ -108,7 +108,7 @@ export default {
 		  }],
 		  'mobile/h2': ['32px', {
 			lineHeight: '38.4px',
-			letterSpacing: '-0.64px',
+			letterSpacing: '0.64px',
 			fontWeight: '700'
 		  }],
 		  'mobile/h3': ['28px', {
@@ -183,10 +183,10 @@ export default {
 		// Custom colors
 		colors: {
 		  'primary-green': '#5BBEBC',
-		  'primary-dark-green': '#006167',
 		  'primary-yellow': '#FDC114',
 		  'primary-gray': '#999999',
 		  'primary-white': 'white',
+		  'primary-dark-green': '#006167',
 		}
 	  },
 	},

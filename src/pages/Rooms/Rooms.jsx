@@ -12,6 +12,7 @@ import Loader from "../../Components/Loader"
 import BottomRoomSticky from "../../Components/BottomRoomSticky"
 import { Helmet } from "react-helmet"
 import { useGetMetas } from "../../ApiHooks/useMetaHook"
+import { usePricing } from "../../Context/PricingContext"
 
 const Rooms = () => {
   const { data: metas } = useGetMetas();
@@ -20,7 +21,9 @@ const Rooms = () => {
   const [roomData, setroomData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+  const { setEditAddPricing } = usePricing();
+
+
   const [otherRoomData, setOtherRoomData] = useState(null);
   useEffect(() => {
     if (id) {
@@ -28,6 +31,7 @@ const Rooms = () => {
         try {
           const data = await getSingleRoomById(id?.id);
           setroomData(data);
+          setEditAddPricing(true)
         } catch (err) {
           setError(err);
         } finally {
@@ -64,29 +68,34 @@ const Rooms = () => {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-  const roomsMeta = metas?.find(meta => meta.page === 'rooms');
 
+  const roomsMeta = Array.isArray(metas)
+    ? metas.find(meta => meta.page === "rooms")
+    : null;
   return (
-    <div>
-         <Helmet>
-      <title>{roomsMeta?.metaTitle || 'Rooms & Suites - Sunstar Hotels'}</title>
-      <meta name="description" content={roomsMeta?.metaDescription || ''} />
-      <meta name="keywords" content={roomsMeta?.metaKeywords?.join(', ') || ''} />
-    </Helmet>
+    <div className="bg-gray-100">
+      <Helmet>
+        <title>{roomsMeta?.metaTitle || 'Rooms & Suites - Sunstar Hotels'}</title>
+        <meta name="description" content={roomsMeta?.metaDescription || ''} />
+        <meta name="keywords" content={roomsMeta?.metaKeywords?.join(', ') || ''} />
+      </Helmet>
       <RoomsBanner businessPlatformFeatures={roomData} hotelDetail={otherRoomData} />
-      <RoomPriceSection roomData={roomData} />
-      <hr className="content h-[2px] bg-gray-400" />
-      <RoomsDescription roomData={roomData} />
+      <div className="flex flex-col gap-4  -mt-6 rounded-t-lg relative bg-white max-w-7xl  mx-auto">
 
-      <AmenitiesList2 amenities={roomData?.Amenities} />
-      <hr className="mb-10 content h-[2px] bg-gray-400" />
+        <RoomPriceSection roomData={roomData} hotelDetail={otherRoomData} />
+        {/* <hr className="content h-[2px] bg-gray-400" /> */}
+        <AmenitiesList2 amenities={roomData?.Amenities} />
+        {/* <RoomsDescription roomData={roomData} /> */}
 
-      <RoomLayout rooms={otherRoomData?.rooms} title='Other Room' />
+        <hr className="mb-10 content h-[2px] bg-gray-400" />
 
-      <hr className="mt-10 content h-[2px] bg-gray-400" />
-      <FAQSection faqs={otherRoomData?.faqs} />
+        <RoomLayout rooms={otherRoomData?.rooms} title='Other Room' />
 
-      <BottomRoomSticky/>
+        <hr className="mt-10 content h-[2px] bg-gray-400" />
+        {/* <FAQSection faqs={otherRoomData?.faqs} /> */}
+      </div>
+
+      <BottomRoomSticky />
 
 
 

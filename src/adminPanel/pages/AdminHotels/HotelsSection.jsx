@@ -38,14 +38,14 @@ const Card = ({ item, type, onEdit, onDelete, onToggle }) => {
             {item.active ? "Active" : "Inactive"}
           </span>
         </div>
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <Switch
             checked={item.isDayUseRoom}
             onChange={() => onToggle(item, 'dayUseRoom', !item.isDayUseRoom)}
             color="primary"
           />
           <span className="text-sm text-gray-700">Day Use Room</span>
-        </div>
+        </div> */}
       </div>
       {/* Rest of the Card component remains unchanged */}
       <div className="relative group">

@@ -187,8 +187,8 @@ const WeddingPreWeddingPage = () => {
 
 
       <CommonUseEnquiryForm
-        title="TALK WITH US?"
-        subtitle="Sunstar Offers The Perfect Corporate Events Packages Designed To Make Your Experience Truly Magical"
+        title="Wedding & Pre-Wedding Enquiry"
+        subtitle="Let us make your special day truly unforgettable"
         fields={eventFormFields}
         onSubmit={handleSubmit}
         buttonLabel="Submit Enquiry"

@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AllHotelCard from "../../../Components/AllHotelCard";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 import { motion } from "framer-motion";
-import CityPagesOptions from "../../Citypage/CityPagesOptions";
+// import CityPagesOptions from "../../Citypage/CityPagesOptions";
 
 const useProgressiveImage = (src, placeholderSrc) => {
   const [sourceLoaded, setSourceLoaded] = useState(placeholderSrc);
@@ -28,7 +28,7 @@ const useProgressiveImage = (src, placeholderSrc) => {
 const Section1 = ({ section1Data }) => {
   const { heroSectionUpdate, loading, Loader } = useUpdatePagesHook();
   const { words = [], buttonLabel = "Search for" } = section1Data || {};
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
   const [index, setIndex] = useState(0);
   const [currentWord, setCurrentWord] = useState("");
@@ -120,12 +120,8 @@ const Section1 = ({ section1Data }) => {
     return <Loader />;
   }
 
-
-
-  const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
-
-
+  // const handleOpen = () => setIsOpen(true);
+  // const handleClose = () => setIsOpen(false);
 
   return (
     <div className="overflow-hidden md:overflow-visible">
@@ -142,7 +138,7 @@ const Section1 = ({ section1Data }) => {
           >
             {/* Decorative element */}
             <div
-              className="md:z-10 absolute left-[20%] md:left-auto md:right-16 top-[33rem] md:top-[30rem] 
+              className="md:z-10 absolute left-[20%] md:left-auto md:right-[19rem] top-[33rem] md:top-[27rem] 
                        w-[300px] h-[300px] animate-spin-slow 
                        bg-no-repeat bg-contain"
               style={{
@@ -160,7 +156,7 @@ const Section1 = ({ section1Data }) => {
                          flex flex-col md:gap-4 text-left text-primary-white 
                          max-w-[90%] sm:max-w-[80%] md:max-w-7xl"
             >
-              <h1 className="text-mobile/h1 sm:text-5xl md:text-desktop/large/h text-reveal-animation">
+              <h1 className="text-mobile/h2 md:text-desktop/h2 text-reveal-animation">
                 {heading}
               </h1>
               <p className="text-mobile/body/2 md:text-desktop/body/1 md:max-w-[53%] animation-on-scroll-Section1">

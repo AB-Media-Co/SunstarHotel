@@ -18,7 +18,7 @@ const Banner = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-primary-white text-mobile/h3 md:text-desktop/h3 max-w-[700px]  font-bold drop-shadow-xl md:mb-4"
+          className="text-primary-white text-mobile/h3 md:text-desktop/h3 capitalize max-w-[700px]  font-bold drop-shadow-xl md:mb-4"
         >
           Turn Your Property into a Profitable Hotel with Hotel Sunstar Group <br /> <span className="text-[#FDD304]">Guaranteed Returns | Zero Headaches | Complete Transparency</span>
         </motion.h1>

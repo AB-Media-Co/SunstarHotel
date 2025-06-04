@@ -20,16 +20,16 @@ const Faq = () => {
   const [localFaqs, setLocalFaqs] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedPage, setSelectedPage] = useState('Day Stays Rooms'); // Default page to select
- 
+
   const pages = [
     'Day Stays Rooms',
     'Events & Conference',
-    // 'Corporate Events',
+    'corporate-booking',
     // 'Social Events',
     // 'Wedding & Pre-Wedding',
   ]; // List of pages to be shown in the dropdown
 
-  const { data:faqs, isLoading, error } = useGetFAQsByPage(selectedPage); // Fetch FAQs for the selected page
+  const { data: faqs, isLoading, error } = useGetFAQsByPage(selectedPage); // Fetch FAQs for the selected page
   const { mutate: addMultipleFAQs } = useAddMultipleFAQs(); // Hook for adding multiple FAQs
 
   useEffect(() => {
@@ -57,11 +57,20 @@ const Faq = () => {
   };
 
   const handleBulkAdd = () => {
-    // Ensure that there is at least one FAQ to add
-    if (localFaqs.length > 0) {
-      addMultipleFAQs(localFaqs); // Call the hook to add multiple FAQs
-      setOpen(false); // Close modal after successful addition
+    const newFaqs = localFaqs.filter(faq => !faq._id);
+
+    const cleanedFaqs = newFaqs.filter(faq => faq.question && faq.answer);
+
+    if (cleanedFaqs.length > 0) {
+      // Add the page info to each FAQ
+      const faqsWithPage = cleanedFaqs.map(faq => ({ ...faq, page: selectedPage }));
+
+      addMultipleFAQs(faqsWithPage); // Call the mutation
+      setOpen(false); // Close modal
+    } else {
+      alert("Please add at least one new FAQ with a question and answer.");
     }
+
   };
 
   const handleOpenModal = () => setOpen(true);
@@ -84,7 +93,7 @@ const Faq = () => {
               label="Choose Page"
             >
               {pages.map((page) => (
-                <MenuItem key={page} value={page}>
+                <MenuItem key={page} value={page} className=''>
                   {page}
                 </MenuItem>
               ))}

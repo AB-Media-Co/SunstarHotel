@@ -56,7 +56,7 @@ const FAQSection = ({ faqs }) => {
     );
 
     return (
-        <div id="faqs" className="bg-gray-50 py-10">
+        <div id="faqs" className=" py-10">
             <div className="content mx-auto px-4 max-w-7xl">
                 <h2 className="text-center md:text-left text-2xl md:text-3xl font-bold text-gray-800 mb-2">
                     Frequently Asked Questions
@@ -68,14 +68,38 @@ const FAQSection = ({ faqs }) => {
                 {faqs?.length ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="flex flex-col gap-4">
-                            {leftColumn.map((faq, i) =>
-                                renderFaqItem(faq, faqs.indexOf(faq))
-                            )}
+                            <AnimatePresence>
+                                {leftColumn.map((faq, i) => (
+                                    <motion.div
+                                        key={faq.question}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        {renderFaqItem(faq, faqs.indexOf(faq))}
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+
                         </div>
                         <div className="flex flex-col gap-4">
-                            {rightColumn.map((faq, i) =>
-                                renderFaqItem(faq, faqs.indexOf(faq))
-                            )}
+
+                            <AnimatePresence>
+                                {rightColumn.map((faq, i) => (
+                                    <motion.div
+                                        key={faq.question}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        {renderFaqItem(faq, faqs.indexOf(faq))}
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+
+
                         </div>
                     </div>
                 ) : (
@@ -88,8 +112,19 @@ const FAQSection = ({ faqs }) => {
                             onClick={handleViewMore}
                             className="px-5 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition"
                         >
-                            {showMore ? "View Less" : "View More"}
+                            <AnimatePresence mode="wait">
+                                <motion.span
+                                    key={showMore ? "less" : "more"}
+                                    initial={{ opacity: 0, y: -5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 5 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    {showMore ? "View Less" : "View More"}
+                                </motion.span>
+                            </AnimatePresence>
                         </button>
+
                     </div>
                 )}
             </div>

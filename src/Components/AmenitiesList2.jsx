@@ -25,7 +25,7 @@ export const AmenitiesList2 = ({ amenities }) => {
                     </span>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mt-10">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 md:gap-x-[12rem] gap-y-10  mt-10">
                     <AnimatePresence>
                         {amenities.slice(0, itemsToShow).map((amenity, index) => {
                             const key = amenity.label.toLowerCase();
@@ -38,7 +38,8 @@ export const AmenitiesList2 = ({ amenities }) => {
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
                                     transition={{ duration: 0.3, delay: index % 12 * 0.05 }}
-                                    className="flex flex-col justify-center items-center group"
+                                    className="flex flex-col justify-center w-full
+                                    max-w-[300px] items-center group"
                                 >
                                     <div className="transition-all duration-300">
                                         <img

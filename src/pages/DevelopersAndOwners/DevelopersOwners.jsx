@@ -18,7 +18,10 @@ const DevelopersOwners = () => {
         window.scrollTo(0, 0);
       }, []);
     const { data: metas } = useGetMetas();
-    const developersMeta = metas?.find(meta => meta.page === "developersowners");
+
+    const developersMeta = Array.isArray(metas)
+    ? metas.find(meta => meta.page === "developersowners")
+    : null;
 
     return (
         <div>

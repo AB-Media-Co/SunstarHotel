@@ -35,7 +35,7 @@ const Footer = () => {
                                 className="flex items-center gap-3 hover:text-primary-yellow transition-all duration-300 group">
                                 <LinkedInIcon className=' border-yellow-500 rounded-lg  group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300' />
                             </a>
-                        
+
                             <a href="https://in.pinterest.com/hotel_sunstar_group/"
                                 className="flex items-center gap-3 hover:text-primary-yellow transition-all duration-300 group">
                                 <PinterestIcon className=' border-yellow-500 rounded-lg  group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300' />
@@ -63,7 +63,7 @@ const Footer = () => {
                             <a href="https://www.linkedin.com/company/hotelsunstargroup/">
                                 <LinkedInIcon className=' border-yellow-500 rounded-lg  group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300 ' style={{ fontSize: "30px" }} />
                             </a>
-                          
+
                             <a href="https://in.pinterest.com/hotel_sunstar_group/"
                                 className="flex items-center gap-3 hover:text-primary-yellow transition-all duration-300 group">
                                 <PinterestIcon className=' border-yellow-500 rounded-lg  group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300' />
@@ -75,14 +75,16 @@ const Footer = () => {
                     <div className='flex md:hidden w-full gap-[20px] flex-col justify-between'>
                         <Link to='/why-sunstar' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Why Sunstar</Link>
                         <Link to='/loyalty-program' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Loyalty Program</Link>
-                        <Link to='/dayuseroom' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Day Stays Rooms</Link>
+                        <Link to='/dayuseroom' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Day Use Rooms</Link>
 
                         <Link to='/developers&owners' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Dev & Owners</Link>
                         <Link to='/eventandconference' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Events & Conference</Link>
 
-                        <Link to='/coorporatevents' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Corporate Events</Link>
-                        <Link to='/socialevents' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Social Events</Link>
-                        <Link to='/weddingpreWedding' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Wedding & Pre-Wedding</Link>
+
+                        <Link to='/tour&travel' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Tour & Travel</Link>
+                        <Link to='/travel-agent' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Travel Agents</Link>
+                        <Link to='/in-the-media' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">In the Media</Link>
+
 
                         {/* <div className='bg-[#66D7D6] h-[6rem] w-[1px]'></div> */}
                     </div>
@@ -109,18 +111,18 @@ const Footer = () => {
                         </div>
                         <div className="flex flex-col space-y-3">
                             <Link to='/corporate-booking' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Coorporate Booking</Link>
-                            <Link to='/dayuseroom' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Day Stays Rooms</Link>
+                            <Link to='/dayuseroom' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Day Use Rooms</Link>
                             <Link to='/developers&owners' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Developers & Owners</Link>
                         </div>
                         <div className="flex flex-col space-y-3">
                             <Link to='/eventandconference' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Events & Conference</Link>
-                            <Link to='/coorporatevents' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Corporate Events</Link>
                             <Link to='/sunstar-blogs' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Blog & Buzz</Link>
+                            <Link to='/career' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Career</Link>
                         </div>
                         <div className="flex flex-col space-y-3">
-                            <Link to='/socialevents' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Social Events</Link>
-                            <Link to='/weddingpreWedding' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Wedding & Pre-Wedding</Link>
-                            <Link to='/career' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Career</Link>
+                            <Link to='/tour&travel' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Tour & Travel</Link>
+                            <Link to='/travel-agent' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Travel Agents</Link>
+                            <Link to='/in-the-media' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">In the Media</Link>
                         </div>
                     </div>
 
@@ -134,24 +136,29 @@ const Footer = () => {
 
                 {/* Bottom Section */}
                 <div className="md:flex hidden px-4 md:flex-row gap-6 md:items-center justify-center text-sm">
-                    <a href="#" className="hover:text-primary-yellow transition-all duration-300">©2024 Sunstar Hospitality</a>
+                    <span className="hover:text-primary-yellow transition-all duration-300">
+                        © {new Date().getFullYear()} Sunstar Hospitality. All rights reserved.
+                    </span>
                     <hr className='bg-primary-white h-[20px] w-[1px] opacity-30' />
-                    <Link to="/terms-conditions&cancellation" className="hover:text-primary-yellow transition-all duration-300">T & C  and Cancellation Policy</Link>
+                    <Link to="/terms-conditions&cancellation" className="hover:text-primary-yellow transition-all duration-300">T & C and Cancellation Policy</Link>
                     <hr className='bg-primary-white h-[20px] w-[1px] opacity-30' />
                     <Link to="/privacy-policies" className="hover:text-primary-yellow transition-all duration-300">Privacy Policy</Link>
                 </div>
+
 
 
                 {/* <div className="mt-4 md:hidden">
                     <hr className="border-gray-300 opacity-30" />
                 </div> */}
 
-                <div className="hover:text-primary-yellow  mx-4 border-b py-2 border-[#67D0CF]  transition-all duration-300 text-lg md:hidden text-center ">©2024 Sunstar Hospitality</div>
 
-                <div className="flex  md:hidden mt-2 gap-4 items-center  justify-around w-full text-sm">
+                <div className="flex  md:hidden mt-2 gap-4 items-center border-b  border-[#67D0CF] py-2 justify-around w-full text-sm">
                     <a href="/terms-conditions&cancellation" className="hover:text-primary-yellow transition-all duration-300">Terms & Conditions</a>
                     <hr className='bg-[#66D7D6] h-[1.5rem] w-[1.5px]' />
                     <a href="/privacy-policies" className="hover:text-primary-yellow transition-all duration-300">Privacy & Cookie Policy</a>
+                </div>
+                <div className="hover:text-primary-yellow mx-4 pt-2 transition-all duration-300 text-center text-sm md:hidden">
+                    © {new Date().getFullYear()} Sunstar Hospitality. All rights reserved.
                 </div>
 
             </div>

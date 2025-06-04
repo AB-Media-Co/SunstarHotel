@@ -51,7 +51,7 @@ const Card = ({ image, title, description }) => {
         <h3 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-800 mb-2">
           {title}
         </h3>
-        <p className="text-mobile/body/2 md:text-desktop/body/large text-gray-600 line-clamp-3">
+        <p className="text-mobile/body/2 whitespace-pre-line md:text-desktop/body/large text-gray-600 line-clamp-3">
           {description}
         </p>
       </div>

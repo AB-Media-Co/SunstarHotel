@@ -8,12 +8,12 @@ import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 
 const SocialEventsPage = () => {
     const { Testimonials } = useUpdatePagesHook();
-    const { mutate, isLoading } = useEnquiryForm();
+    const { mutate } = useEnquiryForm();
 
     const eventTypes = [
         { title: 'Birthday Celebrations', image: '/images/OtherPageImages/Bdy.webp' },
-        { title: 'Anniversary', image: '/images/OtherPageImages/Aniv.webp' },
-        { title: 'Kitty Party', image: '/images/OtherPageImages/celeb.webp' },
+        { title: 'Private Dinners', image: '/images/OtherPageImages/Aniv.webp' },
+        { title: 'Get Together', image: '/images/OtherPageImages/celeb.webp' },
         { title: 'Baby Shower', image: '/images/OtherPageImages/bbyshower.webp' },
     ];
 
@@ -178,33 +178,25 @@ const SocialEventsPage = () => {
             <OtherPageLayout
                 // Page type for SEO
                 pageType="Social Events"
-
                 // Hero section
                 heroImage="/images/OtherPageImages/socialeventhead.webp"
                 anotherText={heroTitle}
                 // heroHighlightedText="the ideal destination for corporate events"
-
                 // Intro section
                 introText={introText}
-
+                // chooseUsHead="Making Your Celebrations Seamless"
                 // Section titles
-                sectionMainTitle="Personalised Celebration"
+                // sectionMainTitle="Personalised Celebration"
                 // sectionSubtitle="At Sunstar Hotels, we are committed to delivering exceptional service and support, ensuring the success of your corporate event."
-
-
                 // Event types grid
-                eventTypes={eventTypes}
-
-                sectionMainTitleexp='Personalised Experiences'
+                // eventTypes={eventTypes}
+                sectionMainTitleexp='Personalised Celebration'
                 sectionSubtitleexp='Our hotel offers a variety of beautiful and unique event spaces that can be tailored to your needs and preferences.'
-                eventTypesexp={eventTypesexp}
-
+                eventTypesexp={eventTypes}
                 // Venues slider
                 venueData={venueData}
-
                 // Features grid
                 featureItems={whyChooseUsFeatures}
-
                 // Testimonials and form
                 testimonials={Testimonials}
                 testimonialBackgroundImage={testimonialData.backgroundImage}
@@ -212,8 +204,8 @@ const SocialEventsPage = () => {
             />
 
             <CommonUseEnquiryForm
-                title="TALK WITH US?"
-                subtitle="Sunstar Offers The Perfect Corporate Events Packages Designed To Make Your Experience Truly Magical"
+                title="Host a Social Event"
+                subtitle="Whether it’s a celebration or gathering, we’ll help you plan it right."
                 fields={eventFormFields}
                 onSubmit={handleSubmit}
                 buttonLabel="Submit Enquiry"

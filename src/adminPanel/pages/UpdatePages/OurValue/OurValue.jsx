@@ -62,7 +62,7 @@ const OurValueModal = ({ open, handleClose, initialData, onSave }) => {
       return wordCount > 50;
     });
 
-    if (heroWordCount > 80 || hasLongValueDesc) {
+    if (heroWordCount > 110 || hasLongValueDesc) {
       alert('Hero section description should not exceed 80 words and value descriptions should not exceed 50 words');
       return;
     }
@@ -86,8 +86,8 @@ const OurValueModal = ({ open, handleClose, initialData, onSave }) => {
             value={heroSectionDescription}
             onChange={handleDescriptionChange}
             sx={{ mb: 3 }}
-            helperText={`${heroSectionDescription.trim().split(/\s+/).length}/80 words`}
-            error={heroSectionDescription.trim().split(/\s+/).length > 80}
+            helperText={`${heroSectionDescription.trim().split(/\s+/).length}/110 words`}
+            error={heroSectionDescription.trim().split(/\s+/).length > 110}
           />
           <h1 className='text-desktop/h4 pb-10'>Our Value Section</h1>
           <TextField

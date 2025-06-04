@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 
 // Reusable Input Components
@@ -28,11 +29,11 @@ export const TextAreaField = ({ placeholder, rows, value, onChange, error, addit
 );
 
 export const DropdownField = ({ placeholder, options, value, onChange, error, additionalClasses = "" }) => (
-  <>
+  <div className="relative">
     <select
       value={value}
       onChange={onChange}
-      className={`w-full p-4 rounded-xl border ${error ? 'border-red-500' : 'border-gray-200'} transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#404040] focus:border-transparent shadow-sm placeholder-primary-green bg-white ${additionalClasses}`}
+      className={`w-full p-4 pr-10 rounded-xl border appearance-none ${error ? 'border-red-500' : 'border-gray-200'} transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#404040] focus:border-transparent shadow-sm placeholder-primary-green bg-white ${additionalClasses}`}
     >
       <option value="" disabled>{placeholder}</option>
       {options.map((option, index) => (
@@ -41,8 +42,14 @@ export const DropdownField = ({ placeholder, options, value, onChange, error, ad
         </option>
       ))}
     </select>
+    {/* Custom dropdown arrow */}
+    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+      </svg>
+    </div>
     {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-  </>
+  </div>
 );
 
 export const Button = ({ label, onClick, additionalClasses = "", type = "submit" }) => (
@@ -99,7 +106,7 @@ const CommonUseEnquiryForm = ({
     };
 
     onSubmit(payload, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         if (showResponseMessage) {
           setResponseMsg("Form submitted successfully!");
         }
@@ -176,10 +183,15 @@ const CommonUseEnquiryForm = ({
           </p>
         )}
         <form onSubmit={handleSubmit} className={formClassName}>
-          <div className="w-full  px-4   lg:px-8">
+          <div className="w-full px-4 lg:px-8">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {fields.map((field) => (
-                <div key={field.name} className="w-full col-span-1">
+                <div
+                  key={field.name}
+                  className={`w-full col-span-1 ${
+                    field.type === 'textarea' ? 'sm:col-span-2' : ''
+                  }`}
+                >
                   {renderField(field)}
                 </div>
               ))}

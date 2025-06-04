@@ -8,7 +8,7 @@ const Description = () => {
       </p>
       <p className="text-mobile/body/2 md:text-desktop/body/1 font-semibold">
         Discover flexibility, comfort, and convenience right when you need it.{" "}
-        <span className="text-[#FDC304]">Book your Day Use Room today!</span>
+        <span className="font-bold">Book your Day Use Room today!</span>
       </p>
     </div>
   );

@@ -1,8 +1,8 @@
 // data.js (example data)
 export const heroData = {
-  title: "Putting The Trust Back Into Travel.",
+  title: "Where Hospitality Feels Like Home.",
   subtitle: "The hospitality industry has lost its way...",
-  highlightText: ["Into", "Travel."],
+  highlightText: ["Like", "Home."],
   description:
     "The hospitality industry has lost its way; all everyone seems to care about anymore is making a quick buck. But what about the people they're actually supposed to care about - you?\n\nWhen we started bloom, we set out with the goal of creating a consistent & reliable offering that gives you what you care about the most – a great room, in the best location, at a surprisingly affordable rate. Over the years we’ve expanded across India with our growing community of loyal bloomers supporting us with every new hotel opening.\n\nCome experience our award winning hotels today.",
   imageSrc: "/images/AbouPageImages/aboutBanner.png",

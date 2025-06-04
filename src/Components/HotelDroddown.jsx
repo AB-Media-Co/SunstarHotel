@@ -102,7 +102,9 @@ const HotelDropdown = () => {
 
     const handleSelectChange = (event) => {
         const hotelId = event.target.value;
-        const selectedHotel = hotels.find((hotel) => hotel.id === hotelId);
+        const selectedHotel = Array.isArray(hotels)
+            ? hotels.find((hotel) => hotel.id === hotelId)
+            : null;
         setSelectedHotelId(hotelId);
         if (selectedHotel) {
             fetchHotelData(selectedHotel.id, selectedHotel.apiKey);
@@ -113,7 +115,9 @@ const HotelDropdown = () => {
 
     useEffect(() => {
         if (selectedHotelId && checkIn && checkOut) {
-            const selectedHotel = hotels.find((hotel) => hotel.id === selectedHotelId);
+            const selectedHotel = Array.isArray(hotels)
+                ? hotels.find((hotel) => hotel.id === selectedHotelId)
+                : null;
             if (selectedHotel) {
                 fetchRoomAvailabliity(selectedHotel.id, selectedHotel.apiKey);
             }
@@ -152,7 +156,7 @@ const HotelDropdown = () => {
                     {openCalender &&
                         <Calendar setCheckInDate={setCheckIn} setCheckOutDate={setCheckOut} setOpenCalender={setOpenCalender} />
 
-                     }
+                    }
                 </div>
 
                 {hotelData && (

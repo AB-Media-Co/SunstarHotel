@@ -8,11 +8,11 @@ const OtherEnquiries = () => {
   const enquiriesData = ContactUsDetail?.OtherEnquieirs || {};
 
   const iconsMapping = {
-    reservations: 'marketing',      
+    reservations: 'Reservation',      
     corporateSales: 'Group',     
-    traveAgentSales: 'generalChat',       
-    marketing: 'corporate',               
-    careers: 'Group',                   
+    traveAgentSales: 'TravelAgent',       
+    marketing: 'marketing',               
+    careers: 'Career',                   
     hotelDevelopment: 'builders'  
   };
 
@@ -35,7 +35,7 @@ const OtherEnquiries = () => {
   return (
     <div className="bg-gray-50 py-10">
       <div className="content mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8">
+        <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-800 mb-8">
           Other Enquiries
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -48,12 +48,13 @@ const OtherEnquiries = () => {
             >
               <Icon name={enquiry.icon} className="w-10 h-10" />
               <div>
-                <p className="text-md font-medium text-[#A4A4A4]">
+                <p className="text-lg font-medium text-[#A4A4A4]">
                   {enquiry.title}
                 </p>
                 <a
                   href={`mailto:${enquiry.email}`}
-                  className="underline text-[#848484] font-bold hover:underline md:text-xl"
+                  className="underline text-[#848484] font-semibold
+                   hover:underline md:text-xl"
                 >
                   {enquiry.email}
                 </a>

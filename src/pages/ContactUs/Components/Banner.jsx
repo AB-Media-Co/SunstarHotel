@@ -24,7 +24,7 @@ const Banner = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-primary-white text-mobile/h3 md:text-desktop/h3 font-bold drop-shadow-xl mb-4"
+          className="text-primary-white text-mobile/h3 md:text-desktop/h3  font-bold drop-shadow-xl mb-4"
         >
           Get in Touch with Us  ?
         </motion.h1>

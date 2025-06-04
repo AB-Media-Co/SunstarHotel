@@ -6,15 +6,18 @@ import SunstarEnquiryForm from "./Components/SunstarEnquiryForm";
 import { useGetMetas } from "../../ApiHooks/useMetaHook";
 import FormData from "./Components/FormData";
 import { useEffect } from "react";
+import CoorporateBookingFaqs from "./Components/CoorporateBookingFaqs";
 
 const CorporateBooking = () => {
   const { CoorporateBooking } = useUpdatePagesHook();
 
   const { data: metas } = useGetMetas();
-  const whySunstarMeta = metas?.find(meta => meta.page === "corporatebooking");
+  const whySunstarMeta = Array.isArray(metas)
+    ? metas.find(meta => meta.page === "corporatebooking")
+    : null;
   useEffect(() => {
     window.scrollTo(0, 0);
-}, []);
+  }, []);
   return (
     <div>
       <Helmet>
@@ -45,6 +48,7 @@ const CorporateBooking = () => {
 
 
       <FormData />
+      <CoorporateBookingFaqs />
 
     </div>
   );

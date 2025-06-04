@@ -11,6 +11,7 @@ import {
   Group,
   Article,
   Search,
+  TravelExplore,
 } from '@mui/icons-material';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import { useAdminContext } from '../utils/AdminContext';
@@ -50,6 +51,7 @@ export function Sidebar() {
     { id: 3, text: 'Locations', icon: <LocationCity />, path: '/admin/hotel-locations', roles: ['superadmin', 'admin', 'manager', 'cityManager'] },
     { id: 4, text: 'Offers And Deals', icon: <LocalOfferIcon />, path: '/admin/offers', roles: ['superadmin', 'admin', 'manager', 'contentManager', 'cityManager', 'hotelManager', 'digitalMarketer'] },
     { id: 5, text: 'Update Pages', icon: <Edit />, path: '/admin/pages', roles: ['superadmin', 'admin', 'contentManager'] },
+    { id: 9, text: 'Tour And Travel', icon: <TravelExplore />, path: '/admin/tour&travel', roles: ['superadmin', 'admin', 'manager', 'contentManager', 'cityManager', 'hotelManager', 'digitalMarketer'] },
     { id: 6, text: 'Manage SEO', icon: <Search />, path: '/admin/manage-seo', roles: ['superadmin', 'admin', 'digitalMarketer'] },
     { id: 7, text: 'Manage Blogs', icon: <Article />, path: '/admin/manage-blogs', roles: ['superadmin', 'admin', 'contentManager', 'digitalMarketer'] },
     { id: 8, text: 'All Users', icon: <Group />, path: '/admin/all-users', roles: ['superadmin', 'admin'] },

@@ -21,7 +21,7 @@ const BookingForm = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);
+    }, []);
     useEffect(() => {
         if (startDate && endDate) {
             const nights = differenceInDays(endDate, startDate);
@@ -48,10 +48,26 @@ const BookingForm = () => {
         lastName: Yup.string().required('Last name is required'),
     });
 
+    // Extract default hotel name from localStorage
+    const localHotelInfo = localStorage.getItem("hotelInfo");
+    let defaultHotel = "";
+
+    try {
+        if (localHotelInfo) {
+            const parsed = JSON.parse(localHotelInfo);
+            defaultHotel = parsed?.name || ""; // Adjust key path if needed
+        }
+    } catch (e) {
+        console.error("Error parsing hotelInfo from localStorage:", e);
+    }
+
+    
+
+
     // Initialize formik
     const formik = useFormik({
         initialValues: {
-            propertyName: '',
+            propertyName: defaultHotel,
             dates: '',
             guests: '',
             email: '',
@@ -64,7 +80,7 @@ const BookingForm = () => {
             const payload = {
                 page: "Bulk Booking",
                 companyName: values?.propertyName,
-                address: values?.firstName + " " + values?.lastName,
+                name: values?.firstName + " " + values?.lastName,
                 email: values?.email,
                 phone: values?.mobileNumber,
                 decisionMaker: values?.nights + " Nights",
@@ -165,7 +181,7 @@ const BookingForm = () => {
                             <h1 className="text-5xl font-bold text-white mb-4">Booking Form</h1>
                             <p className="text-white mb-8">For bookings longer than 10 nights or large groups</p>
                         </div>
-                        <div className="w-full bg-white rounded-2xl shadow-lg p-12">
+                        <div className="w-full bg-white rounded-2xl shadow-lg p-6 md:p-12">
                             <div className="flex flex-col lg:flex-row">
                                 <div className="w-full lg:w-2/3 lg:pr-8">
                                     <form onSubmit={formik.handleSubmit} className='flex flex-col gap-4'>
@@ -187,8 +203,8 @@ const BookingForm = () => {
                                             )}
                                         </div>
 
-                                        <div className="mb-4">
-                                            <div className="relative">
+                                        <div className="mb-4 w-full sm:col-span-2">
+                                            <div className="relative w-full border rounded-md">
                                                 <DatePicker
                                                     selected={startDate}
                                                     onChange={handleDateChange}
@@ -196,8 +212,8 @@ const BookingForm = () => {
                                                     endDate={endDate}
                                                     selectsRange
                                                     minDate={new Date()}
-                                                    placeholderText="Pick Check-in & Check-out Dates"
-                                                    className={`w-full border rounded-md p-3 pl-10 ${formik.touched.dates && formik.errors.dates ? 'border-red-500' : 'border-gray-300'}`}
+                                                    placeholderText="Pick Dates"
+                                                    className={`w-full p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-[#404040] rounded-md ${formik.touched.dates && formik.errors.dates ? 'border-red-500' : 'border-gray-300'}`}
                                                     onBlur={formik.handleBlur}
                                                     name="dates"
                                                     dateFormat="EEE, MMM d"
@@ -207,6 +223,7 @@ const BookingForm = () => {
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                 </svg>
                                             </div>
+
                                             {formik.touched.dates && formik.errors.dates && (
                                                 <div className="text-red-500 text-sm mt-1">{formik.errors.dates}</div>
                                             )}
@@ -309,20 +326,20 @@ const BookingForm = () => {
                                     <h2 className="text-2xl font-medium text-gray-600 mb-6">Need Help?</h2>
 
                                     <div className="flex items-center mb-4">
-                                        <div className="w-8 h-8 bg-primary-green rounded-full flex items-center justify-center mr-3">
+                                        {/* <div className="w-8 h-8 bg-primary-green rounded-full flex items-center justify-center mr-3">
                                             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
-                                        </div>
+                                        </div> */}
                                         <a href="mailto:booking@sunstarhospitality.com" className="text-primary-green font-medium">booking@sunstarhospitality.com</a>
                                     </div>
 
                                     <div className="flex items-center mb-6">
-                                        <div className="w-8 h-8 bg-primary-green rounded-full flex items-center justify-center mr-3">
+                                        {/* <div className="w-8 h-8 bg-primary-green rounded-full flex items-center justify-center mr-3">
                                             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                             </svg>
-                                        </div>
+                                        </div> */}
                                         <a href="tel:+91114225666" className="text-primary-green font-medium">+91 11 4122 5666</a>
                                     </div>
 

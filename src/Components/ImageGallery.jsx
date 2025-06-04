@@ -1,5 +1,6 @@
 import Marquee from "react-fast-marquee";
 import useUpdatePagesHook from "../ApiHooks/useUpdatePagesHook";
+import Masonry from 'react-masonry-css';
 
 const ImageGallery = () => {
   const { galleryImages } = useUpdatePagesHook();
@@ -14,8 +15,8 @@ const ImageGallery = () => {
 
   const { images, content } = galleryImages;
   const combinedItems = [
+    ...content,
     ...images.map(src => ({ type: "image", src })),
-    ...content
   ];
 
   // Fisher-Yates shuffle
@@ -30,46 +31,115 @@ const ImageGallery = () => {
 
   const shuffledItems = shuffleArray(combinedItems);
 
-  return (
-    <div className="relative z-10 w-full md:h-[40rem] h-[600px] overflow-hidden">
-      <Marquee gradient={false} speed={50}>
-        <div className="ps-2 sm:ps-4 w-full">
+  const breakpointColumnsObj = {
+    default: 4,
+    1024: 3,
+    768: 2,
+    480: 2,
+  };
 
-          <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
+  const rowsToShow = 2;
+  const columns = 4;
+  const totalItems = rowsToShow * columns;
+
+  const itemsToRender = shuffledItems.slice(0, totalItems);
+
+
+  return (
+    <div className="relative z-10 w-full ">
+      <Marquee gradient={false} speed={60} className=" ">
+        <div className="ps-4 sm:ps-6 py-8 m">
+          {/* <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-8 max-h-[100vh] overflow-hidden space-y-8">
             {shuffledItems.map((item, index) => {
               if (item.type === "image") {
                 return (
-                  <div key={`image-${index}`} className="break-inside-avoid mb-4 overflow-hidden">
-                    <img src={item.src} className="w-full rounded-2xl scale-[0.99] h-full object-cover bg-white" />
+                  <div
+                    key={`image-${index}`}
+                    className="  rounded-2xl shadow-md bg-white"
+                  >
+                    <img
+                      src={item.src}
+                      alt="Gallery item"
+                      className="w-full  object-cover rounded-2xl"
+                      loading="lazy"
+                    />
+
                   </div>
                 );
               }
 
               if (item.type === "div") {
                 return (
-                  <div key={item._id} className="break-inside-avoid mb-4">
-                    <div
-                      className={`${item.bg} p-4 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 text-primary-white font-bold flex items-center justify-center`}
-                      style={{
-                        backgroundColor: item.bg,
-                        minHeight: index % 2 === 0 ? '16rem' : '20rem'
-                      }}
-                    >
-                      <div className="text-center w-full text-xl">
-                        {item.content}
-                      </div>
+                  <div
+                    key={item._id}
+                    className="break-inside-avoid overflow-hidden rounded-2xl shadow-md"
+                    style={{
+                      backgroundColor: item.bg || "#FFEB3B",
+                      minHeight: index % 2 === 0 ? '10rem' : '14rem',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "2rem",
+                    }}
+                  >
+                    <div className="text-center text-primary-black text-lg font-semibold leading-snug">
+                      {item.content}
                     </div>
                   </div>
                 );
               }
               return null;
             })}
-          </div>
+          </div> */}
+
+          <Masonry
+            breakpointCols={breakpointColumnsObj}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column "
+          >
+            {itemsToRender.map((item, index) => {
+              if (item.type === "image") {
+                return (
+                  <div
+                    key={`image-${index}`}
+                    className="rounded-2xl shadow-md bg-white"
+                  >
+                    <img
+                      src={item.src}
+                      alt="Gallery item"
+                      className="w-full object-cover rounded-2xl"
+                      loading="lazy"
+                    />
+                  </div>
+                );
+              }
+
+              if (item.type === "div") {
+                return (
+                  <div
+                    key={item._id}
+                    className="rounded-2xl shadow-md"
+                    style={{
+                      backgroundColor: item.bg || "#FFEB3B",
+                      minHeight: index % 2 === 0 ? '10rem' : '14rem',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "2rem",
+                    }}
+                  >
+                    <div className="text-start  text-white font-bold text-2xl  leading-snug">
+                      {item.content}
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            })}
+          </Masonry>
+
         </div>
       </Marquee>
-
-
-   
     </div>
   );
 };

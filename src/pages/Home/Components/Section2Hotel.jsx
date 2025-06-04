@@ -14,7 +14,7 @@ const Section2Hotel = () => {
                     <h1 className="text-mobile/h3 md:text-desktop/h3 sm:text-[1.8rem] md:text-[2rem]  font-bold text-reveal-animation">
                         {homePageDescription?.heading}
                     </h1>
-                    <p className="text-mobile/body/2 md:text-desktop/body/1 sm:text-[1rem]  mt-3 sm:mt-4 animation-on-scroll ">
+                    <p className="text-mobile/body/2 md:text-desktop/body/1 whitespace-pre-line sm:text-[1rem]  mt-3 sm:mt-4 animation-on-scroll ">
                         {homePageDescription?.description}
                     </p>
                 </div>

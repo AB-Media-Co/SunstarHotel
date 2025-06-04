@@ -439,9 +439,9 @@ const EventandConference = () => {
                         Whether you're planning a corporate conference, wedding, milestone celebration, or an intimate gathering, Hotel Sunstar Group ensures a flawless experience from start to finish. With versatile venues, expert event planning, and an award-winning culinary team, we craft extraordinary moments that leave a lasting impression.
                     </p>
                     <div className="text-center mx-auto mt-12">
-                        <Link to="#contact" className="bg-yellow-400 text-white px-6 py-3 rounded-md shadow hover:bg-yellow-500 transition">
+                        <a href="#contact" className="bg-yellow-400 text-white px-6 py-3 rounded-md shadow hover:bg-yellow-500 transition">
                             Book Your Event Now
-                        </Link>
+                        </a>
                     </div>
                 </div>
             </header>
@@ -459,7 +459,7 @@ const EventandConference = () => {
 
             {/* Why Choose Us Features */}
             <section className="pb-12 md:px-4">
-                <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold content text-start">Why Choose Us</h2>
+                <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold content text-start">Making Your Celebrations Seamless</h2>
                 <div className="mt-8 grid grid-cols-1 content sm:grid-cols-2 md:grid-cols-4 gap-6">
                     {whyChooseUsFeatures.map((feature, index) => (
                         <div key={index} className="bg-primary-white p-6 text-center rounded-lg shadow-lg hover:scale-105 transition-all duration-300">
@@ -488,9 +488,10 @@ const EventandConference = () => {
                         arrow="mt-8"
                         autoplayDelay={4000}
                         showPagination={true}
+                         className="relative z-10 testiM mySwiper"
                     />
                 </div>
-            </section>
+            </section> 
 
             {/* Testimonial Section */}
             <section className="py-16 md:px-4 content bg-white">
@@ -507,6 +508,7 @@ const EventandConference = () => {
                     autoplayDelay={5000}
                     showPagination={true}
                     arrow="mt-8"
+                     className="relative z-10 testiM mySwiper"
                 />
 
             </section>
@@ -516,8 +518,8 @@ const EventandConference = () => {
 
             <section id="contact" className="py-16">
                 <CommonUseEnquiryForm
-                    title="Instant Booking & Inquiry Form"
-                    subtitle="Fill out the form below and our event planning team will contact you within 24 hours"
+                    title="Plan Your Event or Conference"
+                    subtitle="Share your event details and we’ll take care of the rest"
                     fields={eventFormFields}
                     onSubmit={handleSubmit}
                     buttonLabel="Submit Enquiry"

@@ -14,12 +14,12 @@ const Banner = () => {
             loading="lazy"
         />
         <div className="absolute inset-0 bg-black opacity-60"></div>
-        <div className="absolute inset-0 content flex flex-col items-start pt-20 md:pt-0 justify-center text-start px-4 md:px-8 lg:px-12">
+        <div className="absolute inset-0 content flex flex-col items-start pt-20 md:pt-0 justify-center text-start">
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="text-primary-white text-mobile/h3 md:text-desktop/h3 font-bold drop-shadow-xl mb-3 sm:mb-4 max-w-full md:max-w-[850px] mx-auto md:mx-0 leading-tight"
+                    className="text-primary-white capitalize text-mobile/h3 md:text-desktop/h3 font-bold drop-shadow-xl mb-3 sm:mb-4 max-w-full md:max-w-[850px] mx-auto md:mx-0 leading-tight"
                 >
                     <span className="inline md:hidden">Experience Comfort with Our</span>
                     <span className="hidden md:inline">Experience Comfort & Convenience with Our <br /> </span>

@@ -13,7 +13,7 @@ const BenefitsCard = () => {
         <div>
             <section className="py-12 ">
                 <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold content text-start">Benifits</h2>
-                <div className="mt-8 grid grid-cols-2 content sm:grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="mt-8 grid grid-cols-2 content sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {featureItems.map((feature, index) => (
                         <div
                             key={index}

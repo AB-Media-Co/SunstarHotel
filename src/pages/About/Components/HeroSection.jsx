@@ -34,7 +34,7 @@ const HeroSection = ({ title, highlightText, description, imageSrc }) => {
                             );
                         })}
                     </h1>
-                    <p className="text-mobile/body/2 text-start md:text-desktop/body/large text-primary-white mb-6 whitespace-pre-line animation-on-scroll-Section1 leading-relaxed">
+                    <p className=" text-start  text-mobile/body/2 md:text-desktop/body/1 e text-primary-white mb-6 whitespace-pre-line animation-on-scroll-Section1 leading-relaxed">
                         {description}
                     </p>
                 </motion.div>

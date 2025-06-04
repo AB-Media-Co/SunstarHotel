@@ -15,6 +15,7 @@ const OtherPageLayout = ({
     heroImage = '',
     heroTitle = '',
     heroHighlightedText = '',
+    chooseUsHead = 'Why Choose Us',
 
     // Intro section
     introText = '',
@@ -47,8 +48,9 @@ const OtherPageLayout = ({
     children
 }) => {
     const { data: metas } = useGetMetas();
-    const pageMeta = metas?.find(meta => meta.page === pageType.toLowerCase().replace(/\s+/g, ''));
-
+    const pageMeta = Array.isArray(metas)
+        ? metas.find(meta => meta.page === pageType.toLowerCase().replace(/\s+/g, ''))
+        : null;
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -75,15 +77,38 @@ const OtherPageLayout = ({
                 </div>
                 <div className="mt-2 space-y-2">
                     <div className="flex items-center gap-2 text-gray-700 font-medium">
-                        <img src="/images/othericons/loc.svg" alt="" />
+                        <div className="w-6 h-6 flex items-center justify-center">  {/* Icon container */}
+                            <img
+                                src="/images/othericons/loc.svg"
+                                alt="Location"
+                                className="w-5 h-5 "  // object-contain prevents cutting
+                                style={{objectFit:"contain"}}
+                            />
+                        </div>
                         <span className="text-sm">{venue.location}</span>
                     </div>
+
                     <div className="flex items-center gap-2 text-gray-700 font-medium">
-                        <img src="/images/othericons/plate.svg" alt="" />
+                        <div className="w-6 h-6 flex items-center justify-center">
+                            <img
+                                src="/images/othericons/plate.svg"
+                                alt="Price per plate"
+                                className="w-5 h-5 object-contain"
+                                  style={{objectFit:"contain"}}
+                            />
+                        </div>
                         <span className="text-sm">Price per plate ₹ {venue.pricePerPlate}</span>
                     </div>
+
                     <div className="flex items-center gap-2 text-gray-700 font-medium">
-                        <img src="/images/othericons/people.svg" alt="" />
+                        <div className="w-6 h-6 flex items-center justify-center">
+                            <img
+                                src="/images/othericons/people.svg"
+                                alt="Capacity"
+                                className="w-5 h-5 object-contain"
+                                  style={{objectFit:"contain"}}
+                            />
+                        </div>
                         <span className="text-sm">{venue.capacity}</span>
                     </div>
                 </div>
@@ -107,12 +132,12 @@ const OtherPageLayout = ({
                     className="w-full h-[100vh] object-cover"
                 />
                 <div className="absolute inset-0 bg-black opacity-60"></div>
-                <div className="absolute inset-0 content flex flex-col items-start justify-center text-start px-4">
+                <div className="absolute inset-0 capitalize content flex flex-col items-start justify-center text-start px-4">
                     <h1 className="text-mobile/h3 md:text-desktop/h3 font-bold text-primary-white">
                         {heroTitle} <br />
                         <span className='text-[#F9BF02]'>{heroHighlightedText}</span>
                     </h1>
-                    
+
                     {anotherText}
                 </div>
             </header>
@@ -216,8 +241,8 @@ const OtherPageLayout = ({
             {/* Features Grid */}
             {featureItems.length > 0 && (
                 <section className="py-12 md:px-4">
-                    <h2 className="text-3xl font-bold content text-start">Why Choose Us</h2>
-                    <div className="mt-8 grid grid-cols-2 content sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <h2 className="text-3xl font-bold content text-start">{chooseUsHead}</h2>
+                    <div className="mt-8 grid grid-cols-2 content sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {featureItems.map((feature, index) => (
                             <div
                                 key={index}

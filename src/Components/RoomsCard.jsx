@@ -6,7 +6,7 @@ import { usePricing } from "../Context/PricingContext";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import Icon from "./Icons";
-
+import WarningIcon from '@mui/icons-material/Warning';
 const RoomsCard = ({ room }) => {
   const navigate = useNavigate();
   const { fetchRoomHotelDetails, selectedRooms, removeRoom, maxRoomSelection, setMaxRoomSelection } = usePricing();
@@ -57,7 +57,7 @@ const RoomsCard = ({ room }) => {
 
   return (
     <div className="bg-primary-white shadow-md rounded-lg overflow-hidden relative">
-      <div 
+      <div
         className="relative h-64 overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -65,18 +65,17 @@ const RoomsCard = ({ room }) => {
         <div
           className="absolute inset-0 bg-center bg-cover transition-all duration-700 ease-in-out"
           onClick={() => navigate(`/room/${room._id}`)}
-          style={{ 
+          style={{
             backgroundImage: `url(${room?.RoomImage[0] || "placeholder-image-url"})`,
             transform: isHovered ? 'scale(1.1)' : 'scale(1)',
           }}
         />
-        <div 
-        onClick={() => navigate(`/room/${room._id}`)}
-          className={`absolute cursor-pointer inset-0 bg-black transition-opacity duration-200 ease-in-out ${
-            isHovered ? 'opacity-20' : 'opacity-0'
-          }`}
+        <div
+          onClick={() => navigate(`/room/${room._id}`)}
+          className={`absolute cursor-pointer inset-0 bg-black transition-opacity duration-200 ease-in-out ${isHovered ? 'opacity-20' : 'opacity-0'
+            }`}
         />
-        
+
         {room?.Availability > 0 && room?.Availability <= 3 && (
           <span className="absolute top-6 right-0 bg-red-500 text-primary-white text-mobile/caption md:text-desktop/caption font-bold px-2 py-1 rounded-l-xl z-10">
             {room.Availability === 1 ? "1 Room Left" : `${room.Availability} Rooms Left`}
@@ -125,21 +124,32 @@ const RoomsCard = ({ room }) => {
               Sold Out
             </button>
           ) : (
-            <div className="flex items-center border border-primary-green rounded-lg px-2 py-1 gap-4">
+            <div className="flex items-center border border-primary-yellow rounded-lg px-2 py-2 gap-4">
               <button
-                className={`font-bold  text-primary-green ${
-                  roomCount === 0 ? "opacity-50 cursor-not-allowed" : "hover:text-primary-dark-green"
-                }`}
+                className={`font-bold  text-primary-yellow cursor-pointer ${roomCount === 0 ? "opacity-50 cursor-not-allowed hidden" : ""
+                  }`}
                 onClick={handleRemoveRoom}
-                disabled={roomCount === 0}
+              // disabled={roomCount === 0}
               >
                 <RemoveIcon />
               </button>
-              <span className="font-semibold w-[65px] text-primary-dark-green">
-                {roomCount} {roomCount === 1 ? "Room" : "Rooms"}
-              </span>
+              {roomCount === 0 ? (
+                <>
+                  <span className="font-semibold  text-primary-yellow cursor-pointer" onClick={handleAddRoom} >
+                    Add Room
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="font-semibold w-[65px] text-primary-yellow" >
+
+                    {roomCount} {roomCount === 1 ? "Room" : "Rooms"}
+                  </span></>
+              )
+              }
+
               <button
-                className=" font-bold  text-primary-green hover:text-primary-dark-green"
+                className={`font-bold  text-primary-yellow cursor-pointer ${roomCount === 0 ? "hidden" : ""} `}
                 onClick={handleAddRoom}
               >
                 <AddIcon />
@@ -147,24 +157,35 @@ const RoomsCard = ({ room }) => {
             </div>
           )}
         </div>
-      </div>
+      </div >
 
       {showMaxAlert && (
-        <div className="absolute top-[16rem] right-0 z-10 bg-white border border-gray-300 px-2 py-4 rounded-md shadow-md w-64">
-          <p className="text-gray-800 text-sm font-medium">
-            Maximum of {maxRoomSelection} {maxRoomSelection === 1 ? "room" : "rooms"} allowed.
-          </p>
-          <div className="flex items-center justify-end gap-2 mt-2">
+        <div className="absolute top-[11rem] right-1 z-10 bg-white border border-gray-300 px-4 py-5 rounded-md shadow-md w-72">
+          <div className="flex items-start mb-3 gap-2">
+            <WarningIcon className="text-primary-yellow"/>
+            <p className="text-gray-500 text-xs">
+              Booking limit reached. Maximum of {maxRoomSelection} {maxRoomSelection === 1 ? "room" : "rooms"} per reservation.
+              Please complete your current booking or adjust your selection to proceed.
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 mt-1 border-t pt-3">
+            <button
+              onClick={() => window.location.href = "/booking-form"}
+              className="py-1.5 px-3 text-sm font-medium text-primary-yellow rounded-md hover:bg-blue-50 transition-colors"
+            >
+              Book More
+            </button>
             <button
               onClick={handleDismissAlert}
-              className="px-2 py-1 bg-gray-200 text-sm rounded-md hover:bg-gray-300 transition-colors"
+              className="py-1.5 px-3 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors"
             >
               Dismiss
             </button>
           </div>
         </div>
       )}
-    </div>
+    </div >
   );
 };
 

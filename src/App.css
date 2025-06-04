@@ -204,7 +204,7 @@
 
 @media screen and (min-width: 768px) {
   .testiM .swiper-slide {
-    width: 450px !important;
+    width: 397px !important;
   }
 
 }
@@ -394,7 +394,7 @@ padding-top: 5px;
   .calendar-container {
     /* padding: 1rem; */
     align-items: flex-start;
-    padding-top: 3rem;
+    padding-top: 1rem;
   }
 }
 
@@ -532,3 +532,30 @@ padding-top: 5px;
 }
 
 
+
+
+
+/* Masonry Grid Styles */
+.my-masonry-grid {
+  display: flex;
+  margin-left: -1rem; /* gutter size offset */
+  width: auto;
+}
+.my-masonry-grid_column {
+  padding-left: 1rem; /* gutter size */
+  background-clip: padding-box;
+}
+
+/* Add bottom margin to each item */
+.my-masonry-grid_column > div {
+  margin-bottom: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}

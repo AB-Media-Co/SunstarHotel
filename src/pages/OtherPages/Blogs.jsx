@@ -32,20 +32,59 @@ const Blogs = () => {
   }, []);
   
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]); 
+  const [selectedCategories, setSelectedCategories] = useState([]);
   
-  // First, get all blogs to determine available categories
+  // Get all blogs
   const { data: allBlogs, isLoading: loadingAllBlogs } = useGetBlogs("", "");
   
-  // Then, get filtered blogs based on search and selected categories
-  const { data: filteredBlogs, isLoading: loadingFilteredBlogs, error } = useGetBlogs(
-    searchQuery, 
-    selectedCategories.join(',')
-  );
+  // Handle filtering locally rather than relying on the API
+  const [isFiltering, setIsFiltering] = useState(false);
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
   
-  // Use either the filtered blogs or all blogs for display
-  const displayBlogs = selectedCategories.length > 0 || searchQuery ? filteredBlogs : allBlogs;
-  const isLoading = loadingAllBlogs || loadingFilteredBlogs;
+  // Filter blogs locally
+  useEffect(() => {
+    if (!allBlogs?.data) return;
+    
+    setIsFiltering(true);
+    
+    try {
+      // Start with all blogs
+      let results = [...allBlogs.data];
+      
+      // Apply search filter if provided
+      if (searchQuery) {
+        const searchLower = searchQuery.toLowerCase();
+        results = results.filter(blog => 
+          blog.title?.toLowerCase().includes(searchLower) || 
+          blog.content?.toLowerCase().includes(searchLower) ||
+          blog.category?.toLowerCase().includes(searchLower)
+        );
+      }
+      
+      // Apply category filters if any are selected
+      if (selectedCategories.length > 0) {
+        results = results.filter(blog => 
+          selectedCategories.includes(blog.category)
+        );
+      }
+      
+      setFilteredBlogs(results);
+    } catch (err) {
+      console.error("Error filtering blogs:", err);
+    } finally {
+      setIsFiltering(false);
+    }
+  }, [allBlogs, searchQuery, selectedCategories]);
+  
+  // Determine which blogs to display
+  const displayBlogs = {
+    data: (selectedCategories.length > 0 || searchQuery) 
+      ? filteredBlogs 
+      : allBlogs?.data
+  };
+  
+  const isLoading = loadingAllBlogs || isFiltering;
+  const error = null; // No longer using API error
   
   const navigate = useNavigate();
 
@@ -146,6 +185,29 @@ const Blogs = () => {
       {/* Cards Section */}
       <div className="bg-white">
         <section className="py-16 content mx-auto px-4">
+          {/* {selectedCategories.length > 0 && (
+            <div className="mb-4 flex flex-wrap gap-2">
+              <span className="font-semibold">Filtered by:</span>
+              {selectedCategories.map(cat => (
+                <span key={cat} className="px-3 py-1 bg-gray-200 rounded-full text-sm flex items-center">
+                  {cat}
+                  <button 
+                    onClick={() => setSelectedCategories(prev => prev.filter(c => c !== cat))}
+                    className="ml-2 text-gray-500 hover:text-gray-700"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+              <button 
+                onClick={() => setSelectedCategories([])}
+                className="text-blue-600 hover:underline text-sm ml-2"
+              >
+                Clear all
+              </button>
+            </div>
+          )} */}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayBlogs?.data?.map((blog) => (
               <div
@@ -169,6 +231,11 @@ const Blogs = () => {
                   <h2 className="text-white text-lg md:text-xl font-bold">
                     {blog.title}
                   </h2>
+                  {blog.category && (
+                    <span className="text-white text-sm bg-primary-dark-green px-2 py-1 rounded-full mt-2 inline-block">
+                      {blog.category}
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
@@ -183,7 +250,9 @@ const Blogs = () => {
             (!displayBlogs?.data || displayBlogs.data.length === 0) && (
               <div className="text-center py-12">
                 <p className="text-gray-600 text-lg">
-                  No blogs available at the moment. Check back later!
+                  {selectedCategories.length > 0 || searchQuery 
+                    ? "No blogs available for the selected filters. Try different categories or search terms."
+                    : "No blogs available at the moment. Check back later!"}
                 </p>
               </div>
             )

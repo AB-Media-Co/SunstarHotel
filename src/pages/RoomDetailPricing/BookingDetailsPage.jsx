@@ -11,6 +11,8 @@ import GuestDetailsForm from "./BookingDetailPageComponent/GuestDetailsForm";
 import { HotelDetailsCard } from "./BookingDetailPageComponent/HotelDetailsCard";
 import { usePricing } from "../../Context/PricingContext";
 import { Helmet } from "react-helmet";
+import { HeaderHotel } from "./BookingDetailPageComponent/HeaderHotel";
+import { ArrowBackIosNew, ForkLeftOutlined } from "@mui/icons-material";
 
 const calculateDays = (checkIn, checkOut) => {
   if (!checkIn || !checkOut) return 0;
@@ -22,7 +24,7 @@ const calculateDays = (checkIn, checkOut) => {
 
 const BookingDetailsPage = () => {
   const { ContactUsDetail } = useUpdatePagesHook();
-  const { details, hotelData } = usePricing(); 
+  const { details, hotelData } = usePricing();
   const hotelDetail = details[0];
   const navigate = useNavigate();
 
@@ -72,19 +74,49 @@ const BookingDetailsPage = () => {
   }
 
   return (
-    <div className="p-4 content md:flex gap-5">
-      <div className="flex flex-col gap-8">
-        <Helmet>
-          <title>Booking Details</title>
-          <meta name="" content={``} />
-          <meta name="" content={``} />
-        </Helmet>
-        <HotelDetailsCard />
-        {/* Render GuestDetailsForm once and pass its ref */}
-        <GuestDetailsForm ref={guestFormRef} />
-        {hotelDetail.addToYourStay.length > 0 && <AddToYourStayOptions data={hotelDetail} />}
-        <OfferCode hotelDetail={hotelDetail}  checkIn={checkIn} />
-        <div className="lg:hidden">
+    <div className="md:p-4 md:pb-0  bg-primary-green">
+      <Helmet>
+        <title>Booking Details</title>
+        <meta name="" content={``} />
+        <meta name="" content={``} />
+      </Helmet>
+      <div className="content flex items-center gap-2 py-4 md:py-10 text-mobile/h1 md:text-desktop/h2 text-white">
+        <button
+          onClick={() => navigate(-1)}
+        
+          aria-label="Go back"
+        >
+          <ArrowBackIosNew className="text-white" style={{ height: "35px", width: "35px" }} />
+        </button>
+        <span>Booking Details</span>
+      </div>
+      <div className="md:flex gap-5 content  bg-white rounded-t-3xl">
+        <div className="flex flex-col md:px-8 md:py-10 gap-8">
+
+          <HeaderHotel />
+          <HotelDetailsCard />
+          {/* Render GuestDetailsForm once and pass its ref */}
+          <GuestDetailsForm ref={guestFormRef} />
+          {hotelDetail.addToYourStay.length > 0 && <AddToYourStayOptions data={hotelDetail} />}
+          <OfferCode hotelDetail={hotelDetail} checkIn={checkIn} />
+          <div className="lg:hidden">
+            <ReservationSummarySidebar
+              hotelDetail={hotelDetail}
+              checkIn={checkIn}
+              checkOut={checkOut}
+              days={days}
+              showButton={showButton}
+              isPaymentVisible={isPaymentVisible}
+            />
+          </div>
+          {/* Pass the guestFormRef to PaymentMethod */}
+          <PaymentMethod hotelDetail={hotelDetail} guestFormRef={guestFormRef}
+            checkIn={checkIn}
+            checkOut={checkOut}
+          />
+          <Footer ContactUsDetail={ContactUsDetail} />
+        </div>
+        <div className="hidden md:px-8 py-10  lg:block">
           <ReservationSummarySidebar
             hotelDetail={hotelDetail}
             checkIn={checkIn}
@@ -94,22 +126,6 @@ const BookingDetailsPage = () => {
             isPaymentVisible={isPaymentVisible}
           />
         </div>
-        {/* Pass the guestFormRef to PaymentMethod */}
-        <PaymentMethod hotelDetail={hotelDetail} guestFormRef={guestFormRef} 
-          checkIn={checkIn}
-          checkOut={checkOut}
-        />
-        <Footer ContactUsDetail={ContactUsDetail} />
-      </div>
-      <div className="hidden lg:block">
-        <ReservationSummarySidebar
-          hotelDetail={hotelDetail}
-          checkIn={checkIn}
-          checkOut={checkOut}
-          days={days}
-          showButton={showButton}
-          isPaymentVisible={isPaymentVisible}
-        />
       </div>
     </div>
   );

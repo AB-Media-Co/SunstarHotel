@@ -3,7 +3,7 @@ import {
   TextField,
   Button,
   Box,
-  Typography,
+  
   Dialog,
   DialogTitle,
   DialogContent,
@@ -14,7 +14,6 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import useUpdatePagesHook from '../../../../ApiHooks/useUpdatePagesHook';
 import { uploadImagesAPIV2 } from '../../../../ApiHooks/useHotelHook2';
-import ImageUpload from '../../../Components/ImageUpload';
 
 const EditHomePageData = () => {
   const {
@@ -39,9 +38,7 @@ const EditHomePageData = () => {
   const [openModal, setOpenModal] = useState(false);
   // States for image handling (for Hero Section)
   const [imageFile, setImageFile] = useState(null);
-  const [uploadResponse, setUploadResponse] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [imageUpload, setImageUpload] = useState(false);
+
 
   // Initialize hero section data
   useEffect(() => {
@@ -51,9 +48,7 @@ const EditHomePageData = () => {
         description: heroSectionUpdate.description || '',
         image: heroSectionUpdate.image || '',
       });
-      if (heroSectionUpdate.image) {
-        setImagePreview(heroSectionUpdate.image);
-      }
+  
     }
   }, [heroSectionUpdate]);
 
@@ -85,16 +80,6 @@ const EditHomePageData = () => {
     }));
   };
 
-  // Handler for image updates from the ImageUpload component
-  const handleFeatureChange = (field, value) => {
-    setHeroFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-    if (field === 'image') {
-      setImagePreview(value);
-    }
-  };
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -104,7 +89,6 @@ const EditHomePageData = () => {
     setOpenModal(false);
     // Reset image-related state if needed
     setImageFile(null);
-    setUploadResponse(null);
   };
 
   // Combined save handler
@@ -115,7 +99,6 @@ const EditHomePageData = () => {
       if (imageFile) {
         const response = await uploadImagesAPIV2([imageFile]);
         updatedHeroData.image = response.url; // Assuming response contains a url property
-        setUploadResponse(response);
       }
 
       // Call both APIs
@@ -178,41 +161,13 @@ const EditHomePageData = () => {
               rows={4}
             />
 
-            {/* Image Preview & Upload */}
-            {/* {imagePreview && (
-              <Box sx={{ mt: 2, mb: 2, textAlign: 'start', }}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Image Preview:
-                </Typography>
-                <Box
-                  component="img"
-                  src={imagePreview}
-                  alt="Preview"
-                  sx={{
-                    maxWidth: '100%',
-                    maxHeight: 150,
-                    borderRadius: 2,
-                    objectFit: 'cover',
-                    border: '1px solid #ccc',
-                  }}
-                />
-              </Box>
-            )} */}
-            {/* <ImageUpload
-              feature={heroFormData}
-              handleFeatureChange={handleFeatureChange}
-              setImageUpload={setImageUpload}
-              setImageFile={setImageFile} // pass this if your ImageUpload component accepts it
-            /> */}
           </Box>
 
           <Divider />
 
           {/* Home Page Description Inputs */}
           <Box >
-            {/* <Typography variant="h6" gutterBottom>
-              
-            </Typography> */}
+            
             <h1 className='text-desktop/h4 py-4'> Home Page Description</h1>
 
             <TextField
@@ -241,7 +196,7 @@ const EditHomePageData = () => {
           <Button onClick={handleCloseModal} variant="outlined">
             Cancel
           </Button>
-          <Button onClick={handleSaveClick} variant="contained" disabled={imageUpload}>
+          <Button onClick={handleSaveClick} variant="contained">
             Save
           </Button>
         </DialogActions>

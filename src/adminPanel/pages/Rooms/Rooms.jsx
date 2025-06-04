@@ -105,8 +105,12 @@ export const Rooms = () => {
 
   const handleToggleShow = (roomId, newShowStatus) => {
     // Update the room's show status in the state
-    const updatedRoom = roomArray.find((room) => room._id === roomId);
-    updatedRoom.show = newShowStatus;
+    const updatedRoom = Array.isArray(roomArray) && roomArray.length > 0
+      ? roomArray.find((room) => room && room._id === roomId)
+      : null;
+    
+    if (!updatedRoom) return; // Return early if room not found
+      updatedRoom.show = newShowStatus;
 
     updateRoomMutation.mutate(updatedRoom); // Call mutation to update in database
   };
@@ -126,9 +130,10 @@ export const Rooms = () => {
                     label="Select Hotel"
                     onChange={(e) => {
                       setSelectedHotel(e.target.value);
-                      const selected = filteredHotels?.find(
-                        (hotel) => String(hotel.hotelCode) === e.target.value
-                      );
+                      const selected = Array.isArray(filteredHotels)
+                      ? filteredHotels.find((hotel) => String(hotel.hotelCode) === e.target.value)
+                      : null;
+                    
                       if (selected) {
                         setAuthCode(selected.authKey);
                       }

@@ -19,7 +19,7 @@ const TestimonialSection = ({ backgroundImage, Testimonials }) => {
             {item?.heading || item?.name}
           </h3>
           <p className="text-mobile/body/2 md:text-desktop/body/1 text-gray-600 flex-grow">
-            {item.description.split(' ').length > 20 
+            {item.description.split(' ').length > 20
               ? item.description.split(' ').slice(0, 20).join(' ') + '...'
               : item.description
             }
@@ -37,27 +37,24 @@ const TestimonialSection = ({ backgroundImage, Testimonials }) => {
               </p>
             </div>
           </div>
-         
+
         </div>
       </motion.div>
     );
   };
 
   return (
-    <div
-      className="w-full py-10"
-      style={{
-        backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
-        backgroundPosition: "top",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-      }}
-    >
+    <div className="w-full relative py-10">
+      {/* Background Image Behind Content */}
+      <div className="absolute inset-0 -z-10">
+        <img src={backgroundImage} alt="" className="w-full h-full object-cover" />
+      </div>
+  
       <div className="content flex flex-col relative overflow-hidden container mx-auto">
-        <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold  text-gray-900  text-start">
+        <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-900 text-start">
           {Testimonials?.clientHeading ? Testimonials?.clientHeading : "Testimonials"}
         </h2>
-
+  
         <CommonSwiper
           items={Testimonials?.clients ? Testimonials?.clients : Testimonials}
           renderItem={renderItem}
@@ -70,6 +67,7 @@ const TestimonialSection = ({ backgroundImage, Testimonials }) => {
       </div>
     </div>
   );
+  
 };
 
 export default TestimonialSection;

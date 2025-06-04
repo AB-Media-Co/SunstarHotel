@@ -34,6 +34,29 @@ const HotelCard = ({ hotel, close }) => {
     });
   };
 
+
+  const renderRatingStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating - fullStars >= 0.5;
+
+    return (
+      <div className="flex items-center">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            className={`${i < fullStars
+              ? 'text-yellow-400'
+              : (i === fullStars && hasHalfStar)
+                ? 'text-yellow-400 opacity-60'
+                : 'text-gray-300'}`}
+            style={{ fontSize: "16px" }}
+          />
+        ))}
+        {/* <span className="ml-1 text-sm font-medium text-gray-700">{rating}</span> */}
+      </div>
+    );
+  };
+
   return (
     <motion.div
       className="bg-primary-white rounded-2xl shadow-lg overflow-hidden w-full h-full transition-transform duration-300 hover:scale-105 flex flex-col"
@@ -44,12 +67,16 @@ const HotelCard = ({ hotel, close }) => {
       <img src={hotel?.images[0]} alt={hotel.name} onClick={handleClick} className="w-full h-48 object-cover cursor-pointer transition-transform duration-500 ease-in-out hover:scale-110" />
       <div className="p-4 flex flex-col flex-grow justify-between">
         <div>
-          <div className="flex justify-between items-start gap-4">
+          <div className="flex justify-between items-center gap-4">
             <h1 className="text-xl  text-start font-bold text-black cursor-pointer hover:text-primary-green   transition-colors duration-300"  onClick={handleClick}>{hotel?.name}</h1>
-            <span className="bg-primary-green text-primary-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
+            {/* <span className="bg-primary-green text-primary-white text-xs font-semibold px-2 py-1 rounded-full flex items-center">
               <Star className="text-primary-yellow text-sm mr-1" />
               {hotel.rating}
-            </span>
+            </span> */}
+
+            {renderRatingStars(hotel.rating)}
+
+            
           </div>
           <ul className="flex items-center mt-2 flex-wrap">
             {visibleAmenities.length > 0 ? (

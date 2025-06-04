@@ -241,6 +241,23 @@ const ManageBlogs = () => {
         },
     }));
 
+
+
+    const parseLinksInDescription = (text) => {
+        const urlRegex = /(?:https?:\/\/[^\s]+|\/[^\s]+)/g;
+    
+        return text.split(' ').map((word, index) => {
+            if (urlRegex.test(word)) {
+                return (
+                    <a href={word} target="_blank" rel="noopener noreferrer" key={index}>
+                        {word}
+                    </a>
+                );
+            }
+            return word + ' ';
+        });
+    };
+
     return (
         <>
             <div className="mx-auto pt-10">
@@ -291,9 +308,9 @@ const ManageBlogs = () => {
                                                 }}
                                             >
                                                 {/* {blog.description} */}
-                                                {blog.description.split(' ').length > 50
+                                                {parseLinksInDescription(blog.description.split(' ').length > 50
                                                     ? blog.description.split(' ').slice(0, 50).join(' ') + '...'
-                                                    : blog.description
+                                                    : blog.description)
                                                 }
                                             </Typography>
                                             {blog.image && (

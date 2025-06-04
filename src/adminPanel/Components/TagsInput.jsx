@@ -40,7 +40,7 @@ const TagsInput = ({ setAmmenities }) => {
       return true;
     }
 
-    const index = tags.findIndex((tag) => tag === newTag);
+    const index = tags?.findIndex((tag) => tag === newTag);
     return index !== -1;
   };
 

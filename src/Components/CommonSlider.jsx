@@ -22,6 +22,7 @@ const CommonSwiper = ({
   speed = 500,
   effect = 'slide', // 'slide' or 'fade'
   showPagination = true,
+  swiperh = "",
   breakpoints,
   onSlideChange,
   allowTouchMove = true,
@@ -215,7 +216,7 @@ const CommonSwiper = ({
         breakpoints={breakpoints || defaultBreakpoints}
         spaceBetween={spaceBetween}
         loop={loop && shouldShowNavigation}
-        className="mySwiper"
+        className={`mySwiper ${swiperh}`}
         onSwiper={handleSwiperInit}
         onSlideChange={handleSlideChangeInternal}
         allowTouchMove={allowTouchMove}
@@ -226,7 +227,7 @@ const CommonSwiper = ({
         resizeObserver={true}
       >
         {items.map((item, index) => (
-          <SwiperSlide className="md:p-2" key={index}>
+          <SwiperSlide className="md:p-2 " key={index}>
             {renderItem(item, index, currentSlide === index)}
           </SwiperSlide>
         ))}

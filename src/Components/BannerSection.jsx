@@ -15,6 +15,8 @@ const BannerSection = ({
     ctaLink,
 }) => {
 
+    
+
     useEffect(() => {
         Aos.init({
           duration: 1000,
@@ -32,7 +34,7 @@ const BannerSection = ({
                         {data?.title ?? "About Us"}
                     </h1>
                     <p
-                        className={`text-${textC} ${ptext} animate-fade-in  leading-relaxed tracking-wide  `}
+                        className={`text-${textC} ${ptext} animate-fade-in whitespace-pre-line  leading-relaxed tracking-wide  `}
                         // style={{ animationDelay: "200ms" }}
                     >
                         {data?.description ?? "We are a company dedicated to excellence."}

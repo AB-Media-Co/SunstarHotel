@@ -18,6 +18,9 @@ const Navbar = () => {
   const { isHotelModalOpen, openHotelModal, closeHotelModal } = usePricing();  
   const [active, setActive] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Check if current path starts with "/hotels"
+  const isHotelsPath = location.pathname.startsWith("/hotels");
 
   // Updated navItems using context function for Hotels
   const navItems = [
@@ -102,10 +105,12 @@ const Navbar = () => {
               ))}
             </ul>
 
-            {/* Book Now Button */}
-            <button className="bg-primary-yellow px-11 py-2 text-black font-bold rounded-full md:ml-4 hidden md:block">
-              Pay Now
-            </button>
+            {/* Pay Now Button - Only show when path starts with "/hotels" */}
+            {isHotelsPath && (
+              <button className="bg-primary-yellow px-11 py-2 text-black font-bold rounded-full md:ml-4 hidden md:block">
+                Pay Now
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -197,9 +202,12 @@ const Navbar = () => {
                   </a>
                 </div>
 
-                <button className="mt-6 bg-primary-yellow text-primary-green px-6 py-3 w-full rounded-lg font-bold relative">
-                  Pay Now
-                </button>
+                {/* Mobile Pay Now Button - Only show when path starts with "/hotels" */}
+                {isHotelsPath && (
+                  <button className="mt-6 bg-primary-yellow text-primary-green px-6 py-3 w-full rounded-lg font-bold relative">
+                    Pay Now
+                  </button>
+                )}
               </div>
             </div>
           </div>

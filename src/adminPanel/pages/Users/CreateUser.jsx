@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useAdminRegister } from '../../../ApiHooks/useAdminHooks';
 import { useGetHotels } from '../../../ApiHooks/useHotelHook2';
 import toast from 'react-hot-toast';
-import { 
-  Container, Box, Grid, TextField, Select, MenuItem, FormControl, 
+import {
+  Container, Box, Grid, TextField, Select, MenuItem, FormControl,
   InputLabel, Button, Typography, Divider, CircularProgress,
-  Paper, Stepper, Step, StepLabel, Card, CardContent, Avatar, 
+  Paper, Stepper, Step, StepLabel, Card, CardContent, Avatar,
   Chip, Tooltip, IconButton
 } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -92,7 +92,7 @@ export const CreateUser = () => {
           </Avatar>
           <Typography variant="h6">Basic Information</Typography>
         </Box>
-        
+
         <TextField
           fullWidth
           label="Username"
@@ -149,7 +149,7 @@ export const CreateUser = () => {
           </Avatar>
           <Typography variant="h6">Personal Details</Typography>
         </Box>
-        
+
         <Grid container spacing={2}>
           <Grid item xs={12} md={12}>
             <FormControl fullWidth variant="outlined">
@@ -200,7 +200,7 @@ export const CreateUser = () => {
           </Avatar>
           <Typography variant="h6">Role & Security</Typography>
         </Box>
-        
+
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <FormControl fullWidth variant="outlined">
@@ -252,7 +252,7 @@ export const CreateUser = () => {
           </Avatar>
           <Typography variant="h6">Access Control</Typography>
         </Box>
-        
+
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <TextField
@@ -280,13 +280,15 @@ export const CreateUser = () => {
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((value) => {
-                      const hotel = hotels?.hotels?.find(h => h._id === value);
+                      const hotel = Array.isArray(hotels?.hotels)
+                        ? hotels.hotels.find(h => h._id === value)
+                        : null;
                       return (
-                        <Chip 
-                          key={value} 
-                          label={hotel?.name || value} 
-                          size="small" 
-                          color="primary" 
+                        <Chip
+                          key={value}
+                          label={hotel?.name || value}
+                          size="small"
+                          color="primary"
                           variant="outlined"
                         />
                       );
@@ -367,7 +369,7 @@ export const CreateUser = () => {
             >
               Back
             </Button>
-            
+
             {activeStep === steps.length - 1 ? (
               <Button
                 type="submit"
