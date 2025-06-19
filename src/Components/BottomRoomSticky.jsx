@@ -6,7 +6,6 @@ import { FlashOnRounded } from "@mui/icons-material";
 const BottomRoomSticky = () => {
   const navigate = useNavigate();
   const { details, selectedRooms, setEditAddPricing, finalPrice, nights } = usePricing();
-  console.log(details)
   const [isVisible, setIsVisible] = useState(false);
 
   const isRooomHidden = location.pathname.startsWith("/room");
@@ -22,8 +21,6 @@ const BottomRoomSticky = () => {
     setEditAddPricing(false);
     navigate("/room/details");
   };
-
-
 
   const days = parseInt(localStorage.getItem("days"), 10) || nights; // Fallback to context nights
   const totalPrice = finalPrice * days;

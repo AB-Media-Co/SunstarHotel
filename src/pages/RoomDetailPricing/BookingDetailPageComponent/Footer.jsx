@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
 
 export const Footer = ({ ContactUsDetail }) => (
-    <div className="flex flex-col gap-6 md:gap-10 md:flex-row justify-between md:items-center text-gray-600 px-4 py-6">
+    <div className="flex flex-col gap-6 md:gap-10 md:flex-row justify-between md:items-center text-gray-600  py-6">
         <div className="flex flex-col gap-3 md:gap-4">
             <p className="text-lg md:text-2xl font-bold tracking-tight">Facing an Issue? Call us for assistance.</p>
             <a

@@ -1,17 +1,14 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import {
+  Card, CardMedia, CardContent, CardActions,
+  Typography, Button, Box, Switch
+} from '@mui/material';
+import { styled, keyframes } from '@mui/system';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
-import { Switch } from '@mui/material';
-import { keyframes } from '@mui/system';
-import { styled } from '@mui/material/styles';
+import HotelIcon from '@mui/icons-material/Hotel';
 import Loader from '../../../Components/Loader';
 
 const fadeIn = keyframes`
@@ -40,21 +37,21 @@ const RoomCard = ({ room, onEdit, onToggleShow }) => {
   const [isChecked, setIsChecked] = useState(room.show);
   const [showOverlay, setShowOverlay] = useState(false);
   const [countdown, setCountdown] = useState(5);
-  let timer;
-
-  if (showOverlay) {
-    timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          setShowOverlay(false);
-          return 5;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  }
 
   useEffect(() => {
+    let timer;
+    if (showOverlay) {
+      timer = setInterval(() => {
+        setCountdown(prev => {
+          if (prev <= 1) {
+            setShowOverlay(false);
+            clearInterval(timer);
+            return 5;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
     return () => clearInterval(timer);
   }, [showOverlay]);
 
@@ -65,30 +62,27 @@ const RoomCard = ({ room, onEdit, onToggleShow }) => {
     onToggleShow(room._id, !isChecked);
   };
 
-  const truncateDescription = (description, limit = 15) => {
-    if (!description) return '';
-    const words = description.split(' ');
-    if (words.length <= limit) return description;
-    return words.slice(0, limit).join(' ') + '...';
+  const truncateDescription = (desc, limit = 15) => {
+    if (!desc) return '';
+    const words = desc.split(' ');
+    return words.length <= limit ? desc : words.slice(0, limit).join(' ') + '...';
   };
-  
 
   return (
-    <Card
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        position: 'relative',
-        width: '300px', // Adjust width for card size
-        margin: '10px', // Space between cards
-      }}
-    >
-      {/* Toggle Button to Control Room Visibility */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 1 }}>
-        <Typography variant="body2" color="text.secondary">
-          Show Room:
-        </Typography>
+    <Card sx={{
+      width: 320,
+      margin: 2,
+      display: 'flex',
+      flexDirection: 'column',
+      borderRadius: 3,
+      boxShadow: 4,
+      overflow: 'hidden',
+      transition: 'transform 0.3s ease',
+      '&:hover': { transform: 'scale(1.02)' }
+    }}>
+      {/* Toggle Visibility */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1 }}>
+        <Typography variant="body2">Show Room:</Typography>
         <Switch checked={isChecked} onChange={handleToggleChange} />
       </Box>
 
@@ -98,100 +92,98 @@ const RoomCard = ({ room, onEdit, onToggleShow }) => {
           <Typography variant="h6" sx={{ mb: 1 }}>
             {isChecked ? 'Showing Room' : 'Hiding Room'}
           </Typography>
-          <Typography variant="body1">
-            Please wait {countdown} seconds...
-          </Typography>
+          <Typography variant="body1">Please wait {countdown} seconds...</Typography>
         </OverlayContainer>
       )}
 
-      {/* Image Section */}
-      <Box sx={{ height: 180, backgroundColor: 'grey.300' }}>
-        {room.RoomImage && room.RoomImage.length > 0 ? (
+      {/* Image */}
+      <Box sx={{ height: 180, backgroundColor: 'grey.200' }}>
+        {room.RoomImage?.[0] ? (
           <CardMedia
             component="img"
             image={room.RoomImage[0]}
             alt={room.RoomName}
-            sx={{
-              height: '100%',
-              objectFit: 'cover',
-            }}
+            sx={{ height: '100%', objectFit: 'cover' }}
           />
         ) : (
-          <Box
-            sx={{
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'grey.300',
-            }}
-          >
-            <Typography variant="caption" color="text.secondary">
-              No Image
-            </Typography>
+          <Box sx={{
+            height: '100%', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', backgroundColor: 'grey.300'
+          }}>
+            <Typography variant="caption">No Image Available</Typography>
           </Box>
         )}
       </Box>
 
-      {/* Card Content */}
-      <CardContent sx={{ flexGrow: 1, padding: 2 }}>
-        <Typography gutterBottom variant="h6" component="div">
-          {room.RoomName || 'Unknown Room'}
+      {/* Content */}
+      <CardContent sx={{ flexGrow: 1, p: 2 }}>
+        <Typography variant="h6" fontWeight={600}>
+          {room.RoomName || 'Unnamed Room'}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {truncateDescription(room.RoomDescription, 15)}
+          {truncateDescription(room.RoomDescription)}
         </Typography>
 
-        {/* Extra Room Details */}
-        <Box sx={{ mt: 2 }}>
+        {/* Room Info */}
+        <Box sx={{ mt: 2, display: 'grid', gap: 1 }}>
           {room.maxGuests && (
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-              <PeopleAltIcon fontSize="small" sx={{ mr: 0.5 }} />
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <PeopleAltIcon sx={{ fontSize: 18, mr: 0.5 }} />
               <Typography variant="body2">Max Guests: {room.maxGuests}</Typography>
             </Box>
           )}
           {room.squareFeet && (
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-              <SquareFootIcon fontSize="small" sx={{ mr: 0.5 }} />
-              <Typography variant="body2">Square Feet: {room.squareFeet}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <SquareFootIcon sx={{ fontSize: 18, mr: 0.5 }} />
+              <Typography variant="body2">Area: {room.squareFeet} sq.ft</Typography>
             </Box>
           )}
-          {room.services && room.services.length > 0 && (
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-              <RoomServiceIcon fontSize="small" sx={{ mr: 0.5 }} />
-              <Typography variant="body2">
-                Services: {room.services.join(', ')}
-              </Typography>
+          {room.Availability !== undefined && (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <HotelIcon sx={{ fontSize: 18, mr: 0.5 }} />
+              <Typography variant="body2">Available Rooms: {room.Availability}</Typography>
+            </Box>
+          )}
+          {room.services?.length > 0 && (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <RoomServiceIcon sx={{ fontSize: 18, mr: 0.5 }} />
+              <Typography variant="body2">Services: {room.services.join(', ')}</Typography>
             </Box>
           )}
         </Box>
       </CardContent>
 
-      {/* Card Actions (Price and Edit Button) */}
-      <CardActions sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}>
+      {/* Footer */}
+      <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
         <Box>
-          <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-            ₹ {room.defaultRate}
-          </Typography>
-          <Typography variant="subtitle1" color="success.main">
+          {room.defaultRate && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ textDecoration: 'line-through' }}
+            >
+              ₹ {room.defaultRate}
+            </Typography>
+          )}
+          <Typography variant="subtitle1" color="success.main" fontWeight={600}>
             ₹ {room.discountRate}
           </Typography>
         </Box>
-        <Box>
-          <Button size="small" variant="contained" onClick={() => onEdit(room)}>
-            Edit
-          </Button>
-        </Box>
+        <Button variant="outlined" onClick={() => onEdit(room)}>Edit</Button>
       </CardActions>
     </Card>
   );
 };
 
 const RoomCardList = ({ room, onEdit, onToggleShow }) => {
-  console.log(room)
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-     
+    <Box sx={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      px: 2,
+      py: 4
+    }}>
       <RoomCard
         key={room._id}
         room={room}

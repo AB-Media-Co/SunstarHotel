@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Box, Grid, FormControl, InputLabel, Select, MenuItem, TextField, CircularProgress } from '@mui/material';
+import { Container, Box, Grid, FormControl, InputLabel, Select, MenuItem, TextField, CircularProgress, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { useGetHotels } from '../../../ApiHooks/useHotelHook2';
 import { useRooms, useUpdateRoom } from '../../../ApiHooks/useRoomsHook';
@@ -90,16 +90,7 @@ export const Rooms = () => {
         },
       });
     } else {
-      // createRoomMutation.mutate(updatedRoom, {
-      //   onSuccess: () => {
-      //     setEditingRoom(null);
-      //     setIsRoomSaving(false);
-      //   },
-      //   onError: (error) => {
-      //     console.error('Error creating room:', error);
-      //     setIsRoomSaving(false);
-      //   },
-      // });
+      // Create a new room object
     }
   };
 
@@ -108,76 +99,75 @@ export const Rooms = () => {
     const updatedRoom = Array.isArray(roomArray) && roomArray.length > 0
       ? roomArray.find((room) => room && room._id === roomId)
       : null;
-    
+
     if (!updatedRoom) return; // Return early if room not found
-      updatedRoom.show = newShowStatus;
+    updatedRoom.show = newShowStatus;
 
     updateRoomMutation.mutate(updatedRoom); // Call mutation to update in database
   };
 
+  // 👇 Add this style snippet at top
+  const SectionTitle = styled(Typography)(({ theme }) => ({
+    fontSize: '1.25rem',
+    fontWeight: 600,
+    // marginBottom: theme.spacing(2),
+    // color: theme.palette.grey[800],
+  }));
+
+
   return (
     <StyledContainer maxWidth="lg">
-      <HeaderBox>
+      <HeaderBox elevation={2}>
+        <SectionTitle variant="h6">Room Configuration</SectionTitle>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={8}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <HotelSelect fullWidth>
-                  <InputLabel id="hotel-select-label">Select Hotel</InputLabel>
-                  <Select
-                    labelId="hotel-select-label"
-                    value={selectedHotel}
-                    label="Select Hotel"
-                    onChange={(e) => {
-                      setSelectedHotel(e.target.value);
-                      const selected = Array.isArray(filteredHotels)
-                      ? filteredHotels.find((hotel) => String(hotel.hotelCode) === e.target.value)
-                      : null;
-                    
-                      if (selected) {
-                        setAuthCode(selected.authKey);
-                      }
-                    }}
-                  >
-                    {filteredHotels &&
-                      filteredHotels?.map((hotel) => (
-                        <MenuItem key={hotel._id} value={String(hotel.hotelCode)}>
-                          {hotel.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </HotelSelect>
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <DateTextField
-                  fullWidth
-                  label="From"
-                  type="date"
-                  value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <DateTextField
-                  fullWidth
-                  label="To"
-                  type="date"
-                  value={toDate}
-                  onChange={(e) => setToDate(e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-            </Grid>
+          <Grid item xs={12} md={4}>
+            <HotelSelect>
+              <InputLabel id="hotel-select-label">Select Hotel</InputLabel>
+              <Select
+                labelId="hotel-select-label"
+                value={selectedHotel}
+                label="Select Hotel"
+                onChange={(e) => {
+                  setSelectedHotel(e.target.value);
+                  const selected = filteredHotels.find(h => String(h.hotelCode) === e.target.value);
+                  if (selected) setAuthCode(selected.authKey);
+                }}
+              >
+                {filteredHotels?.map((hotel) => (
+                  <MenuItem key={hotel._id} value={String(hotel.hotelCode)}>
+                    {hotel.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </HotelSelect>
+          </Grid>
+          <Grid item xs={6} md={4}>
+            <DateTextField
+              label="From Date"
+              type="date"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+          <Grid item xs={6} md={4}>
+            <DateTextField
+              label="To Date"
+              type="date"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+            />
           </Grid>
         </Grid>
       </HeaderBox>
 
+
       <Box>
         {roomsLoading ? (
-         <div className='flex justify-center items-center mx-auto'>
-          <img src="/images/Logo/spinner.svg" alt="" />
-         </div>
+          <div className='flex justify-center items-center mx-auto'>
+            <img src="/images/Logo/spinner.svg" alt="" />
+          </div>
         ) : (
           <RoomsGrid container spacing={3}>
             {roomArray?.map((room) => (

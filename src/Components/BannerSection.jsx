@@ -24,8 +24,8 @@ const BannerSection = ({
         });
       }, []);
     return (
-        <div className={`w-full ${bg} py-8 md:py-12 lg:py-20  md:px-8 lg:px-16 `}>
-            <div className={`content flex flex-col lg:flex-row justify-between items-center max-w-7xl mx-auto gap-8 lg:gap-12 ${paddTop}`}>
+        <div className={`w-full ${bg} py-8 md:py-12 lg:py-20   `}>
+            <div className={`content flex flex-col lg:flex-row justify-between items-center  mx-auto gap-8 lg:gap-12 ${paddTop}`}>
                 {/* Text Section */}
                 <div className="lg:w-1/2 " data-aos="fade-up" data-aos-delay="100" >
                     <h1

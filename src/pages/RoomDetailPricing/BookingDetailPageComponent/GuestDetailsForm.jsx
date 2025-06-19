@@ -1,307 +1,340 @@
-import { useState, forwardRef, useImperativeHandle, useRef, useEffect } from "react";
-import Cookies from "js-cookie";
-import toast from "react-hot-toast";
-import { useSendOtp, useVerifyOtp } from "../../../ApiHooks/useOffersAndDealsHook";
-import { usePricing } from "../../../Context/PricingContext";
-import {  useCreateBooking } from "../../../ApiHooks/useCreateBookingHook";
-import { useUserBookings } from "../../../ApiHooks/useEnquiryFormHook";
+import { useState, forwardRef, useEffect } from "react";
+import { useSendOtp, useVerifyOtp, useGetUserByEmail } from "../../../ApiHooks/useUser";
+import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 
-const GuestDetailsForm = forwardRef((props, ref) => {
-  const { phoneVerified, setPhoneVerified } = usePricing();
-
-  // State variables for user details and OTP flow
+const GuestDetailsForm = forwardRef(({setIsVerified}) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(localStorage.getItem("user_email") || "");
   const [phoneNumber, setPhoneNumber] = useState("");
+
+  const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
 
-  // Get hotel info from localStorage (if needed for booking)
-  const localdata = localStorage.getItem("hotelInfo");
-  const hotelData = localdata ? JSON.parse(localdata) : null;
+  const sendOtpMutation = useSendOtp();
+  const verifyOtpMutation = useVerifyOtp();
 
+  const { data: userData, refetch: refetchUser } = useGetUserByEmail(email);
+  console.log("userData", userData);  // log userData here
 
-  const SavedEmail = Cookies.get("userEmail");
-  let SavedPhone = Cookies.get("userPhone");
-  
-  // Normalize phone number for consistency (remove +91, spaces, dashes)
-  if (SavedPhone) {
-    SavedPhone = SavedPhone.replace(/[^0-9]/g, "").replace(/^91/, "");
-  }
-  
-  const { data: userBookings } = useUserBookings(SavedEmail?.toLowerCase(), SavedPhone);
-  
-
-
+  // ✅ Auto-fill after getting user data
   useEffect(() => {
-    if (userBookings?.length > 0) {
-      console.log("User booking history:", userBookings);
-    }
-  }, [userBookings]);
+    if (userData?.data?.isVerified) {
+      setFirstName(userData?.data?.firstName || "");
+      setLastName(userData?.data?.lastName || "");
+      setPhoneNumber(userData?.data?.phone || "");
+      setIsVerified(userData?.data?.isVerified);
 
-  // Ref for scrolling into view on validation errors
-  const formRef = useRef(null);
+    }
+    if (userData?.data?.isVerified) {
+      localStorage.setItem("user_email", email);
+    }
+  }, [email, setIsVerified, userData]);
 
-  const { mutate: sendOtp } = useSendOtp();
-  const { mutate: verifyOtp } = useVerifyOtp();
-  const { mutate: createBooking } = useCreateBooking();
-
-  // On mount, check if the user has already verified (via cookie) and load stored info.
-  useEffect(() => {
-    const verified = Cookies.get("phoneVerified");
-    const storedPhone = Cookies.get("userPhone");
-    const storedUserInfo = localStorage.getItem("userInfo");
-
-    if (verified === "true" && storedPhone) {
-      setPhoneVerified(true);
-      setPhoneNumber(storedPhone);
-      if (storedUserInfo) {
-        const { firstName, lastName, email } = JSON.parse(storedUserInfo);
-        setFirstName(firstName);
-        setLastName(lastName);
-        setEmail(email);
-      }
-      toast.success("Welcome back! Your information is loaded.");
-    }
-  }, [setPhoneVerified]);
-
-  const validateFields = () => {
-    if (!firstName.trim()) {
-      toast.error("Please enter your first name");
-      return false;
-    }
-    if (!lastName.trim()) {
-      toast.error("Please enter your last name");
-      return false;
-    }
-    if (!email.trim()) {
-      toast.error("Please enter your email address");
-      return false;
-    }
-    if (!phoneNumber.trim()) {
-      toast.error("Please enter your phone number");
-      return false;
-    }
-    return true;
-  };
-
-  const handleVerifyClick = () => {
-    if (!validateFields()) {
-      return;
-    }
-    sendOtp(`+91${phoneNumber}`, {
-      onSuccess: (data) => {
-        // Store the session ID returned from the API
-        if (data && data.sessionId) {
-          localStorage.setItem('otpSessionId', data.sessionId);
-        }
-        setShowModal(true);
-        toast.success("OTP sent to your phone");
-      },
-      onError: () => {
-        toast.error("Error sending OTP");
+  const handleSendOtp = () => {
+    const payload = { email, phone: phoneNumber, firstName, lastName, role: "user", loyalAgent: false };
+    sendOtpMutation.mutate(payload, {
+      onSuccess: () => {
+        setOtpSent(true);
       }
     });
   };
 
-  const handleVerifyOTP = () => {
-    if (!otp.trim()) {
-      toast.error("Please enter the OTP");
-      return;
-    }
-
-    let formattedPhone = phoneNumber.trim();
-    if (!formattedPhone.startsWith("+91")) {
-      formattedPhone = "+91" + formattedPhone;
-    }
-
-    const sessionId = localStorage.getItem('otpSessionId');
-    if (!sessionId) {
-      toast.error("Session expired. Please request a new OTP");
-      return;
-    }
-
-    verifyOtp({
-      phone: formattedPhone,
-      code: otp,
-      sessionId: sessionId,
-      firstName,
-      lastName,
-      email
-    }, {
-      onSuccess: (data) => {
-        if (data && (data.status === "OTP Matched" || data.valid === true)) {
-          setPhoneVerified(true);
-          setShowModal(false);
-          setOtp("");
-          Cookies.set("phoneVerified", "true", { expires: 30 });
-          Cookies.set("userPhone", formattedPhone, { expires: 30 });
-          Cookies.set("userEmail", email, { expires: 30 });
-          localStorage.setItem("userInfo", JSON.stringify({ firstName, lastName, email }));
-          toast.success("Phone number verified");
-
-          createBooking({
-            name: `${firstName} ${lastName}`,
-            email: email,
-            mobileNumber: formattedPhone,
-            hotelcode: hotelData?.hotelCode || "",
-            authcode: hotelData?.authKey || "",
-            roomDetails: []
-          });
-        } else {
-          toast.error("Invalid OTP");
-        }
-      },
-      onError: (error) => {
-        if (error?.response?.data?.message) {
-          toast.error(`OTP verification failed: ${error.response.data.message}`);
-        } else {
-          toast.error("OTP verification failed. Please try again.");
-        }
+  const handleVerifyOtp = () => {
+    verifyOtpMutation.mutate({ email, otp }, {
+      onSuccess: () => {
+        localStorage.setItem("user_email", email);
+        refetchUser();
+        setOtp("");  // clear OTP after success
       }
     });
   };
 
-  // Extended validation function that checks for all required fields
-  const validateForm = () => {
-    if (!firstName.trim()) {
-      toast.error("Please enter your first name");
-      formRef.current?.scrollIntoView({ behavior: "smooth" });
-      return false;
+  const isFormValid = firstName.trim() && lastName.trim() && email.trim() && phoneNumber.trim();
+
+  const formFields = [ 
+    { 
+      id: "firstName", 
+      label: "First Name", 
+      placeholder: "Enter your first name", 
+      type: "text",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      )
+    },
+    { 
+      id: "lastName", 
+      label: "Last Name", 
+      placeholder: "Enter your last name", 
+      type: "text",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      )
+    },
+    { 
+      id: "email", 
+      label: "Email Address", 
+      placeholder: "Enter your email address", 
+      type: "email",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+      )
+    },
+    { 
+      id: "mobile", 
+      label: "Mobile Number", 
+      placeholder: "Enter your mobile number", 
+      type: "tel",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+        </svg>
+      )
     }
-    if (!lastName.trim()) {
-      toast.error("Please enter your last name");
-      formRef.current?.scrollIntoView({ behavior: "smooth" });
-      return false;
+  ];
+
+  const getFieldValue = (id) => {
+    switch(id) {
+      case "firstName": return firstName;
+      case "lastName": return lastName;
+      case "email": return email;
+      case "mobile": return phoneNumber;
+      default: return "";
     }
-    if (!email.trim()) {
-      toast.error("Please enter your email address");
-      formRef.current?.scrollIntoView({ behavior: "smooth" });
-      return false;
-    }
-    if (!phoneNumber.trim()) {
-      toast.error("Please enter your mobile number");
-      formRef.current?.scrollIntoView({ behavior: "smooth" });
-      return false;
-    }
-    if (!phoneVerified) {
-      toast.error("Please verify your phone number");
-      formRef.current?.scrollIntoView({ behavior: "smooth" });
-      return false;
-    }
-    return true;
   };
 
-  // Expose the validateForm method and guest details to the parent component via ref
-  useImperativeHandle(ref, () => ({
-    validateForm,
-    getGuestDetails: () => ({
-      firstName,
-      lastName,
-      email,
-      phoneNumber
-    })
-  }));
+  const handleFieldChange = (id, value) => {
+    switch(id) {
+      case "firstName": setFirstName(value); break;
+      case "lastName": setLastName(value); break;
+      case "email": setEmail(value); break;
+      case "mobile": setPhoneNumber(value); break;
+    }
+  };
 
   return (
-    <div ref={formRef} className="flex flex-col gap-8 bg-white  rounded-lg shadow-sm">
-      <div className="flex items-center mb-2">
-        <div className="w-1.5 h-10 bg-primary-green rounded-full mr-4" style={{ backgroundColor: "#058FA2" }}></div>
-        <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Enter Your Details</h2>
+    <div id="guestDetail" className="flex flex-col gap-10 relative overflow-hidden" >
+      {/* Decorative Background Elements */}
+      {/* <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-cyan-400 to-cyan-600"></div>
+      <div className="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-full opacity-20"></div>
+      <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-full opacity-30"></div> */}
+
+      {/* Enhanced Header */}
+      <div className="flex items-center mb-2 relative z-10">
+        <div className="w-2 h-12 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-full mr-5 shadow-lg"></div>
+        <div>
+          <h2 className="text-4xl font-bold text-gray-900 tracking-tight mb-1">Guest Details</h2>
+          <p className="text-gray-600">Please provide your information to proceed</p>
+        </div>
       </div>
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {[
-          { id: "firstName", label: "First Name *", placeholder: "John", type: "text" },
-          { id: "lastName", label: "Last Name *", placeholder: "Smith", type: "text" },
-          { id: "email", label: "Email Address *", placeholder: "abc@example.com", type: "email" },
-          { id: "mobile", label: "Mobile Number *", placeholder: "1234567896", type: "tel" }
-        ].map(({ id, label, placeholder, type }) => (
-          <div key={id} className="flex flex-col gap-3">
-            <label htmlFor={id} className="block text-base font-semibold text-gray-800 tracking-wide">{label}</label>
-            <div className="flex">
+
+     
+        <div className="relative z-10">
+          {/* Verification Status Banner */}
+          {userData?.data?.isVerified && (
+            <div className="mb-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl flex items-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-3 shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-green-800">Account Verified</p>
+                <p className="text-green-600 text-sm">Your email and mobile number are verified</p>
+              </div>
+            </div>
+          )}
+
+          {/* Enhanced Form */}
+          <form className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {formFields.map(({ id, label, placeholder, type, icon }) => {
+              const fieldValue = getFieldValue(id);
+              const isFieldFocused = focusedField === id;
+              const hasValue = fieldValue && fieldValue.trim();
+              
+              return (
+                <div key={id} className="flex flex-col gap-3 group">
+                  <label 
+                    htmlFor={id} 
+                    className={`block text-sm font-semibold tracking-wide transition-colors duration-200 ${
+                      isFieldFocused || hasValue ? 'text-cyan-600' : 'text-gray-700'
+                    }`}
+                  >
+                    {label} <span className="text-red-500">*</span>
+                  </label>
+                  
+                  <div className="flex gap-3">
+                    <div className="relative flex-1">
+                      {/* Icon */}
+                      <div className={`absolute left-4 top-1/2 transform -translate-y-1/2 transition-colors duration-200 ${
+                        isFieldFocused ? 'text-cyan-500' : hasValue ? 'text-cyan-600' : 'text-gray-400'
+                      }`}>
+                        {icon}
+                      </div>
+                      
+                      {/* Input Field */}
+                      <input
+                        type={type}
+                        id={id}
+                        placeholder={placeholder}
+                        className={`w-full h-14 pl-12 pr-4 py-3 text-base text-gray-900 placeholder-gray-400 bg-white border-2 rounded-xl shadow-sm transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-cyan-100 ${
+                          isFieldFocused 
+                            ? 'border-cyan-400 shadow-lg' 
+                            : hasValue 
+                              ? 'border-cyan-300 bg-cyan-50' 
+                              : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                        value={fieldValue}
+                        onChange={(e) => handleFieldChange(id, e.target.value)}
+                        onFocus={() => setFocusedField(id)}
+                        onBlur={() => setFocusedField(null)}
+                      />
+                      
+                      {/* Clear Button */}
+                      {hasValue && (
+                        <button
+                          type="button"
+                          onClick={() => handleFieldChange(id, "")}
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Verify Button for Mobile */}
+                    {id === "mobile" && !userData?.data?.isVerified && (
+                      <button
+                        type="button"
+                        className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                          isFormValid 
+                            ? 'bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white shadow-cyan-200 hover:shadow-cyan-300' 
+                            : 'bg-gray-300 cursor-not-allowed text-gray-500'
+                        } ${sendOtpMutation.isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={!isFormValid || sendOtpMutation.isLoading}
+                        onClick={handleSendOtp}
+                      >
+                        {sendOtpMutation.isLoading ? (
+                          <div className="flex items-center">
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            Sending...
+                          </div>
+                        ) : (
+                          <div className="flex gap-2 items-center">
+                            <CheckCircleOutlineOutlinedIcon/>
+                            Verify
+                          </div>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </form>
+        </div>
+
+      {/* Enhanced OTP Section */}
+      {otpSent && !userData?.data?.isVerified && (
+        <div className="relative z-10 mt-8 p-6 bg-gradient-to-br from-cyan-50 to-white border-2 border-cyan-200 rounded-2xl shadow-xl">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-cyan-600 rounded-t-2xl"></div>
+          
+          <div className="flex items-center mb-6">
+            <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center mr-4 shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-800">Verify Your Mobile</h3>
+              <p className="text-gray-600 text-sm">We've sent a verification code to your mobile number</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
               <input
-                type={type}
-                id={id}
-                placeholder={placeholder}
-                className="w-full h-[54px] shadow-sm border border-gray-300 rounded-lg py-2.5 px-4 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-green focus:border-transparent transition-all duration-200"
-                value={id === "mobile" ? phoneNumber : id === "firstName" ? firstName : id === "lastName" ? lastName : id === "email" ? email : undefined}
-                onChange={(e) => {
-                  if (id === "mobile") setPhoneNumber(e.target.value);
-                  else if (id === "firstName") setFirstName(e.target.value);
-                  else if (id === "lastName") setLastName(e.target.value);
-                  else if (id === "email") setEmail(e.target.value);
-                }}
+                type="text"
+                id="otp"
+                placeholder="Enter 6-digit OTP"
+                maxLength="6"
+                className="w-full h-14 pl-12 pr-4 py-3 text-base text-gray-900 placeholder-gray-400 bg-white border-2 border-cyan-200 rounded-xl shadow-sm transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-cyan-100 focus:border-cyan-400 focus:shadow-lg"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                onKeyPress={(e) => e.key === 'Enter' && otp.length === 6 && handleVerifyOtp()}
               />
-              {id === "mobile" && !phoneVerified && (
+              {otp && (
                 <button
                   type="button"
-                  onClick={handleVerifyClick}
-                  className={`ml-3 px-6 py-2 rounded-lg font-medium transition-all duration-200 ${firstName.trim() && lastName.trim() && email.trim() && phoneNumber.trim() ? 'bg-cyan-600 hover:bg-cyan-700 text-white' : 'bg-gray-400 cursor-not-allowed text-white'}`}
-                  disabled={!firstName.trim() || !lastName.trim() || !email.trim() || !phoneNumber.trim()}
+                  onClick={() => setOtp('')}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  Verify
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
                 </button>
               )}
             </div>
-          </div>
-        ))}
-      </form>
+            
+            <button
+              type="button"
+              className={`w-full h-14 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                verifyOtpMutation.isLoading || otp.length !== 6
+                  ? 'bg-gray-300 cursor-not-allowed text-gray-500' 
+                  : 'bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white shadow-cyan-300 hover:shadow-cyan-400'
+              }`}
+              onClick={handleVerifyOtp}
+              disabled={verifyOtpMutation.isLoading || otp.length !== 6}
+            >
+              {verifyOtpMutation.isLoading ? (
+                <div className="flex items-center justify-center">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
+                  Verifying OTP...
+                </div>
+              ) : (
+                <div className="flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  Verify OTP
+                </div>
+              )}
+            </button>
 
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg w-96 shadow-2xl">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-800">Enter Verification Code</h2>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-500">Didn't receive the code?</span>
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                disabled={sendOtpMutation.isLoading}
+                className="text-cyan-600 hover:text-cyan-700 font-semibold hover:underline transition-colors"
+              >
+                Resend OTP
               </button>
             </div>
-            <div className="mb-6 text-center">
-              <div className="inline-block p-3 rounded-full bg-cyan-100 mb-4">
-                {/* Optional SVG icon */}
-              </div>
-              <p className="text-gray-600 mb-4">We've sent a 6-digit code to +91 {phoneNumber}</p>
-            </div>
-            <div className="mb-6">
-              <input
-                type="text"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                placeholder="Enter 6-digit OTP"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-center text-lg tracking-widest focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all"
-                maxLength="6"
-              />
-            </div>
-            <button
-              onClick={handleVerifyOTP}
-              className="w-full py-3 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white font-semibold rounded-lg shadow hover:shadow-lg transition-all"
-            >
-              Verify &amp; Continue
-            </button>
-            <div className="mt-4 text-center">
-              <p className="text-gray-600 text-sm">
-                Didn't receive the code?{" "}
-                <button onClick={handleVerifyClick} className="text-cyan-600 font-medium hover:underline">
-                  Resend
-                </button>
-              </p>
-            </div>
           </div>
-        </div>
-      )}
-
-      {phoneVerified && (
-        <div className="mt-4 py-3 px-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-green-700 font-medium flex items-center">
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            Phone number verified successfully
-          </p>
         </div>
       )}
     </div>

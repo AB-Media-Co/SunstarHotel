@@ -92,7 +92,7 @@ const useAmenities = (amenities, roomAmenities) => {
   return { selectedAmenities, handleAmenitiesChange, setSelectedAmenities };
 };
 
-const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, amenities, selectedAmenities, handleAmenitiesChange }) => {
+const RoomInfoTab = ({ formData, isEdit, handleInputChange, handleCheckboxChange, amenities, selectedAmenities, handleAmenitiesChange }) => {
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -143,64 +143,87 @@ const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, amenit
               sx={{ bgcolor: 'background.paper' }}
               placeholder="Enter distinctive room name"
               required
+              disabled
             />
           </Grid>
         </Grid>
       </Paper>
 
-      <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: 'rgba(0, 0, 0, 0.02)', borderRadius: 2 }}>
-        <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 500 }}>
+      <Paper
+        elevation={1}
+        sx={{
+          p: 3,
+          mb: 4,
+          borderRadius: 3,
+          bgcolor: 'background.paper',
+          border: '1px solid',
+          borderColor: 'divider',
+          // transition: '0.2s ease',
+          // '&:hover': {
+          //   boxShadow: 3,
+          //   borderColor: 'primary.main',
+          // },
+        }}
+      >
+        <Typography
+          variant="h6"
+          gutterBottom
+          sx={{ color: 'primary.main', fontWeight: 600, mb: 2 }}
+        >
           Room Details
         </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Room Description"
-              name="RoomDescription"
-              value={formData.RoomDescription}
-              onChange={handleInputChange}
-              multiline
-              rows={3}
-              sx={{ bgcolor: 'background.paper' }}
-              placeholder="Describe the unique features and benefits of this room"
-              required
-            />
-          </Grid>
-          
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Max Guests"
-              name="maxGuests"
-              type="number"
-              value={formData.maxGuests}
-              onChange={handleInputChange}
-              sx={{ bgcolor: 'background.paper' }}
-              InputProps={{
-                startAdornment: <GroupIcon color="action" sx={{ mr: 1 }} />,
-              }}
-              placeholder="e.g., 2"
-            />
-          </Grid>
-          
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Square Feet"
-              name="squareFeet"
-              type="number"
-              value={formData.squareFeet}
-              onChange={handleInputChange}
-              sx={{ bgcolor: 'background.paper' }}
-              InputProps={{
-                startAdornment: <SquareFootIcon color="action" sx={{ mr: 1 }} />,
-              }}
-              placeholder="e.g., 450"
-            />
-          </Grid>
-        </Grid>
+
+        <Box display="flex" flexDirection="column" gap={3}>
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            label="Room Description"
+            name="RoomDescription"
+            value={formData.RoomDescription}
+            onChange={handleInputChange}
+            sx={{ bgcolor: 'background.default' }}
+            placeholder="Describe the unique features and benefits of this room"
+          />
+
+          <TextField
+            fullWidth
+            type="number"
+            label="Max Guests"
+            name="maxGuests"
+            value={formData.maxGuests}
+            onChange={handleInputChange}
+            placeholder="e.g., 2 guests"
+            InputProps={{
+              startAdornment: (
+                <Box sx={{ mr: 1, display: 'flex', alignItems: 'center' }}>
+                  <GroupIcon color="primary" />
+                </Box>
+              ),
+            }}
+            sx={{ bgcolor: 'background.default' }}
+          />
+
+          <TextField
+            fullWidth
+            type="number"
+            label="Room Size (sq ft)"
+            name="squareFeet"
+            value={formData.squareFeet}
+            onChange={handleInputChange}
+            placeholder="e.g., 450 sq ft"
+            InputProps={{
+              startAdornment: (
+                <Box sx={{ mr: 1, display: 'flex', alignItems: 'center' }}>
+                  <SquareFootIcon color="primary" />
+                </Box>
+              ),
+            }}
+            sx={{ bgcolor: 'background.default' }}
+          />
+        </Box>
       </Paper>
+
 
       <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: 'rgba(0, 0, 0, 0.02)', borderRadius: 2 }}>
         <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 500 }}>
@@ -216,10 +239,10 @@ const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, amenit
               onChange={handleAmenitiesChange}
               getOptionLabel={(option) => option.label || ''}
               renderInput={(params) => (
-                <TextField 
-                  {...params} 
-                  label="Amenities" 
-                  placeholder="Select amenities" 
+                <TextField
+                  {...params}
+                  label="Amenities"
+                  placeholder="Select amenities"
                   sx={{ bgcolor: 'background.paper' }}
                 />
               )}
@@ -261,7 +284,7 @@ const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, amenit
               required
             />
           </Grid>
-          
+
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
@@ -277,7 +300,7 @@ const RoomInfoTab = ({ formData, handleInputChange, handleCheckboxChange, amenit
               helperText="Managed by pricing system"
             />
           </Grid>
-          
+
           <Grid item xs={12}>
             <FormControlLabel
               control={
@@ -306,20 +329,20 @@ const UploadImagesTab = ({ images, onUploadSuccess, onRemoveImageUrl, isUploadin
         <Typography variant="body2" color="text.secondary" paragraph>
           Upload high-quality images that showcase your room. We recommend at least 3 images from different angles.
         </Typography>
-        
+
         {isUploading && (
           <Box sx={{ width: '100%', mb: 2 }}>
             <LinearProgress />
           </Box>
         )}
-        
+
         <MultipleImageUpload
           imagesUrls={images}
           onUploadSuccess={onUploadSuccess}
           onRemoveImageUrl={onRemoveImageUrl}
           isUploading={isUploading}
         />
-        
+
         {images.length > 0 && (
           <Box sx={{ mt: 3 }}>
             <Typography variant="subtitle2" gutterBottom>
@@ -372,7 +395,7 @@ const AboutRoomTab = ({ aboutRoom, handleAboutChange }) => {
         <Typography variant="body2" color="text.secondary" paragraph>
           Provide detailed information about what makes this room special. This will be displayed prominently on booking pages.
         </Typography>
-        
+
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
@@ -387,7 +410,7 @@ const AboutRoomTab = ({ aboutRoom, handleAboutChange }) => {
               placeholder="Describe unique features, views, or experiences guests can expect"
             />
           </Grid>
-          
+
           <Grid item xs={12}>
             <Typography variant="subtitle2" gutterBottom>
               Featured Image
@@ -396,7 +419,7 @@ const AboutRoomTab = ({ aboutRoom, handleAboutChange }) => {
               <ImageUpload
                 feature={aboutRoom}
                 handleFeatureChange={handleAboutChange}
-                setImageUpload={() => {}}
+                setImageUpload={() => { }}
                 index={0}
               />
             </Box>
@@ -607,18 +630,18 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
           }
         }}
       >
-        <Tab 
-          label="Room Info" 
-          icon={<BedIcon />} 
-          iconPosition="start" 
+        <Tab
+          label="Room Info"
+          icon={<BedIcon />}
+          iconPosition="start"
         />
-        <Tab 
-          label="Upload Images" 
+        <Tab
+          label="Upload Images"
           icon={<ImageIcon />}
           iconPosition="start"
         />
-        <Tab 
-          label="About Room" 
+        <Tab
+          label="About Room"
           icon={<CheckCircleOutlineIcon />}
           iconPosition="start"
         />
@@ -656,23 +679,23 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
   );
 
   return (
-    <Dialog 
-      open 
-      onClose={onClose} 
-      fullWidth 
+    <Dialog
+      open
+      onClose={onClose}
+      fullWidth
       maxWidth="md"
-      PaperProps={{ 
-        sx: { 
+      PaperProps={{
+        sx: {
           borderRadius: 2,
-          overflow: 'hidden' 
-        } 
+          overflow: 'hidden'
+        }
       }}
       fullScreen={isMobile}
     >
-      <DialogTitle sx={{ 
-        m: 0, 
-        p: 3, 
-        bgcolor: 'primary.main', 
+      <DialogTitle sx={{
+        m: 0,
+        p: 3,
+        bgcolor: 'primary.main',
         color: 'primary.contrastText',
       }}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -689,24 +712,24 @@ const EditRoom = ({ room, roomTypes, roomSaving, onClose, onSave, isEdit }) => {
           </IconButton>
         </Box>
       </DialogTitle>
-      
+
       <DialogContent dividers sx={{ p: isMobile ? 2 : 3, bgcolor: 'background.default' }}>
         {isMobile ? renderMobileView() : renderDesktopView()}
       </DialogContent>
-      
+
       {!isMobile && (
         <DialogActions sx={{ px: 3, py: 2, bgcolor: 'background.paper' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
             <Box>
-              <Button 
-                onClick={() => setActiveTab(Math.max(0, activeTab - 1))} 
+              <Button
+                onClick={() => setActiveTab(Math.max(0, activeTab - 1))}
                 disabled={activeTab === 0}
                 sx={{ ml: 1 }}
               >
                 Previous
               </Button>
-              <Button 
-                variant="contained" 
+              <Button
+                variant="contained"
                 color="primary"
                 onClick={() => setActiveTab(Math.min(2, activeTab + 1))}
                 disabled={activeTab === 2}

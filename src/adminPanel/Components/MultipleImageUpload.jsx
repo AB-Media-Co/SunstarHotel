@@ -140,12 +140,12 @@ const MultipleImageUpload = ({ onUploadSuccess, isUploading, imagesUrls = [], on
                     </div>
 
                     <button
-                        onClick={handleSubmit}
-                        className={`w-full mt-6 py-3 rounded-lg font-semibold text-white text-lg ${isUploading
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition duration-200 transform hover:scale-105"
+                        type="submit"
+                        disabled={isUploading || images.length === 0}
+                        className={`w-full mt-6 py-3 rounded-lg font-semibold text-white text-lg ${isUploading || images.length === 0
+                                ? "bg-gray-400 cursor-not-allowed"
+                                : "bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition duration-200 transform hover:scale-105"
                             }`}
-                        disabled={isUploading}
                     >
                         {isUploading ? (
                             <svg
@@ -172,6 +172,7 @@ const MultipleImageUpload = ({ onUploadSuccess, isUploading, imagesUrls = [], on
                             "Upload Images"
                         )}
                     </button>
+
                 </form>
             </div>
         </div>

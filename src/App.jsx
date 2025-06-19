@@ -30,9 +30,11 @@ import EventandConference from './pages/OtherPages/EventandConference';
 import ComingSoonPage from './pages/OtherPages/ComingSoonPage';
 import CookieConsent from "./Components/CookieConsent"; // adjust path
 import CareerMain from './pages/SunstarCareer/CareerMain';
-import SunstarCareersFormComponent from './pages/SunstarCareer/SunstarCareersFormComponent';
 import TravelAgent from './pages/TravelAgent/TravelAgent';
 import TourAndTravel from './adminPanel/pages/TourAndTravel/TourAndTravel';
+import Jobs from './adminPanel/pages/CareerPageJobs/Jobs';
+import BlogEditorTabs from './adminPanel/pages/ManageBlogs/BlogEditorTabs';
+import MyBookings from './pages/OtherPages/My-Bookings';
 
 // import PhoneAuth from './pages/PhoneAuth';
 
@@ -57,6 +59,9 @@ const BookingForm = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './
 const DevelopersOwners = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/DevelopersAndOwners/DevelopersOwners'));
 const DayUseRoom = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/DayUseRoom/DayUseRoom'));
 const TourAndTravelPage = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/TourAndTravelPaage/TourAndTravelMain/TourAndTravelPage'));
+const SelectedState = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/TourAndTravelPaage/SeletectedState/SelectedState'));
+const PackageDetails = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/TourAndTravelPaage/PackageDetails/PackageDetail'));
+const TravelBookingForm = lazy(() => import(/* webpackChunkName: "roomsdetails" */ './pages/TourAndTravelPaage/TravelBookingForm'));
 
 const queryClient = new QueryClient();
 
@@ -113,10 +118,13 @@ function App() {
               <Route path="/dayuseroom" element={<DayUseRoom />} />
               <Route path="/career" element={<CareerMain />} />
               <Route path="/tour&travel" element={<TourAndTravelPage />} />
+              <Route path="/destination/:state" element={<SelectedState />} />
+              <Route path="/package-detail/:title" element={<PackageDetails />} />
               <Route path="/travel-agent" element={<TravelAgent />} />
               <Route path="/in-the-media" element={<ComingSoonPage />} />
               <Route path="/loyalty-program" element={<ComingSoonPage />} />
-              <Route path="/career-form" element={  <SunstarCareersFormComponent/>} />
+              <Route path="/travel-booking-form" element={  <TravelBookingForm/>} />
+              <Route path="/my-bookings" element={  <MyBookings/>} />
             </Route>
             <Route path="/room/details" element={<RoomsDetails />} />
             <Route path="/room/:id" element={<HotelRooms />} />
@@ -138,9 +146,11 @@ function App() {
             <Route path="/admin/view-user" element={<PrivateRoute><ViewUser /></PrivateRoute>} />
             <Route path="/admin/all-users" element={<PrivateRoute><AllUsers /></PrivateRoute>} />
             <Route path="/admin/hotel-locations" element={<PrivateRoute><HotelLocations /></PrivateRoute>} />
-            <Route path="/admin/manage-blogs" element={<PrivateRoute><ManageBlogs /></PrivateRoute>} />
+            {/* <Route path="/admin/manage-blogs" element={<PrivateRoute><ManageBlogs /></PrivateRoute>} /> */}
+            <Route path="/admin/manage-blogs" element={<PrivateRoute><BlogEditorTabs /></PrivateRoute>} />
             <Route path="/admin/manage-seo" element={<PrivateRoute><SeoMeta /></PrivateRoute>} />
             <Route path="/admin/tour&travel" element={<PrivateRoute><TourAndTravel /></PrivateRoute>} />
+            <Route path="/admin/jobs" element={<PrivateRoute><Jobs /></PrivateRoute>} />
           </Routes>
         </AdminProvider>
         {/* <Suspense fallback={<Loader />}>

@@ -73,10 +73,6 @@ export const useOfferCodesForHotel = () => {
   });
 };
 
-/**
- * Updated hook to include `checkInDate` along with hotelId, rate, and offerCode.
- * This supports the backend logic for last-minute/early-booker deals.
- */
 export const useDiscountedRate = () => {
   return useMutation({
     mutationFn: async ({ hotelId, rate, offerCode, checkInDate }) => {
@@ -91,31 +87,3 @@ export const useDiscountedRate = () => {
   });
 };
 
-// Updated to match backend expectation (phone parameter)
-export const useSendOtp = () => {
-  return useMutation({
-    mutationFn: async (phone) => {
-      const response = await axiosInstance.post('/api/deals/sendOtp', { phone });
-      return response.data;
-    },
-  });
-};
-
-// Updated to match backend expectation (sessionId, otp, phone)
-export const useVerifyOtp = () => {
-  return useMutation({
-    mutationFn: async ({ phone, code }) => {
-      // Extract sessionId from the app's state management if available
-      // If not available in props, you might need to store it after sending OTP
-      const sessionId = localStorage.getItem('otpSessionId');
-      
-      const response = await axiosInstance.post('/api/deals/verifyOtp', {
-        sessionId,   // This is required by your backend
-        otp: code,   // Renamed from 'code' to 'otp' to match backend
-        phone        // Phone number
-      });
-      
-      return response.data;
-    },
-  });
-};

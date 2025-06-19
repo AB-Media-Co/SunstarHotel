@@ -28,6 +28,7 @@ export const PricingProvider = ({ children }) => {
       price: item?.roomData?.discountRate || 0,
       RoomTypeID: item?.roomData?.RoomTypeID,
       RateTypeID: item?.roomData?.RateTypeID,
+      roomrateunkid:item?.roomData?.roomrateunkid,  
     }))
   );
 
@@ -50,6 +51,7 @@ export const PricingProvider = ({ children }) => {
   });
 
   const [isHotelModalOpen, setIsHotelModalOpen] = useState(false);
+  const [navColor, setIsNavColor] = useState(false);
 
   // Functions to control the Hotel Modal
   const openHotelModal = () => setIsHotelModalOpen(true);
@@ -136,6 +138,7 @@ export const PricingProvider = ({ children }) => {
           RateTypeID: response.data.room.RateTypeID,
           discountRate: response.data.room.discountRate,
           maxGuests: response.data.room.maxGuests,
+          roomrateunkid:response?.data?.room?.roomrateunkid,
         },
       };
 
@@ -150,6 +153,7 @@ export const PricingProvider = ({ children }) => {
           RoomTypeID: response.data.room.RoomTypeID,
           RateTypeID: response.data.room.RateTypeID,
           maxGuests: response.data.room.maxGuests,
+          roomrateunkid:response?.data?.room?.roomrateunkid,
         },
       ]);
 
@@ -211,8 +215,10 @@ export const PricingProvider = ({ children }) => {
         isHotelModalOpen,
         openHotelModal,
         closeHotelModal,
+        setIsConfirmationModalOpen,
         phoneVerified, // Add phoneVerified here
         setPhoneVerified, // Add setPhoneVerified here
+        navColor, setIsNavColor
       }}
     >
       {children}

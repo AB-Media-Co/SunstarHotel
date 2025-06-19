@@ -98,12 +98,12 @@ const Hotels = () => {
       </Helmet>
       <Banner
         businessPlatformFeatures={hotelData?.images}
-      
+
       />
       <div className="flex flex-col gap-4 bg-white max-w-7xl  mx-auto">
 
-        <HotelCard hotelData={hotelData}  openCalender={openCalender}
-        setOpenCalender={setOpenCalender} />
+        <HotelCard hotelData={hotelData} openCalender={openCalender}
+          setOpenCalender={setOpenCalender} />
         <RoomLayout rooms={roomsData?.rooms} />
         <AmenitiesList2 amenities={hotelData?.amenities} />
         <div id="reviews">
@@ -111,7 +111,6 @@ const Hotels = () => {
             Testimonials={hotelData?.testimonials}
             backgroundImage={OurClientsData.backgroundImage}
           />
-
         </div>
         {hotelData?.imageSections && <HotelImageCarousel data={hotelData?.imageSections} />}
         <Location address={hotelData?.location} city={hotelData?.cityLocation?.name} />

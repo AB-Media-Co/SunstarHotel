@@ -9,7 +9,11 @@ import {
   useUpdateState,
   useDeleteState,
 } from '../../../ApiHooks/useTravelPackagesHook';
+import MultipleImageUpload from '../../Components/MultipleImageUpload';
 import ImageUpload from '../../Components/ImageUpload';
+import toast from 'react-hot-toast';
+import { uploadImagesAPIV2 } from '../../../ApiHooks/useHotelHook2';
+
 
 const TourAndTravel = () => {
   const { data: states = [] } = useGetStates();
@@ -22,11 +26,24 @@ const TourAndTravel = () => {
   const deleteState = useDeleteState();
 
   const [stateForm, setStateForm] = useState({ name: '', image: '' });
+  
+  const [newHighlight, setNewHighlight] = useState('');
+  const [newInclusion, setNewInclusion] = useState('');
+  const [newExclusion, setNewExclusion] = useState('');
+  const [newItineraryDay, setNewItineraryDay] = useState('');
+  const [newItineraryTitle, setNewItineraryTitle] = useState('');
+  const [newItineraryDetails, setNewItineraryDetails] = useState('');
+  const [isUploadingImage, setUploadingImage] = useState(false);
+  const [activeTab, setActiveTab] = useState('states');
+  const [images, setImages] = useState([]);
+  console.log(images);
+  const [isUploading, setIsUploading] = useState(false);
+
   const [packageForm, setPackageForm] = useState({
     _id: '',
     stateId: '',
     title: '',
-    image: '',
+    images:images,
     duration: { nights: '', days: '' },
     price: '',
     highlights: [],
@@ -36,16 +53,6 @@ const TourAndTravel = () => {
     itinerary: [],
     topSelling: false,
   });
-
-  const [newHighlight, setNewHighlight] = useState('');
-  const [newInclusion, setNewInclusion] = useState('');
-  const [newExclusion, setNewExclusion] = useState('');
-  const [newItineraryDay, setNewItineraryDay] = useState('');
-  const [newItineraryTitle, setNewItineraryTitle] = useState('');
-  const [newItineraryDetails, setNewItineraryDetails] = useState('');
-  const [isUploadingImage, setUploadingImage] = useState(false);
-  const [activeTab, setActiveTab] = useState('states');
-
   const handleStateChange = (key, value) => {
     setStateForm((prev) => ({ ...prev, [key]: value }));
   };
@@ -58,18 +65,21 @@ const TourAndTravel = () => {
         duration: { ...prev.duration, [subKey]: value },
       }));
     } else if (key === 'topSelling') {
-      setPackageForm((prev) => ({ ...prev, [key]: !prev.topSelling }));
+      setPackageForm((prev) => ({ ...prev, topSelling: !prev.topSelling }));
+    } else if (key === 'images') {
+      setPackageForm((prev) => ({ ...prev, images: value }));
     } else {
       setPackageForm((prev) => ({ ...prev, [key]: value }));
     }
   };
+
 
   const resetPackageForm = () => {
     setPackageForm({
       _id: '',
       stateId: '',
       title: '',
-      image: '',
+      images: [],
       duration: { nights: '', days: '' },
       price: '',
       highlights: [],
@@ -79,6 +89,7 @@ const TourAndTravel = () => {
       itinerary: [],
       topSelling: false,
     });
+    setImages([]);
   };
 
   const handleCreateOrUpdatePackage = () => {
@@ -103,6 +114,38 @@ const TourAndTravel = () => {
     if (window.confirm('Are you sure you want to delete this package?')) {
       deletePackage.mutate(id);
     }
+  };
+
+
+  const handleImageUpload = async (selectedFiles) => {
+    if (selectedFiles.length === 0) {
+      toast.error("No images selected");
+      return;
+    }
+    setIsUploading(true);
+    try {
+      const data = await uploadImagesAPIV2(selectedFiles);
+      const uploadedUrls = Array.isArray(data) ? data : [data];
+      const newImageUrls = uploadedUrls[0].imageUrls;
+      setImages((prev) => [...prev, ...newImageUrls]);
+      setPackageForm((prev) => ({
+        ...prev,
+        images: [...prev.images, ...newImageUrls],
+      }));
+      toast.success("Images uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      toast.error("Error uploading images");
+    }
+    setIsUploading(false);
+  };
+
+  const handleRemoveImageUrl = (url) => {
+    setPackageForm(prev => ({
+      ...prev,
+      images: prev.images?.filter(img => img !== url)
+      ,
+    }));
   };
 
 
@@ -215,7 +258,7 @@ const TourAndTravel = () => {
               />
             </div>
           </div>
-      
+
 
           <div className="flex gap-4 mt-4">
             <button
@@ -317,11 +360,11 @@ const TourAndTravel = () => {
 
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-1">Package Image*</label>
-            <ImageUpload
-              feature={packageForm}
-              handleFeatureChange={handlePackageChange}
-              setImageUpload={setUploadingImage}
-              index={1}
+            <MultipleImageUpload
+              onUploadSuccess={handleImageUpload}
+              isUploading={isUploading}
+              imagesUrls={packageForm.images}
+              onRemoveImageUrl={handleRemoveImageUrl}
             />
           </div>
 
@@ -582,7 +625,7 @@ const TourAndTravel = () => {
               <div key={pkg._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
                 <div className="relative">
                   <img
-                    src={pkg.image}
+                    src={pkg.images[0]}
                     alt={pkg.title}
                     className="w-full h-48 object-cover"
                   />

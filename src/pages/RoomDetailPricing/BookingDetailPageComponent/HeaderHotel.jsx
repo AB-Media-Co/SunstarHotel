@@ -13,9 +13,7 @@ import {
 
 
 export const HeaderHotel = () => {
-    const { details, setDetails, selectedRooms, setSelectedRooms, setEditAddPricing } = usePricing();
-    console.log(details);
-
+    const { details,  setEditAddPricing } = usePricing();
     const getHotelDataLocal = localStorage.getItem("hotelInfo");
     const getHotelData = JSON.parse(getHotelDataLocal);
 

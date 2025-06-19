@@ -1,179 +1,335 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { usePricing } from "../../../Context/PricingContext";
-import toast from "react-hot-toast";
-import { useMakeBooking } from "../../../ApiHooks/useCreateBookingHook";
-import { useHotelEnquiryForm } from "../../../ApiHooks/useEnquiryFormHook";
-import { useNavigate } from "react-router-dom";
+import { useGetUserByEmail } from "../../../ApiHooks/useUser";
+import { usePushBooking } from "../../../ApiHooks/pushBookingHook";
+import Loader from "../../../Components/Loader";
+import {
+  CreditCard,
+  Building2,
+  Shield,
+  Clock,
+  CheckCircle2,
+  ArrowRight
+} from "lucide-react";
+import RazorpayPayment from "./RazorpayPayment";
+import { BookingSuccessPopup } from "./BookingSuccessPopup";
 
-export const PaymentMethod = ({ hotelDetail, guestFormRef, checkIn, checkOut }) => {
-  const { selectedRooms } = usePricing();
+export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
+  const email = localStorage.getItem("user_email");
+  const { data: userData } = useGetUserByEmail(email);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const navigate = useNavigate();
-  const { mutate: makeBooking, isLoading } = useMakeBooking(
-    hotelDetail?.hotelCode,
-    hotelDetail?.authKey,
-    checkIn,
-    checkOut,
-    selectedRooms
-  );
+  const { selectedRooms,setIsConfirmationModalOpen } = usePricing();
+  const pushBooking = usePushBooking();
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
   };
 
-  const { mutate } = useHotelEnquiryForm();
-
-
-  const ContinueBtnClick = async () => {
-    // Validate guest form first
-    if (guestFormRef.current && !guestFormRef.current.validateForm()) {
-      toast.error("Please fill all required guest information");
-      return;
-    }
-    const guestDetails = guestFormRef.current.getGuestDetails();
-
-    // Validate essential information
-    if (!guestDetails.firstName || !guestDetails.lastName || !guestDetails.email) {
-      toast.error("Please provide name and email information");
+  const ContinueBtnClick = (paymenttypeunkid = "") => {
+    if (!(verified || userData?.data?.isVerified)) {
+      document.getElementById("guestDetail")?.scrollIntoView({ behavior: "smooth" });
       return;
     }
 
-    guestDetails.paymentMethod = selectedPaymentMethod;
+    const Room_Details = {};
+    selectedRooms.forEach((room, index) => {
+      const days = parseInt(localStorage.getItem("days"));
+      const baserate = Array(days).fill(room.price).join(",");
+      const extradultrate = Array(days).fill(0).join(",");
+      const extrachildrate = Array(days).fill(0).join(",");
 
-    const payload = {
-      userEmail: guestDetails.email,
-      userPhone: guestDetails.phoneNumber,
-      checkIn,
-      checkOut,
-      hotelCode: hotelDetail?.hotelCode,
-      Hoteldata: hotelDetail?.authKey,
-      selectedRooms,
-      submittedAt: new Date().toISOString(),
-    };
-
-    // Call the mutation
-    mutate(payload, {
-      onSuccess: () => {
-        setShowSuccessModal(true);
-      },
-      onError: (error) => {
-        console.error("Enquiry submission failed:", error);
-        toast.error("Failed to submit enquiry. Please try again.");
-      }
+      Room_Details[`Room_${index + 1}`] = {
+        Rateplan_Id: room?.roomrateunkid,
+        Ratetype_Id: room.RateTypeID,
+        Roomtype_Id: room.RoomTypeID,
+        baserate: baserate,
+        extradultrate: extradultrate,
+        extrachildrate: extrachildrate,
+        number_adults: room.guestQty?.toString() || '1',
+        number_children: "0",
+        ExtraChild_Age: "",
+        Title: "",
+        First_Name: userData?.data.firstName || '',
+        Last_Name: userData?.data.lastName || '',
+        Gender: userData?.data.gender || '',
+        SpecialRequest: ""
+      };
     });
 
+    const BookingData = {
+      Room_Details,
+      check_in_date: checkIn,
+      check_out_date: checkOut,
+      Booking_Payment_Mode: selectedPaymentMethod === "pay-at-hotel" ? "0" : "1",
+      Email_Address: userData?.data.email,
+      Source_Id: "",
+      MobileNo: userData?.data.phone || '',
+      Address: userData?.data.address || '',
+      State: userData?.data.state || '',
+      Country: userData?.data.country || '',
+      City: userData?.data.city || '',
+      Zipcode: "",
+      Fax: "",
+      Device: "Web",
+      Languagekey: "",
+      paymenttypeunkid: paymenttypeunkid
+    };
 
+    const payload = {
+      BookingData: BookingData,
+      HotelCode: hotelDetail?.hotelCode,
+      APIKey: hotelDetail?.authKey,
+      userEmail: userData?.data.email,
+    };
 
-    // for booking
-    // try {
-    //   // Call the makeBooking mutation with the guest details
-    //   // const result = await makeBooking(guestDetails);
-
-    //   // If the booking was successful and we have a reservation number
-    //   if (result?.ReservationNo) {
-    //     toast.success(`Booking confirmed! Reservation #${result.ReservationNo}`);
-    //     // You can add navigation logic here if needed
-    //     // For example: navigate(`/booking-confirmation/${result.ReservationNo}`);
-    //   }
-    // } catch (error) {
-    //   // Error handling is already in the hook, but we can add specific UI feedback here
-    //   console.error("Booking failed:", error);
-    // }
-
+    pushBooking.mutate(payload, {
+      onSuccess: () => {
+        setShowSuccessPopup(true);
+      }
+    });
   };
+
+
+  // Loading overlay when booking is in progress
+  if (pushBooking.isPending) {
+    return (
+      <div className="relative bg-white border-gray-100">
+        {/* Background overlay */}
+        <div className="absolute inset-0 bg-white bg-opacity-90 z-50 flex items-center justify-center">
+          <div className="text-center">
+            {/* Spinner Loader */}
+            <div className="relative mb-6">
+              <div className="w-16 h-16 border-4 border-gray-200 border-t-teal-500 rounded-full animate-spin mx-auto"></div>
+              <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-teal-300 rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-xl font-semibold text-gray-800">Processing Your Booking</h3>
+              <p className="text-gray-600">Please wait while we confirm your reservation...</p>
+              <div className="flex items-center justify-center mt-3">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Blurred background content */}
+        <div className="filter blur-sm pointer-events-none">
+          <PaymentMethodContent
+            hotelDetail={hotelDetail}
+            selectedPaymentMethod={selectedPaymentMethod}
+            handlePaymentMethodChange={handlePaymentMethodChange}
+            ContinueBtnClick={ContinueBtnClick}
+            isLoading={true}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
-      {showSuccessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Thank You!</h2>
-              <p className="text-gray-600 mb-6">Your booking has been successfully submitted. We will contact you shortly.</p>
-              <button
-                onClick={() => navigate('/')}
-                className="w-full bg-blue-600 text-white font-semibold py-3 rounded transition-all"
-                style={{ backgroundColor: "#058FA2" }}
-              >
-                Continue to Home
-              </button>
-            </div>
-          </div>
+      <PaymentMethodContent
+        hotelDetail={hotelDetail}
+        selectedPaymentMethod={selectedPaymentMethod}
+        handlePaymentMethodChange={handlePaymentMethodChange}
+        ContinueBtnClick={ContinueBtnClick}
+        isLoading={false}
+      />
+
+      <BookingSuccessPopup
+        isOpen={showSuccessPopup}
+        onClose={() => setShowSuccessPopup(false)}
+        onSeeBookings={() => {
+          setShowSuccessPopup(false);
+        
+
+          window.location.href = "/my-bookings";  // Your bookings page route
+        }}
+        onContinueBooking={() => {
+          setShowSuccessPopup(false);
+          setIsConfirmationModalOpen(false);
+          window.location.href = "/";  // Your home page route
+        }}
+      />
+
+
+    </>
+  );
+};
+
+// Separate component for the main content
+const PaymentMethodContent = ({ hotelDetail, selectedPaymentMethod, handlePaymentMethodChange, ContinueBtnClick, isLoading }) => {
+  const { finalPrice } = usePricing();
+  return (
+    <div id="payment-method" className="bg-white border-gray-100">
+      {/* Header */}
+      <div className="flex items-center mb-8">
+        <div className="w-2 h-10 bg-gradient-to-b from-teal-500 to-teal-600 rounded-full mr-4"></div>
+        <div>
+          <h2 className="text-3xl font-bold text-gray-800 mb-1">Payment Method</h2>
+          <p className="text-gray-500">Choose your preferred payment option</p>
         </div>
-      )}
-      <div id="payment-method" className="flex flex-col bg-white mt-6">
-      <div className="flex items-center mb-6">
-        <div
-          className="w-1 h-8 rounded-full mr-3"
-          style={{ backgroundColor: "#058FA2" }}
-        ></div>
-        <h2 className="text-3xl font-bold text-gray-800">Payment Method</h2>
-      </div>
-      <div className="flex flex-col gap-4">
-        {hotelDetail?.payAtHotel === "yes" && (
-          <label
-            htmlFor="pay-at-hotel"
-            className="flex items-center gap-4 p-4 rounded-lg cursor-pointer border-2 border-gray-200 hover:border-teal-200 hover:bg-gray-50 transition-all shadow-sm hover:shadow-lg"
-          >
-            <input
-              type="radio"
-              id="pay-at-hotel"
-              name="payment-method"
-              className="w-5 h-5"
-              onChange={() => handlePaymentMethodChange("pay-at-hotel")}
-              checked={selectedPaymentMethod === "pay-at-hotel"}
-            />
-            <div>
-              <h3 className="text-lg font-medium text-gray-800">Pay at Hotel</h3>
-              <p className="text-sm text-gray-500">
-                Reserve now and pay directly at the hotel upon check-in.
-              </p>
-            </div>
-          </label>
-        )}
-        {/* <label
-          htmlFor="upi-payment"
-          className="flex items-center gap-4 p-4 rounded-lg cursor-pointer hover:shadow-lg border-2 border-gray-200 hover:border-teal-200 hover:bg-gray-50"
-        >
-          <input
-            type="radio"
-            id="upi-payment"
-            name="payment-method"
-            className="w-5 h-5"
-            onChange={() => handlePaymentMethodChange("upi")}
-            checked={selectedPaymentMethod === "upi"}
-          />
-          <div>
-            <h3 className="text-lg font-medium">UPI</h3>
-            <p className="text-sm text-gray-500">
-              Pay securely using UPI (Google Pay, PhonePe, etc.).
-            </p>
-          </div>
-        </label> */}
       </div>
 
-      {/* Conditional rendering of the Continue button */}
-      {selectedPaymentMethod && (
-        <div className="w-full flex justify-end">
-          <button
-            className="mt-6 w-[200px] bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded transition-all"
-            style={{ backgroundColor: "#058FA2" }}
-            onClick={ContinueBtnClick}
-            disabled={isLoading}
+      {/* Payment Options */}
+      <div className="space-y-4 mb-8">
+        {/* Pay and Book Now Option */}
+        <div
+          className={`relative overflow-hidden rounded-xl border-2 transition-all duration-300 cursor-pointer group ${selectedPaymentMethod === "pay-now"
+            ? "border-teal-500 bg-teal-50 shadow-lg transform scale-[1.02]"
+            : "border-gray-200 hover:border-teal-300 hover:shadow-md"
+            } ${isLoading ? 'pointer-events-none' : ''}`}
+          onClick={() => !isLoading && handlePaymentMethodChange("pay-now")}
+        >
+          <label htmlFor="pay-now" className="flex items-start p-6 cursor-pointer">
+            <input
+              type="radio"
+              id="pay-now"
+              name="payment-method"
+              className="w-5 h-5 mt-1 text-teal-600 border-2 border-gray-300 focus:ring-teal-500"
+              onChange={() => !isLoading && handlePaymentMethodChange("pay-now")}
+              checked={selectedPaymentMethod === "pay-now"}
+              disabled={isLoading}
+            />
+
+            <div className="ml-4 flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <div className={`p-2 rounded-lg ${selectedPaymentMethod === "pay-now" ? "bg-teal-500" : "bg-gray-100 group-hover:bg-teal-100"}`}>
+                  <CreditCard className={`w-5 h-5 ${selectedPaymentMethod === "pay-now" ? "text-white" : "text-gray-600 group-hover:text-teal-600"}`} />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800">Pay and Book Now</h3>
+                <div className="ml-auto">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <CheckCircle2 className="w-3 h-3 mr-1" />
+                    Secure
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-gray-600 mb-3">
+                Complete your booking instantly with secure online payment
+              </p>
+
+              <div className="flex flex-wrap gap-4 text-sm">
+                <div className="flex items-center text-green-600">
+                  <Shield className="w-4 h-4 mr-1" />
+                  <span>Instant confirmation</span>
+                </div>
+                <div className="flex items-center text-blue-600">
+                  <CreditCard className="w-4 h-4 mr-1" />
+                  <span>All major cards accepted</span>
+                </div>
+              </div>
+            </div>
+          </label>
+
+          {selectedPaymentMethod === "pay-now" && (
+            <div className="absolute top-4 right-4">
+              <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
+                <CheckCircle2 className="w-4 h-4 text-white" />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Pay at Hotel Option */}
+        {hotelDetail?.payAtHotel === "yes" && (
+          <div
+            className={`relative overflow-hidden rounded-xl border-2 transition-all duration-300 cursor-pointer group ${selectedPaymentMethod === "pay-at-hotel"
+              ? "border-teal-500 bg-teal-50 shadow-lg transform scale-[1.02]"
+              : "border-gray-200 hover:border-teal-300 hover:shadow-md"
+              } ${isLoading ? 'pointer-events-none' : ''}`}
+            onClick={() => !isLoading && handlePaymentMethodChange("pay-at-hotel")}
           >
-            {isLoading ? "Processing..." : "Continue to Pay"}
-          </button>
+            <label htmlFor="pay-at-hotel" className="flex items-start p-6 cursor-pointer">
+              <input
+                type="radio"
+                id="pay-at-hotel"
+                name="payment-method"
+                className="w-5 h-5 mt-1 text-teal-600 border-2 border-gray-300 focus:ring-teal-500"
+                onChange={() => !isLoading && handlePaymentMethodChange("pay-at-hotel")}
+                checked={selectedPaymentMethod === "pay-at-hotel"}
+                disabled={isLoading}
+              />
+
+              <div className="ml-4 flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className={`p-2 rounded-lg ${selectedPaymentMethod === "pay-at-hotel" ? "bg-teal-500" : "bg-gray-100 group-hover:bg-teal-100"}`}>
+                    <Building2 className={`w-5 h-5 ${selectedPaymentMethod === "pay-at-hotel" ? "text-white" : "text-gray-600 group-hover:text-teal-600"}`} />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800">Pay at Hotel</h3>
+                  <div className="ml-auto">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                      <Clock className="w-3 h-3 mr-1" />
+                      Flexible
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-gray-600 mb-3">
+                  Reserve now and pay directly at the hotel during check-in
+                </p>
+
+                <div className="flex flex-wrap gap-4 text-sm">
+                  <div className="flex items-center text-orange-600">
+                    <Clock className="w-4 h-4 mr-1" />
+                    <span>No advance payment</span>
+                  </div>
+                  <div className="flex items-center text-blue-600">
+                    <Building2 className="w-4 h-4 mr-1" />
+                    <span>Pay at reception</span>
+                  </div>
+                </div>
+              </div>
+            </label>
+
+            {selectedPaymentMethod === "pay-at-hotel" && (
+              <div className="absolute top-4 right-4">
+                <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center">
+                  <CheckCircle2 className="w-4 h-4 text-white" />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Continue Button */}
+      {selectedPaymentMethod && (
+        <div className="flex justify-end">
+          {selectedPaymentMethod === "pay-now" ? (
+            <RazorpayPayment
+              hotelDetail={hotelDetail}
+              amount={finalPrice}
+              onSuccess={(paymenttypeunkid) => ContinueBtnClick(paymenttypeunkid)}
+            />
+          ) : (
+            <button
+              className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-semibold rounded-xl"
+              onClick={() => ContinueBtnClick()}
+            >
+              Confirm Booking
+            </button>
+          )}
         </div>
       )}
+
+
+      {/* Security Notice */}
+      <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center text-sm text-gray-600">
+          <Shield className="w-4 h-4 mr-2 text-green-600" />
+          <span>Your payment information is secured with 256-bit SSL encryption</span>
+        </div>
+      </div>
     </div>
-    </>
   );
 };
 

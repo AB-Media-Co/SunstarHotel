@@ -55,7 +55,7 @@ export function Sidebar() {
     { id: 6, text: 'Manage SEO', icon: <Search />, path: '/admin/manage-seo', roles: ['superadmin', 'admin', 'digitalMarketer'] },
     { id: 7, text: 'Manage Blogs', icon: <Article />, path: '/admin/manage-blogs', roles: ['superadmin', 'admin', 'contentManager', 'digitalMarketer'] },
     { id: 8, text: 'All Users', icon: <Group />, path: '/admin/all-users', roles: ['superadmin', 'admin'] },
-    // { id: 9, text: 'My Profile', icon: <People />, path: '/admin/profile', roles: ['superadmin', 'admin', 'manager', 'contentManager', 'cityManager', 'hotelManager', 'digitalMarketer'] },
+    // { id: 9, text: 'Jobs', icon: <People />, path: '/admin/jobs', roles: ['superadmin', 'admin', 'manager', 'contentManager', 'cityManager', 'hotelManager', 'digitalMarketer'] },
   ];
 
   // Show loading state

@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import { useGetBlogs } from "../../ApiHooks/useBlogHooks";
 import SearchIcon from '@mui/icons-material/Search';
+import { useGetBlogs2 } from "../../ApiHooks/useBlogs2";
 const categories = [
   "Hospitality",
   "First-Time Visitors",
@@ -25,7 +26,7 @@ const categories = [
   "Travel Essentials",
   "Scam Awareness"
 ];
-
+ 
 const Blogs = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -35,7 +36,10 @@ const Blogs = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   
   // Get all blogs
-  const { data: allBlogs, isLoading: loadingAllBlogs } = useGetBlogs("", "");
+  // const { data: allBlogs, isLoading: loadingAllBlogs } = useGetBlogs("", "");
+  const { data: allBlogs,isLoading: loadingAllBlogs } = useGetBlogs2({ status: "all" })
+  console.log(allBlogs)
+
   
   // Handle filtering locally rather than relying on the API
   const [isFiltering, setIsFiltering] = useState(false);
@@ -43,13 +47,13 @@ const Blogs = () => {
   
   // Filter blogs locally
   useEffect(() => {
-    if (!allBlogs?.data) return;
+    if (!allBlogs?.blogs) return;
     
     setIsFiltering(true);
     
     try {
       // Start with all blogs
-      let results = [...allBlogs.data];
+      let results = [...allBlogs?.blogs];
       
       // Apply search filter if provided
       if (searchQuery) {
@@ -80,7 +84,7 @@ const Blogs = () => {
   const displayBlogs = {
     data: (selectedCategories.length > 0 || searchQuery) 
       ? filteredBlogs 
-      : allBlogs?.data
+      : allBlogs?.blogs
   };
   
   const isLoading = loadingAllBlogs || isFiltering;
@@ -88,8 +92,8 @@ const Blogs = () => {
   
   const navigate = useNavigate();
 
-  const handleCardClick = (slug) => {
-    navigate(`/sunstar-blogs/${slug}`);
+  const handleCardClick = (blog) => {
+    navigate(`/sunstar-blogs/${blog?.title}`, { state: { blog } });
   };
 
   // Handle category button click
@@ -120,7 +124,7 @@ const Blogs = () => {
 
   // Extract available categories from ALL blogs data
   const availableCategories = Array.from(
-    new Set(allBlogs?.data?.map((b) => b.category).filter(Boolean))
+    new Set(allBlogs?.blogs?.map((b) => b.category).filter(Boolean))
   );
 
   return (
@@ -213,11 +217,11 @@ const Blogs = () => {
               <div
                 key={blog._id}
                 className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group"
-                onClick={() => handleCardClick(blog.slug)}
+                onClick={() => handleCardClick(blog)}
               >
-                {blog.image && (
+                {blog.featuredImage?.url && (
                   <img
-                    src={blog.image}
+                    src={blog.featuredImage?.url}
                     alt={blog.title}
                     className="w-full h-64 object-cover transform transition duration-300 group-hover:scale-105"
                     onError={(e) => (e.target.src = "/fallback-image.jpg")}

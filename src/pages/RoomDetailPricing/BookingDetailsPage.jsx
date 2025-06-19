@@ -13,6 +13,7 @@ import { usePricing } from "../../Context/PricingContext";
 import { Helmet } from "react-helmet";
 import { HeaderHotel } from "./BookingDetailPageComponent/HeaderHotel";
 import { ArrowBackIosNew, ForkLeftOutlined } from "@mui/icons-material";
+import { useGetUserByEmail } from "../../ApiHooks/useUser";
 
 const calculateDays = (checkIn, checkOut) => {
   if (!checkIn || !checkOut) return 0;
@@ -27,9 +28,11 @@ const BookingDetailsPage = () => {
   const { details, hotelData } = usePricing();
   const hotelDetail = details[0];
   const navigate = useNavigate();
+  const [verified,setIsVerified]=useState(false);
 
   const getHotelDataLocal = localStorage.getItem("hotelInfo");
   const getHotelData = JSON.parse(getHotelDataLocal);
+
 
   const checkIn = localStorage.getItem("checkInDate");
   const checkOut = localStorage.getItem("checkOutDate");
@@ -83,7 +86,6 @@ const BookingDetailsPage = () => {
       <div className="content flex items-center gap-2 py-4 md:py-10 text-mobile/h1 md:text-desktop/h2 text-white">
         <button
           onClick={() => navigate(-1)}
-        
           aria-label="Go back"
         >
           <ArrowBackIosNew className="text-white" style={{ height: "35px", width: "35px" }} />
@@ -96,9 +98,9 @@ const BookingDetailsPage = () => {
           <HeaderHotel />
           <HotelDetailsCard />
           {/* Render GuestDetailsForm once and pass its ref */}
-          <GuestDetailsForm ref={guestFormRef} />
+          <GuestDetailsForm ref={guestFormRef} setIsVerified={setIsVerified}/>
           {hotelDetail.addToYourStay.length > 0 && <AddToYourStayOptions data={hotelDetail} />}
-          <OfferCode hotelDetail={hotelDetail} checkIn={checkIn} />
+          <OfferCode hotelDetail={hotelDetail} checkIn={checkIn} verified={verified} />
           <div className="lg:hidden">
             <ReservationSummarySidebar
               hotelDetail={hotelDetail}
@@ -110,7 +112,8 @@ const BookingDetailsPage = () => {
             />
           </div>
           {/* Pass the guestFormRef to PaymentMethod */}
-          <PaymentMethod hotelDetail={hotelDetail} guestFormRef={guestFormRef}
+          <PaymentMethod hotelDetail={hotelDetail}
+            verified={verified}
             checkIn={checkIn}
             checkOut={checkOut}
           />

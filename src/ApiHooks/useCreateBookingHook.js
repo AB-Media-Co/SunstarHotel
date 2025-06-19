@@ -38,16 +38,17 @@ export const useMakeBooking = (hotelCode, authKey, checkIn, checkOut, selectedRo
         City: guestDetails.city || "",
         Zipcode: guestDetails.zipcode || "",
       };
+      console.log("roomData", roomData)
 
-      const response = await axiosInstance.post('/api/booking', {
-        roomData,
-        hotelDetail: {
-          hotelCode,
-          authKey,
-        },
-      });
+      // const response = await axiosInstance.post('/api/booking', {
+      //   roomData,
+      //   hotelDetail: {
+      //     hotelCode,
+      //     authKey,
+      //   },
+      // });
 
-      return response.data;
+      // return response.data;
     },
     onSuccess: (data) => {
       // Check for proper response structure based on eZee API

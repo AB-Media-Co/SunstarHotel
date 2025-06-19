@@ -7,23 +7,17 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export const AmenitiesList2 = ({ amenities }) => {
     const [visible, setVisible] = useState(false);
-    const itemsToShow = visible ? amenities.length : 12;
+    const itemsToShow = visible ? amenities.length : 10;
 
     return (
         <section id="amenities" className="py-12 bg-primary-white content">
             <div className="container mx-auto ">
                 <hr className="bg-[#A4A4A4] h-[2px] w-full" />
                 <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold my-4 text-reveal-animation transition-all duration-300">
-                    Amenities
+                Popular Amenities
                 </h2>
                 <hr className="bg-[#A4A4A4] h-[2px] w-full mb-6" />
 
-                <div className="flex justify-start">
-                    <span className="bg-primary-green text-primary-white text-lg font-bold 
-                           px-6 py-2 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300">
-                        Popular Amenities
-                    </span>
-                </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 md:gap-x-[12rem] gap-y-10  mt-10">
                     <AnimatePresence>

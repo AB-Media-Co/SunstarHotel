@@ -1,27 +1,26 @@
-import { useState } from "react";
-import { usePackageById, usePackagesByState, useStatesWithSummary } from "../../../../ApiHooks/useTravelPackagesHook";
+import { useStatesWithSummary } from "../../../../ApiHooks/useTravelPackagesHook";
 import CommonSwiper from "../../../../Components/CommonSlider";
 import RoatinfImg from "../../../../Components/RoatinfImg";
-import { Link } from "react-router-dom"; // assuming you use React Router
+import { useNavigate } from "react-router-dom"; // 🔄 Use this
 
 const PopularDestination = () => {
   const { data: packages = [] } = useStatesWithSummary();
-  console.log(packages)
-  const [selectedState, setSelectedState] = useState('');
-  const { data, isLoading, isError, error } = usePackagesByState(selectedState);
-  console.log(data)
+  const navigate = useNavigate(); // ✅ Add this
+
   const renderCard = (item) => (
     <div
-      to={`/destination/${item._id}`} // route to destination detail
-      onClick={() => setSelectedState(item?.name)}
-      className="group rounded-2xl overflow-hidden my-10 bg-white shadow-md transition hover:shadow-xl block"
+      onClick={() => navigate(`/destination/${encodeURIComponent(item.name)}`, {
+        state: { item }
+      })}
+      className="group rounded-2xl overflow-hidden my-10 bg-white shadow-md transition hover:shadow-xl block cursor-pointer"
     >
-      <div className="overflow-hidden rounded-2xl">
+      <div className="relative overflow-hidden rounded-2xl group">
         <img
           src={item.image}
           alt={item.name}
           className="h-64 w-full object-cover transform transition-transform duration-300 group-hover:scale-105"
         />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
       <div className="p-4 py-10 flex gap-2 justify-between items-center">
         <h3 className="text-lg font-semibold text-primary-green">{item.name}</h3>
@@ -65,7 +64,6 @@ const PopularDestination = () => {
             autoplayDelay={4000}
             enableAutoplay={true}
             showPagination={true}
-
           />
         </div>
       </div>

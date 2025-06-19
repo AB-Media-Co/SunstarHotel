@@ -3,12 +3,9 @@ import { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import Icon from "../../../Components/Icons";
 import Calendar from "../../../Components/Calendar";
-
 import { ArrowRightAlt } from "@mui/icons-material";
-
 import {
-  format,
-  differenceInCalendarDays,
+  format,differenceInCalendarDays,
 } from "date-fns";
 import { usePricing } from "../../../Context/PricingContext";
 import { useNavigate } from "react-router-dom";
@@ -50,8 +47,14 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
 
   // Handle scroll and update active section
   useEffect(() => {
+    let timeout;
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
+      clearTimeout(timeout);
+  
+      timeout = setTimeout(() => {
+        setItemFixed(currentScrollPos > 600);
+      }, 50);
       setItemFixed(currentScrollPos > 600);
 
       // Update active tab based on scroll position
@@ -79,9 +82,8 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+  return () => window.removeEventListener("scroll", handleScroll);
+
   }, [activeTab, tabs]);
 
   useEffect(() => {

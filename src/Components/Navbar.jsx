@@ -12,24 +12,54 @@ import AllHotelCard from "./AllHotelCard";
 import { hotels } from "../Data/AboutSectionData";
 import { usePricing } from "../Context/PricingContext";
 
+
+function getHotelPayLink(hotelCode) {
+  switch (String(hotelCode)) {
+    case "14494":
+      return "https://hotelsunstarresidency.hotelpay.co.in/";
+    case "14492":
+      return "https://hotelsunstargrand.hotelpay.co.in/";
+    case "14496":
+      return "https://suncourthotelyatri.hotelpay.co.in/";
+    case "14493":
+      return "https://sunstarheritage.hotelpay.co.in/";
+    default:
+      return "#";
+  }
+}
+
+
+
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isHotelModalOpen, openHotelModal, closeHotelModal } = usePricing();  
+  const { isHotelModalOpen, openHotelModal, closeHotelModal,navColor } = usePricing();
   const [active, setActive] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+
   // Check if current path starts with "/hotels"
   const isHotelsPath = location.pathname.startsWith("/hotels");
+  const hotelInfo = localStorage.getItem("hotelInfo");
+  let hotelObj = null;
+  let payLink = "#";
+
+  if (hotelInfo) {
+    try {
+      hotelObj = JSON.parse(hotelInfo);
+      payLink = getHotelPayLink(hotelObj.hotelCode); // works, even if hotelCode is number
+    } catch (err) {
+      console.error("Parse error", err);
+    }
+  }
 
   // Updated navItems using context function for Hotels
   const navItems = [
     { name: "Home", icon: <HomeIcon />, route: "/" },
     { name: "Why Sunstar?", icon: <InfoIcon />, route: "/why-sunstar" },
-    { 
-      name: "Hotels", 
-      icon: <HotelIcon />, 
-      action: openHotelModal 
+    {
+      name: "Hotels",
+      icon: <HotelIcon />,
+      action: openHotelModal
     },
     { name: "Corporate Booking", icon: <BusinessIcon />, route: "/corporate-booking" },
     { name: "Day Use Room", icon: <BusinessIcon />, route: "/dayuseroom" },
@@ -43,7 +73,7 @@ const Navbar = () => {
     } else if (location.pathname.startsWith("/hotels")) {
       setActive("Hotels");
     } else if (location.pathname === "/why-sunstar") {
-      setActive("Why Sunstar?");  
+      setActive("Why Sunstar?");
     } else if (location.pathname === "/corporate-booking") {
       setActive("Corporate Booking");
     } else if (location.pathname === "/dayuseroom") {
@@ -70,12 +100,12 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-transparent nav text-primary-white py-4 top-2 absolute w-full z-40">
+      <nav className={`bg-transparent nav ${navColor ? 'text-black':'text-primary-white'}  py-4 top-2 absolute w-full z-40`}>
         <div className="content flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="text-2xl font-bold">
             <img
-              src="/images/Logo/logo.svg"
+              src={`${navColor? '/images/Logo/logo2.svg' : '/images/Logo/logo.svg'} `}
               alt="Logo"
               className="h-[49px] w-[150px]"
             />
@@ -94,9 +124,8 @@ const Navbar = () => {
                         navigate(route);
                       }
                     }}
-                    className={`flex items-center px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${
-                      active === name ? "text-primary-yellow" : "hover:text-primary-yellow"
-                    }`}
+                    className={`flex items-center px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name ? "text-primary-yellow" : "hover:text-primary-yellow"
+                      }`}
                   >
                     {/* {icon} */}
                     <span className="text-mobile/body/2 md:text-desktop/body/1 md:font-semibold">{name}</span>
@@ -107,9 +136,11 @@ const Navbar = () => {
 
             {/* Pay Now Button - Only show when path starts with "/hotels" */}
             {isHotelsPath && (
-              <button className="bg-primary-yellow px-11 py-2 text-black font-bold rounded-full md:ml-4 hidden md:block">
-                Pay Now
-              </button>
+              <a href={payLink} target="_blank" rel="noopener noreferrer">
+                <button className="bg-primary-yellow px-11 py-2 text-black font-bold rounded-full md:ml-4 hidden md:block">
+                  Pay Now
+                </button>
+              </a>
             )}
           </div>
 
@@ -126,9 +157,8 @@ const Navbar = () => {
           {/* Mobile Menu (Slide-in Sidebar) */}
           <div
             id="mobile-menu"
-            className={`fixed top-0 md:hidden left-0 h-screen overflow-hidden bg-primary-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${
-              isMenuOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
+            className={`fixed top-0 md:hidden left-0 h-screen overflow-hidden bg-primary-white text-[#A4A4A4] font-semibold w-72 transform transition-transform ease-in-out duration-500 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+              }`}
           >
             {/* Header with Logo and Close Button */}
             <div className="flex justify-between p-4 border-b border-gray-200">
@@ -161,9 +191,8 @@ const Navbar = () => {
                         }
                         closeMobileMenu();
                       }}
-                      className={`flex items-center space-x-2 w-full text-left px-4 py-2 rounded-lg transition-colors duration-300 ${
-                        active === name ? "text-primary-yellow bg-gray-100" : "hover:text-primary-yellow"
-                      }`}
+                      className={`flex items-center space-x-2 w-full text-left px-4 py-2 rounded-lg transition-colors duration-300 ${active === name ? "text-primary-yellow bg-gray-100" : "hover:text-primary-yellow"
+                        }`}
                     >
                       {icon}
                       <span className="text-mobile/body/2">{name}</span>
