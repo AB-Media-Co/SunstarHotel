@@ -1,16 +1,17 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 import { useCreateRazorpayOrder, useVerifyRazorpayPayment } from "../../../ApiHooks/useRazorpayOrderHook";
 import toast from "react-hot-toast";
 
 const RazorpayPayment = ({ hotelDetail, amount, onSuccess }) => {
+  console.log("hi")
   const createOrder = useCreateRazorpayOrder();
   const verifyPayment = useVerifyRazorpayPayment();
 
   const razorpayKeys = {
-    14496: "rzp_test_YAWILDo6yQ4sNw",
-    14492: "rzp_test_xxxx2",
-    14494: "rzp_test_xxxx3",
-    14493: "rzp_test_xxxx4",
+    14496: "rzp_live_KZSDFi3qOgrIgC",
+    14492: "rzp_live_IQdcqeX4foVUM3",
+    14494: "rzp_live_SxbRIhkDqyGEOM",
+    14493: "rzp_live_uUlevuP8MoleGg", 
   };
   const razorpayKeyId = razorpayKeys[hotelDetail?.hotelCode];
 

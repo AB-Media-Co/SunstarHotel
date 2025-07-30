@@ -1,63 +1,47 @@
 import { useState, forwardRef, useEffect } from "react";
-import { useSendOtp, useVerifyOtp, useGetUserByEmail } from "../../../ApiHooks/useUser";
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
+import { useGetUserByEmail } from "../../../ApiHooks/useUser";
+import LoginModal from "../../../Components/LoginModal";
+import { usePricing } from "../../../Context/PricingContext";
 
-const GuestDetailsForm = forwardRef(({setIsVerified}) => {
+const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState(localStorage.getItem("user_email") || "");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isBookingForSomeoneElse, setIsBookingForSomeoneElse] = useState(false);
+  const {someOneElse, setSomeoneElse,setGuestData} = usePricing()
 
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
   const [focusedField, setFocusedField] = useState(null);
 
-  const sendOtpMutation = useSendOtp();
-  const verifyOtpMutation = useVerifyOtp();
 
-  const { data: userData, refetch: refetchUser } = useGetUserByEmail(email);
-  console.log("userData", userData);  // log userData here
+  const verifiedUser = localStorage.getItem("user_email") !== null;
 
-  // ✅ Auto-fill after getting user data
+  const { data: userData } = useGetUserByEmail(email);
+
+  console.log(userData)
+
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+
+
   useEffect(() => {
-    if (userData?.data?.isVerified) {
-      setFirstName(userData?.data?.firstName || "");
-      setLastName(userData?.data?.lastName || "");
-      setPhoneNumber(userData?.data?.phone || "");
-      setIsVerified(userData?.data?.isVerified);
-
+    if (verifiedUser && someOneElse) {
+      setGuestData({
+        firstName,
+        lastName,
+        email,
+        phone: phoneNumber
+      });
     }
-    if (userData?.data?.isVerified) {
-      localStorage.setItem("user_email", email);
-    }
-  }, [email, setIsVerified, userData]);
+  }, [verifiedUser, someOneElse, firstName, lastName, email, phoneNumber, setGuestData]);
+  
 
-  const handleSendOtp = () => {
-    const payload = { email, phone: phoneNumber, firstName, lastName, role: "user", loyalAgent: false };
-    sendOtpMutation.mutate(payload, {
-      onSuccess: () => {
-        setOtpSent(true);
-      }
-    });
-  };
 
-  const handleVerifyOtp = () => {
-    verifyOtpMutation.mutate({ email, otp }, {
-      onSuccess: () => {
-        localStorage.setItem("user_email", email);
-        refetchUser();
-        setOtp("");  // clear OTP after success
-      }
-    });
-  };
-
-  const isFormValid = firstName.trim() && lastName.trim() && email.trim() && phoneNumber.trim();
-
-  const formFields = [ 
-    { 
-      id: "firstName", 
-      label: "First Name", 
-      placeholder: "Enter your first name", 
+  const formFields = [
+    {
+      id: "firstName",
+      label: "First Name",
+      placeholder: "Enter your first name",
       type: "text",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -66,10 +50,10 @@ const GuestDetailsForm = forwardRef(({setIsVerified}) => {
         </svg>
       )
     },
-    { 
-      id: "lastName", 
-      label: "Last Name", 
-      placeholder: "Enter your last name", 
+    {
+      id: "lastName",
+      label: "Last Name",
+      placeholder: "Enter your last name",
       type: "text",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -78,10 +62,10 @@ const GuestDetailsForm = forwardRef(({setIsVerified}) => {
         </svg>
       )
     },
-    { 
-      id: "email", 
-      label: "Email Address", 
-      placeholder: "Enter your email address", 
+    {
+      id: "email",
+      label: "Email Address",
+      placeholder: "Enter your email address",
       type: "email",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -90,10 +74,10 @@ const GuestDetailsForm = forwardRef(({setIsVerified}) => {
         </svg>
       )
     },
-    { 
-      id: "mobile", 
-      label: "Mobile Number", 
-      placeholder: "Enter your mobile number", 
+    {
+      id: "mobile",
+      label: "Mobile Number",
+      placeholder: "Enter your mobile number",
       type: "tel",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -104,7 +88,7 @@ const GuestDetailsForm = forwardRef(({setIsVerified}) => {
   ];
 
   const getFieldValue = (id) => {
-    switch(id) {
+    switch (id) {
       case "firstName": return firstName;
       case "lastName": return lastName;
       case "email": return email;
@@ -114,7 +98,7 @@ const GuestDetailsForm = forwardRef(({setIsVerified}) => {
   };
 
   const handleFieldChange = (id, value) => {
-    switch(id) {
+    switch (id) {
       case "firstName": setFirstName(value); break;
       case "lastName": setLastName(value); break;
       case "email": setEmail(value); break;
@@ -122,12 +106,9 @@ const GuestDetailsForm = forwardRef(({setIsVerified}) => {
     }
   };
 
+
   return (
     <div id="guestDetail" className="flex flex-col gap-10 relative overflow-hidden" >
-      {/* Decorative Background Elements */}
-      {/* <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-cyan-400 to-cyan-600"></div>
-      <div className="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-full opacity-20"></div>
-      <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-full opacity-30"></div> */}
 
       {/* Enhanced Header */}
       <div className="flex items-center mb-2 relative z-10">
@@ -138,10 +119,11 @@ const GuestDetailsForm = forwardRef(({setIsVerified}) => {
         </div>
       </div>
 
-     
-        <div className="relative z-10">
-          {/* Verification Status Banner */}
-          {userData?.data?.isVerified && (
+
+      <div className="relative z-10">
+        {/* Verification Status Banner */}
+        {verifiedUser && (
+          <>
             <div className="mb-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl flex items-center">
               <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-3 shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -153,190 +135,141 @@ const GuestDetailsForm = forwardRef(({setIsVerified}) => {
                 <p className="text-green-600 text-sm">Your email and mobile number are verified</p>
               </div>
             </div>
-          )}
-
-          {/* Enhanced Form */}
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {formFields.map(({ id, label, placeholder, type, icon }) => {
-              const fieldValue = getFieldValue(id);
-              const isFieldFocused = focusedField === id;
-              const hasValue = fieldValue && fieldValue.trim();
-              
-              return (
-                <div key={id} className="flex flex-col gap-3 group">
-                  <label 
-                    htmlFor={id} 
-                    className={`block text-sm font-semibold tracking-wide transition-colors duration-200 ${
-                      isFieldFocused || hasValue ? 'text-cyan-600' : 'text-gray-700'
-                    }`}
-                  >
-                    {label} <span className="text-red-500">*</span>
-                  </label>
-                  
-                  <div className="flex gap-3">
-                    <div className="relative flex-1">
-                      {/* Icon */}
-                      <div className={`absolute left-4 top-1/2 transform -translate-y-1/2 transition-colors duration-200 ${
-                        isFieldFocused ? 'text-cyan-500' : hasValue ? 'text-cyan-600' : 'text-gray-400'
-                      }`}>
-                        {icon}
-                      </div>
-                      
-                      {/* Input Field */}
-                      <input
-                        type={type}
-                        id={id}
-                        placeholder={placeholder}
-                        className={`w-full h-14 pl-12 pr-4 py-3 text-base text-gray-900 placeholder-gray-400 bg-white border-2 rounded-xl shadow-sm transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-cyan-100 ${
-                          isFieldFocused 
-                            ? 'border-cyan-400 shadow-lg' 
-                            : hasValue 
-                              ? 'border-cyan-300 bg-cyan-50' 
-                              : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                        value={fieldValue}
-                        onChange={(e) => handleFieldChange(id, e.target.value)}
-                        onFocus={() => setFocusedField(id)}
-                        onBlur={() => setFocusedField(null)}
-                      />
-                      
-                      {/* Clear Button */}
-                      {hasValue && (
-                        <button
-                          type="button"
-                          onClick={() => handleFieldChange(id, "")}
-                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Verify Button for Mobile */}
-                    {id === "mobile" && !userData?.data?.isVerified && (
-                      <button
-                        type="button"
-                        className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg ${
-                          isFormValid 
-                            ? 'bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white shadow-cyan-200 hover:shadow-cyan-300' 
-                            : 'bg-gray-300 cursor-not-allowed text-gray-500'
-                        } ${sendOtpMutation.isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={!isFormValid || sendOtpMutation.isLoading}
-                        onClick={handleSendOtp}
-                      >
-                        {sendOtpMutation.isLoading ? (
-                          <div className="flex items-center">
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                            Sending...
-                          </div>
-                        ) : (
-                          <div className="flex gap-2 items-center">
-                            <CheckCircleOutlineOutlinedIcon/>
-                            Verify
-                          </div>
-                        )}
-                      </button>
-                    )}
-                  </div>
+            <div className="mb-8 p-4 border rounded-xl bg-gray-50 flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-4">
+                {/* Avatar with initials */}
+                <div className="w-12 h-12 rounded-full bg-primary-green flex items-center justify-center text-white font-bold text-lg shadow">
+                  {userData?.data?.firstName?.charAt(0)}{userData?.data?.lastName?.charAt(0)}
                 </div>
-              );
-            })}
-          </form>
-        </div>
-
-      {/* Enhanced OTP Section */}
-      {otpSent && !userData?.data?.isVerified && (
-        <div className="relative z-10 mt-8 p-6 bg-gradient-to-br from-cyan-50 to-white border-2 border-cyan-200 rounded-2xl shadow-xl">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-cyan-600 rounded-t-2xl"></div>
-          
-          <div className="flex items-center mb-6">
-            <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center mr-4 shadow-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-gray-800">Verify Your Mobile</h3>
-              <p className="text-gray-600 text-sm">We've sent a verification code to your mobile number</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="relative">
-              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-500">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                  <line x1="8" y1="21" x2="16" y2="21"></line>
-                  <line x1="12" y1="17" x2="12" y2="21"></line>
-                </svg>
+                {/* User Info */}
+                <div className="flex flex-col">
+                  <p className="text-gray-900 font-semibold text-lg">{userData?.data?.firstName} {userData?.data?.lastName}</p>
+                  <p className="text-sm text-gray-500">
+                    {userData?.data?.email?.replace(/^(.{2})(.*)(@.*)$/, (_, a, b, c) => `${a}${'*'.repeat(b.length)}${c}`)} |
+                    {' '}{userData?.data?.phone?.replace(/^(.{0,2})(.*)(.{4})$/, (_, a, b, c) => `${'*'.repeat(a.length ? a.length : 2)}${'*'.repeat(b.length)}${c}`)}
+                  </p>
+                </div>
               </div>
-              <input
-                type="text"
-                id="otp"
-                placeholder="Enter 6-digit OTP"
-                maxLength="6"
-                className="w-full h-14 pl-12 pr-4 py-3 text-base text-gray-900 placeholder-gray-400 bg-white border-2 border-cyan-200 rounded-xl shadow-sm transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-cyan-100 focus:border-cyan-400 focus:shadow-lg"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                onKeyPress={(e) => e.key === 'Enter' && otp.length === 6 && handleVerifyOtp()}
-              />
-              {otp && (
-                <button
-                  type="button"
-                  onClick={() => setOtp('')}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </button>
-              )}
-            </div>
-            
-            <button
-              type="button"
-              className={`w-full h-14 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg ${
-                verifyOtpMutation.isLoading || otp.length !== 6
-                  ? 'bg-gray-300 cursor-not-allowed text-gray-500' 
-                  : 'bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white shadow-cyan-300 hover:shadow-cyan-400'
-              }`}
-              onClick={handleVerifyOtp}
-              disabled={verifyOtpMutation.isLoading || otp.length !== 6}
-            >
-              {verifyOtpMutation.isLoading ? (
-                <div className="flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3"></div>
-                  Verifying OTP...
-                </div>
-              ) : (
-                <div className="flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  Verify OTP
-                </div>
-              )}
-            </button>
 
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-500">Didn't receive the code?</span>
+              {/* Log Out Link */}
               <button
-                type="button"
-                onClick={handleSendOtp}
-                disabled={sendOtpMutation.isLoading}
-                className="text-cyan-600 hover:text-cyan-700 font-semibold hover:underline transition-colors"
+                onClick={() => {
+                  localStorage.removeItem("user_email");
+                  window.location.reload();
+                }}
+                className="text-sm font-semibold text-gray-500 hover:underline"
               >
-                Resend OTP
+                Log Out
               </button>
             </div>
+
+            {/* Checkbox Option */}
+            <label className="flex items-center gap-2 text-gray-700 text-sm mb-8">
+              <input
+                type="checkbox"
+                className="form-checkbox h-5 w-5 text-yellow-500 border-gray-300 rounded"
+                checked={isBookingForSomeoneElse}
+                onChange={(e) => {
+                  setIsBookingForSomeoneElse(e.target.checked);
+                  setSomeoneElse(e.target.checked);
+                }}
+              />
+              I'm booking for someone else
+            </label>
+
+
+            {/* Guest Details Form - Optional, if needed */}
+            {isBookingForSomeoneElse && (
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {formFields.map(({ id, label, placeholder, type, icon }) => {
+                  const fieldValue = getFieldValue(id);
+                  const isFieldFocused = focusedField === id;
+                  const hasValue = fieldValue && fieldValue.trim();
+
+                  return (
+                    <div key={id} className="flex flex-col gap-3 group">
+                      <label
+                        htmlFor={id}
+                        className={`block text-sm font-semibold tracking-wide transition-colors duration-200 ${isFieldFocused || hasValue ? 'text-cyan-600' : 'text-gray-700'
+                          }`}
+                      >
+                        {label} <span className="text-red-500">*</span>
+                      </label>
+                      <div className="flex gap-3">
+                        <div className="relative flex-1">
+                          <div
+                            className={`absolute left-4 top-1/2 transform -translate-y-1/2 transition-colors duration-200 ${isFieldFocused
+                              ? 'text-cyan-500'
+                              : hasValue
+                                ? 'text-cyan-600'
+                                : 'text-gray-400'
+                              }`}
+                          >
+                            {icon}
+                          </div>
+                          <input
+                            type={type}
+                            id={id}
+                            placeholder={placeholder}
+                            className={`w-full h-14 pl-12 pr-4 py-3 text-base text-gray-900 placeholder-gray-400 border-2 rounded-xl shadow-sm transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-cyan-100
+                              ${isFieldFocused
+                                ? 'border-cyan-400 shadow-lg'
+                                : hasValue
+                                  ? 'border-cyan-300 bg-cyan-50'
+                                  : 'border-gray-200 hover:border-gray-300'}
+                              ${id === "email" ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'bg-white'}
+                            `}
+                            value={fieldValue}
+                            onChange={(e) => handleFieldChange(id, e.target.value)}
+                            onFocus={() => setFocusedField(id)}
+                            onBlur={() => setFocusedField(null)}
+                            disabled={id === "email"}
+
+                          />
+                          {hasValue && (
+                            <button
+                              type="button"
+                              onClick={() => handleFieldChange(id, '')}
+                              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </form>
+            )}
+
+          </>
+        )}
+
+        {!verifiedUser && (
+          <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-xl flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-yellow-400 text-white rounded-full flex items-center justify-center shadow">
+                !
+              </div>
+              <div>
+                <p className="font-semibold text-yellow-800">Verification Needed</p>
+                <p className="text-yellow-600 text-sm">Please verify your account to continue</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowLoginModal(true)}
+              className="ml-4 px-5 py-2 rounded-lg bg-cyan-600 text-white hover:bg-cyan-700 transition"
+            >
+              Please Verify
+            </button>
           </div>
-        </div>
-      )}
+        )}
+        {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
+      </div>
     </div>
   );
 });

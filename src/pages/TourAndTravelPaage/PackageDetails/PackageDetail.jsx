@@ -14,17 +14,16 @@ const PackageDetail = () => {
     const { state } = useLocation();
     const { data: packageDetails, isLoading, isError, error } = usePackageById(state?.pkg?._id)
     const { Testimonials } = useUpdatePagesHook();
-    const {setIsNavColor} =usePricing()
+    const { setIsNavColor } = usePricing()
 
     useEffect(() => {
         setIsNavColor(true);
-      
         return () => {
-          setIsNavColor(false); // ✅ Reset when leaving the page
+            setIsNavColor(false); 
         };
-      }, [setIsNavColor]);
+    }, [setIsNavColor]);
 
-      useEffect(() => {
+    useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
@@ -48,7 +47,7 @@ const PackageDetail = () => {
         <div>
             <HeroSectionCarousel packageDetails={packageDetails} />
             <TourHiglights packageDetails={packageDetails} />
-            <PackageItinerary packageDetails={packageDetails}  />
+            <PackageItinerary packageDetails={packageDetails} />
             <PackageInclusionBlock packageDetails={packageDetails} />
             <TestimonialSection Testimonials={Testimonials} />
 

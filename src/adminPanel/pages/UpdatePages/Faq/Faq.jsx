@@ -14,10 +14,11 @@ import {
   FormControl,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useAddMultipleFAQs, useGetFAQsByPage } from '../../../../ApiHooks/useFaqsHooks';
+import { useAddMultipleFAQs, useGetFAQsByPage, useDeleteFAQ } from '../../../../ApiHooks/useFaqsHooks';
 
 const Faq = () => {
   const [localFaqs, setLocalFaqs] = useState([]);
+  const [deletedFaqIds, setDeletedFaqIds] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedPage, setSelectedPage] = useState('Day Stays Rooms'); // Default page to select
 
@@ -31,6 +32,7 @@ const Faq = () => {
 
   const { data: faqs, isLoading, error } = useGetFAQsByPage(selectedPage); // Fetch FAQs for the selected page
   const { mutate: addMultipleFAQs } = useAddMultipleFAQs(); // Hook for adding multiple FAQs
+  const { mutate: deleteFAQ } = useDeleteFAQ();
 
   useEffect(() => {
     if (faqs && Array.isArray(faqs)) {
@@ -53,25 +55,37 @@ const Faq = () => {
   };
 
   const handleRemoveFaq = (index) => {
-    setLocalFaqs(localFaqs.filter((_, i) => i !== index));
+    const faqToRemove = localFaqs[index];
+    if (faqToRemove._id) {
+      setDeletedFaqIds(ids => [...ids, faqToRemove._id]);
+    }
+    setLocalFaqs(faqs => faqs.filter((_, i) => i !== index));
   };
-
   const handleBulkAdd = () => {
-    const newFaqs = localFaqs.filter(faq => !faq._id);
+    // 1) brand-new FAQs
+    const newFaqsToAdd = localFaqs
+      .filter(faq => !faq._id && faq.question && faq.answer)
+      .map(faq => ({ ...faq, page: selectedPage }));
 
-    const cleanedFaqs = newFaqs.filter(faq => faq.question && faq.answer);
-
-    if (cleanedFaqs.length > 0) {
-      // Add the page info to each FAQ
-      const faqsWithPage = cleanedFaqs.map(faq => ({ ...faq, page: selectedPage }));
-
-      addMultipleFAQs(faqsWithPage); // Call the mutation
-      setOpen(false); // Close modal
-    } else {
+    // 2) if nothing to add AND nothing to delete → alert
+    if (newFaqsToAdd.length === 0 && deletedFaqIds.length === 0) {
       alert("Please add at least one new FAQ with a question and answer.");
+      return;
     }
 
+    // 3) add new FAQs
+    if (newFaqsToAdd.length > 0) {
+      addMultipleFAQs(newFaqsToAdd);
+    }
+
+    // 4) delete removed FAQs
+    deletedFaqIds.forEach(id => deleteFAQ(id));
+
+    // 5) reset and close modal
+    setDeletedFaqIds([]);
+    setOpen(false);
   };
+
 
   const handleOpenModal = () => setOpen(true);
   const handleCloseModal = () => setOpen(false);

@@ -1,5 +1,4 @@
-"use client"
-
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react"
 import { Tab } from "@headlessui/react"
 import {
@@ -62,6 +61,11 @@ export default function BlogEditorTabs() {
   const [content, setContent] = useState("")
   const [category, setCategory] = useState("")
   const [featuredImage, setFeaturedImage] = useState("")
+
+  const [metaTitle, setMetaTitle] = useState("")          // New state for meta title
+  const [metaDescription, setMetaDescription] = useState("") // New state for meta description
+  const [metaKeywords, setMetaKeywords] = useState("")
+
   const [selectedBlogId, setSelectedBlogId] = useState(null)
   const [isUploading, setIsUploading] = useState(false)
 
@@ -79,6 +83,10 @@ export default function BlogEditorTabs() {
       setCategory(blogData.category || "")
       setFeaturedImage(blogData.featuredImage?.url || "")
       setContent(blogData.content || "")
+      setMetaTitle(blogData.meta?.title || "")               // Populate meta title
+      setMetaDescription(blogData.meta?.description || "")   // Populate meta description
+      setMetaKeywords(blogData.meta?.keywords.join(", ") || "") // Populate meta keywords
+
     }
   }, [blogData, isLoading])
 
@@ -94,6 +102,12 @@ export default function BlogEditorTabs() {
       author,
       category,
       featuredImage: { url: featuredImage },
+      meta: {
+        title: metaTitle,
+        description: metaDescription,
+        keywords: metaKeywords.split(",").map(keyword => keyword.trim()), // Convert keywords to array
+
+      },
       status: "published",
     }
 
@@ -133,6 +147,9 @@ export default function BlogEditorTabs() {
     setCategory("")
     setFeaturedImage("")
     setSelectedBlogId(null)
+    setMetaTitle("")
+    setMetaDescription("")
+    setMetaKeywords("")
   }
 
   const handleDelete = (id) => {
@@ -296,6 +313,45 @@ export default function BlogEditorTabs() {
                     </button>
                   )}
                 </div>
+
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Meta Title</label>
+                    <input
+                      type="text"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      placeholder="Enter meta title..."
+                      value={metaTitle}
+                      onChange={(e) => setMetaTitle(e.target.value)}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
+                    <textarea
+                      rows={3}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      placeholder="Enter meta description..."
+                      value={metaDescription}
+                      onChange={(e) => setMetaDescription(e.target.value)}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Meta Keywords</label>
+                    <input
+                      type="text"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      placeholder="Enter keywords, separated by commas"
+                      value={metaKeywords}
+                      onChange={(e) => setMetaKeywords(e.target.value)}
+                    />
+                  </div>
+
+                 
+                </div>
+
 
                 {/* Form Fields */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

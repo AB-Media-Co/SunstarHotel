@@ -28,7 +28,6 @@ const DayUseRoom = () => {
             <BenefitsCard />
             <Rooms />
             <DayRoomTandC />
-
             <DaysUseRoomFaq />
 
         </div>

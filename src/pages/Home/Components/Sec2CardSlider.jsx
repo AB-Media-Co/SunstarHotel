@@ -57,6 +57,7 @@ export default function SwiperComponent() {
 
   const navigate = useNavigate();
   const { data: hotels } = useGetHotels();
+  
 
 
 
@@ -116,7 +117,7 @@ export default function SwiperComponent() {
                 {/* <span className="">({card.reviews} reviews)</span> */}
               </div>
               <h2
-                onClick={() => navigate(`hotels/${card?.hotelCode}`)}
+                onClick={() => navigate(`hotels/${card?.hotelCode}`, { state: { hotelData: card} })}
                 className="text-mobile/h5/medium cursor-pointer hover:text-primary-green md:text-desktop/h5 font-bold text-start transition-colors duration-300"
               >
                 {card.name?.length > 20 ? `${card.name.slice(0, 20)}...` : card.name}

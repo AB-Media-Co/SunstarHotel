@@ -17,22 +17,25 @@ import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 const EventCard = ({ image, title, description, link }) => {
     return (
         <Link to={link} className="block">
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
-                <div className="relative h-64 cursor-pointer">
-                    <img
-                        src={image}
-                        alt={title}
-                        className="w-full h-full object-cover transition-transform duration-300 "
-                        loading="lazy"
-                    />
-                    <div className="absolute cursor-pointer bottom-[-14px] rounded-full w-[250px] text-center left-10 right-10 bg-teal-500 text-white py-2 px-4 transition-colors duration-300 hover:bg-teal-600">
-                        <h3 className="text-sm font-semibold">{title}</h3>
-                    </div>
-                </div>
-                <div className="p-4">
-                    <p className="text-gray-600 transition-colors duration-300 hover:text-gray-800">{description}</p>
-                </div>
-            </div>
+      <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
+    <div className="relative h-48 sm:h-56 md:h-64 lg:h-72 cursor-pointer">
+        <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-300"
+            loading="lazy"
+        />
+        <div className="absolute cursor-pointer bottom-[-8px] sm:bottom-[-10px] md:bottom-[-14px] rounded-full w-[200px] sm:w-[220px] md:w-[250px] lg:w-[280px] text-center left-1/2 transform -translate-x-1/2 bg-teal-500 text-white py-1.5 sm:py-2 px-2 sm:px-3 md:px-4 transition-colors duration-300 hover:bg-teal-600">
+            <h3 className="text-xs sm:text-sm md:text-sm lg:text-base font-semibold truncate">{title}</h3>
+        </div>
+    </div>
+    <div className="p-3 sm:p-4 md:p-4 lg:p-6">
+        <p className="text-gray-600 text-sm sm:text-base md:text-base lg:text-lg transition-colors duration-300 hover:text-gray-800 leading-relaxed">
+            {description}
+        </p>
+    </div>
+</div>
+
         </Link>
     );
 };
@@ -299,7 +302,7 @@ const EventandConference = () => {
                         <span className="text-sm">{venue.location}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-700">
-                        <img src="/images/othericons/plate.svg" alt="" />
+                        <img src="/images/othericons/plate.svg" alt="" className='w-6' />
                         <span className="text-sm">Price per plate ₹ {venue.pricePerPlate}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-700">

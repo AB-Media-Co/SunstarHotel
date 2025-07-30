@@ -9,171 +9,220 @@ import {
   TextField,
   Typography,
   Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
-import useUpdatePagesHook from '../../../../ApiHooks/useUpdatePagesHook';
+import { useBulkCreateTestimonials, useCreateTestimonial, useDeleteTestimonial, useGetTestimonials, useUpdateTestimonial } from '../../../../ApiHooks/useTestimonialHook';
+import toast from 'react-hot-toast';
+
+const pages = [
+  '',
+  'tour&travel',
+  'corporate-booking',
+  // 'Social Events',
+  // 'Wedding & Pre-Wedding',
+];
 
 const Testimonials = () => {
-  // Get API testimonials data and update function from the custom hook
-  const { Testimonials: apiTestimonials, updateTestimonials } = useUpdatePagesHook();
-  
-  // Store the fetched testimonials data
-  const [testimonialData, setTestimonialData] = useState(null);
-  // Local state to hold editable data inside the modal
-  const [editingData, setEditingData] = useState(null);
-  // Controls modal visibility
+  const [selectedPage, setSelectedPage] = useState('');
+  const { data: apiTestimonials = [], isLoading, error } = useGetTestimonials({ page: selectedPage });
+  const createTestimonial = useCreateTestimonial();
+  const updateTestimonial = useUpdateTestimonial();
+  const bulkCreateTestimonials = useBulkCreateTestimonials();
+  const deleteTestimonial = useDeleteTestimonial();
+
+  const [editingData, setEditingData] = useState({ clientHeading: '', clients: [] });
+  const [deletedIds, setDeletedIds] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
-  // When API data is loaded, update local state
   useEffect(() => {
-    if (apiTestimonials) {
-      setTestimonialData(apiTestimonials);
-    }
+    // initialize editingData whenever page or apiTestimonials change
+    setEditingData({
+      clientHeading: '',              // or pull from a separate field if you store per-page heading
+      clients: apiTestimonials.map(t => ({
+        _id: t._id,
+        name: t.name,
+        location: t.location,
+        heading: t.heading,
+        description: t.description
+      }))
+    });
+    setDeletedIds([]);
   }, [apiTestimonials]);
 
-  // Open the modal and initialize the editing data with the current testimonialData
-  const handleOpenModal = () => {
-    setEditingData(testimonialData);
-    setOpenModal(true);
+  const handlePageChange = e => {
+    setSelectedPage(e.target.value);
   };
 
-  // Close the modal (discard changes if not saved)
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
-  // Handle changes for the main client heading
-  const handleHeadingChange = (e) => {
-    setEditingData({ ...editingData, clientHeading: e.target.value });
-  };
-
-  // Handle changes for each client's field
   const handleClientChange = (index, field, value) => {
-    const newClients = [...editingData.clients];
-    newClients[index] = { ...newClients[index], [field]: value };
-    setEditingData({ ...editingData, clients: newClients });
+    const clients = [...editingData.clients];
+    clients[index] = { ...clients[index], [field]: value };
+    setEditingData({ ...editingData, clients });
   };
 
-  // Add a new testimonial client
   const handleAddClient = () => {
-    const newClient = { name: '', location: '', heading: '', description: '' };
     setEditingData({
       ...editingData,
-      clients: [...editingData.clients, newClient],
+      clients: [
+        ...editingData.clients,
+        { name: '', location: '', heading: '', description: '' }
+      ]
     });
   };
 
-  // Delete a testimonial client
-  const handleDeleteClient = (index) => {
-    const newClients = editingData.clients.filter((_, i) => i !== index);
-    setEditingData({ ...editingData, clients: newClients });
+  const handleDeleteClient = index => {
+    const toDelete = editingData.clients[index];
+    if (toDelete._id) {
+      setDeletedIds(ids => [...ids, toDelete._id]);
+    }
+    setEditingData({
+      ...editingData,
+      clients: editingData.clients.filter((_, i) => i !== index)
+    });
   };
 
-  // Save the changes: update local state and call the update API function
   const handleSaveChanges = () => {
-    // Check descriptions word count
-    const hasLongDescription = editingData.clients.some(client => {
-      const wordCount = client.description.trim().split(/\s+/).length;
-      return wordCount > 50;
-    });
 
-    if (hasLongDescription) {
-      alert('Testimonial descriptions should not exceed 50 words');
+    const tooLong = editingData.clients.some(c =>
+      c.description.trim().split(/\s+/).length > 50
+    );
+    if (tooLong) {
+      toast.error('Each description must be 50 words or fewer.');
       return;
     }
+    // 1) updates
+    editingData.clients
+      .filter(c => c._id)
+      .forEach(c => {
+        updateTestimonial.mutate({
+          id: c._id,
+          updateData: {
+            name: c.name,
+            location: c.location,
+            heading: c.heading,
+            description: c.description,
+            page: selectedPage
+          }
+        });
+      });
 
-    setTestimonialData(editingData);
-    updateTestimonials({ TestimonialData: editingData });
+    // 2) new creations
+    const newClients = editingData.clients
+      .filter(c => !c._id)
+      .map(c => ({
+        name: c.name,
+        location: c.location,
+        heading: c.heading,
+        description: c.description,
+        page: selectedPage
+      }));
+    if (newClients.length) {
+      bulkCreateTestimonials.mutate(newClients);
+    }
+
+    // 3) deletions
+    deletedIds.forEach(id => deleteTestimonial.mutate(id));
+
     setOpenModal(false);
+    toast.success('Testimonials saved successfully');
+
   };
 
   return (
     <div>
-      {/* <Typography variant="h4" gutterBottom>
-        Testimonials
-      </Typography> */}
 
-      {/* A button that opens the modal for full editing */}
-      <div className='myGlobalButton' onClick={handleOpenModal}>
+
+      <div className="myGlobalButton" onClick={handleOpenModal}>
         Edit Testimonials
       </div>
 
-      {/* <Box sx={{ mt: 3 }}>
-        <Typography variant="h6">{testimonialData?.clientHeading}</Typography>
-        {testimonialData?.clients.map((client, index) => (
-          <Paper key={client._id || index} sx={{ p: 2, mb: 2 }}>
-            <Typography variant="subtitle1">{client.name}</Typography>
-            <Typography variant="body2">Location: {client.location}</Typography>
-            <Typography variant="body2">Heading: {client.heading}</Typography>
-            <Typography variant="body2">Description: {client.description}</Typography>
-          </Paper>
-        ))}
-      </Box> */}
-
-      {/* Modal for editing testimonials */}
       <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="md">
-        <DialogTitle>Edit Testimonials</DialogTitle>
+        <DialogTitle>Edit Testimonials for “{selectedPage || 'Default'}”</DialogTitle>
+
+
         <DialogContent dividers>
-          {editingData && (
-            <Box display="flex" flexDirection="column" gap={2} mt={1}>
-              <TextField
-                label="Client Heading"
-                variant="outlined"
-                fullWidth
-                value={editingData.clientHeading}
-                onChange={handleHeadingChange}
-              />
-              {editingData.clients.map((client, index) => (
-                <Paper key={client._id || index} sx={{ p: 2 }}>
-                  <Box display="flex" flexDirection="column" gap={2}>
-                    <TextField
-                      label="Name"
-                      variant="outlined"
-                      value={client.name}
-                      onChange={(e) => handleClientChange(index, 'name', e.target.value)}
-                    />
-                    <TextField
-                      label="Location"
-                      variant="outlined"
-                      value={client.location}
-                      onChange={(e) => handleClientChange(index, 'location', e.target.value)}
-                    />
-                    <TextField
-                      label="Heading"
-                      variant="outlined"
-                      value={client.heading}
-                      onChange={(e) => handleClientChange(index, 'heading', e.target.value)}
-                    />
-                    <TextField
-                      label="Description"
-                      variant="outlined"
-                      multiline
-                      rows={3}
-                      value={client.description}
-                      onChange={(e) => handleClientChange(index, 'description', e.target.value)}
-                      helperText={`${client.description.trim().split(/\s+/).length}/50 words`}
-                      error={client.description.trim().split(/\s+/).length > 50}
-                    />
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      startIcon={<Delete />}
-                      onClick={() => handleDeleteClient(index)}
-                    >
-                      Delete Client
-                    </Button>
-                  </Box>
-                </Paper>
+
+
+
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Choose Page</InputLabel>
+            <Select
+              labelId="page-select-label"
+              value={selectedPage}
+              label="Choose Page"
+              onChange={handlePageChange}
+              displayEmpty                          // ← show even when value is ""
+              renderValue={val =>
+                val === '' ? 'Default Testimonials' : val
+              }
+            >
+              {pages.map(pg => (
+                <MenuItem key={pg} value={pg}>
+                  {pg === '' ? 'Default Testimonials' : pg}
+                </MenuItem>
               ))}
-              <Button variant="contained" startIcon={<Add />} onClick={handleAddClient}>
-                Add Client
-              </Button>
-            </Box>
-          )}
+            </Select>
+          </FormControl>
+
+
+
+
+          {editingData.clients.map((client, idx) => (
+            <Paper key={client._id || idx} sx={{ p: 2, mb: 2 }}>
+              <Box display="flex" flexDirection="column" gap={2}>
+                <TextField
+                  label="Name"
+                  value={client.name}
+                  onChange={e => handleClientChange(idx, 'name', e.target.value)}
+                />
+                <TextField
+                  label="Location"
+                  value={client.location}
+                  onChange={e => handleClientChange(idx, 'location', e.target.value)}
+                />
+                <TextField
+                  label="Heading"
+                  value={client.heading}
+                  onChange={e => handleClientChange(idx, 'heading', e.target.value)}
+                />
+                <TextField
+                  label="Description"
+                  multiline
+                  rows={3}
+                  value={client.description}
+                  onChange={e => handleClientChange(idx, 'description', e.target.value)}
+                  helperText={`${client.description.trim().split(/\s+/).length}/50 words`}
+                  error={client.description.trim().split(/\s+/).length > 50}
+                />
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<Delete />}
+                  onClick={() => handleDeleteClient(idx)}
+                >
+                  Delete
+                </Button>
+              </Box>
+            </Paper>
+          ))}
+
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={handleAddClient}
+          >
+            Add Testimonial
+          </Button>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseModal}>Cancel</Button>
-          <Button variant="contained" color="primary" onClick={handleSaveChanges}>
+          <Button variant="contained" onClick={handleSaveChanges}>
             Save Changes
           </Button>
         </DialogActions>

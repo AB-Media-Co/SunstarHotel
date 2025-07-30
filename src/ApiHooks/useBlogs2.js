@@ -28,7 +28,6 @@ export const useGetBlogById2 = (id) => {
   });
 };
 
-// 🔹 Create blog
 export const useCreateBlog2 = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -46,7 +45,6 @@ export const useCreateBlog2 = () => {
   });
 };
 
-// 🔹 Update blog
 export const useUpdateBlog2 = () => {
   const queryClient = useQueryClient();
   return useMutation({

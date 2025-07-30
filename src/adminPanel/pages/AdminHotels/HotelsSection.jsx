@@ -38,14 +38,14 @@ const Card = ({ item, type, onEdit, onDelete, onToggle }) => {
             {item.active ? "Active" : "Inactive"}
           </span>
         </div>
-        {/* <div className="flex items-center">
+        <div className="flex items-center">
           <Switch
             checked={item.isDayUseRoom}
             onChange={() => onToggle(item, 'dayUseRoom', !item.isDayUseRoom)}
             color="primary"
           />
           <span className="text-sm text-gray-700">Day Use Room</span>
-        </div> */}
+        </div>
       </div>
       {/* Rest of the Card component remains unchanged */}
       <div className="relative group">
@@ -130,11 +130,11 @@ export const Section = ({ title, type, onEdit, onDelete, onAdd }) => {
   const { mutate: editHotel } = useEditHotel();
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateMessage, setUpdateMessage] = useState("");
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(3);
 
   const handleToggle = async (item, toggleType = 'active', newStatus = !item.active) => {
     setIsUpdating(true);
-    setCountdown(5);
+    setCountdown(3);
     setUpdateMessage(
       toggleType === 'active'
         ? newStatus
@@ -152,38 +152,20 @@ export const Section = ({ title, type, onEdit, onDelete, onAdd }) => {
           { onSuccess: () => refetch() }
         );
       } else if (toggleType === 'dayUseRoom') {
-        if (newStatus) {
-          // Fetch all hotels to ensure we have the latest data
-          const otherHotels = hotels?.hotels?.filter(
-            (hotel) => hotel.isDayUseRoom && hotel.hotelCode !== item.hotelCode
-          ) || [];
-
-          // Batch update: disable day use room for other hotels
-          const updatePromises = otherHotels.map((hotel) =>
-            editHotel({ hotelCode: hotel.hotelCode, hotelData: { isDayUseRoom: false } })
-          );
-
-          // Update the current hotel
-          updatePromises.push(
-            editHotel({ hotelCode: item.hotelCode, hotelData: { isDayUseRoom: true } })
-          );
-
-          // Execute all updates concurrently
-          await Promise.all(updatePromises);
-        } else {
-          // Only update the current hotel to false
-          await editHotel({ hotelCode: item.hotelCode, hotelData: { isDayUseRoom: false } });
-        }
-
-        // Refetch data to sync UI
-        await refetch();
-      }
+        await editHotel(
+          {
+            hotelCode: item.hotelCode,
+            hotelData: { isDayUseRoom: newStatus }
+          },
+          { onSuccess: () => refetch() }
+        );
+      }      
     } catch (err) {
       console.error("Error updating hotel:", err);
       setUpdateMessage("Failed to update. Please try again.");
       setTimeout(() => {
         setIsUpdating(false);
-        setCountdown(5);
+        setCountdown(3);
       }, 3000);
       return;
     }
@@ -202,8 +184,8 @@ export const Section = ({ title, type, onEdit, onDelete, onAdd }) => {
     // Clear overlay after countdown
     setTimeout(() => {
       setIsUpdating(false);
-      setCountdown(5);
-    }, 5000);
+      setCountdown(3);
+    }, 3000);
   };
 
   if (isLoading) {

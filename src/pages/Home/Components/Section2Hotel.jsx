@@ -7,7 +7,7 @@ const Section2Hotel = () => {
     const { homePageDescription } = useUpdatePagesHook();
 
     return (
-        <div className="flex flex-col mt-[2rem] sm:mt-[3rem] md:mt-0 md:gap-14 justify-between items-center lg:items-start px-2 sm:px-4 lg:px-8 lg:pr-0 z-0">
+        <div className="flex flex-col mt-[2rem] sm:mt-[3rem] lg:mt-0 md:gap-14 justify-between items-center lg:items-start px-2 sm:px-4 lg:px-8 lg:pr-0 z-0">
             <div data-aos="fade-up" className="relative flex flex-col items-center lg:items-start mb-6 sm:mb-8 lg:mb-0 w-full">
                 <RoatinfImg position='md:left-0 top-[-6rem] sm:top-[-7rem] md:top-0 left-[-4rem] sm:left-[-6rem] z-0' />
                 <div className="relative content text-black mt-[-1rem] sm:mt-[-1.5rem] lg:mt-10 px-2 sm:px-4">

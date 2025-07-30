@@ -6,6 +6,8 @@ import { useRooms, useUpdateRoom } from '../../../ApiHooks/useRoomsHook';
 import RoomCard from './RoomCard';
 import EditRooms from './EditRooms';
 import Loader from '../../../Components/Loader';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material'; // You need Button too
 
 // Styled Components
 const StyledContainer = styled(Container)(({ theme }) => ({
@@ -40,6 +42,7 @@ export const Rooms = () => {
   const [selectedHotel, setSelectedHotel] = useState('');
   const [authCode, setAuthCode] = useState('');
   const [roomSaving, setIsRoomSaving] = useState(false);
+  const navigate = useNavigate();
 
   const { data: hotels } = useGetHotels();
   const filteredHotels = hotels?.hotels?.filter((hotel) => hotel.hotelCode);
@@ -119,47 +122,66 @@ export const Rooms = () => {
     <StyledContainer maxWidth="lg">
       <HeaderBox elevation={2}>
         <SectionTitle variant="h6">Room Configuration</SectionTitle>
-        <Grid container spacing={2} alignItems="center">
+        <div className='flex w-full justify-between'>
+
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={4}>
+              <HotelSelect>
+                <InputLabel id="hotel-select-label">Select Hotel</InputLabel>
+                <Select
+                  labelId="hotel-select-label"
+                  value={selectedHotel}
+                  label="Select Hotel"
+                  onChange={(e) => {
+                    setSelectedHotel(e.target.value);
+                    const selected = filteredHotels.find(h => String(h.hotelCode) === e.target.value);
+                    if (selected) setAuthCode(selected.authKey);
+                  }}
+                >
+                  {filteredHotels?.map((hotel) => (
+                    <MenuItem key={hotel._id} value={String(hotel.hotelCode)}>
+                      {hotel.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </HotelSelect>
+            </Grid>
+
+            <Grid item xs={6} md={4}>
+              <DateTextField
+                label="From Date"
+                type="date"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+
+            <Grid item xs={6} md={4}>
+              <DateTextField
+                label="To Date"
+                type="date"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+
+
+          </Grid>
+
           <Grid item xs={12} md={4}>
-            <HotelSelect>
-              <InputLabel id="hotel-select-label">Select Hotel</InputLabel>
-              <Select
-                labelId="hotel-select-label"
-                value={selectedHotel}
-                label="Select Hotel"
-                onChange={(e) => {
-                  setSelectedHotel(e.target.value);
-                  const selected = filteredHotels.find(h => String(h.hotelCode) === e.target.value);
-                  if (selected) setAuthCode(selected.authKey);
-                }}
-              >
-                {filteredHotels?.map((hotel) => (
-                  <MenuItem key={hotel._id} value={String(hotel.hotelCode)}>
-                    {hotel.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </HotelSelect>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={() => navigate('/admin/day-use-room')}
+            >
+              Switch to Day Use Room
+            </Button>
           </Grid>
-          <Grid item xs={6} md={4}>
-            <DateTextField
-              label="From Date"
-              type="date"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={6} md={4}>
-            <DateTextField
-              label="To Date"
-              type="date"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
+        </div>
+
       </HeaderBox>
 
 
@@ -169,7 +191,7 @@ export const Rooms = () => {
             <img src="/images/Logo/spinner.svg" alt="" />
           </div>
         ) : (
-          <RoomsGrid container spacing={3}>
+          <RoomsGrid container spacing={1}>
             {roomArray?.map((room) => (
               <Grid item xs={12} sm={6} md={4} key={room._id}>
                 <RoomCard

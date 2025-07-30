@@ -62,24 +62,4 @@ export const getSingleRoomById = async (id) => {
   }
 };
 
-// Fetch single room by ID
-export const getDayUseRooms = async () => {
-  try {
-    const response = await axiosInstance.get(`/api/day-use-rooms`);
-    return response?.data;
-  } catch (error) {
-    const errorMessage = error?.response?.data?.error || error.message;
-    toast.error(`Error fetching day use rooms: ${errorMessage}`);
-    throw error;
-  }
-};
-
-export const useDayUseRooms = () => {
-  return useQuery({
-    queryKey: ['dayUseRooms'],
-    queryFn: getDayUseRooms,
-    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
-    retry: 2, // Retry failed requests twice
-  });
-};
 

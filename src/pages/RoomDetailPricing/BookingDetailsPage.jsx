@@ -12,8 +12,9 @@ import { HotelDetailsCard } from "./BookingDetailPageComponent/HotelDetailsCard"
 import { usePricing } from "../../Context/PricingContext";
 import { Helmet } from "react-helmet";
 import { HeaderHotel } from "./BookingDetailPageComponent/HeaderHotel";
-import { ArrowBackIosNew, ForkLeftOutlined } from "@mui/icons-material";
+import { ArrowBackIosNew } from "@mui/icons-material";
 import { useGetUserByEmail } from "../../ApiHooks/useUser";
+import LoginModal from "../../Components/LoginModal";
 
 const calculateDays = (checkIn, checkOut) => {
   if (!checkIn || !checkOut) return 0;
@@ -28,7 +29,11 @@ const BookingDetailsPage = () => {
   const { details, hotelData } = usePricing();
   const hotelDetail = details[0];
   const navigate = useNavigate();
-  const [verified,setIsVerified]=useState(false);
+  const [verified, setIsVerified] = useState(false);
+  const userInfo = localStorage.getItem('user_email');
+  const { data: userData, } = useGetUserByEmail(userInfo);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
 
   const getHotelDataLocal = localStorage.getItem("hotelInfo");
   const getHotelData = JSON.parse(getHotelDataLocal);
@@ -83,14 +88,34 @@ const BookingDetailsPage = () => {
         <meta name="" content={``} />
         <meta name="" content={``} />
       </Helmet>
-      <div className="content flex items-center gap-2 py-4 md:py-10 text-mobile/h1 md:text-desktop/h2 text-white">
-        <button
-          onClick={() => navigate(-1)}
-          aria-label="Go back"
-        >
-          <ArrowBackIosNew className="text-white" style={{ height: "35px", width: "35px" }} />
-        </button>
-        <span>Booking Details</span>
+      <div className="content flex justify-between items-center ">
+        <div className="py-4 md:py-10  flex items-center gap-2 text-mobile/h1 md:text-desktop/h2 text-white">
+          <button
+            onClick={() => navigate(-1)}
+            aria-label="Go back"
+          >
+            <ArrowBackIosNew className="text-white" style={{ height: "35px", width: "35px" }} />
+          </button>
+          <span>Booking Details</span>
+        </div>
+        <div className="">
+          {userInfo ? (
+            <div onClick={() => navigate('/user/profile')} className="bg-white cursor-pointer text-primary-yellow font-bold w-12 h-12 rounded-full flex items-center justify-center">
+              {userData?.data.firstName?.[0]?.toUpperCase()}{userData?.data.lastName?.[0]?.toUpperCase()}
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowLoginModal(true)}
+              className="border-2 border-primary-yellow text-primary-yellow px-4 py-2 rounded-full font-bold hover:bg-primary-yellow hover:text-white transition"
+            >
+              Login or Join
+            </button>
+          )}
+
+        </div>
+
+        {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
+
       </div>
       <div className="md:flex gap-5 content  bg-white rounded-t-3xl">
         <div className="flex flex-col md:px-8 md:py-10 gap-8">
@@ -98,7 +123,7 @@ const BookingDetailsPage = () => {
           <HeaderHotel />
           <HotelDetailsCard />
           {/* Render GuestDetailsForm once and pass its ref */}
-          <GuestDetailsForm ref={guestFormRef} setIsVerified={setIsVerified}/>
+          <GuestDetailsForm ref={guestFormRef} setIsVerified={setIsVerified} />
           {hotelDetail.addToYourStay.length > 0 && <AddToYourStayOptions data={hotelDetail} />}
           <OfferCode hotelDetail={hotelDetail} checkIn={checkIn} verified={verified} />
           <div className="lg:hidden">

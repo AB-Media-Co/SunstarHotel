@@ -19,21 +19,21 @@ const StarRating = ({ rating, onChange, maxRating = 5 }) => {
         const starValue = index + 1;
         const isFullStar = rating >= starValue;
         const isHalfStar = !isFullStar && rating >= starValue - 0.5;
-        
+
         return (
           <div key={index} className="relative">
             {/* Half star clickable area (left half) */}
-            <div 
-              className="absolute inset-y-0 left-0 w-1/2 cursor-pointer z-10" 
+            <div
+              className="absolute inset-y-0 left-0 w-1/2 cursor-pointer z-10"
               onClick={() => handleHalfStarClick(starValue)}
             ></div>
-            
+
             {/* Full star clickable area (right half) */}
-            <div 
-              className="absolute inset-y-0 right-0 w-1/2 cursor-pointer z-10" 
+            <div
+              className="absolute inset-y-0 right-0 w-1/2 cursor-pointer z-10"
               onClick={() => handleStarClick(starValue)}
             ></div>
-            
+
             {/* Star display */}
             <div className="flex">
               {isFullStar ? (
@@ -52,7 +52,7 @@ const StarRating = ({ rating, onChange, maxRating = 5 }) => {
           </div>
         );
       })}
-      
+
       {/* Display numerical rating (optional) */}
       <span className="ml-2 text-lg self-center">{rating.toFixed(1)}</span>
     </div>
@@ -79,7 +79,7 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
   // Parse a time string (either "1:00 PM" format or "13:00" format)
   const parseTimeString = (timeStr) => {
     if (!timeStr) return;
-    
+
     try {
       // Handle "1:00 PM" format
       if (timeStr.includes('AM') || timeStr.includes('PM')) {
@@ -90,7 +90,7 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
         setSelectedAmPm(ampm);
         return;
       }
-      
+
       // Handle "13:00" format
       const [hours, minutes] = timeStr.split(':');
       const hour = parseInt(hours, 10);
@@ -121,11 +121,11 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
   // Handle when a minute is selected on the clock
   const handleMinuteSelect = (minute) => {
     setSelectedMinute(minute);
-    
+
     // Update the selectedTime
     const newTime = `${selectedHour}:${minute.toString().padStart(2, '0')} ${selectedAmPm}`;
     setSelectedTime(newTime);
-    
+
     // Notify parent component
     if (onChange) {
       onChange({
@@ -141,11 +141,11 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
   // Handle AM/PM toggle
   const handleAmPmToggle = (value) => {
     setSelectedAmPm(value);
-    
+
     // Update the selectedTime
     const newTime = `${selectedHour}:${selectedMinute.toString().padStart(2, '0')} ${value}`;
     setSelectedTime(newTime);
-    
+
     // Notify parent component
     if (onChange) {
       onChange({
@@ -163,7 +163,7 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
     const newTime = formatTime();
     setSelectedTime(newTime);
     setIsOpen(false);
-    
+
     // Notify parent component
     if (onChange) {
       onChange({
@@ -186,15 +186,14 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
         const radius = 80; // Adjust as needed
         const x = Math.cos(angle) * radius + 100; // 100 is center x
         const y = Math.sin(angle) * radius + 100; // 100 is center y
-        
+
         return (
-          <div 
+          <div
             key={hour}
-            className={`absolute rounded-full h-8 w-8 flex items-center justify-center cursor-pointer ${
-              selectedHour === hour ? 'bg-blue-500 text-white' : 'hover:bg-blue-100'
-            }`}
-            style={{ 
-              left: `${x}px`, 
+            className={`absolute rounded-full h-8 w-8 flex items-center justify-center cursor-pointer ${selectedHour === hour ? 'bg-blue-500 text-white' : 'hover:bg-blue-100'
+              }`}
+            style={{
+              left: `${x}px`,
               top: `${y}px`,
               transform: 'translate(-50%, -50%)'
             }}
@@ -212,15 +211,14 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
         const radius = 80; // Adjust as needed
         const x = Math.cos(angle) * radius + 100; // 100 is center x
         const y = Math.sin(angle) * radius + 100; // 100 is center y
-        
+
         return (
-          <div 
+          <div
             key={minute}
-            className={`absolute rounded-full h-8 w-8 flex items-center justify-center cursor-pointer ${
-              selectedMinute === minute ? 'bg-blue-500 text-white' : 'hover:bg-blue-100'
-            }`}
-            style={{ 
-              left: `${x}px`, 
+            className={`absolute rounded-full h-8 w-8 flex items-center justify-center cursor-pointer ${selectedMinute === minute ? 'bg-blue-500 text-white' : 'hover:bg-blue-100'
+              }`}
+            style={{
+              left: `${x}px`,
               top: `${y}px`,
               transform: 'translate(-50%, -50%)'
             }}
@@ -240,9 +238,9 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
       const length = 60; // Shorter than radius for hours
       const x = Math.cos(angle) * length;
       const y = Math.sin(angle) * length;
-      
+
       return {
-        transform: `translate(0, 0) rotate(${angle + Math.PI/2}rad)`,
+        transform: `translate(0, 0) rotate(${angle + Math.PI / 2}rad)`,
         transformOrigin: 'bottom center',
         height: `${length}px`
       };
@@ -251,9 +249,9 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
       const length = 70; // Longer for minutes
       const x = Math.cos(angle) * length;
       const y = Math.sin(angle) * length;
-      
+
       return {
-        transform: `translate(0, 0) rotate(${angle + Math.PI/2}rad)`,
+        transform: `translate(0, 0) rotate(${angle + Math.PI / 2}rad)`,
         transformOrigin: 'bottom center',
         height: `${length}px`
       };
@@ -263,7 +261,7 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
   return (
     <div className="relative">
       {/* Time display that opens the picker */}
-      <div 
+      <div
         className="w-full border rounded-md p-3 cursor-pointer flex justify-between items-center bg-white"
         onClick={() => setIsOpen(!isOpen)}
       >
@@ -272,7 +270,7 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
       </div>
-      
+
       {/* Clock picker popup */}
       {isOpen && (
         <div className="absolute z-20 mt-1 p-4 bg-white shadow-xl rounded-lg border" style={{ width: '250px' }}>
@@ -281,54 +279,54 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
             {selectedHour}:{selectedMinute.toString().padStart(2, '0')}
             <span className="ml-2">{selectedAmPm}</span>
           </div>
-          
+
           {/* AM/PM selector */}
           <div className="flex justify-center mb-4 space-x-4">
-            <button 
+            <button
               className={`px-4 py-1 rounded ${selectedAmPm === 'AM' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
               onClick={() => handleAmPmToggle('AM')}
             >
               AM
             </button>
-            <button 
+            <button
               className={`px-4 py-1 rounded ${selectedAmPm === 'PM' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
               onClick={() => handleAmPmToggle('PM')}
             >
               PM
             </button>
           </div>
-          
+
           {/* Clock face */}
           <div className="relative w-48 h-48 mx-auto mb-4">
             {/* Clock circle */}
             <div className="absolute inset-0 rounded-full border-2 border-gray-200"></div>
-            
+
             {/* Center dot */}
             <div className="absolute rounded-full bg-blue-500 h-3 w-3" style={{ left: '100px', top: '100px', transform: 'translate(-50%, -50%)' }}></div>
-            
+
             {/* Clock hand */}
-            <div 
-              className="absolute w-1 bg-blue-500 rounded-full" 
-              style={{ 
+            <div
+              className="absolute w-1 bg-blue-500 rounded-full"
+              style={{
                 ...clockHandStyle(),
                 left: '100px',
                 bottom: '100px',
               }}
             ></div>
-            
+
             {/* Clock numbers */}
             {generateClockFace()}
           </div>
-          
+
           {/* Action buttons */}
           <div className="flex justify-between">
-            <button 
+            <button
               className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
               onClick={() => setIsOpen(false)}
             >
               Cancel
             </button>
-            <button 
+            <button
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
               onClick={applyTime}
             >
@@ -342,15 +340,13 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
 };
 
 
-
-
-
 export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAmenitiesChange, setFormData }) => {
+  console.log('DetailsTab formData:', formData);
   const handleTimeChange = (e) => {
     const { name, value } = e.target;
     handleDetailsChange(e);
   };
- return <div className="space-y-5">
+  return <div className="space-y-5">
     <FormControlLabel
       control={
         <FormControlLabel
@@ -400,6 +396,57 @@ export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAme
         />
       </div>
     </div>
+
+
+
+    <div className="border-t pt-6">
+      <div className="group">
+        <summary className="text-xl font-semibold cursor-pointer list-none flex justify-between items-center">
+          SEO & Meta Data
+        </summary>
+        <div className="mt-4 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Meta Title</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.meta.title}
+                onChange={handleDetailsChange}
+                placeholder="Enter meta title"
+                className="w-full border rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Meta Description</label>
+              <input
+                type="text"
+                name="description"
+                value={formData.meta.description}
+                onChange={handleDetailsChange}
+                placeholder="Enter meta description"
+                className="w-full border rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Keywords</label>
+            <input
+              type="text"
+              name="keywords"
+              value={formData.meta.keywords.join(', ')}
+              onChange={handleDetailsChange}
+              placeholder="e.g., hotel in Dehradun, best hotels, luxury stay"
+              className="w-full border rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            />
+            <small className="text-gray-500">Use commas to separate keywords.</small>
+          </div>
+         
+        </div>
+      </div>
+    </div>
+
+
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Continental Plan (Breakfast)</h2>
       <div className="flex gap-4">
@@ -484,7 +531,7 @@ export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAme
         renderInput={params => <TextField {...params} label="Select amenities" placeholder="Select amenities" />}
       />
     </div>
-  
+
 
 
     {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -508,24 +555,24 @@ export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAme
 
 
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Check In:</label>
-          <ClockTimePicker
-            initialTime={formData.checkIn}
-            onChange={handleTimeChange}
-            name="checkIn"
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Check Out:</label>
-          <ClockTimePicker
-            initialTime={formData.checkOut}
-            onChange={handleTimeChange}
-            name="checkOut"
-          />
-        </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label className="block text-gray-700 font-medium mb-1">Check In:</label>
+        <ClockTimePicker
+          initialTime={formData.checkIn}
+          onChange={handleTimeChange}
+          name="checkIn"
+        />
       </div>
+      <div>
+        <label className="block text-gray-700 font-medium mb-1">Check Out:</label>
+        <ClockTimePicker
+          initialTime={formData.checkOut}
+          onChange={handleTimeChange}
+          name="checkOut"
+        />
+      </div>
+    </div>
 
 
 

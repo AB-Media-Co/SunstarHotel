@@ -181,8 +181,8 @@ const RoomCardList = ({ room, onEdit, onToggleShow }) => {
       display: 'flex',
       flexWrap: 'wrap',
       justifyContent: 'center',
-      px: 2,
-      py: 4
+      // px: 2,
+      // py: 4
     }}>
       <RoomCard
         key={room._id}

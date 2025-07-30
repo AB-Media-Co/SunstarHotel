@@ -28,7 +28,7 @@ export const PricingProvider = ({ children }) => {
       price: item?.roomData?.discountRate || 0,
       RoomTypeID: item?.roomData?.RoomTypeID,
       RateTypeID: item?.roomData?.RateTypeID,
-      roomrateunkid:item?.roomData?.roomrateunkid,  
+      roomrateunkid: item?.roomData?.roomrateunkid,
     }))
   );
 
@@ -43,7 +43,9 @@ export const PricingProvider = ({ children }) => {
   const [nights, setNights] = useState(1);
   const [baseFinalPrice, setBaseFinalPrice] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
-  const [phoneVerified, setPhoneVerified] = useState(false); // Add this line to manage phone verification state
+  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [someOneElse, setSomeoneElse] = useState(false);
+  const [guestData,setGuestData]=useState([])
 
   const [guestDetails, setGuestDetails] = useState(() => {
     const storedGuestDetails = localStorage.getItem("guestDetails");
@@ -52,6 +54,9 @@ export const PricingProvider = ({ children }) => {
 
   const [isHotelModalOpen, setIsHotelModalOpen] = useState(false);
   const [navColor, setIsNavColor] = useState(false);
+  const [dayUseRoom, setDayUseRoom] = useState(false);
+  console.log("hii",dayUseRoom)
+
 
   // Functions to control the Hotel Modal
   const openHotelModal = () => setIsHotelModalOpen(true);
@@ -138,7 +143,7 @@ export const PricingProvider = ({ children }) => {
           RateTypeID: response.data.room.RateTypeID,
           discountRate: response.data.room.discountRate,
           maxGuests: response.data.room.maxGuests,
-          roomrateunkid:response?.data?.room?.roomrateunkid,
+          roomrateunkid: response?.data?.room?.roomrateunkid,
         },
       };
 
@@ -153,7 +158,7 @@ export const PricingProvider = ({ children }) => {
           RoomTypeID: response.data.room.RoomTypeID,
           RateTypeID: response.data.room.RateTypeID,
           maxGuests: response.data.room.maxGuests,
-          roomrateunkid:response?.data?.room?.roomrateunkid,
+          roomrateunkid: response?.data?.room?.roomrateunkid,
         },
       ]);
 
@@ -218,7 +223,11 @@ export const PricingProvider = ({ children }) => {
         setIsConfirmationModalOpen,
         phoneVerified, // Add phoneVerified here
         setPhoneVerified, // Add setPhoneVerified here
-        navColor, setIsNavColor
+        navColor, setIsNavColor,
+        someOneElse,
+        setSomeoneElse,
+        guestData,setGuestData,
+        dayUseRoom, setDayUseRoom
       }}
     >
       {children}

@@ -10,6 +10,9 @@ const ReadBlog = () => {
   console.log(state,"aa")
   const { data: blogs, isLoading: blogsLoading } = useGetBlogs2({ status: "all" })
   const { data: blog, isLoading: blogLoading, error: blogError } = useGetBlogById2(state?.blog?._id);
+
+  console.log(blog, "blog data")
+
   const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -38,9 +41,9 @@ const ReadBlog = () => {
   return (
     <>
       <Helmet>
-        <title>{blog?.data?.title || "Sunstar Hotel Blog"}</title>
-        <meta name="description" content={blog?.data?.description.slice(0, 150) || "Blog post from Sunstar Hotel"} />
-        <meta name="keywords" content="hotel, blog, sunstar, travel" />
+        <title>{blog?.meta?.title || "Sunstar Hotel Blog"}</title>
+        <meta name="description" content={blog?.meta?.description.slice(0, 150) || "Blog post from Sunstar Hotel"} />
+        <meta name="keywords" content={blog?.meta?.keywords.join(',') ||"hotel, blog, sunstar, travel" }/>
       </Helmet>
 
 

@@ -5,7 +5,7 @@ import { usePricing } from '../../../Context/PricingContext';
 import Cookies from 'js-cookie';
 import { useGetUserByEmail } from '../../../ApiHooks/useUser';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-export const OfferCode = ({ hotelDetail, checkIn,verified }) => {
+export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
   // Existing states
   const [inputValue, setInputValue] = useState('');
   const [appliedOffer, setAppliedOffer] = useState(null);
@@ -20,7 +20,10 @@ export const OfferCode = ({ hotelDetail, checkIn,verified }) => {
 
   const email = localStorage.getItem("user_email");
   const { data: userData, isLoading: userLoading } = useGetUserByEmail(email);
-const isUserVerified = verified || userData?.data?.isVerified;
+  const isUserVerified = localStorage.getItem("user_email") !== null;
+  // const isUserVerified = verified || isUserVerified;
+
+
   useEffect(() => {
     if (hotelDetail && hotelDetail._id && isUserVerified) {
       fetchOfferCodes(hotelDetail._id);
@@ -45,14 +48,14 @@ const isUserVerified = verified || userData?.data?.isVerified;
       </div>
     );
   }
-  
 
 
-  if (!(verified || userData?.data?.isVerified)) {
+
+  if (!( isUserVerified)) {
     return (
       <div className="relative bg-gradient-to-br from-white to-gray-50 p-10 rounded-2xl shadow-xl border border-gray-100 text-center overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-cyan-400 to-cyan-600"></div>
-        <div className="relative z-10">
+        <div className="relative ">
           <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-full flex items-center justify-center">
             <CheckCircleOutlineOutlinedIcon className='text-primary-green' />
           </div>

@@ -49,48 +49,7 @@ const ImageGallery = () => {
     <div className="relative z-10 w-full ">
       <Marquee gradient={false} speed={60} className=" ">
         <div className="ps-4 sm:ps-6 py-8 m">
-          {/* <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-8 max-h-[100vh] overflow-hidden space-y-8">
-            {shuffledItems.map((item, index) => {
-              if (item.type === "image") {
-                return (
-                  <div
-                    key={`image-${index}`}
-                    className="  rounded-2xl shadow-md bg-white"
-                  >
-                    <img
-                      src={item.src}
-                      alt="Gallery item"
-                      className="w-full  object-cover rounded-2xl"
-                      loading="lazy"
-                    />
 
-                  </div>
-                );
-              }
-
-              if (item.type === "div") {
-                return (
-                  <div
-                    key={item._id}
-                    className="break-inside-avoid overflow-hidden rounded-2xl shadow-md"
-                    style={{
-                      backgroundColor: item.bg || "#FFEB3B",
-                      minHeight: index % 2 === 0 ? '10rem' : '14rem',
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      padding: "2rem",
-                    }}
-                  >
-                    <div className="text-center text-primary-black text-lg font-semibold leading-snug">
-                      {item.content}
-                    </div>
-                  </div>
-                );
-              }
-              return null;
-            })}
-          </div> */}
 
           <Masonry
             breakpointCols={breakpointColumnsObj}

@@ -3,6 +3,7 @@ import HotelForm from './HotelForm';
 const EditHotel = () => {
   const location = useLocation();
   const initialDataFromState = location.state?.hotel;
+  console.log('Initial data from state:', initialDataFromState);
   const hotelData = initialDataFromState 
   return <HotelForm initialData={hotelData} />;
 };

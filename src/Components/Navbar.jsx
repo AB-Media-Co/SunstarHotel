@@ -7,10 +7,16 @@ import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
 import BusinessIcon from "@mui/icons-material/Business";
 import HotelIcon from "@mui/icons-material/Hotel";
+import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import PinterestIcon from '@mui/icons-material/Pinterest';
+
 import ContactMailIcon from "@mui/icons-material/ContactMail";
 import AllHotelCard from "./AllHotelCard";
 import { hotels } from "../Data/AboutSectionData";
 import { usePricing } from "../Context/PricingContext";
+import { useGetUserByEmail } from "../ApiHooks/useUser";
+import LoginModal from "./LoginModal";
+import { LogIn } from "lucide-react";
 
 
 function getHotelPayLink(hotelCode) {
@@ -33,9 +39,14 @@ function getHotelPayLink(hotelCode) {
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isHotelModalOpen, openHotelModal, closeHotelModal,navColor } = usePricing();
+  const { isHotelModalOpen, openHotelModal, closeHotelModal, navColor } = usePricing();
   const [active, setActive] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const userInfo = localStorage.getItem('user_email');
+  const { data: userData, } = useGetUserByEmail(userInfo);
+
 
   // Check if current path starts with "/hotels"
   const isHotelsPath = location.pathname.startsWith("/hotels");
@@ -100,12 +111,12 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`bg-transparent nav ${navColor ? 'text-black':'text-primary-white'}  py-4 top-2 absolute w-full z-40`}>
+      <nav className={`bg-transparent nav ${navColor ? 'text-black' : 'text-primary-white'}  py-4 top-2 absolute w-full z-40`}>
         <div className="content flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="text-2xl font-bold">
             <img
-              src={`${navColor? '/images/Logo/logo2.svg' : '/images/Logo/logo.svg'} `}
+              src={`${navColor ? '/images/Logo/logo2.svg' : '/images/Logo/logo.svg'} `}
               alt="Logo"
               className="h-[49px] w-[150px]"
             />
@@ -113,8 +124,8 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="flex gap-10 items-center">
-            <ul className="hidden md:flex space-x-6">
-              {navItems.map(({ name, icon, route, action }, index) => (
+            <ul className="hidden md:flex items-center space-x-6">
+              {navItems.map(({ name, route, action }, index) => (
                 <li key={index}>
                   <button
                     onClick={() => {
@@ -134,6 +145,9 @@ const Navbar = () => {
               ))}
             </ul>
 
+            {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
+
+
             {/* Pay Now Button - Only show when path starts with "/hotels" */}
             {isHotelsPath && (
               <a href={payLink} target="_blank" rel="noopener noreferrer">
@@ -145,14 +159,36 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Toggle */}
-          {!isMenuOpen && (
-            <button
-              className="block md:hidden focus:outline-none"
-              onClick={toggleMobileMenu}
-            >
-              <span className="text-[34px]">☰</span>
-            </button>
-          )}
+
+          <div className="flex gap-2">
+
+            {!isMenuOpen && (
+              <button
+                className="block md:hidden focus:outline-none"
+                onClick={toggleMobileMenu}
+              >
+                <span className="text-[34px]">☰</span>
+              </button>
+            )}
+
+            <div className="md:absolute top-4 lg:right">
+              {userInfo ? (
+                <div onClick={() => navigate('/user/profile')} className="bg-white border-2 cursor-pointer text-primary-yellow font-bold w-12 h-12 rounded-full flex items-center justify-center">
+                  {userData?.data.firstName?.[0]?.toUpperCase()}{userData?.data.lastName?.[0]?.toUpperCase()}
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className=" text-primary-yellow px-4 py-2 rounded-full font-bold  "
+                >
+                  <LogIn className="h-10 w-10" />
+                </button>
+              )}
+
+            </div>
+
+
+          </div>
 
           {/* Mobile Menu (Slide-in Sidebar) */}
           <div
@@ -199,6 +235,8 @@ const Navbar = () => {
                     </button>
                   </div>
                 ))}
+
+
               </div>
 
               <div className="relative px-4 py-6 border-t h-[300px] border-gray-200">
@@ -229,6 +267,21 @@ const Navbar = () => {
                     <YouTubeIcon style={{ color: "#FDC114" }} />
                     <span className="text-mobile/body/2">YouTube</span>
                   </a>
+                  <a
+                    href="https://www.linkedin.com/company/hotelsunstargroup/"
+                    className="flex items-center space-x-2 hover:text-primary-yellow transition-colors duration-300"
+                  >
+                    <LinkedInIcon style={{ color: "#FDC114" }} />
+                    <span className="text-mobile/body/2">YouTube</span>
+                  </a>
+                  <a
+                    href="https://in.pinterest.com/hotel_sunstar_groupm"
+                    className="flex items-center space-x-2 hover:text-primary-yellow transition-colors duration-300"
+                  >
+                    <PinterestIcon style={{ color: "#FDC114" }} />
+                    <span className="text-mobile/body/2">YouTube</span>
+                  </a>
+
                 </div>
 
                 {/* Mobile Pay Now Button - Only show when path starts with "/hotels" */}

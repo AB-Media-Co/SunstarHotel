@@ -17,7 +17,6 @@ const Location = ({ address }) => {
         nightlife,
         city
     } = address || {};
-    // console.log(address)
 
     const zoom = 20;
     const mapContainerRef = useRef(null);
@@ -44,14 +43,13 @@ const Location = ({ address }) => {
         'Metro Station': '/images/MapIcons/Metro.svg',
     };
 
-
     const [showPopup, setShowPopup] = useState(false);
     const [activeTab, setActiveTab] = useState('Attractions');
     const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
 
     const popupMapContainerRef = useRef(null);
     const [popupMapInstance, setPopupMapInstance] = useState(null);
-    const popupMarkerRef = useRef(null); // Ref for the popup marker
+    const popupMarkerRef = useRef(null);
 
     useEffect(() => {
         setOpenAccordionIndex(null);
@@ -93,7 +91,6 @@ const Location = ({ address }) => {
                     'Nightlife': nightlife,
                 };
 
-                // console.log("hi",categories);
                 Object.entries(categories).forEach(([label, places]) => {
                     if (places && places.length > 0) {
                         Promise.all(
@@ -126,7 +123,6 @@ const Location = ({ address }) => {
                         setGroupedPlaces((prev) => ({ ...prev, [label]: [] }));
                     }
                 });
-
             } else {
                 console.error('Geocode was not successful for: ' + status);
             }
@@ -147,7 +143,7 @@ const Location = ({ address }) => {
     // Helper to create markers on the map using the enriched location property
     const createMarker = (place, map) => {
         const marker = new window.google.maps.Marker({
-            position: place.location, // use the enriched location
+            position: place.location,
             map,
             title: place.name,
         });
@@ -197,7 +193,6 @@ const Location = ({ address }) => {
             setTimeout(() => {
                 map.setZoom(zoom);
             }, 600);
-            // Open existing marker if available, or create one if missing
             if (markersRef.current[place_id]) {
                 markersRef.current[place_id].infoWindow.open(map, markersRef.current[place_id].marker);
             } else {
@@ -277,28 +272,28 @@ const Location = ({ address }) => {
     };
 
     return (
-        <div className="content my-5"  id='location'>
+        <div className="content my-5" id='location'>
             {/* Top Section */}
             <div className="w-full mb-5 flex flex-col gap-1">
                 <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold mb-1">Location</h2>
-                <p className="text-primary-gray text-mobile/body/2 md:text-desktop/body/1">{hotelAddress }</p>
+                <p className="text-primary-gray text-mobile/body/2 md:text-desktop/body/1">{hotelAddress}</p>
                 <a
                     onClick={viewHotelLocationOnMap}
-                    className="my-2 underline items-center text-primary-green font-bold text-lg cursor-pointer flex gap-2"
+                    className="my-2 underline items-center text-primary-green font-bold text-base lg:text-lg cursor-pointer flex gap-2"
                 >
-                    View Hotel Location <ExternalLink style={{ height: '16px' }} />
+                    View Hotel Location <ExternalLink className="w-4 h-4 lg:w-5 lg:h-5" />
                 </a>
             </div>
 
-            <div className="flex justify-between flex-col-reverse md:flex-row gap-14">
+            <div className="flex justify-between flex-col-reverse xl:flex-row gap-6 lg:gap-14">
                 {/* Left Side */}
-                <div style={{ overflowY: 'auto' }} className="md:w-[50%] flex flex-col-reverse md:flex-col gap-6 md:gap-0">
-                    <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between items-center">
+                <div className="xl:w-[50%] flex flex-col-reverse xl:flex-col gap-6 xl:gap-0 overflow-y-auto">
+                    {/* Transportation Cards */}
+                    <div className="flex flex-col sm:flex-row gap-4 xl:flex-nowrap justify-between items-stretch xl:items-center">
                         {leftCategories.map(category => (
                             <div
                                 key={category}
-                                style={{ marginBottom: '20px' }}
-                                className="flex flex-col w-full md:w-auto p-4 gap-2 border rounded-lg shadow-md justify-center items-center"
+                                className="flex flex-col w-full xl:w-auto p-3 sm:p-4 gap-2 border rounded-lg shadow-md justify-center items-center mb-0 xl:mb-5"
                             >
                                 {groupedPlaces[category] && groupedPlaces[category].length > 0 ? (
                                     groupedPlaces[category].map(place => {
@@ -306,20 +301,22 @@ const Location = ({ address }) => {
                                         return (
                                             <div
                                                 key={place.place_id}
-                                                className="flex flex-col gap-2 p-6 justify-center items-center"
+                                                className="flex flex-col gap-2 p-3 sm:p-4 lg:p-6 justify-center items-center"
                                             >
                                                 <img
                                                     src={leftIcons[category]}
                                                     alt={category}
-                                                    className="w-16 h-16"
+                                                    className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16"
                                                 />
-                                                <h4 className="text-sm font-semibold text-gray-700">{category}</h4>
+                                                <h4 className="text-xs sm:text-sm font-semibold text-gray-700 text-center">
+                                                    {category}
+                                                </h4>
                                                 <span className="text-xs text-gray-500">
                                                     {travelTime} Min away
                                                 </span>
                                                 <button
                                                     onClick={() => viewOnMap(place)}
-                                                    className="text-primary-green font-medium text-lg hover:underline"
+                                                    className="text-primary-green font-medium text-sm lg:text-lg hover:underline text-center"
                                                 >
                                                     View on Map
                                                 </button>
@@ -327,155 +324,169 @@ const Location = ({ address }) => {
                                         );
                                     })
                                 ) : (
-                                    <p className="text-sm text-gray-500">No {category} found.</p>
+                                    <div className="flex flex-col gap-2 p-3 sm:p-4 lg:p-6 justify-center items-center">
+                                        <img
+                                            src={leftIcons[category]}
+                                            alt={category}
+                                            className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 opacity-50"
+                                        />
+                                        <h4 className="text-xs sm:text-sm font-semibold text-gray-700 text-center">
+                                            {category}
+                                        </h4>
+                                        <p className="text-xs text-gray-500 text-center">Not found</p>
+                                    </div>
                                 )}
                             </div>
                         ))}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    {/* Category Cards */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {popupCategories.map(category => (
                             <div
                                 key={category}
                                 className="bg-white rounded-lg border p-4 shadow-md flex items-center justify-between"
                             >
-                                <div className="flex flex-col gap-2">
-                                    <h4 className="text-sm font-semibold text-gray-700">{category}</h4>
+                                <div className="flex flex-col gap-2 flex-1">
+                                    <h4 className="text-sm lg:text-base font-semibold text-gray-700">{category}</h4>
                                     <span className="text-xs text-gray-500">
                                         {(groupedPlaces[category] && groupedPlaces[category].length) || 0} Nearby
                                     </span>
                                     <button
-                                        onClick={() => setShowPopup(true)}
-                                        className="text-primary-green font-medium text-lg hover:underline mt-2"
+                                        onClick={() => {
+                                            setActiveTab(category);
+                                            setShowPopup(true);
+                                        }}
+                                        className="text-primary-green font-medium text-sm lg:text-lg hover:underline mt-2 text-left"
                                     >
                                         View More
                                     </button>
                                 </div>
-                                <img src={popupIcons[category]} alt={category} className="w-14 h-14" />
+                                <img 
+                                    src={popupIcons[category]} 
+                                    alt={category} 
+                                    className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 ml-2" 
+                                />
                             </div>
                         ))}
                     </div>
                 </div>
 
                 {/* Right Side: Main Map Container */}
-                <div style={{ position: 'relative', height: '510px' }} className="md:w-[50%]">
-                    <div
-                        ref={mapContainerRef}
-                        style={{
-                            height: '100%',
-                            width: '100%',
-                            filter: mapUnlocked ? 'none' : 'blur(8px)',
-                            transition: 'filter 0.3s ease'
-                        }}
-                        className="rounded-2xl shadow-lg"
-                    ></div>
-                    {!mapUnlocked && (
+                <div className="xl:w-[50%] relative">
+                    <div className="h-64 sm:h-80 lg:h-96 xl:h-[510px] w-full">
                         <div
-                            onClick={() => setMapUnlocked(true)}
+                            ref={mapContainerRef}
                             style={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundColor: 'rgba(255, 255, 255, 0.6)',
-                                cursor: 'pointer',
-                                zIndex: 2,
-                                fontSize: '1.2rem',
-                                fontWeight: 'bold',
-                                color: '#333'
+                                height: '100%',
+                                width: '100%',
+                                filter: mapUnlocked ? 'none' : 'blur(8px)',
+                                transition: 'filter 0.3s ease'
                             }}
-                        >
-                            <p className="bg-primary-green px-4 py-2 rounded-3xl text-white font-medium">
-                                Click here to view on map
-                            </p>
-                        </div>
-                    )}
+                            className="rounded-2xl shadow-lg"
+                        ></div>
+                        {!mapUnlocked && (
+                            <div
+                                onClick={() => setMapUnlocked(true)}
+                                className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-60 cursor-pointer z-10 rounded-2xl"
+                            >
+                                <p className="bg-primary-green px-3 py-2 sm:px-4 sm:py-2 rounded-3xl text-white font-medium text-sm sm:text-base text-center">
+                                    Click here to view on map
+                                </p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {showPopup && (
-                <AnimatePresence>
+            {/* Popup Modal */}
+            <AnimatePresence>
+                {showPopup && (
                     <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
                         variants={popupVariants}
-                        className="fixed inset-0 bg-primary-green flex justify-center items-start z-50 transition-transform duration-500 transform"
+                        className="fixed inset-0 bg-primary-green flex justify-center items-start z-50"
                     >
                         <button
-                            className="absolute top-4 right-4 text-primary-white p-2 rounded"
+                            className="absolute top-4 right-4 text-primary-white p-2 rounded z-50"
                             onClick={() => setShowPopup(false)}
                         >
-                            <CloseOutlined style={{ height: "40px", width: "40px" }} />
+                            <CloseOutlined className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10" />
                         </button>
+                        
                         <motion.div
                             variants={popupVariants}
-                            className="bg-white hotelSelection overflow-y-auto pb-20 w-full md:w-[1300px] h-full mt-16 rounded-t-[40px] shadow-lg"
+                            className="bg-white overflow-y-auto pb-20 w-full max-w-7xl h-full mt-12 sm:mt-16 rounded-t-[20px] sm:rounded-t-[40px] shadow-lg"
                         >
-                            <div className="sticky top-0 z-50 bg-white px-8 pt-4 border-b-2 border-gray-200">
-                                <div className="flex justify-between max-w-4xl mx-auto">
+                            {/* Sticky Tab Navigation */}
+                            <div className="sticky top-0 z-40 bg-white px-4 sm:px-8 pt-4 border-b-2 border-gray-200">
+                                <div className="flex justify-between max-w-4xl mx-auto overflow-x-auto scrollbar-hide">
                                     {popupCategories.map(category => (
                                         <button
                                             key={category}
                                             onClick={() => setActiveTab(category)}
-                                            className={`flex flex-col items-center px-4 py-2 transition-all duration-200 ${activeTab === category
+                                            className={`flex flex-col items-center px-2 sm:px-4 py-2 transition-all duration-200 flex-shrink-0 ${
+                                                activeTab === category
                                                     ? 'border-b-2 border-primary-green text-primary-green font-medium'
                                                     : 'text-gray-600'
-                                                }`}
+                                            }`}
                                         >
                                             <img
                                                 src={popupIcons[category]}
                                                 alt={category}
-                                                className={`w-12 h-12 transition-transform duration-200 ${activeTab === category ? 'scale-110' : ''}`}
+                                                className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 transition-transform duration-200 ${
+                                                    activeTab === category ? 'scale-110' : ''
+                                                }`}
                                             />
-                                            <span className="mt-1 text-sm">{category}</span>
+                                            <span className="mt-1 text-xs sm:text-sm whitespace-nowrap">{category}</span>
                                         </button>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="px-8 mt-8">
-                                <div className="flex flex-col lg:flex-row gap-8">
+                            <div className="px-4 sm:px-8 mt-6 sm:mt-8">
+                                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                                    {/* Places List */}
                                     <div className="w-full lg:w-[60%]">
-                                        <h2 className="text-2xl font-bold mb-4 text-gray-800">Nearby {activeTab}</h2>
+                                        <h2 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800">
+                                            Nearby {activeTab}
+                                        </h2>
 
                                         {groupedPlaces[activeTab] && groupedPlaces[activeTab].length > 0 ? (
-                                            <div className="space-y-4 pr-4">
+                                            <div className="space-y-4 pr-0 lg:pr-4">
                                                 {groupedPlaces[activeTab].map((place, index) => (
                                                     <div
                                                         key={place.place_id}
                                                         className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden"
                                                     >
                                                         <div
-                                                            className="flex flex-col sm:flex-row justify-between p-4 cursor-pointer"
+                                                            className="flex flex-col p-4 cursor-pointer"
                                                             onClick={() => setOpenAccordionIndex(openAccordionIndex === index ? null : index)}
                                                         >
-                                                            <div className="flex items-center space-x-3">
-                                                                <div className="bg-green-100 p-2 rounded-full">
+                                                            <div className="flex items-start space-x-3 mb-3">
+                                                                <div className="bg-green-100 p-2 rounded-full flex-shrink-0">
                                                                     <img
                                                                         src={popupIcons[activeTab]}
                                                                         alt={activeTab}
-                                                                        className="w-6 h-6 text-green-600"
+                                                                        className="w-5 h-5 sm:w-6 sm:h-6"
                                                                     />
                                                                 </div>
-                                                                <div>
-                                                                    <h3 className="font-semibold text-gray-800">{place.name}</h3>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <h3 className="font-semibold text-gray-800 text-sm sm:text-base truncate pr-2">
+                                                                        {place.name}
+                                                                    </h3>
                                                                     {place.rating && (
                                                                         <div className="flex items-center mt-1">
                                                                             <div className="flex text-yellow-400">
                                                                                 {Array(Math.floor(place.rating))
                                                                                     .fill()
                                                                                     .map((_, i) => (
-                                                                                        <svg key={i} className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                                                        <svg key={i} className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                                                                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                                                                                         </svg>
                                                                                     ))}
-                                                                                {place.rating % 1 !== 0 && (
-                                                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                                                    </svg>
-                                                                                )}
                                                                                 <span className="ml-1 text-xs text-gray-600">{place.rating}</span>
                                                                             </div>
                                                                         </div>
@@ -483,21 +494,21 @@ const Location = ({ address }) => {
                                                                 </div>
                                                             </div>
 
-                                                            <div className="flex flex-col sm:items-end mt-2 sm:mt-0">
-                                                                <div className="flex items-center space-x-3">
-                                                                    <div className="flex items-center text-gray-600">
+                                                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                                                <div className="flex items-center space-x-4 text-gray-600 text-sm">
+                                                                    <div className="flex items-center">
                                                                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                                         </svg>
-                                                                        <span className="text-sm">{(place.distance / 1000).toFixed(2)} km</span>
+                                                                        <span>{(place.distance / 1000).toFixed(2)} km</span>
                                                                     </div>
 
-                                                                    <div className="flex items-center text-gray-600">
+                                                                    <div className="flex items-center">
                                                                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                                         </svg>
-                                                                        <span className="text-sm">{calcTravelTime(place.distance)} min</span>
+                                                                        <span>{calcTravelTime(place.distance)} min</span>
                                                                     </div>
                                                                 </div>
 
@@ -506,7 +517,7 @@ const Location = ({ address }) => {
                                                                         e.stopPropagation();
                                                                         viewPopupMapOnLocation(place);
                                                                     }}
-                                                                    className="mt-2 px-3 py-1 text-sm bg-primary-green text-white rounded-md transition-colors duration-200 flex items-center"
+                                                                    className="px-3 py-1 text-sm bg-primary-green text-white rounded-md hover:bg-green-600 transition-colors duration-200 flex items-center justify-center w-full sm:w-auto"
                                                                 >
                                                                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
@@ -518,7 +529,7 @@ const Location = ({ address }) => {
 
                                                         {openAccordionIndex === index && (
                                                             <div className="bg-gray-50 p-4 border-t border-gray-100">
-                                                                <p className="text-gray-600">{place.vicinity || 'No address available'}</p>
+                                                                <p className="text-gray-600 text-sm">{place.vicinity || 'No address available'}</p>
                                                                 {place.opening_hours && (
                                                                     <p className="mt-2 text-sm">
                                                                         {place.opening_hours.open_now
@@ -532,12 +543,12 @@ const Location = ({ address }) => {
                                                 ))}
                                             </div>
                                         ) : (
-                                            <div className="flex flex-col items-center justify-center bg-gray-50 rounded-lg p-8">
-                                                <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <div className="flex flex-col items-center justify-center bg-gray-50 rounded-lg p-6 sm:p-8">
+                                                <svg className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
-                                                <p className="mt-4 text-gray-600">No {activeTab} found in this area.</p>
-                                                <button className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors">
+                                                <p className="mt-4 text-gray-600 text-center text-sm sm:text-base">No {activeTab} found in this area.</p>
+                                                <button className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-sm">
                                                     Expand Search Area
                                                 </button>
                                             </div>
@@ -546,11 +557,11 @@ const Location = ({ address }) => {
 
                                     {/* Popup Map Section */}
                                     <div className="w-full lg:w-[40%] mt-6 lg:mt-0">
-                                        <div className="sticky top-24">
-                                            <h2 className="text-2xl font-bold mb-4 text-gray-800">Map View</h2>
+                                        <div className="lg:sticky lg:top-24">
+                                            <h2 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800">Map View</h2>
                                             <div
                                                 ref={popupMapContainerRef}
-                                                className="w-full h-[450px] rounded-lg overflow-hidden shadow-lg border border-gray-200"
+                                                className="w-full h-64 sm:h-80 lg:h-[450px] rounded-lg overflow-hidden shadow-lg border border-gray-200"
                                             ></div>
                                         </div>
                                     </div>
@@ -558,8 +569,8 @@ const Location = ({ address }) => {
                             </div>
                         </motion.div>
                     </motion.div>
-                </AnimatePresence>
-            )}
+                )}
+            </AnimatePresence>
         </div>
     );
 };

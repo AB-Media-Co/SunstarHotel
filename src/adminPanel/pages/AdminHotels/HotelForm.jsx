@@ -90,6 +90,7 @@ const MultipleImagesTab = ({
 );
 
 const HotelForm = ({ initialData = null }) => {
+  console.log('Initial data: form', initialData);
   const isEditMode = Boolean(initialData);
   const navigate = useNavigate();
   const { amenities } = useUpdatePagesHook();
@@ -129,6 +130,16 @@ const HotelForm = ({ initialData = null }) => {
       activities: initialData?.location?.activities || [],
       nightlife: initialData?.location?.nightlife || []
     },
+    meta: {
+      title: initialData?.meta?.title || '',
+      description: initialData?.meta?.description || '',
+      keywords: initialData?.meta?.keywords || [],
+      ogTitle: initialData?.meta?.ogTitle || '',
+      ogDescription: initialData?.meta?.ogDescription || '',
+      ogImage: initialData?.meta?.ogImage || '',
+      canonicalUrl: initialData?.meta?.canonicalUrl || '',
+    },
+
     amenities: initialData?.amenities || [],
     rating: initialData?.rating || 0,
     price: initialData?.price || 0,
@@ -182,10 +193,42 @@ const HotelForm = ({ initialData = null }) => {
 
   const handleDetailsChange = e => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === "payAtHotel" ? (checked ? "yes" : "no") : type === 'checkbox' ? checked : value,
-    }));
+
+    // Checkbox value logic
+    const finalValue = name === "payAtHotel" ? (checked ? "yes" : "no") : type === 'checkbox' ? checked : value;
+
+    // Handle meta fields
+    if (["title", "description", "keywords", "ogTitle", "ogDescription", "ogImage", "canonicalUrl"].includes(name)) {
+      setFormData(prev => ({
+        ...prev,
+        meta: {
+          ...prev.meta,
+          [name]: name === 'keywords' ? value.split(',').map(k => k.trim()) : finalValue
+        }
+      }));
+    }
+
+    // Handle continental plan
+    else if (name === "amount" || name === "period") {
+      setFormData(prev => ({
+        ...prev,
+        continentalPlan: {
+          ...prev.continentalPlan,
+          rate: {
+            ...prev.continentalPlan.rate,
+            [name]: name === "amount" ? Number(value) : value
+          }
+        }
+      }));
+    }
+
+    // Fallback: top-level values
+    else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: finalValue
+      }));
+    }
   };
 
   const handleAboutUsChange = e => {
@@ -202,10 +245,7 @@ const HotelForm = ({ initialData = null }) => {
     }));
   };
 
-  // const handleTestimonialChange = e => {
-  //   const { name, value } = e.target;
-  //   setTestimonialInput(prev => ({ ...prev, [name]: value }));
-  // };
+
   const handleAddTestimonial = () => {
     const newTestimonial = { ...testimonialInput };
     setFormData(prev => ({
@@ -548,14 +588,14 @@ const HotelForm = ({ initialData = null }) => {
           )}
 
           {currentTab === 'testimonials' && (
-          <TestimonialsTab
-          formData={formData}
-          setFormData={setFormData}
-          testimonialInput={testimonialInput}
-          setTestimonialInput={setTestimonialInput}
-          handleAddTestimonial={handleAddTestimonial}
-          handleRemoveTestimonial={handleRemoveTestimonial}
-        />
+            <TestimonialsTab
+              formData={formData}
+              setFormData={setFormData}
+              testimonialInput={testimonialInput}
+              setTestimonialInput={setTestimonialInput}
+              handleAddTestimonial={handleAddTestimonial}
+              handleRemoveTestimonial={handleRemoveTestimonial}
+            />
           )}
 
           {currentTab === 'aboutUs' && (
@@ -594,7 +634,6 @@ const HotelForm = ({ initialData = null }) => {
                     Add FAQ
                   </button>
                 </div>
-                {/* Render Existing FAQs with Inline Editing */}
                 {formData.faqs.length > 0 ? (
                   formData.faqs.map((faq, index) => (
                     <div key={index} className="flex flex-col sm:flex-row justify-between items-center p-4 border rounded-md">

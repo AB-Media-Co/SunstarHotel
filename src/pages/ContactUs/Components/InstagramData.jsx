@@ -12,10 +12,11 @@ const InstagramData = () => {
 
   useEffect(() => {
     axiosInstance
-      .get('/api/instagram/posts')
+      .get('/api/instagram/insta-posts')
       .then(response => {
-        setPosts(response.data || []);
-        setLoading(false);
+        console.log(response)
+        // setPosts(response.data || []);
+        // setLoading(false);
       })
       .catch(error => {
         console.error("There was an error fetching the posts:", error);

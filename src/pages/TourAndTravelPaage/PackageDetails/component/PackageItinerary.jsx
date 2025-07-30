@@ -5,14 +5,14 @@ const PackageItinerary = ({ packageDetails }) => {
     const { itinerary = [] } = packageDetails || {};
 
     return (
-        <div className="bg-primary-green mx-auto p-6">
+        <div className="bg-primary-green mx-auto py-6">
             <div className='content mx-auto'>
 
                 <h2 className="text-mobile/h3 md:text-desktop/h3 font-semibold text-white mb-6">
                     Description
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="flex  flex-col gap-6">
                     {itinerary.map((item, index) => (
                         <div
                             key={item._id || index}

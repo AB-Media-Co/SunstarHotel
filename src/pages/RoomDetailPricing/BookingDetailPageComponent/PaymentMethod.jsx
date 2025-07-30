@@ -18,8 +18,10 @@ import { BookingSuccessPopup } from "./BookingSuccessPopup";
 export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
   const email = localStorage.getItem("user_email");
   const { data: userData } = useGetUserByEmail(email);
+  console.log(userData)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
-  const { selectedRooms,setIsConfirmationModalOpen } = usePricing();
+  console.log(selectedPaymentMethod)
+  const { selectedRooms, setIsConfirmationModalOpen, someOneElse, guestData } = usePricing();
   const pushBooking = usePushBooking();
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
@@ -51,10 +53,10 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
         number_children: "0",
         ExtraChild_Age: "",
         Title: "",
-        First_Name: userData?.data.firstName || '',
-        Last_Name: userData?.data.lastName || '',
+        First_Name: someOneElse ? guestData.firstName || '' : userData?.data.firstName || '',
+        Last_Name: someOneElse ? guestData.lastName || '' : userData?.data.lastName || '',
         Gender: userData?.data.gender || '',
-        SpecialRequest: ""
+        SpecialRequest: selectedPaymentMethod === "pay-at-hotel" ? "pay-at-hotel" : paymenttypeunkid
       };
     });
 
@@ -65,7 +67,7 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
       Booking_Payment_Mode: selectedPaymentMethod === "pay-at-hotel" ? "0" : "1",
       Email_Address: userData?.data.email,
       Source_Id: "",
-      MobileNo: userData?.data.phone || '',
+      MobileNo: someOneElse ? guestData.phone : userData?.data.phone || '',
       Address: userData?.data.address || '',
       State: userData?.data.state || '',
       Country: userData?.data.country || '',
@@ -91,8 +93,6 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
     });
   };
 
-
-  // Loading overlay when booking is in progress
   if (pushBooking.isPending) {
     return (
       <div className="relative bg-white border-gray-100">
@@ -148,9 +148,7 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
         onClose={() => setShowSuccessPopup(false)}
         onSeeBookings={() => {
           setShowSuccessPopup(false);
-        
-
-          window.location.href = "/my-bookings";  // Your bookings page route
+          window.location.href = "/user/profile";  // Your bookings page route
         }}
         onContinueBooking={() => {
           setShowSuccessPopup(false);

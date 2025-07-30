@@ -24,7 +24,6 @@ import AddHotel from './adminPanel/pages/AdminHotels/AddHotel';
 import UpdatePage from './adminPanel/pages/UpdatePages/UpdatePage';
 import DealsOffers from './adminPanel/pages/Deals&Offers/DealsOffers';
 import { PricingProvider } from './Context/PricingContext';
-import ManageBlogs from './adminPanel/pages/ManageBlogs/ManageBlogs';
 import SeoMeta from './adminPanel/pages/OptimiseSeo/SeoMeta';
 import EventandConference from './pages/OtherPages/EventandConference';
 import ComingSoonPage from './pages/OtherPages/ComingSoonPage';
@@ -35,6 +34,10 @@ import TourAndTravel from './adminPanel/pages/TourAndTravel/TourAndTravel';
 import Jobs from './adminPanel/pages/CareerPageJobs/Jobs';
 import BlogEditorTabs from './adminPanel/pages/ManageBlogs/BlogEditorTabs';
 import MyBookings from './pages/OtherPages/My-Bookings';
+import UserProfile from './pages/Profile/UserProfile';
+import ManageDayUseRoom from './adminPanel/pages/ManageDayUseRoom/ManageDayUseRoom';
+import InTheMediaPage from './pages/InTheMedia/Component/InTheMediaPage';
+import IntheMediaMain from './pages/InTheMedia/IntheMediaMain';
 
 // import PhoneAuth from './pages/PhoneAuth';
 
@@ -121,10 +124,11 @@ function App() {
               <Route path="/destination/:state" element={<SelectedState />} />
               <Route path="/package-detail/:title" element={<PackageDetails />} />
               <Route path="/travel-agent" element={<TravelAgent />} />
-              <Route path="/in-the-media" element={<ComingSoonPage />} />
+              <Route path="/in-the-media" element={<IntheMediaMain />} />
               <Route path="/loyalty-program" element={<ComingSoonPage />} />
               <Route path="/travel-booking-form" element={  <TravelBookingForm/>} />
               <Route path="/my-bookings" element={  <MyBookings/>} />
+              <Route path="/user/profile" element={  <UserProfile/>} />
             </Route>
             <Route path="/room/details" element={<RoomsDetails />} />
             <Route path="/room/:id" element={<HotelRooms />} />
@@ -151,6 +155,7 @@ function App() {
             <Route path="/admin/manage-seo" element={<PrivateRoute><SeoMeta /></PrivateRoute>} />
             <Route path="/admin/tour&travel" element={<PrivateRoute><TourAndTravel /></PrivateRoute>} />
             <Route path="/admin/jobs" element={<PrivateRoute><Jobs /></PrivateRoute>} />
+            <Route path="/admin/day-use-room" element={<PrivateRoute><ManageDayUseRoom /></PrivateRoute>} />
           </Routes>
         </AdminProvider>
         {/* <Suspense fallback={<Loader />}>

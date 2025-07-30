@@ -4,41 +4,36 @@ import CommonUseEnquiryForm from "../../../Components/CommonUseEnquiryForm";
 
 const EnquieryForm = ({ page = 'Dev & Owners', gid = [1824860371] }) => {
   const { mutate, isLoading } = useEnquiryForm();
+const contactFields = [
+  {
+    name: "firstName",
+    placeholder: "Your Name*",
+  },
+  {
+    name: "company", // repurposed to capture property location
+    placeholder: "Property Location*",
+  },
+  {
+    name: "lastName", // repurposed for number of rooms
+    placeholder: "Number of Rooms*",
+  },
+  {
+    name: "hotelType",
+    type: "dropdown",
+    placeholder: "Current Hotel Status",
+    colSpan: "md:col-span-1",
+    options: [
+      { value: "Operating", label: "Operating" },
+      { value: "new", label: "New Build" },
+      { value: "Conversion", label: "Conversion" },
+    ],
+  },
+  {
+    name: "phone", // using phone for contact details
+    placeholder: "Contact Details*",
+  }
+];
 
-  const contactFields = [
-    {
-      name: "firstName",
-      placeholder: "First Name*",
-    },
-    {
-      name: "lastName",
-      placeholder: "Last Name*",
-    },
-    {
-      name: "email",
-      type: "email",
-      placeholder: "Email Address*",
-    },
-    {
-      name: "phone",
-      placeholder: "Phone Number",
-    },
-    {
-      name: "company",
-      placeholder: "Company Name",
-    },
-    {
-      name: "hotelType",
-      type: "dropdown",
-      placeholder: "Current Hotel Status",
-      colSpan: "md:col-span-1",
-      options: [
-        { value: "Operating", label: "Operating" },
-        { value: "new", label: "New Build" },
-        { value: "Conversion", label: "Conversion" },
-      ],
-    }
-  ];
 
   const handleSubmit = (formData, callbacks) => {
     mutate({

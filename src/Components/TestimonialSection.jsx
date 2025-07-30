@@ -1,8 +1,12 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import CommonSwiper from "./CommonSlider";
+import { useGetTestimonials } from "../ApiHooks/useTestimonialHook";
 
-const TestimonialSection = ({ backgroundImage, Testimonials }) => {
+const TestimonialSection = ({ backgroundImage, Testimonials, page='' }) => {
+  const { data: apiTestimonials = [], isLoading, error } = useGetTestimonials({ page: page });
+  console.log("Testimonials data:", apiTestimonials);
+
   const renderItem = (item) => {
     return (
       <motion.div
@@ -51,15 +55,15 @@ const TestimonialSection = ({ backgroundImage, Testimonials }) => {
       </div>
 
       <div className="content flex flex-col relative overflow-hidden container mx-auto">
-        {Testimonials?.clientHeading && (
+        {Testimonials && (
           <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-900 text-start">
-            {Testimonials?.clientHeading ? Testimonials?.clientHeading : "Testimonials"}
+            { "Testimonials"}
           </h2>
         )}
 
 
         <CommonSwiper
-          items={Testimonials?.clients ? Testimonials?.clients : Testimonials}
+          items={apiTestimonials}
           renderItem={renderItem}
           spaceBetween={30}
           loop={true}

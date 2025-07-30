@@ -50,6 +50,30 @@ export const useSendOtp = () => {
   });
 };
 
+// ✅ Check Email Verification Status by Email
+export const useCheckEmailVerification = (email) => {
+  return useQuery({
+    queryKey: ['check-email-verification', email],
+    queryFn: async () => {
+      if (!email || email.trim() === '') {
+        return { verified: false };
+      }
+
+      try {
+        const response = await axiosInstance.get(`/api/user/check-verification?email=${email}`);
+        return response.data;
+      } catch (error) {
+        toast.error('Verification check failed: ' + (error?.response?.data?.message || error.message));
+        throw error;
+      }
+    },
+    enabled: !!email,
+    staleTime: 30000,
+    refetchOnWindowFocus: false,
+  });
+};
+
+
 // ✅ Verify OTP Hook
 export const useVerifyOtp = () => {
   return useMutation({
@@ -98,8 +122,6 @@ export const useGetUserBookings = (userId) => {
   });
 };
 
-
-
 export const useCancelBooking = () => {
   return useMutation({
     mutationFn: async ({ hotelCode, apiKey, reservationNo }) => {
@@ -143,3 +165,27 @@ export const useCancelBooking = () => {
     }
   });
 };
+
+// ✅ Update User Profile Hook
+export const useUpdateUserProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (updateData) => {
+      const response = await axiosInstance.put('/api/user/update-profile', updateData);
+      return response.data;
+    },
+    onSuccess: (data, variables) => {
+      toast.success('Profile updated successfully');
+
+      // Invalidate the user info query to refetch updated data
+      if (variables?.email) {
+        queryClient.invalidateQueries({ queryKey: ['user-info', variables.email] });
+      }
+    },
+    onError: (error) => {
+      toast.error('Failed to update profile: ' + (error?.response?.data?.message || error.message));
+    }
+  });
+};
+

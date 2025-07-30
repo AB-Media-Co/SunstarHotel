@@ -138,7 +138,7 @@ const Section1 = ({ section1Data }) => {
           >
             {/* Decorative element */}
             <div
-              className="md:z-10 absolute left-[20%] md:left-auto md:right-[19rem] top-[33rem] md:top-[27rem] 
+              className="md:z-10 z-0 absolute left-[20%] md:left-auto md:top-[20rem] md:right-0 lg:right-[19rem] top-[33rem] lg:top-[27rem] 
                        w-[300px] h-[300px] animate-spin-slow 
                        bg-no-repeat bg-contain"
               style={{
@@ -154,7 +154,7 @@ const Section1 = ({ section1Data }) => {
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="absolute top-[60%] left-[5%] sm:top-[63%] sm:left-[53%] md:top-[45%] md:left-[10%] 
                          flex flex-col md:gap-4 text-left text-primary-white 
-                         max-w-[90%] sm:max-w-[80%] md:max-w-7xl"
+                         max-w-[90%] sm:max-w-[80%] md:max-w-7xl z-10"
             >
               <h1 className="text-mobile/h2 md:text-desktop/h2 text-reveal-animation">
                 {heading}

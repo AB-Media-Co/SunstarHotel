@@ -53,7 +53,7 @@ const Sec3CardSlider = () => {
         src={item.image?.replace('/upload/', '/upload/f_auto,q_auto,w_800/')}
         className="h-[300px] md:h-[280px] bg-cover rounded-lg bg-center hover:scale-105 ease-in-out duration-300"
       />
-      <div className="py-4 w-full cursor-pointer gap-2 h-[150px] md:h-[180px] text-left flex flex-col"
+      <div className="py-4 w-full cursor-pointer gap-2h-[180px] text-left flex flex-col"
 
         onClick={() => {
           navigate("/why-sunstar#what-make-us-shine");

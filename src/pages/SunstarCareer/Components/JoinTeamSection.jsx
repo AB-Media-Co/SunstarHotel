@@ -1,7 +1,7 @@
 const JoinTeamSection = () => {
     return (
-        <div className="min-h-screen  flex items-center justify-center">
-            <div className="content w-full py-4 bg-white  overflow-hidden">
+        <div className="   flex items-center justify-center">
+            <div className="content w-full py-8 bg-white  overflow-hidden">
                 <div className="flex flex-col gap-4 lg:flex-row">
                     {/* Left Content Section */}
                     <div className="lg:w-[60%]  flex flex-col justify-center">

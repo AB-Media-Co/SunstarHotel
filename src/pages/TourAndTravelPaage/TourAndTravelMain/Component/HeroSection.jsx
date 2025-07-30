@@ -22,7 +22,7 @@ const HeroSection = () => {
           Choose from our curated experiences, customized for every kind of traveler.
         </p>
         <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-3 rounded-full">
-          BOOK NOW
+         <a href="/travel-booking-form"> BOOK NOW</a>
         </button>
       </div>
 

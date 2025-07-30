@@ -12,7 +12,7 @@ const Banner = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0 bg-cover md:bg-right"
         style={{
           backgroundImage: "url('/images/ContctUsImg/ContactUsBanner.png')",
         }}
@@ -69,7 +69,7 @@ const Banner = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-primary-white text-mobile/body/2 md:text-desktop/body/1 mt-6 drop-shadow"
+          className="text-primary-white max-w-2xl text-mobile/body/2 md:text-desktop/body/1 mt-6 drop-shadow"
         >
           For further support, reach out via email, and we'll get back to you promptly.
           <a href={ContactUsDetail?.emailId} className="underline font-semibold ml-1">
