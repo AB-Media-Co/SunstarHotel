@@ -305,8 +305,8 @@ const Bookings = () => {
     <div className="min-h-screen">
       {/* Cancel Booking Modal */}
       {showCancelModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-4 md:p-6 transform transition-all">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 ">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all">
             <div className="text-center">
               <div className="mx-auto flex items-center justify-center h-12 w-12 md:h-16 md:w-16 rounded-full bg-red-100 mb-3 md:mb-4">
                 <Trash2 className="h-6 w-6 md:h-8 md:w-8 text-red-600" />
@@ -347,7 +347,7 @@ const Bookings = () => {
         </div>
       )}
 
-      <div className="mx-auto px-4 py-4 md:py-8">
+      <div className="mx-auto">
         {/* Header */}
         <div className="mb-6 md:mb-12">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 md:mb-8 gap-4">
@@ -355,7 +355,7 @@ const Bookings = () => {
               <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1 md:mb-2">My Bookings</h1>
               <p className="text-sm md:text-lg text-gray-500">Manage and review your hotel reservations</p>
             </div>
-            <div className="flex gap-2 md:gap-3">
+            {/* <div className="flex gap-2 md:gap-3">
               <button
                 onClick={handleRefresh}
                 className="flex items-center gap-1 md:gap-2 px-3 md:px-5 py-2 md:py-3 text-white bg-[#5BBEBC] hover:bg-[#4BA9A6] rounded-xl shadow-md transition text-sm md:text-base"
@@ -363,7 +363,7 @@ const Bookings = () => {
                 <RefreshCw className="w-4 h-4 md:w-5 md:h-5" /> 
                 <span className="hidden sm:inline">Refresh</span>
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Hotel Selection */}
@@ -564,7 +564,7 @@ const Bookings = () => {
         ) : (
           !bookingsLoading &&
           selectedHotel && (
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl text-center py-8 md:py-16 px-4 md:px-8">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl  text-center py-8 md:py-16 px-4 md:px-8">
               <div className="flex flex-col items-center gap-4 md:gap-6">
                 <div className="p-4 md:p-6 bg-gradient-to-br from-gray-100 to-slate-100 rounded-full">
                   {activeTab === "upcoming" && <Calendar className="w-8 h-8 md:w-12 md:h-12 text-gray-400" />}

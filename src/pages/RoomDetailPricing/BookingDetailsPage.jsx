@@ -82,7 +82,7 @@ const BookingDetailsPage = () => {
   }
 
   return (
-    <div className="md:p-4 md:pb-0  bg-primary-green">
+    <div className="md:p-4 md:pb-0  bg-primary-green overflow-hidden">
       <Helmet>
         <title>Booking Details</title>
         <meta name="" content={``} />
@@ -117,7 +117,7 @@ const BookingDetailsPage = () => {
         {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
 
       </div>
-      <div className="md:flex gap-5 content  bg-white rounded-t-3xl">
+      <div className="md:flex gap-5 content  bg-white rounded-t-3xl overflow-hidden ">
         <div className="flex flex-col md:px-8 md:py-10 gap-8">
 
           <HeaderHotel />
@@ -126,7 +126,7 @@ const BookingDetailsPage = () => {
           <GuestDetailsForm ref={guestFormRef} setIsVerified={setIsVerified} />
           {hotelDetail.addToYourStay.length > 0 && <AddToYourStayOptions data={hotelDetail} />}
           <OfferCode hotelDetail={hotelDetail} checkIn={checkIn} verified={verified} />
-          <div className="lg:hidden">
+          <div className="xl:hidden">
             <ReservationSummarySidebar
               hotelDetail={hotelDetail}
               checkIn={checkIn}
@@ -144,7 +144,7 @@ const BookingDetailsPage = () => {
           />
           <Footer ContactUsDetail={ContactUsDetail} />
         </div>
-        <div className="hidden md:px-8 py-10  lg:block">
+        <div className=" md:px-8 py-10  hidden  xl:block">
           <ReservationSummarySidebar
             hotelDetail={hotelDetail}
             checkIn={checkIn}

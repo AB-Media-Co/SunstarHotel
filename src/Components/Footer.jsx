@@ -74,7 +74,7 @@ const Footer = () => {
 
                     <div className='flex md:hidden w-full gap-[20px] flex-col justify-between'>
                         <Link to='/why-sunstar' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Why Sunstar</Link>
-                        <Link to='/loyalty-program' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Loyalty Program</Link>
+                        <Link to='/loyalty-program' state={{ tab: 'loyalty' }} className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Loyalty Program</Link>
                         <Link to='/dayuseroom' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Day Use Rooms</Link>
 
                         <Link to='/developers&owners' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Dev & Owners</Link>
@@ -106,7 +106,7 @@ const Footer = () => {
                     <div className='md:flex hidden justify-around w-full'>
                         <div className="flex flex-col space-y-3">
                             <Link to='/why-sunstar' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Why Sunstar</Link>
-                            <Link to='/loyalty-program' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Loyalty Program</Link>
+                            <Link to='/loyalty-program'  className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Loyalty Program</Link>
                             <Link to='/contact' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Contact</Link>
                         </div>
                         <div className="flex flex-col space-y-3">

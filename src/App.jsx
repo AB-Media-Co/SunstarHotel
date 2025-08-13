@@ -38,6 +38,8 @@ import UserProfile from './pages/Profile/UserProfile';
 import ManageDayUseRoom from './adminPanel/pages/ManageDayUseRoom/ManageDayUseRoom';
 import InTheMediaPage from './pages/InTheMedia/Component/InTheMediaPage';
 import IntheMediaMain from './pages/InTheMedia/IntheMediaMain';
+import LoyaltyPrograme from './pages/LoyaltyPrograme/LoyaltyPrograme';
+import VenueManagement from './adminPanel/pages/VenueManagement/VenueManagement';
 
 // import PhoneAuth from './pages/PhoneAuth';
 
@@ -125,7 +127,7 @@ function App() {
               <Route path="/package-detail/:title" element={<PackageDetails />} />
               <Route path="/travel-agent" element={<TravelAgent />} />
               <Route path="/in-the-media" element={<IntheMediaMain />} />
-              <Route path="/loyalty-program" element={<ComingSoonPage />} />
+              <Route path="/loyalty-program" element={<LoyaltyPrograme />} />
               <Route path="/travel-booking-form" element={  <TravelBookingForm/>} />
               <Route path="/my-bookings" element={  <MyBookings/>} />
               <Route path="/user/profile" element={  <UserProfile/>} />
@@ -156,6 +158,7 @@ function App() {
             <Route path="/admin/tour&travel" element={<PrivateRoute><TourAndTravel /></PrivateRoute>} />
             <Route path="/admin/jobs" element={<PrivateRoute><Jobs /></PrivateRoute>} />
             <Route path="/admin/day-use-room" element={<PrivateRoute><ManageDayUseRoom /></PrivateRoute>} />
+            <Route path="/admin/venue-management" element={<PrivateRoute><VenueManagement /></PrivateRoute>} />
           </Routes>
         </AdminProvider>
         {/* <Suspense fallback={<Loader />}>

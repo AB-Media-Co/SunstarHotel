@@ -33,7 +33,7 @@ const WhyWorkWithUs = () => {
                     return (
                         <div
                             key={index}
-                            className="relative group cursor-pointer transform transition-all duration-300 hover:scale-105"
+                            className="relative group  transform transition-all duration-300 hover:scale-105"
                         >
                             <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 h-full p-6">
 

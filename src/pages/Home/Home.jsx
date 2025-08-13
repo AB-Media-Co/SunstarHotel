@@ -13,7 +13,6 @@ const Section5 = lazy(() => import('./Components/Section5'));
 const TestimonialSection = lazy(() => import('../../Components/TestimonialSection'));
 
 const Home = () => {
-  const { Testimonials } = useUpdatePagesHook();
   const { data: metas } = useGetMetas();
 
   const homeMeta = Array.isArray(metas)
@@ -54,7 +53,7 @@ const Home = () => {
       </Suspense>
 
       <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
-        <TestimonialSection Testimonials={Testimonials} />
+        <TestimonialSection page='home'/>
       </Suspense>
     </div>
   );

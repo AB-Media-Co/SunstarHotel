@@ -1,13 +1,11 @@
 
 import { testimonialData } from '../../Data/AboutSectionData';
 import OtherPageLayout from './OtherPageLayout';
-import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
 import { Helmet } from 'react-helmet';
 import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 
 const SocialEventsPage = () => {
-    const { Testimonials } = useUpdatePagesHook();
     const { mutate } = useEnquiryForm();
 
     const eventTypes = [
@@ -15,13 +13,6 @@ const SocialEventsPage = () => {
         { title: 'Private Dinners', image: '/images/OtherPageImages/Aniv.webp' },
         { title: 'Get Together', image: '/images/OtherPageImages/celeb.webp' },
         { title: 'Baby Shower', image: '/images/OtherPageImages/bbyshower.webp' },
-    ];
-
-    const eventTypesexp = [
-        { title: 'Candle Light Dinner', image: '/images/OtherPageImages/Cld.webp' },
-        { title: 'Bachelor Party', image: '/images/OtherPageImages/bechlorsp.webp' },
-        { title: 'Marriage Proposal', image: '/images/OtherPageImages/prpposal.webp' },
-        { title: 'Group Party', image: '/images/OtherPageImages/groupP.webp' },
     ];
 
     const whyChooseUsFeatures = [
@@ -35,46 +26,7 @@ const SocialEventsPage = () => {
         { title: 'Parking', icon: '/images/othericons/valetParking.svg' },
     ];
 
-    const venueData = [
-        {
-            id: 1,
-            name: 'Venue1',
-            location: 'Rajendra Place, Delhi',
-            pricePerPlate: 600,
-            capacity: '30 to 200',
-            rating: 4.6,
-            image: '/images/OtherPageImages/CoorporateEvents.webp'
-        },
-        {
-            id: 2,
-            name: 'Venue2',
-            location: 'Karol Bagh, Delhi',
-            pricePerPlate: 650,
-            capacity: '50 to 700',
-            rating: 4.9,
-            image: '/images/OtherPageImages/Conference.jpg'
-        },
-        {
-            id: 3,
-            name: 'Venue3',
-            location: 'Patel Nagar, Delhi',
-            pricePerPlate: 550,
-            capacity: '40 to 300',
-            rating: 4.4,
-            image: '/images/OtherPageImages/GalaDinner.jpg'
-        },
-        {
-            id: 4,
-            name: 'Venue4',
-            location: 'Pusa Road, Delhi',
-            pricePerPlate: 580,
-            capacity: '30 to 250',
-            rating: 4.5,
-            image: '/images/OtherPageImages/AwardCeremony.webp'
-        }
-    ];
-
-
+   
 
     const introText = (
         <>
@@ -193,12 +145,10 @@ const SocialEventsPage = () => {
                 sectionMainTitleexp='Personalised Celebration'
                 sectionSubtitleexp='Our hotel offers a variety of beautiful and unique event spaces that can be tailored to your needs and preferences.'
                 eventTypesexp={eventTypes}
-                // Venues slider
-                venueData={venueData}
                 // Features grid
                 featureItems={whyChooseUsFeatures}
                 // Testimonials and form
-                testimonials={Testimonials}
+                page='social event'
                 testimonialBackgroundImage={testimonialData.backgroundImage}
                 formImage="/images/OtherPageImages/formImg2.webp"
             />

@@ -6,6 +6,7 @@ import TestimonialSection from '../../Components/TestimonialSection';
 import OtherPagesEnquiryform from '../../Components/OtherPagesEnquiryform';
 import CommonSwiper from '../../Components/CommonSlider';
 import { useGetMetas } from '../../ApiHooks/useMetaHook';
+import { useVenues } from '../../ApiHooks/useVenues';
 
 const OtherPageLayout = ({
     // SEO and page metadata
@@ -33,21 +34,23 @@ const OtherPageLayout = ({
     sectionSubtitleexp = '',
     eventTypesexp = [],
 
-    // Venues slider
-    venueData = [],
 
     // Features grid
     featureItems = [],
 
     // Testimonials and form
-    testimonials = [],
+    // testimonials = [],
     testimonialBackgroundImage = '',
     formImage = '',
+    page = '',
 
     // Additional props
     children
 }) => {
     const { data: metas } = useGetMetas();
+    const { data: venueData, } = useVenues();
+    console.log(venueData)
+
     const pageMeta = Array.isArray(metas)
         ? metas.find(meta => meta.page === pageType.toLowerCase().replace(/\s+/g, ''))
         : null;
@@ -82,7 +85,7 @@ const OtherPageLayout = ({
                                 src="/images/othericons/loc.svg"
                                 alt="Location"
                                 className="w-5 h-5 "  // object-contain prevents cutting
-                                style={{objectFit:"contain"}}
+                                style={{ objectFit: "contain" }}
                             />
                         </div>
                         <span className="text-sm">{venue.location}</span>
@@ -94,7 +97,7 @@ const OtherPageLayout = ({
                                 src="/images/othericons/plate.svg"
                                 alt="Price per plate"
                                 className="w-5 h-5 object-contain"
-                                  style={{objectFit:"contain"}}
+                                style={{ objectFit: "contain" }}
                             />
                         </div>
                         <span className="text-sm">Price per plate ₹ {venue.pricePerPlate}</span>
@@ -106,10 +109,10 @@ const OtherPageLayout = ({
                                 src="/images/othericons/people.svg"
                                 alt="Capacity"
                                 className="w-5 h-5 object-contain"
-                                  style={{objectFit:"contain"}}
+                                style={{ objectFit: "contain" }}
                             />
                         </div>
-                        <span className="text-sm">{venue.capacity}</span>
+                        <span className="text-sm">{venue.capacityMin} to {venue.capacityMax}</span>
                     </div>
                 </div>
             </div>
@@ -218,12 +221,12 @@ const OtherPageLayout = ({
             )}
 
             {/* Venues Slider */}
-            {venueData.length > 0 && (
+            {venueData?.total >=1 && (
                 <section className="py-6 md:py-12 md:px-4">
                     <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold content text-start mb-8">Venues You May Like</h2>
                     <div className="content">
                         <CommonSwiper
-                            items={venueData}
+                            items={venueData?.data}
                             renderItem={renderVenueCard}
                             spaceBetween={20}
                             slidesPerViewDesktop={3}
@@ -263,7 +266,7 @@ const OtherPageLayout = ({
 
             {/* Testimonials Section */}
             <TestimonialSection
-                Testimonials={testimonials}
+                page={page}
                 backgroundImage={testimonialBackgroundImage}
             />
 

@@ -15,7 +15,6 @@ import { AmenitiesList2 } from "../../Components/AmenitiesList2";
 import BottomRoomSticky from "../../Components/BottomRoomSticky";
 import { Helmet } from "react-helmet";
 import { useRooms } from "../../ApiHooks/useRoomsHook";
-import { useGetMetas } from "../../ApiHooks/useMetaHook";
 import { useCallback, useEffect, useState } from "react"; // Add useCallback
 
 import {

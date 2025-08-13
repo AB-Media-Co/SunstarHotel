@@ -1,164 +1,155 @@
-import  { useState } from 'react';
+import { useState } from "react";
+import CommonUseEnquiryForm from "../../../Components/CommonUseEnquiryForm";
 
+/* --- Small custom component for file upload (works with CommonUseEnquiryForm's "custom" type) --- */
+const ResumeUpload = ({ value, error, onChange }) => (
+  <div>
+ 
+    <input
+      type="file"
+      accept=".pdf,.doc,.docx"
+      onChange={(e) => onChange(e.target.files?.[0] || null)}
+      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-teal-50 hover:file:bg-teal-100"
+      required
+    />
+    {value && (
+      <p className="text-xs text-gray-600 mt-1 truncate">
+        Selected: {value.name}
+      </p>
+    )}
+    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+  </div>
+);
+
+/* --- Page/section that uses CommonUseEnquiryForm --- */
 const JobApplicationForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    appliedFor: '',
-    phoneNumber: '',
-    emailId: '',
-    gender: '',
-    resume: null
-  });
+  // optional local loading state if you want to disable the button externally too
+  const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const genderOptions = [
+    { label: "Select Gender", value: "" },
+    { label: "Male", value: "male" },
+    { label: "Female", value: "female" },
+    { label: "Other", value: "other" },
+    { label: "Prefer not to say", value: "prefer-not-to-say" },
+  ];
+
+  // fields config for CommonUseEnquiryForm
+  const fields = [
+    {
+      name: "name",
+      type: "text",
+      placeholder: "Enter Your Name",
+      required: true,
+    },
+    {
+      name: "appliedFor",
+      type: "text",
+      placeholder: "Enter Applied for",
+      required: true,
+    },
+    {
+      name: "phoneNumber",
+      type: "tel",
+      placeholder: "Enter Phone Number",
+      required: true,
+      className: "[-moz-appearance:textfield] [appearance:textfield]",
+    },
+    {
+      name: "emailId",
+      type: "email",
+      placeholder: "Enter Email Id",
+      required: true,
+    },
+    {
+      name: "gender",
+      type: "dropdown",
+      placeholder: "Select Gender",
+      options: genderOptions,
+      required: true,
+    },
+    {
+      name: "resume",
+      type: "custom",
+      required: true,
+      component: (props) => <ResumeUpload {...props} />,
+    },
+  ];
+
+  // simple client-side checks for phone/email/file before sending
+  const extraValidate = (payload) => {
+    const errs = [];
+
+    // phone (basic) – tweak as per your locale
+    if (!/^\+?[0-9\s-]{7,15}$/.test(payload.phoneNumber || "")) {
+      errs.push("Please enter a valid phone number.");
+    }
+
+    // email basic
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.emailId || "")) {
+      errs.push("Please enter a valid email address.");
+    }
+
+    // resume checks
+    const file = payload.resume;
+    const allowed = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    if (!file) {
+      errs.push("Resume is required.");
+    } else {
+      if (!allowed.includes(file.type)) errs.push("Resume must be a PDF or Word document.");
+      const maxMB = 5;
+      if (file.size > maxMB * 1024 * 1024) errs.push(`Resume must be ≤ ${maxMB}MB.`);
+    }
+
+    return errs;
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setFormData(prev => ({
-      ...prev,
-      resume: file
-    }));
-  };
+  const onSubmit = async (payload, callbacks) => {
+    // payload includes all fields; "resume" will be a File from the custom component
+    const problems = extraValidate(payload);
+    if (problems.length) {
+      callbacks.onError(problems.join(" "));
+      alert(problems.join("\n"));
+      return;
+    }
 
-  const handleSubmit = () => {
-    console.log('Form submitted:', formData);
-    // Handle form submission logic here
-    alert('Form submitted successfully!');
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("name", payload.name);
+      formData.append("appliedFor", payload.appliedFor);
+      formData.append("phoneNumber", payload.phoneNumber);
+      formData.append("emailId", payload.emailId);
+      formData.append("gender", payload.gender);
+      formData.append("resume", payload.resume); // <-- file
+      formData.append("submittedAt", payload.submittedAt);
+
+      // TODO: replace with your real endpoint
+      // const res = await fetch("/api/jobs/apply", { method: "POST", body: formData });
+      // if (!res.ok) throw new Error("Network response was not ok");
+
+      console.log("Submitting to server...", Object.fromEntries(formData.entries()));
+      callbacks.onSuccess();
+    } catch (err) {
+      console.error(err);
+      callbacks.onError("Failed to submit form. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-primary-green flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-6xl">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">APPLY HERE</h1>
-          <p className="text-gray-600 text-sm">
-            Whether you're looking for solutions or want to explore opportunities, we're here to collaborate with you.
-          </p>
-        </div>
-
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Name Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Enter Your Name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
-                required
-              />
-            </div>
-
-            {/* Applied For Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Applied for <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="appliedFor"
-                value={formData.appliedFor}
-                onChange={handleInputChange}
-                placeholder="Enter Applied for"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
-                required
-              />
-            </div>
-
-            {/* Phone Number Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder="Enter Phone Number"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
-                required
-              />
-            </div>
-
-            {/* Email Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Id <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                name="emailId"
-                value={formData.emailId}
-                onChange={handleInputChange}
-                placeholder="Enter Email Id"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
-                required
-              />
-            </div>
-
-            {/* Gender Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Gender <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all bg-white"
-                required
-              >
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-                <option value="prefer-not-to-say">Prefer not to say</option>
-              </select>
-            </div>
-
-            {/* Resume Upload Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Upload Resume <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <input
-                  type="file"
-                  name="resume"
-                  onChange={handleFileChange}
-                  accept=".pdf,.doc,.docx"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
-                  required
-                />
-             
-              </div>
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="flex justify-center pt-4">
-            <button
-              onClick={handleSubmit}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-3 px-8 rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-300"
-            >
-              Submit Enquiry
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <CommonUseEnquiryForm
+      title="APPLY HERE"
+      subtitle="Whether you're looking for solutions or want to explore opportunities, we're here to collaborate with you."
+      fields={fields}
+      onSubmit={onSubmit}
+      isLoading={loading}
+      buttonLabel="Submit"
+      loadingLabel="Submitting..."
+      containerClassName="min-h-screen bg-primary-green"       // keeps your original look
+      formClassName="space-y-6"                                 // nice spacing
+    />
   );
 };
 

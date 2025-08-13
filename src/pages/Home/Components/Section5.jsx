@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 import CommonSwiper from "../../../Components/CommonSlider";
@@ -85,9 +86,9 @@ const Section5 = () => {
           items={offeringSection?.offers}
           renderItem={renderCard}
           slidesPerViewDesktop={3.5}
-          spaceBetween={30}
+          spaceBetween={0}
           loop={true}
-                  />
+        />
       </div>
     </div>
   );

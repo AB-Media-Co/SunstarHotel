@@ -36,11 +36,10 @@ const TourAndTravel = () => {
   const [isUploadingImage, setUploadingImage] = useState(false);
   const [activeTab, setActiveTab] = useState('states');
   const [images, setImages] = useState([]);
-  console.log(images);
   const [isUploading, setIsUploading] = useState(false);
 
   const [packageForm, setPackageForm] = useState({
-    _id: '',
+    _id: undefined,
     stateId: '',
     title: '',
     images:images,
@@ -76,7 +75,7 @@ const TourAndTravel = () => {
 
   const resetPackageForm = () => {
     setPackageForm({
-      _id: '',
+      _id: undefined,
       stateId: '',
       title: '',
       images: [],
@@ -93,7 +92,7 @@ const TourAndTravel = () => {
   };
 
   const handleCreateOrUpdatePackage = () => {
-    if (!packageForm.stateId || !packageForm.title || !packageForm.image) {
+    if (!packageForm.stateId || !packageForm.title || !packageForm.images) {
       alert('Please fill in all required fields (State, Title, and Image)');
       return;
     }
@@ -105,6 +104,7 @@ const TourAndTravel = () => {
   };
 
   const handleEditPackage = (pkg) => {
+    console.log(pkg)
     setPackageForm(pkg);
     setActiveTab('packages');
     window.scrollTo({ top: 0, behavior: 'smooth' });

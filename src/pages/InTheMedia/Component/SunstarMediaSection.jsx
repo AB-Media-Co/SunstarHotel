@@ -43,7 +43,7 @@ const SunstarMediaSection = () => {
   return (
     <div className="w-full content ">
   
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
           {mediaItems.map((item) => (
             <div key={item.id} className=" py-6 ">
               {/* Publication Name */}
@@ -56,13 +56,7 @@ const SunstarMediaSection = () => {
                 {item.title}
               </p>
               
-              {/* Read Link */}
-              <a 
-                href={item.readLink}
-                className="text-gray-400 text-sm hover:text-primary-green transition-colors duration-200 inline-block"
-              >
-                Read
-              </a>
+            
             </div>
           ))}
         </div>

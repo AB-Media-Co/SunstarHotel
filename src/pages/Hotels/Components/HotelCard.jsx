@@ -9,32 +9,32 @@ import {
 } from "date-fns";
 import { usePricing } from "../../../Context/PricingContext";
 import { useNavigate } from "react-router-dom";
-function HotelCard({ hotelData,setOpenCalender, openCalender }) {
 
+const tabs = [
+  { iconName: "roundedbed", label: "Rooms", link: "#rooms", id: "rooms" },
+  { iconName: "lamp", label: "Amenities", link: "#amenities", id: "amenities" },
+  { iconName: "message", label: "Reviews", link: "#reviews", id: "reviews" },
+  { iconName: "location", label: "Location", link: "#location", id: "location" },
+  { iconName: "faqs", label: "FAQs", link: "#faqs", id: "faqs" },
+];
+
+const tabs2 = [
+  { iconName: "lamp", label: "Amenities", link: "#amenities", id: "amenities" },
+  { iconName: "message", label: "Reviews", link: "#reviews", id: "reviews" },
+  { iconName: "location", label: "Location", link: "#location", id: "location" },
+  { iconName: "faqs", label: "FAQs", link: "#faqs", id: "faqs" },
+];
+
+function HotelCard({ hotelData, setOpenCalender, openCalender }) {
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
-  const [activeTab, setActiveTab] = useState(null); // Tracks the active tab index
+  const [activeTab, setActiveTab] = useState(null);
   const [isItemFixed, setItemFixed] = useState(false);
   const [isTopSectionHidden, setIsTopSectionHidden] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
 
   const { selectedRooms } = usePricing();
   const navigate = useNavigate();
-
-  const tabs = [
-    { iconName: "roundedbed", label: "Rooms", link: "#rooms", id: "rooms" },
-    { iconName: "lamp", label: "Amenities", link: "#amenities", id: "amenities" },
-    { iconName: "message", label: "Reviews", link: "#reviews", id: "reviews" },
-    { iconName: "location", label: "Location", link: "#location", id: "location" },
-    { iconName: "faqs", label: "FAQs", link: "#faqs", id: "faqs" },
-  ];
-
-  const tabs2 = [
-    { iconName: "lamp", label: "Amenities", link: "#amenities", id: "amenities" },
-    { iconName: "message", label: "Reviews", link: "#reviews", id: "reviews" },
-    { iconName: "location", label: "Location", link: "#location", id: "location" },
-    { iconName: "faqs", label: "FAQs", link: "#faqs", id: "faqs" },
-  ];
 
   useEffect(() => {
     const storedCheckIn = localStorage.getItem("checkInDate");
@@ -45,7 +45,6 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
     }
   }, []);
 
-  // Handle scroll and update active section
   useEffect(() => {
     let timeout;
     const handleScroll = () => {
@@ -57,23 +56,18 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
       }, 50);
       setItemFixed(currentScrollPos > 600);
 
-      // Update active tab based on scroll position
       const sections = tabs.map(tab => document.getElementById(tab.id));
       let activeIndex = null;
       
-      // Check which section is currently in view
       sections.forEach((section, index) => {
         if (section) {
           const rect = section.getBoundingClientRect();
-          // Consider a section in view if its top is less than 200px from the top of viewport
-          // or if we're seeing the bottom of the section (for the last section)
           if (rect.top <= 200 || (index === sections.length - 1 && rect.bottom <= window.innerHeight)) {
             activeIndex = index;
           }
         }
       });
       
-      // Only update if we have a new active section
       if (activeIndex !== null && activeIndex !== activeTab) {
         setActiveTab(activeIndex);
       }
@@ -82,26 +76,25 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
     };
 
     window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [activeTab, tabs]);
 
   useEffect(() => {
     if (openCalender) {
-      document.body.style.overflow = "hidden"; // Disable scrolling
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto"; // Enable scrolling
+      document.body.style.overflow = "auto";
     }
     return () => {
-      document.body.style.overflow = "auto"; // Ensure overflow is reset on cleanup
+      document.body.style.overflow = "auto";
     };
   }, [openCalender]);
 
   const handleBooking = () => {
     if (selectedRooms?.length > 0) {
-      navigate("/room/details"); // Open calendar if dates are not selected
+      navigate("/room/details");
     } else {
-      window.location.href = "#rooms"; // Navigate to "#rooms" if dates are selected
+      window.location.href = "#rooms";
     }
   };
 
@@ -117,19 +110,18 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
     return 0;
   };
 
-  // Function to render tab items with proper highlighting
   const renderTabItem = (tab, index, isMobile = false) => (
     <a
       key={index}
       href={tab.link}
       onClick={() => setActiveTab(index)}
-      className={`flex flex-col sm:flex-row gap-2 items-center cursor-pointer transition-colors duration-300
+      className={`flex flex-col items-center cursor-pointer transition-colors duration-300 text-center min-w-0
         ${activeTab === index ? "text-[#FDC114]" : "text-primary-green"}
       `}
     >
       <Icon
         name={tab.iconName}
-        className={`h-6 w-6 md:h-8 md:w-8 transition-all duration-300
+        className={`h-5 w-5 md:h-6 md:w-6 transition-all duration-300 mb-1
           ${activeTab === index ? "text-[#FDC114]" : "text-primary-green"}
         `}
         styleCss={{
@@ -142,7 +134,7 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
       />
 
       <span
-        className={`text-mobile/body/2 md:text-desktop/body/1 font-semibold transition-colors duration-300
+        className={`text-xs md:text-sm font-medium transition-colors duration-300 leading-tight
           ${activeTab === index ? "text-[#FDC114]" : "text-gray-500"}
         `}
       >
@@ -154,16 +146,16 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
   return (
     <>
       <div
-        className={`bg-primary-white rounded-md shadow-lg  -mt-6 
-          z-10 flex flex-col items-center gap-6 border border-gray-200
-          transition-all duration-700 w-full  ease-in-out will-change-transform
+        className={`bg-primary-white rounded-md shadow-lg -mt-6 
+          z-10 flex flex-col items-center gap-3 md:gap-6 border border-gray-200
+          transition-all duration-700 w-full ease-in-out will-change-transform
           ${isItemFixed
-            ? "fixed top-0 right-0 left-0 content pt-8 z-50 opacity-100 transform translate-y-0 scale-100"
-            : "relative opacity-100 md:py-2 transform translate-y-[-10px] "
+            ? "fixed top-0 right-0 left-0 pt-2 md:pt-4 z-50 opacity-100 transform translate-y-0 scale-100"
+            : "relative opacity-100 py-2 md:py-2 transform translate-y-[-10px]"
           }
           ${isTopSectionHidden
             ? "opacity-0 transform -translate-y-full scale-95"
-            : "opacity-100  transform translate-y-0 scale-100"
+            : "opacity-100 transform translate-y-0 scale-100"
           } 
         `}
         style={{
@@ -175,37 +167,38 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
           willChange: "transform, opacity, scale"
         }}
       >
-        <div className="w-full flex py-3 max-w-6xl flex-col items-center">
-          {/* Top Section: Dates and Guests */}
-          <div className={`gap-2 justify-center md:px-4 md:space-x-6 ${isItemFixed ? 'hidden' : "flex"} lg:justify-between items-center w-full md:space-y-0 space-x-0`}>
-            <div className="flex gap-4 md:gap-8 items-center justify-between w-full flex-row">
-              <div className="flex gap-4">
+        <div className="w-full flex py-2 md:py-3 max-w-6xl flex-col items-center px-2 md:px-4">
+          {/* Top Section: Dates and Guests - Non-fixed state */}
+          <div className={`gap-2 justify-center ${isItemFixed ? 'hidden' : "flex"} items-center w-full`}>
+            <div className="flex flex-col md:flex-row gap-3 md:gap-8 items-center justify-between w-full">
+              <div className="w-full md:w-auto">
                 <div
                   onClick={() => setOpenCalender(true)}
-                  className="flex flex-row cursor-pointer items-center justify-evenly border max-w-full w-full md:w-auto bg-white px-4 py-3 md:px-8 md:py-4 rounded-full gap-3 shadow-md hover:shadow-lg transition-shadow duration-300"
+                  className="flex flex-row cursor-pointer items-center justify-center border w-full md:w-auto bg-white px-3 py-2 md:px-8 md:py-4 rounded-full gap-2 md:gap-3 shadow-md hover:shadow-lg transition-shadow duration-300"
                 >
-                  <Icon name="calendar" className="w-5 h-5 md:w-6 md:h-6 text-primary-green" />
-                  <div className={`flex flex-col`}>
-                    <span className="font-semibold text-[8px] text-gray-700 md:text-base">
-                      {checkIn ? format(new Date(checkIn), "dd MMM, EEEE") : "Check in"}
+                  <Icon name="calendar" className="w-4 h-4 md:w-6 md:h-6 text-primary-green flex-shrink-0" />
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
+                      {checkIn ? format(new Date(checkIn), "dd MMM, EEE") : "Check in"}
                     </span>
                   </div>
-                  <ArrowRightAlt className="text-yellow-500" />
-                  <div className={`flex flex-col`}>
-                    <span className="font-semibold text-[8px] text-gray-700 md:text-base">
-                      {checkOut ? format(new Date(checkOut), "dd MMM, EEEE") : "Check-out"}
+                  <ArrowRightAlt className="text-yellow-500 flex-shrink-0" sx={{ fontSize: { xs: 16, md: 24 } }} />
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
+                      {checkOut ? format(new Date(checkOut), "dd MMM, EEE") : "Check-out"}
                     </span>
                   </div>
                   {checkIn && checkOut && (
-                    <span className="flex items-center text-gray-700 justify-center text-[8px] md:text-base rounded-full border border-gray-300 px-3 md:py-1">
+                    <span className="flex items-center text-gray-700 justify-center text-xs md:text-base rounded-full border border-gray-300 px-2 py-1 whitespace-nowrap">
                       {calculateNights()}
                     </span>
                   )}
                 </div>
               </div>
+              
               <button
                 onClick={handleBooking}
-                className="bg-primary-green text-primary-white text-mobile/button md:text-desktop/h5/medium rounded-2xl md:rounded-full py-[15px] text-[10px] tracking-wide md:text-xl shadow-md px-2 md:px-10 md:py-2 hover:bg-opacity-90 transition-colors duration-300"
+                className="bg-primary-green text-primary-white text-sm md:text-xl font-medium rounded-xl md:rounded-full py-3 md:py-2 px-6 md:px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full md:w-auto"
               >
                 {selectedRooms?.length > 0 ? "Continue" : "Select"}
               </button>
@@ -213,52 +206,53 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
           </div>
 
           {/* Fixed header content */}
-          <div className={`${isItemFixed ? 'flex' : "hidden"} gap-2 justify-center lg:justify-between items-center w-full md:space-y-0 space-x-0`}>
-            <div className="flex gap-4 md:gap-8 items-center justify-between w-full flex-col md:flex-row">
-              <div className="md:block flex justify-between px-2 md:justify-evenly w-full md:w-auto">
-                <div className="flex gap-4">
-                  <div
-                    onClick={() => setOpenCalender(true)}
-                    className="flex cursor-pointer items-center w-full md:w-[350px] justify-center p-3 bg-white border rounded-full shadow-sm gap-3 transition-shadow duration-300"
-                  >
-                    <Icon name="calendar" className="w-5 h-5 md:w-6 md:h-6 text-primary-green" />
-                    <div className={`flex flex-col`}>
-                      <span className="font-semibold text-[12px] text-gray-700 md:text-base">
-                        {checkIn ? format(new Date(checkIn), "dd MMM") : "Check in"}
-                      </span>
-                    </div>
-                    <ArrowRightAlt className="text-yellow-500" />
-                    <div className={`flex flex-col`}>
-                      <span className="font-semibold text-[12px] text-gray-700 md:text-base">
-                        {checkOut ? format(new Date(checkOut), "dd MMM") : "Check-out"}
-                      </span>
-                    </div>
-                    {checkIn && checkOut && (
-                      <span className="flex items-center text-gray-700 justify-center text-[13px] md:text-base rounded-full px-3 md:py-1">
-                        {calculateNights()}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleBooking}
-                  className="bg-primary-green w-[100px] block md:hidden text-primary-white text-mobile/title md:text-desktop/h5/medium rounded-2xl md:rounded-full py-[15px] text-[10px] tracking-wide md:text-xl shadow-md px-2 md:px-10 md:py-2 hover:bg-opacity-90 transition-colors duration-300"
+          <div className={`${isItemFixed ? 'flex' : "hidden"} flex-col md:flex-row gap-3 md:gap-8 items-center w-full`}>
+            <div className="flex flex-col md:flex-row gap-3 md:gap-8 mt-4 md:mt-0 items-center w-full">
+              <div className="w-full md:w-auto">
+                <div
+                  onClick={() => setOpenCalender(true)}
+                  className="flex cursor-pointer items-center justify-center w-full md:w-[350px] p-2 md:p-3 bg-white border rounded-full shadow-sm gap-2 md:gap-3 transition-shadow duration-300"
                 >
-                  {selectedRooms?.length > 0 ? "Continue" : "Select"}
-                </button>
+                  <Icon name="calendar" className="w-4 h-4 md:w-6 md:h-6 text-primary-green flex-shrink-0" />
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
+                      {checkIn ? format(new Date(checkIn), "dd MMM") : "Check in"}
+                    </span>
+                  </div>
+                  <ArrowRightAlt className="text-yellow-500 flex-shrink-0" sx={{ fontSize: { xs: 16, md: 24 } }} />
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
+                      {checkOut ? format(new Date(checkOut), "dd MMM") : "Check-out"}
+                    </span>
+                  </div>
+                  {checkIn && checkOut && (
+                    <span className="flex items-center text-gray-700 justify-center text-xs md:text-base px-2 py-1 whitespace-nowrap">
+                      {calculateNights()}
+                    </span>
+                  )}
+                </div>
               </div>
 
-              {/* Navigation tabs in fixed header */}
-              <div
-                className={`flex flex-wrap px-2 md:px-4 justify-between items-center gap-2 w-full transition-opacity duration-300 ease-in-out`}
+              <button
+                onClick={handleBooking}
+                className="bg-primary-green md:hidden text-primary-white text-sm font-medium rounded-xl py-2 px-6 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full"
               >
+                {selectedRooms?.length > 0 ? "Continue" : "Select"}
+              </button>
+
+              {/* Navigation tabs in fixed header - Mobile */}
+              <div className="flex justify-between items-center gap-1 w-full md:hidden overflow-x-auto">
+                {tabs2.map((tab, index) => renderTabItem(tab, index + 1, true))}
+              </div>
+
+              {/* Navigation tabs in fixed header - Desktop */}
+              <div className="hidden md:flex justify-between items-center gap-4 w-full">
                 {tabs2.map((tab, index) => renderTabItem(tab, index + 1))}
               </div>
 
               <button
                 onClick={handleBooking}
-                className="bg-primary-green hidden md:block text-primary-white text-mobile/button md:text-desktop/h5/medium rounded-2xl md:rounded-full py-[15px] text-[10px] tracking-wide md:text-xl shadow-md px-2 md:px-10 md:py-2 hover:bg-opacity-90 transition-colors duration-300"
+                className="bg-primary-green hidden md:block text-primary-white text-xl font-medium rounded-full py-2 px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300"
               >
                 {selectedRooms?.length > 0 ? "Continue" : "Select"}
               </button>
@@ -267,7 +261,7 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
 
           {/* Regular navigation tabs */}
           <div
-            className={`flex-wrap md:px-4 justify-between items-center mt-6 gap-2 w-full transition-opacity duration-300 ease-in-out
+            className={`justify-between items-center mt-4 md:mt-6 gap-2 md:gap-4 w-full transition-opacity duration-300 ease-in-out
               ${isItemFixed ? "opacity-0 h-0 overflow-hidden hidden" : "opacity-100 flex"}
             `}
           >
@@ -277,7 +271,7 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
       </div>
 
       {openCalender && (
-        <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300">
+        <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300 p-4">
           <Calendar
             setCheckInDate={setCheckIn}
             setCheckOutDate={setCheckOut}
@@ -286,7 +280,7 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
         </div>
       )}
 
-      <div className=" bg-white  content">
+      <div className="bg-white content">
         {/* Optional Image Section */}
         {hotelData?.image && (
           <div className="relative">
@@ -298,51 +292,50 @@ function HotelCard({ hotelData,setOpenCalender, openCalender }) {
             {hotelData?.price && hotelData?.discountedPrice && (
               <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                 {Math.round(
-                  ((hotelData.price - hotelData.discountedPrice) / hotelData.price) *
-                  100
+                  ((hotelData.price - hotelData.discountedPrice) / hotelData.price) * 100
                 )}
                 % OFF
               </div>
             )}
           </div>
         )}
-        <div className="p-1">
-          <div className="flex flex-col sm:flex-row justify-between items-start md:items-center ">
+        
+        <div className="p-3 md:p-4">
+          <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
             {/* Hotel Name and Price Section */}
-            <div className="flex flex-col sm:flex-row items-start md:items-center sm:space-x-5">
-              <div>
-                <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-800">
+            <div className="flex flex-col space-y-3 md:space-y-0 md:flex-row md:items-center md:space-x-5">
+              <div className="min-w-0">
+                <h2 className="text-lg md:text-2xl font-bold text-gray-800 leading-tight">
                   {hotelData?.name}
                 </h2>
-                <div className="text-sm font-medium text-teal-500">
+                <div className="text-sm font-medium text-teal-500 mt-1">
                   <a className="hover:underline">
                     Book Direct for Lowest Prices!
                   </a>
                 </div>
               </div>
-              <div className="mt-3 sm:mt-0 flex flex-col items-center">
-                <div className="flex gap-4 items-center">
-
-                  <span className="text-teal-500 text-2xl font-bold">
-                    ₹ {hotelData?.price}{" "}
-                    <span className="text-xs md:hidden text-gray-500">Incl. taxes</span>
-
-                    <span className="font-normal text-base text-gray-600">
-                      / night
-                    </span>
+              
+              <div className="flex flex-col items-start md:items-center">
+                <div className="flex gap-2 md:gap-4 items-baseline">
+                  <span className="text-teal-500 text-xl md:text-2xl font-bold">
+                    ₹ {hotelData?.price}
+                  </span>
+                  <span className="text-sm md:text-base font-normal text-gray-600">
+                    / night
                   </span>
                 </div>
-                <p className="text-xs hidden md:block text-gray-500">Incl. taxes</p>
+                <p className="text-xs text-gray-500 mt-1">Incl. taxes</p>
               </div>
             </div>
+            
             {/* Check-In/Check-Out Section */}
-            <div className="mt-4 sm:mt-0 text-[14px]  bg-teal-100 text-[#058FA2] font-medium rounded-full py-2 px-4 flex items-center shadow-sm">
-              <span>
+            <div className="text-xs md:text-sm bg-teal-100 text-[#058FA2] font-medium rounded-full py-2 px-3 md:px-4 flex items-center justify-center shadow-sm">
+              <span className="whitespace-nowrap">
                 Check-In{" "}
                 <span className="font-bold text-teal-800">{hotelData?.checkIn}</span>
               </span>
               <span className="mx-2">|</span>
-              <span>
+              <span className="whitespace-nowrap">
                 Check-Out{" "}
                 <span className="font-bold text-teal-800">
                   {hotelData?.checkOut}

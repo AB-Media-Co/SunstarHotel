@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";

@@ -44,8 +44,8 @@ const HotelsInfo = ({ hotels }) => {
                 {/* Contact Info Section */}
                 <div className="space-y-3">
                   {/* Phone Number */}
-                  <div className="flex items-center text-gray-700">
-                    <div className="w-10 h-10 rounded-full bg-primary-green/10 flex items-center justify-center mr-3">
+                  <div className="flex items-center gap-4 text-gray-700">
+                    <div className="w-10 h-10 rounded-full bg-primary-green/10 flex items-center justify-center ">
                       <PhoneIcon size={18} className="text-primary-green" />
                     </div>
                     <a href={`tel:+91${hotel.phoneNumber}`} className="hover:text-primary-green transition-colors">
@@ -54,11 +54,11 @@ const HotelsInfo = ({ hotels }) => {
                   </div>
 
                   {/* Location */}
-                  <div className="flex items-center text-gray-700">
-                    <div className="w-10 h-10 rounded-full bg-primary-green/10 flex items-center justify-center mr-3">
+                  <div className="flex gap-4 items-center text-gray-700">
+                    <div className="w-14 md:w-10 h-10 rounded-full bg-primary-green/10  flex items-center justify-center ">
                       <MapPin size={18} className="text-primary-green" />
                     </div>
-                    <p className="line-clamp-1">{hotel.location?.hotelAddress}</p>
+                    <p className=" truncate">{hotel.location?.hotelAddress}</p>
                   </div>
 
                   {/* Email - Optional, add if available */}

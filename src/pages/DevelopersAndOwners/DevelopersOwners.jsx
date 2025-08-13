@@ -8,11 +8,9 @@ import HowItWorks from './Components/HowItWorks';
 import WhatWeDeliver from './Components/whatwedeliver';
 import { useEffect } from 'react';
 import TestimonialSection from '../../Components/TestimonialSection';
-import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
 import EnquieryForm from './Components/EnquieryForm';
 
 const DevelopersOwners = () => {
-    const { Testimonials } = useUpdatePagesHook();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -36,7 +34,7 @@ const DevelopersOwners = () => {
             <WhyPartner />
             <HowItWorks />
             <WhatWeDeliver />
-            <TestimonialSection Testimonials={Testimonials} />
+            <TestimonialSection page='developera and owners'/>
             <EnquieryForm/>
 
         </div>

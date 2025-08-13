@@ -10,95 +10,37 @@ import { Helmet } from 'react-helmet';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone'
 import { useGetFAQsByPage } from '../../ApiHooks/useFaqsHooks'
+import { useVenues } from '../../ApiHooks/useVenues';
 import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
+import TestimonialSection from '../../Components/TestimonialSection';
 
 
 const EventCard = ({ image, title, description, link }) => {
     return (
         <Link to={link} className="block">
-      <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
-    <div className="relative h-48 sm:h-56 md:h-64 lg:h-72 cursor-pointer">
-        <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover transition-transform duration-300"
-            loading="lazy"
-        />
-        <div className="absolute cursor-pointer bottom-[-8px] sm:bottom-[-10px] md:bottom-[-14px] rounded-full w-[200px] sm:w-[220px] md:w-[250px] lg:w-[280px] text-center left-1/2 transform -translate-x-1/2 bg-teal-500 text-white py-1.5 sm:py-2 px-2 sm:px-3 md:px-4 transition-colors duration-300 hover:bg-teal-600">
-            <h3 className="text-xs sm:text-sm md:text-sm lg:text-base font-semibold truncate">{title}</h3>
-        </div>
-    </div>
-    <div className="p-3 sm:p-4 md:p-4 lg:p-6">
-        <p className="text-gray-600 text-sm sm:text-base md:text-base lg:text-lg transition-colors duration-300 hover:text-gray-800 leading-relaxed">
-            {description}
-        </p>
-    </div>
-</div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
+                <div className="relative h-48 sm:h-56 md:h-64 lg:h-72 cursor-pointer">
+                    <img
+                        src={image}
+                        alt={title}
+                        className="w-full h-full object-cover transition-transform duration-300"
+                        loading="lazy"
+                    />
+                    <div className="absolute cursor-pointer bottom-[-8px] sm:bottom-[-10px] md:bottom-[-14px] rounded-full w-[200px] sm:w-[220px] md:w-[250px] lg:w-[280px] text-center left-1/2 transform -translate-x-1/2 bg-teal-500 text-white py-1.5 sm:py-2 px-2 sm:px-3 md:px-4 transition-colors duration-300 hover:bg-teal-600">
+                        <h3 className="text-xs sm:text-sm md:text-sm lg:text-base font-semibold truncate">{title}</h3>
+                    </div>
+                </div>
+                <div className="p-3 sm:p-4 md:p-4 lg:p-6">
+                    <p className="text-gray-600 text-sm sm:text-base md:text-base lg:text-lg transition-colors duration-300 hover:text-gray-800 leading-relaxed">
+                        {description}
+                    </p>
+                </div>
+            </div>
 
         </Link>
     );
 };
-
-const TestimonialCard = ({ image, guestImage, guestName, guestTitle, testimonialText, isVideo, videoUrl }) => {
-    const [playVideo, setPlayVideo] = useState(false);
-
-    return (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden relative p-4 text-center h-full">
-            <div className="relative">
-                {isVideo && playVideo ? (
-                    <iframe
-                        className="w-full h-60 rounded-md"
-                        src={`${videoUrl}?controls=0&autoplay=1&modestbranding=1&rel=0&showinfo=0`}
-                        title="Testimonial Video"
-                        frameBorder="0"
-                        allow="autoplay; encrypted-media"
-                        allowFullScreen
-                    ></iframe>
-
-                ) : (
-                    <>
-                        <img
-                            src={image}
-                            alt="testimonial"
-                            className="w-full h-60 object-cover rounded-md"
-                        />
-                        {isVideo && (
-                            <button
-                                onClick={() => setPlayVideo(true)}
-                                className="absolute inset-0 flex items-center justify-center"
-                            >
-                                <div className="w-14 h-14 bg-white bg-opacity-70 rounded-full flex items-center justify-center shadow-lg">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-6 h-6 text-gray-800" viewBox="0 0 16 16">
-                                        <path d="M10.804 8.697l-4.796 2.697A.5.5 0 015 11V5a.5.5 0 01.748-.434l4.796 2.697a.5.5 0 010 .868z" />
-                                    </svg>
-                                </div>
-                            </button>
-                        )}
-                    </>
-                )}
-            </div>
-            <div className="mt-4">
-                <p className="text-sm text-gray-700">{testimonialText}</p>
-                <div className="flex items-center justify-center mt-4 gap-3">
-                    {guestImage && (
-                        <img
-                            src={guestImage}
-                            alt={guestName}
-                            className="w-10 h-10 rounded-full border"
-                        />
-                    )}
-                    <div className="text-left">
-                        <p className="text-sm font-bold">{guestName}</p>
-                        <p className="text-xs text-gray-500">{guestTitle}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-
 
 
 
@@ -113,6 +55,9 @@ const EventandConference = () => {
     const [copiedEmail, setCopiedEmail] = useState(null);
 
     const { mutate, isLoading } = useEnquiryForm();
+
+    const { data: venuesData, } = useVenues();
+
 
     const { data: faqs } = useGetFAQsByPage('Events & Conference'); // Fetch FAQs for the selected page
 
@@ -202,44 +147,7 @@ const EventandConference = () => {
         }
     ];
 
-    const venueData = [
-        {
-            id: 1,
-            name: 'Venue1',
-            location: 'Rajendra Place, Delhi',
-            pricePerPlate: 600,
-            capacity: '30 to 200',
-            rating: 4.6,
-            image: '/images/OtherPageImages/CoorporateEvents.webp'
-        },
-        {
-            id: 2,
-            name: 'Venue2',
-            location: 'Karol Bagh, Delhi',
-            pricePerPlate: 650,
-            capacity: '50 to 700',
-            rating: 4.9,
-            image: '/images/OtherPageImages/Conference.jpg'
-        },
-        {
-            id: 3,
-            name: 'Venue3',
-            location: 'Patel Nagar, Delhi',
-            pricePerPlate: 550,
-            capacity: '40 to 300',
-            rating: 4.4,
-            image: '/images/OtherPageImages/GalaDinner.jpg'
-        },
-        {
-            id: 4,
-            name: 'Venue4',
-            location: 'Pusa Road, Delhi',
-            pricePerPlate: 580,
-            capacity: '30 to 250',
-            rating: 4.5,
-            image: '/images/OtherPageImages/AwardCeremony.webp'
-        }
-    ];
+
 
 
     const handleCopyEmail = (email) => {
@@ -248,34 +156,6 @@ const EventandConference = () => {
         setTimeout(() => setCopiedEmail(null), 2000); // Reset after 2 seconds
     };
 
-
-    const testimonialData = [
-        {
-            image: "/images/OtherPageImages/SocialOcc.webp",
-            guestImage: "/images/othericons/prof.jpg",
-            guestName: "Rohan Sharma",
-            guestTitle: "Text commonly used",
-            testimonialText: "They made our day truly magical!",
-            isVideo: false,
-            // videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
-        },
-        {
-            image: "/images/OtherPageImages/SocialOcc.webp",
-            guestImage: "/images/othericons/prof.jpg",
-            guestName: "Meera Joshi",
-            guestTitle: "Text commonly used",
-            testimonialText: "Absolutely wonderful service and ambiance.",
-            isVideo: false
-        },
-        {
-            image: "/images/OtherPageImages/SocialOcc.webp",
-            guestImage: "/images/othericons/prof.jpg",
-            guestName: "Ankit Verma",
-            guestTitle: "Text commonly used",
-            testimonialText: "Everything was just perfect!",
-            isVideo: false
-        }
-    ];
 
     const renderVenueCard = (venue) => (
         <div className="rounded-lg shadow-md overflow-hidden h-full">
@@ -307,7 +187,8 @@ const EventandConference = () => {
                     </div>
                     <div className="flex items-center gap-2 text-gray-700">
                         <img src="/images/othericons/people.svg" alt="" />
-                        <span className="text-sm">{venue.capacity}</span>
+                        <span className="text-sm">{venue.capacityMin} to {venue.capacityMax}</span>
+
                     </div>
                 </div>
             </div>
@@ -441,7 +322,7 @@ const EventandConference = () => {
                     <p className='py-4 md:py-6 text-base md:text-lg  max-w-[650px] text-white leading-relaxed'>
                         Whether you're planning a corporate conference, wedding, milestone celebration, or an intimate gathering, Hotel Sunstar Group ensures a flawless experience from start to finish. With versatile venues, expert event planning, and an award-winning culinary team, we craft extraordinary moments that leave a lasting impression.
                     </p>
-                    <div className="text-center mx-auto mt-12">
+                    <div className="text-center  mt-12">
                         <a href="#contact" className="bg-yellow-400 text-white px-6 py-3 rounded-md shadow hover:bg-yellow-500 transition">
                             Book Your Event Now
                         </a>
@@ -463,7 +344,7 @@ const EventandConference = () => {
             {/* Why Choose Us Features */}
             <section className="pb-12 md:px-4">
                 <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold content text-start">Making Your Celebrations Seamless</h2>
-                <div className="mt-8 grid grid-cols-1 content sm:grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="mt-8 grid grid-cols-1 content sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {whyChooseUsFeatures.map((feature, index) => (
                         <div key={index} className="bg-primary-white p-6 text-center rounded-lg shadow-lg hover:scale-105 transition-all duration-300">
                             <div className="mb-4">
@@ -482,7 +363,7 @@ const EventandConference = () => {
                 <div className="content">
 
                     <CommonSwiper
-                        items={venueData}
+                        items={venuesData?.data}
                         renderItem={renderVenueCard}
                         spaceBetween={20}
                         slidesPerViewDesktop={3}
@@ -491,13 +372,13 @@ const EventandConference = () => {
                         arrow="mt-8"
                         autoplayDelay={4000}
                         showPagination={true}
-                         className="relative z-10 testiM mySwiper"
+                        className="relative z-10 testiM mySwiper"
                     />
                 </div>
-            </section> 
+            </section>
 
             {/* Testimonial Section */}
-            <section className="py-16 md:px-4 content bg-white">
+            {/* <section className="py-16 md:px-4 content bg-white">
                 <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold mb-8 text-start">Testimonials</h2>
                 <CommonSwiper
                     items={testimonialData}
@@ -511,10 +392,12 @@ const EventandConference = () => {
                     autoplayDelay={5000}
                     showPagination={true}
                     arrow="mt-8"
-                     className="relative z-10 testiM mySwiper"
+                    className="relative z-10 testiM mySwiper"
                 />
 
-            </section>
+            </section> */}
+
+            <TestimonialSection page='event and conference' />
 
 
 

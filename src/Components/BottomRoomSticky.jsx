@@ -32,41 +32,52 @@ const BottomRoomSticky = () => {
       className={`w-full  z-10 bottom-0 left-0 right-0 bg-white shadow-lg border py-3 fixed ${isVisible ? "wipe-up" : "wipe-down"
         }`}
     >
-      <div className="flex content items-center justify-between gap-2 ">
-        <div className="flex flex-col">
-          <div className="flex items-center gap-4">
-            {selectedRooms.length === 1 &&
-              <span className="text-primary-dark-green text-sm sm:text-base md:text-xl font-bold">
-                ₹ {totalPrice}
-              </span>
+
+      <div className="flex w-full">
+
+        <div className="flex content md:items-center flex-col md:flex-row justify-between gap-2 ">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-4">
+              {selectedRooms.length === 1 &&
+                <span className="text-primary-dark-green text-lg  md:text-xl font-bold">
+                  ₹ {totalPrice}
+                </span>
+              }
+              <h1 className="font-bold text-primary-gray text-xs sm:text-sm md:text-xl">
+                {selectedRooms.length} {selectedRooms.length === 1 ? "Room" : "Rooms"}
+              </h1>
+            </div>
+            {
+              details.length > 1 &&
+
+              <p className="text-primary-gray text-xs sm:text-sm md:text-base">
+                {details[0]?.name || "Hotel"} - {details[0]?.cityLocation?.name || "Location"}
+              </p>
             }
-            <h1 className="font-bold text-primary-gray text-xs sm:text-sm md:text-xl">
-              {selectedRooms.length} {selectedRooms.length === 1 ? "Room" : "Rooms"}
-            </h1>
           </div>
-          {
-            details.length > 1 &&
 
-            <p className="text-primary-gray text-xs sm:text-sm md:text-base">
-              {details[0]?.name || "Hotel"} - {details[0]?.cityLocation?.name || "Location"}
+          <div className="flex gap-4 items-center">
+            <p className="text-primary-yellow text-sm font-medium italic">
+              <FlashOnRounded className=" rotate-[20deg] font-extralight" />
+              Lowest Price, Guaranteed!
             </p>
-          }
-        </div>
 
-        <div className="flex gap-4 items-center">
-          <p className="text-primary-yellow font-medium italic">
-            <FlashOnRounded className=" rotate-[20deg] font-extralight" />
-            Lowest Price, Guaranteed!
-          </p>
-
-          <div
-            onClick={onContinueClick}
-            className="bg-primary-green text-xs sm:text-sm md:text-lg py-2 px-4 rounded-lg text-white font-medium cursor-pointer hover:bg-primary-dark-green transition-colors"
-          >
-            Continue Booking
+            <div
+              onClick={onContinueClick}
+              className="bg-primary-green md:block hidden text-xs sm:text-sm md:text-lg py-2 px-4 rounded-lg text-white font-medium cursor-pointer hover:bg-primary-dark-green transition-colors"
+            >
+              Continue Booking
+            </div>
           </div>
-        </div>
 
+
+        </div>
+        <div
+          onClick={onContinueClick}
+          className="bg-primary-green md:hidden  text-sm md:text-lg py-2 px-4 rounded-lg text-white font-medium cursor-pointer hover:bg-primary-dark-green transition-colors"
+        >
+          Continue Booking
+        </div>
       </div>
     </div>
   );

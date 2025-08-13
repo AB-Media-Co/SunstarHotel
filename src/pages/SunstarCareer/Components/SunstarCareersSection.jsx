@@ -11,7 +11,7 @@ export default function SunstarCareersSection() {
                     {/* Left content */}
                     <div className="space-y-6">
                         <h2 className="text-mobile/h3  md:text-desktop/h3 text-white leading-tight">
-                            Ready to become a JoinUs
+                            Ready to JoinUs
                         </h2>
 
                         <p className="text-xl text-white leading-relaxed max-w-lg">

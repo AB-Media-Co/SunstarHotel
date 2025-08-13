@@ -10,7 +10,7 @@ function Banner({ businessPlatformFeatures }) {
         height="h-[600px]"
         buttonColor="#FDC114"
         iconSize="h-6 w-6"
-        NavClass="md:left-1/2 bottom-[5rem] md:bottom-[9rem] "
+        NavClass="md:left- bottom-[5rem] md:bottom-[9rem] "
       />
 
     </div>

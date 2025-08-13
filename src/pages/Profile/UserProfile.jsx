@@ -3,16 +3,20 @@ import { User, Star, Calendar, Phone, Mail, MapPin, FileText, MessageCircle, Shi
 import { usePricing } from '../../Context/PricingContext';
 import { useGetUserByEmail, useUpdateUserProfile } from '../../ApiHooks/useUser';
 import Bookings from './Bookings';
+import LoyaltyMain from './LoyaltyProgram/LoyaltyMain';
+import { useLocation } from 'react-router-dom';
 
 const UserProfile = () => {
-  const [activeTab, setActiveTab] = useState('profile');
+  const location = useLocation();
+  const initialTab = location.state?.tab ?? 'profile';
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [editingField, setEditingField] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const { setIsNavColor } = usePricing()
 
   const userInfo = localStorage.getItem('user_email');
-  const { data: userData, refetch: refetchUser } = useGetUserByEmail(userInfo);
+  const { data: userData } = useGetUserByEmail(userInfo);
   console.log(userData)
   const { mutate: updateUserProfile } = useUpdateUserProfile();
 
@@ -82,49 +86,7 @@ const UserProfile = () => {
     switch (activeTab) {
       case 'loyalty':
         return (
-          <div className="space-y-6">
-            <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-6">Loyalty Program</h2>
-            <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-lg p-4 md:p-6 text-white">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold mb-2">Gold Member</h3>
-                  <p className="text-yellow-100 text-sm md:text-base">You've earned 1,250 points</p>
-                </div>
-                <Star className="w-8 h-8 md:w-12 md:h-12 text-yellow-200" />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="bg-white border rounded-lg p-4">
-                <h4 className="font-medium text-gray-800 text-sm md:text-base">Points Balance</h4>
-                <p className="text-xl md:text-2xl font-bold text-teal-500">1,250</p>
-              </div>
-              <div className="bg-white border rounded-lg p-4">
-                <h4 className="font-medium text-gray-800 text-sm md:text-base">Tier Status</h4>
-                <p className="text-base md:text-lg font-semibold text-yellow-500">Gold</p>
-              </div>
-              <div className="bg-white border rounded-lg p-4">
-                <h4 className="font-medium text-gray-800 text-sm md:text-base">Next Tier</h4>
-                <p className="text-base md:text-lg font-semibold text-gray-600">Platinum (750 pts)</p>
-              </div>
-            </div>
-            <div className="bg-white border rounded-lg p-4 md:p-6">
-              <h4 className="font-medium text-gray-800 mb-4 text-sm md:text-base">Recent Activity</h4>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 text-sm md:text-base">Booking #12345</span>
-                  <span className="text-teal-500 font-medium text-sm md:text-base">+150 pts</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 text-sm md:text-base">Referral Bonus</span>
-                  <span className="text-teal-500 font-medium text-sm md:text-base">+100 pts</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 text-sm md:text-base">Welcome Bonus</span>
-                  <span className="text-teal-500 font-medium text-sm md:text-base">+500 pts</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <LoyaltyMain onViewAll={() => setActiveTab('bookings')} />
         );
 
       case 'bookings':
@@ -434,7 +396,7 @@ const UserProfile = () => {
         <div className="flex gap-6 min-h-[calc(100vh-120px)]">
           {/* Mobile Sidebar Overlay */}
           {sidebarOpen && (
-            <div 
+            <div
               className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
               onClick={() => setSidebarOpen(false)}
             />
@@ -459,80 +421,80 @@ const UserProfile = () => {
                 </button>
               </div>
 
-              {/* Illustration */}
-              <div className="hidden lg:block">
-                <img src="/images/loyalty-illustration.svg" alt="" className='mx-auto' />
-              </div>
-
-              {/* Account Details */}
-              <div className="bg-white rounded-lg overflow-hidden shadow-sm">
-                <div className="p-4 border-b">
-                  <h3 className="font-medium text-gray-800">Account Details</h3>
-                  <p className="text-sm text-gray-500 truncate">{profileData.email}</p>
+              <div>
+                {/* Illustration */}
+                <div className="hidden lg:block">
+                  <img src="/images/loyalty-illustration.svg" alt="" className='mx-auto' />
                 </div>
 
-                <div className="space-y-1">
-                  <button
-                    onClick={() => {
-                      setActiveTab('loyalty');
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${
-                      activeTab === 'loyalty'
-                        ? 'bg-yellow-400 text-white'
-                        : 'hover:bg-gray-50 text-gray-700'
-                    }`}
-                  >
-                    <Star className="w-5 h-5" />
-                    <span className={activeTab === 'loyalty' ? 'font-medium' : ''}>Loyalty</span>
-                  </button>
+                {/* Account Details */}
+                <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+                  <div className="p-4 border-b">
+                    <h3 className="font-medium text-gray-800">Account Details</h3>
+                    <p className="text-sm text-gray-500 truncate">{profileData.email}</p>
+                  </div>
 
-                  <button
-                    onClick={() => {
-                      setActiveTab('bookings');
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${
-                      activeTab === 'bookings'
-                        ? 'bg-yellow-400 text-white'
+                  <div className="space-y-1">
+                    <button
+                      onClick={() => {
+                        setActiveTab('loyalty');
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${activeTab === 'loyalty'
+                        ? 'bg-primary-green text-white'
                         : 'hover:bg-gray-50 text-gray-700'
-                    }`}
-                  >
-                    <Calendar className="w-5 h-5" />
-                    <span className={activeTab === 'bookings' ? 'font-medium' : ''}>Bookings</span>
-                  </button>
+                        }`}
+                    >
+                      <Star className="w-5 h-5" />
+                      <span className={activeTab === 'loyalty' ? 'font-medium' : ''}>Loyalty</span>
+                    </button>
 
-                  <button
-                    onClick={() => {
-                      setActiveTab('profile');
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${
-                      activeTab === 'profile'
-                        ? 'bg-yellow-400 text-white'
+                    <button
+                      onClick={() => {
+                        setActiveTab('bookings');
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${activeTab === 'bookings'
+                        ? 'bg-primary-green text-white'
                         : 'hover:bg-gray-50 text-gray-700'
-                    }`}
-                  >
-                    <User className="w-5 h-5" />
-                    <span className={activeTab === 'profile' ? 'font-medium' : ''}>Profile</span>
-                  </button>
+                        }`}
+                    >
+                      <Calendar className="w-5 h-5" />
+                      <span className={activeTab === 'bookings' ? 'font-medium' : ''}>Bookings</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setActiveTab('profile');
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${activeTab === 'profile'
+                        ? 'bg-primary-green text-white'
+                        : 'hover:bg-gray-50 text-gray-700'
+                        }`}
+                    >
+                      <User className="w-5 h-5" />
+                      <span className={activeTab === 'profile' ? 'font-medium' : ''}>Profile</span>
+                    </button>
+                  </div>
                 </div>
+
               </div>
 
               {/* Need Help Section */}
               <div className="bg-white rounded-lg p-4 shadow-sm">
                 <h3 className="font-medium text-gray-800 mb-4">Need Help?</h3>
                 <div className="space-y-3">
-                  <a 
-                    href="mailto:booking@sunstarhospitality.com" 
-                    className="flex items-center space-x-2 text-yellow-500 hover:text-yellow-600"
+                  <a
+                    href="mailto:booking@sunstarhospitality.com"
+                    className="flex items-center space-x-2 text-primary-green hover:text-primary-green"
                   >
                     <Mail className="w-4 h-4 flex-shrink-0" />
                     <span className="text-sm break-all">booking@sunstarhospitality.com</span>
                   </a>
-                  <a 
-                    href="tel:+91-9310831646" 
-                    className="flex items-center space-x-2 text-yellow-500 hover:text-yellow-600"
+                  <a
+                    href="tel:+91-9310831646"
+                    className="flex items-center space-x-2 text-primary-green hover:text-primary-green"
                   >
                     <Phone className="w-4 h-4 flex-shrink-0" />
                     <span className="text-sm">+91-91 9310831646</span>
@@ -556,7 +518,7 @@ const UserProfile = () => {
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 bg-white hotelSelection rounded-lg p-4 sm:p-6 overflow-y-auto max-h-full">
+          <div className="flex-1 bg-white my-6 hotelSelection rounded-lg p-4 sm:p-6 overflow-y-auto max-h-full">
             {renderTabContent()}
 
             {/* Bottom Section - Only show on profile tab */}
@@ -569,7 +531,7 @@ const UserProfile = () => {
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors self-start sm:self-center"
+                    className="bg-primary-green hover:bg-primary-green text-white px-6 py-2 rounded-md text-sm font-medium transition-colors self-start sm:self-center"
                   >
                     Logout
                   </button>

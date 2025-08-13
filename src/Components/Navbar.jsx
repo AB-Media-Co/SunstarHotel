@@ -181,7 +181,12 @@ const Navbar = () => {
                   onClick={() => setShowLoginModal(true)}
                   className=" text-primary-yellow px-4 py-2 rounded-full font-bold  "
                 >
-                  <LogIn className="h-10 w-10" />
+                  <img
+                    src="/images/login.svg"
+                    alt="Logo"
+                    className="h-10 w-10"
+                  />
+
                 </button>
               )}
 

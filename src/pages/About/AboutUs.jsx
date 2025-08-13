@@ -44,8 +44,8 @@ const AboutUs = () => {
 
 
       <TestimonialSection
-        Testimonials={Testimonials}
-        backgroundImage={testimonialData.backgroundImage}
+        page='whysunstar'
+        
       />
 
       {/* <SunstarBrandsSection hotels={hotels?.hotels} /> */}

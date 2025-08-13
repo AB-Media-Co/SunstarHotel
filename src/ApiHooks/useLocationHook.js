@@ -43,7 +43,7 @@ export const useAddLocation = () => {
   });
 };
 
-export const useAddMultipleLocations = () => {
+export const useAddMultipleLocations = ()  => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (locationsArray) => {

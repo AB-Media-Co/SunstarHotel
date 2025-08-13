@@ -83,10 +83,10 @@ const ReadBlog = () => {
           <div className="w-full md:w-1/3">
             {moreBlogs?.length > 0 && (
               <section className="sticky top-0 pt-4 pb-8 ">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 px-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 md:px-4">
                   More Blogs
                 </h2>
-                <div className="flex flex-col gap-6 px-4">
+                <div className="flex flex-col gap-6 md:px-4">
                   {moreBlogs.map((blog) => (
                     <div
                       key={blog._id}

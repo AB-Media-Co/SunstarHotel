@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import {
   format,
   addMonths,
@@ -82,44 +82,72 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
 
   const navigate = useNavigate();
 
-  const handleConfirmClick = async () => {
-    setConfirmClicked(true);
+const roomsRef = useRef(rooms);
+useEffect(() => { roomsRef.current = rooms; }, [rooms]);
 
-    if (!checkIn || !checkOut) {
-      return; // Simply return if dates aren't selected
+const isLoadingRef = useRef(isLoading);
+useEffect(() => { isLoadingRef.current = isLoading; }, [isLoading]);
+
+function waitForRooms({ timeout = 5000, interval = 100 } = {}) {
+  return new Promise(resolve => {
+    const start = Date.now();
+    const check = () => {
+      const r = roomsRef.current;
+      const loading = isLoadingRef.current;
+      if (r || !loading) return resolve(r ?? null);        
+      if (Date.now() - start >= timeout) return resolve(null); 
+      setTimeout(check, interval);
+    };
+    check();
+  });
+}
+
+const handleConfirmClick = useCallback(async () => {
+  // prevent double taps
+  if (confirmClicked) return;
+  setConfirmClicked(true);
+
+  try {
+    if (!checkIn || !checkOut) return;
+
+    // basic validation
+    if (isAfter(checkIn, checkOut)) {
+      // TODO: toast("Check-out must be after check-in")
+      return;
     }
 
-    const formattedStartDate = format(checkIn, "yyyy-MM-dd");
-    const formattedEndDate = format(checkOut, "yyyy-MM-dd");
-    setCheckInDate(formattedStartDate);
-    setCheckOutDate(formattedEndDate);
-    localStorage.setItem("checkInDate", formattedStartDate);
-    localStorage.setItem("checkOutDate", formattedEndDate);
-    if (hotelCode || hotelInfo?.hotelCode) {
-      try {
-        // Wait for the rooms data to be fetched
-        new Promise(resolve => {
-          const checkData = () => {
-            if (rooms) {
-              resolve();
-            } else if (!isLoading) {
-              resolve(); // Resolve if loading is complete but no rooms found
-            } else {
-              setTimeout(checkData, 100); // Check again after 100ms
-            }
-          };
-          checkData();
-        });
+    const start = format(checkIn, "yyyy-MM-dd");
+    const end = format(checkOut, "yyyy-MM-dd");
 
+    setCheckInDate(start);
+    setCheckOutDate(end);
 
-        navigate(`/hotels/${hotelCode || hotelInfo?.hotelCode}`);
-        closeHotelModal();
-        setOpenCalender(false);
-      } catch (error) {
-        console.error("Error handling confirmation:", error);
+    // best-effort persistence (avoids SSR crashes)
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("checkInDate", start);
+        localStorage.setItem("checkOutDate", end);
       }
-    }
-  };
+    } catch { /* ignore quota/private mode errors */ }
+
+    const code = hotelCode ?? hotelInfo?.hotelCode;
+    if (!code) return;
+
+    // ⬇️ actually WAIT for rooms or loading to finish (with a timeout)
+    await waitForRooms({ timeout: 8000, interval: 120 });
+
+    navigate(`/hotels/${code}`);
+    closeHotelModal?.();
+    setOpenCalendar(false); // consider renaming from setOpenCalender
+  } catch (err) {
+    console.error("Error handling confirmation:", err);
+    // TODO: toast("Something went wrong. Please try again.")
+  } finally {
+    // if we navigated, this won’t matter; if we errored, UI re-enables
+    setConfirmClicked(false);
+  }
+}, [confirmClicked, checkIn, checkOut, setCheckInDate, setCheckOutDate, hotelCode, hotelInfo?.hotelCode, navigate, closeHotelModal]);
+
 
   const daysInWeek = ["S", "M", "T", "W", "T", "F", "S"];
 

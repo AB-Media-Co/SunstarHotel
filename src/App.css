@@ -53,14 +53,14 @@
 }
 
 
-.masonry-grid {
+/* react-masonry-css required styles */
+.my-masonry-grid {
   display: flex;
-  margin-left: -16px; /* Ensure correct spacing */
+  margin-left: -16px; /* gutter size offset */
   width: auto;
 }
-
-.masonry-grid_column {
-  padding-left: 16px; /* Ensure even spacing */
+.my-masonry-grid_column {
+  padding-left: 16px; /* gutter size */
   background-clip: padding-box;
 }
 

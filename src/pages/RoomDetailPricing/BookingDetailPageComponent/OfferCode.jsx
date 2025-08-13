@@ -51,7 +51,7 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
 
 
 
-  if (!( isUserVerified)) {
+  if (!(isUserVerified)) {
     return (
       <div className="relative bg-gradient-to-br from-white to-gray-50 p-10 rounded-2xl shadow-xl border border-gray-100 text-center overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-cyan-400 to-cyan-600"></div>
@@ -245,7 +245,13 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
                 className="group relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 border-gray-200 hover:border-cyan-400 hover:bg-gradient-to-br hover:from-cyan-50 hover:to-white transform hover:-translate-y-2 hover:shadow-2xl bg-white overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-full transform translate-x-8 -translate-y-8 opacity-20 group-hover:opacity-40 transition-opacity"></div>
-
+                <div className="mb-4">
+                  <span
+                    className="text-lg font-bold px-4 py-2 rounded-full text-white shadow-lg bg-gradient-to-r from-cyan-500 to-cyan-600 group-hover:shadow-xl transition-shadow"
+                  >
+                    {offer.discountPercent}%
+                  </span>
+                </div>
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
@@ -256,16 +262,10 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
                         <p className="text-gray-600 text-sm mt-1 line-clamp-2">{offer.description}</p>
                       )}
                     </div>
-                    <div className="ml-3">
-                      <span
-                        className="text-lg font-bold px-4 py-2 rounded-full text-white shadow-lg bg-gradient-to-r from-cyan-500 to-cyan-600 group-hover:shadow-xl transition-shadow"
-                      >
-                        {offer.discountPercent}%
-                      </span>
-                    </div>
+
                   </div>
 
-                  <div className="flex justify-between items-center mt-6">
+                  <div className="flex flex-col items-start mt-6">
                     <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                       Instant Discount
                     </div>

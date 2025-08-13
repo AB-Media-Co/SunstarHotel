@@ -34,7 +34,7 @@ const BusinessPlatform = ({ features }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3, delay: index * 0.1 + 0.3 }}
-                className="text-mobile/body/2 text-justify md:text-desktop/body/1 text-gray-600 leading-relaxed"
+                className="text-mobile/body/2 te md:text-desktop/body/1 text-gray-600 "
               >
                 {feature.description}
               </motion.p>

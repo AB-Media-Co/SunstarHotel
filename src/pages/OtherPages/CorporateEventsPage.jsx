@@ -1,16 +1,11 @@
 import { testimonialData } from '../../Data/AboutSectionData';
 import OtherPageLayout from './OtherPageLayout';
-import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
 import { Helmet } from 'react-helmet';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 
 const CorporateEventsPage = () => {
-  const { Testimonials } = useUpdatePagesHook();
   const { mutate, isLoading } = useEnquiryForm();
-
-
-
   const eventTypes = [
     { title: 'Training & Development', image: '/images/OtherPageImages/Training.jpg' },
     { title: 'Conference', image: '/images/OtherPageImages/Conference.jpg' },
@@ -28,49 +23,6 @@ const CorporateEventsPage = () => {
     { title: 'Stay', icon: '/images/othericons/stay.svg' },
     { title: 'Valet Parking', icon: '/images/othericons/valetParking.svg' },
   ];
-
-  const venueData = [
-    {
-      id: 1,
-      name: 'Venue1',
-      location: 'Rajendra Place, Delhi',
-      pricePerPlate: 600,
-      capacity: '30 to 200',
-      rating: 4.6,
-      image: '/images/OtherPageImages/CoorporateEvents.webp'
-    },
-    {
-      id: 2,
-      name: 'Venue2',
-      location: 'Karol Bagh, Delhi',
-      pricePerPlate: 650,
-      capacity: '50 to 700',
-      rating: 4.9,
-      image: '/images/OtherPageImages/Conference.jpg'
-    },
-    {
-      id: 3,
-      name: 'Venue3',
-      location: 'Patel Nagar, Delhi',
-      pricePerPlate: 550,
-      capacity: '40 to 300',
-      rating: 4.4,
-      image: '/images/OtherPageImages/GalaDinner.jpg'
-    },
-    {
-      id: 4,
-      name: 'Venue4',
-      location: 'Pusa Road, Delhi',
-      pricePerPlate: 580,
-      capacity: '30 to 250',
-      rating: 4.5,
-      image: '/images/OtherPageImages/AwardCeremony.webp'
-    }
-  ];
-
-
-
-
 
   const introText = (
     <>
@@ -177,14 +129,12 @@ const CorporateEventsPage = () => {
         // Event types grid
         eventTypes={eventTypes}
 
-        // Venues slider
-        venueData={venueData}
 
         // Features grid
         featureItems={whyChooseUsFeatures}
 
         // Testimonials and form
-        testimonials={Testimonials}
+        page='Corporate Events'
         testimonialBackgroundImage={testimonialData.backgroundImage}
         formImage="/images/OtherPageImages/formImg1.webp"
       />

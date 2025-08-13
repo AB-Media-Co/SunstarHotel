@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import CommonSwiper from "./CommonSlider";
 import { useGetTestimonials } from "../ApiHooks/useTestimonialHook";
 
-const TestimonialSection = ({ backgroundImage, Testimonials, page='' }) => {
-  const { data: apiTestimonials = [], isLoading, error } = useGetTestimonials({ page: page });
+const TestimonialSection = ({ backgroundImage, page = '', head = "Testimonials" }) => {
+  const { data: apiTestimonials = [] } = useGetTestimonials({ page: page });
   console.log("Testimonials data:", apiTestimonials);
 
   const renderItem = (item) => {
@@ -48,18 +48,17 @@ const TestimonialSection = ({ backgroundImage, Testimonials, page='' }) => {
   };
 
   return (
-    <div className={`w-full relative ${Testimonials?.clientHeading ? "py-10" : "py-0"}`}>
+    <div className={`w-full relative py-10`}>
       {/* Background Image Behind Content */}
       <div className="absolute inset-0 -z-10">
         <img src={backgroundImage} alt="" className="w-full h-full object-cover" />
       </div>
 
       <div className="content flex flex-col relative overflow-hidden container mx-auto">
-        {Testimonials && (
-          <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-900 text-start">
-            { "Testimonials"}
-          </h2>
-        )}
+
+        <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-900 text-start">
+          {head}
+        </h2>
 
 
         <CommonSwiper

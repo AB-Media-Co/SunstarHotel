@@ -169,7 +169,7 @@ const CommonUseEnquiryForm = ({
   };
 
   return (
-    <div className={`min-h-screen relative flex items-center justify-center bg-primary-yellow p-4 ${containerClassName}`}>
+    <div id="form" className={`min-h-screen relative flex items-center justify-center bg-primary-yellow p-4 ${containerClassName}`}>
       <img src="/images/HomepageImages/round2.png" alt="" className="absolute -left-10 top-0 hidden md:block " />
       <div className="w-full max-w-3xl bg-white p-2 py-8 lg:p-8 rounded-3xl z-10 shadow-2xl">
         {title && (

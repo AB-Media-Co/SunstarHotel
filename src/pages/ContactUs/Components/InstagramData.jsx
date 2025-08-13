@@ -7,16 +7,18 @@ import axiosInstance from '../../../services/axiosInstance';
 
 const InstagramData = () => {
   const [posts, setPosts] = useState([]);
+  console.log(posts)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
   useEffect(() => {
-    axiosInstance
-      .get('/api/instagram/insta-posts')
+    axiosInstance 
+      .get('/api/instagram/posts/hotel_sunstar_group')
       .then(response => {
-        console.log(response)
-        // setPosts(response.data || []);
-        // setLoading(false);
+        console.log(response,'esssee')
+        setPosts(response.data || []);
+        setLoading(false);
       })
       .catch(error => {
         console.error("There was an error fetching the posts:", error);

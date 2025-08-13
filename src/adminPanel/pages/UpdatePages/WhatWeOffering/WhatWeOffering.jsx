@@ -68,11 +68,11 @@ const WhatWeOffering = () => {
     // Check word count for each offering
     const hasLongDescription = offerings.offers.some(offering => {
       const wordCount = offering.description.trim().split(/\s+/).length;
-      return wordCount > 100;
+      return wordCount > 60;
     });
 
     if (hasLongDescription) {
-      setError('Description should not exceed 100 words');
+      setError('Description should not exceed 60 words');
       setSubmitLoading(false);
       return;
     }
@@ -153,8 +153,8 @@ const WhatWeOffering = () => {
                   rows={4}
                   value={offering.description}
                   onChange={(e) => handleFieldChange(index, 'description', e.target.value)}
-                  helperText={`${offering.description.trim().split(/\s+/).length}/100 words`}
-                  error={offering.description.trim().split(/\s+/).length > 100}
+                  helperText={`${offering.description.trim().split(/\s+/).length}/60 words`}
+                  error={offering.description.trim().split(/\s+/).length > 60}
                 />
 
                 {/* Image preview */}

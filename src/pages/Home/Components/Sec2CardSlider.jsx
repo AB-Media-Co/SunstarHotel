@@ -34,12 +34,25 @@ const LazyBackground = ({ src, className, hovered }) => {
 };
 
 export default function SwiperComponent() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [screenInfo, setScreenInfo] = useState({
+    width: window.innerWidth,
+    isMobile: window.innerWidth <= 768,
+    isTablet: window.innerWidth > 768 && window.innerWidth <= 1024,
+    isLaptop: window.innerWidth > 1024 && window.innerWidth <= 1440,
+    isDesktop: window.innerWidth > 1440,
+  });
   const [hoveredCard, setHoveredCard] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      const width = window.innerWidth;
+      setScreenInfo({
+        width,
+        isMobile: width <= 768,
+        isTablet: width > 768 && width <= 1024,
+        isLaptop: width > 1024 && width <= 1440,
+        isDesktop: width > 1440,
+      });
       setTimeout(() => {
         window.dispatchEvent(new Event('resize'));
       }, 100);
@@ -57,9 +70,6 @@ export default function SwiperComponent() {
 
   const navigate = useNavigate();
   const { data: hotels } = useGetHotels();
-  
-
-
 
   const renderRatingStars = (rating) => {
     const fullStars = Math.floor(rating);
@@ -78,7 +88,6 @@ export default function SwiperComponent() {
             style={{ fontSize: "16px" }}
           />
         ))}
-        {/* <span className="ml-1 text-sm font-medium text-gray-700">{rating}</span> */}
       </div>
     );
   }; 
@@ -92,8 +101,15 @@ export default function SwiperComponent() {
             data-aos="fade-up"
             data-aos-delay={index * 100}
           >
+            {/* Card Image */}
             <div
-              className="relative h-60 overflow-hidden rounded-t-lg z-10 "
+              className={`relative overflow-hidden rounded-t-lg z-10 transition-all duration-300
+                ${screenInfo.isMobile 
+                  ? 'h-60' 
+                  : screenInfo.isTablet 
+                    ? 'h-64' 
+                    : 'h-60 lg:h-64 xl:h-60'
+                }`}
               onMouseEnter={() => setHoveredCard(index)}
               onMouseLeave={() => setHoveredCard(null)}
               onClick={() => navigate(`hotels/${card?.hotelCode}`)}
@@ -105,48 +121,111 @@ export default function SwiperComponent() {
               />
 
               <div
-                className={`cursor-pointer absolute inset-0 bg-black transition-opacity duration-700 ease-in-out ${hoveredCard === index ? "opacity-20" : "opacity-0"
-                  }`}
+                className={`cursor-pointer absolute inset-0 bg-black transition-opacity duration-700 ease-in-out ${
+                  hoveredCard === index ? "opacity-20" : "opacity-0"
+                }`}
               />
             </div>
 
-            <div className="absolute top-[100%] w-full shadow-lg p-4 pt-8 h-[180px] bg-primary-white border rounded-b-lg flex flex-col gap-2">
+            {/* Card Content */}
+            <div className={`absolute top-[100%] w-full shadow-lg border rounded-b-lg flex flex-col bg-primary-white
+              ${screenInfo.isMobile 
+                ? 'p-4 pt-8 h-[180px] gap-2' 
+                : screenInfo.isTablet 
+                  ? 'p-4 pt-6 h-[170px] gap-1.5' 
+                  : 'p-4 pt-8 h-[180px] gap-2'
+              }`}>
 
-              <div className="mt-1 mb-1">
+              {/* Rating */}
+              <div className={screenInfo.isMobile ? "mt-1 mb-1" : screenInfo.isTablet ? "mb-1" : "mt-1 mb-1"}>
                 {renderRatingStars(card.rating)}
-                {/* <span className="">({card.reviews} reviews)</span> */}
               </div>
+              
+              {/* Hotel Name */}
               <h2
                 onClick={() => navigate(`hotels/${card?.hotelCode}`, { state: { hotelData: card} })}
-                className="text-mobile/h5/medium cursor-pointer hover:text-primary-green md:text-desktop/h5 font-bold text-start transition-colors duration-300"
+                className={`cursor-pointer hover:text-primary-green font-bold text-start transition-colors duration-300
+                  ${screenInfo.isMobile 
+                    ? 'text-mobile/h5/medium md:text-desktop/h5' 
+                    : screenInfo.isTablet 
+                      ? 'text-lg leading-tight' 
+                      : 'text-desktop/h5 xl:text-xl'
+                  }`}
               >
-                {card.name?.length > 20 ? `${card.name.slice(0, 20)}...` : card.name}
+                {card.name?.length > (screenInfo.isTablet ? 18 : 20) 
+                  ? `${card.name.slice(0, screenInfo.isTablet ? 18 : 20)}...` 
+                  : card.name}
               </h2>
 
-              <div className="flex items-end gap-1 text-mobile/body/2 text-[#707070] font-semibold">
-                <LocationOnSharp className="text-[#4DB8B6]" style={{ fontSize: "18px" }} />
-                <span className="truncate max-w-[200px]">{card.location?.hotelAddress}</span>
+              {/* Location */}
+              <div className={`flex items-end gap-1 text-[#707070] font-semibold
+                ${screenInfo.isMobile 
+                  ? 'text-mobile/body/2' 
+                  : screenInfo.isTablet 
+                    ? 'text-sm' 
+                    : 'text-mobile/body/2'
+                }`}>
+                <LocationOnSharp 
+                  className="text-[#4DB8B6]" 
+                  style={{ fontSize: "18px" }} 
+                />
+                <span className={`truncate
+                  ${screenInfo.isMobile 
+                    ? 'max-w-[200px]' 
+                    : screenInfo.isTablet 
+                      ? 'max-w-[180px]' 
+                      : screenInfo.isLaptop 
+                        ? 'max-w-[220px]' 
+                        : 'max-w-[280px]'
+                  }`}>
+                  {card.location?.hotelAddress}
+                </span>
               </div>
 
-
-
+              {/* Price */}
               <div
                 className={`flex items-center ${hotels?.hotels?.length === 3 ? "justify-between" : "justify-end"} gap-3 mt-2 text-[#707070] font-semibold`}
               >
-                <span className="text-mobile/body/2">Starting From</span>
-                <p className="text-desktop/body/1 font-bold text-[#4DB8B6]">
+                <span className={screenInfo.isTablet ? "text-sm" : "text-mobile/body/2"}>
+                  Starting From
+                </span>
+                <p className={`font-bold text-[#4DB8B6]
+                  ${screenInfo.isTablet ? 'text-lg' : 'text-desktop/body/1'}`}>
                   ₹{card.price}
                 </p>
               </div>
             </div>
 
-            <div className="absolute left-[77%] md:left-[90%] top-[2rem] z-40 flex flex-col items-center gap-[2px] w-[80px] p-4 bg-[#4DB8B6] rounded-xl shadow-lg">
+            {/* Features Badge */}
+            <div className={`absolute z-40 flex flex-col items-center gap-[2px] bg-[#4DB8B6] rounded-xl shadow-lg
+              ${screenInfo.isMobile 
+                ? 'left-[77%] top-[2rem] w-[80px] p-4' 
+                : screenInfo.isTablet 
+                  ? 'left-[82%] top-[1.5rem] w-[75px] p-3' 
+                  : screenInfo.isLaptop 
+                    ? 'left-[86%] top-[2rem] w-[80px] p-4' 
+                    : 'left-[90%] top-[2rem] w-[80px] p-4'
+              }`}>
               {features.map((feature, index) => (
                 <div key={index} className="flex flex-col items-center">
-                  {feature.icon && <feature.icon className="text-primary-white" />}
-                  <span className="text-mobile/small/body text-primary-white">{feature.label}</span>
+                  {feature.icon && (
+                    <feature.icon 
+                      className="text-primary-white" 
+                      style={{ 
+                        fontSize: screenInfo.isTablet ? "18px" : "20px" 
+                      }}
+                    />
+                  )}
+                  <span className={`text-primary-white text-center
+                    ${screenInfo.isTablet 
+                      ? 'text-[9px] leading-tight' 
+                      : 'text-mobile/small/body'
+                    }`}>
+                    {feature.label}
+                  </span>
                   {index !== features.length - 1 && (
-                    <hr className="w-full h-[1px] bg-primary-white my-2" />
+                    <hr className={`w-full h-[1px] bg-primary-white
+                      ${screenInfo.isTablet ? 'my-1.5' : 'my-2'}`} />
                   )}
                 </div>
               ))}
@@ -157,17 +236,78 @@ export default function SwiperComponent() {
     );
   };
 
+  // Enhanced slides per view calculation
+  const getSlidesPerView = () => {
+    if (screenInfo.isMobile) return 1;
+    if (screenInfo.isTablet) return 2;
+    if (screenInfo.isLaptop) return 2.5;
+    return 3;
+  };
+
+  // Enhanced space between calculation
+  const getSpaceBetween = () => {
+    if (screenInfo.isMobile) return 20;
+    if (screenInfo.isTablet) return 20;
+    if (screenInfo.isLaptop) return 25;
+    return 30;
+  };
+
+  // Dynamic swiper height
+  const getSwiperHeight = () => {
+    if (screenInfo.isMobile) return 'h-[28rem]';
+    if (screenInfo.isTablet) return 'h-[27rem]';
+    return 'h-[28rem]';
+  };
+
   return (
     <div className="swiper-container sec2Swiper pb-5">
       <CommonSwiper
         items={hotels?.hotels}
         renderItem={renderCard}
-        slidesPerViewDesktop={isMobile ? 1 : 3}
-        spaceBetween={30}
+        slidesPerViewDesktop={getSlidesPerView()}
+        spaceBetween={getSpaceBetween()}
         loop={true}
         className={`mySwiper hotelCardsHome pb-10`}
-        swiperh={'h-[28rem]'}
+        swiperh={getSwiperHeight()}
         cssMode={true}
+        breakpoints={{
+          // Mobile breakpoints
+          320: {
+            slidesPerView: 1,
+            spaceBetween: 15,
+          },
+          640: {
+            slidesPerView: 1,
+            spaceBetween: 20,
+          },
+          // Tablet breakpoints (including 1024)
+          768: {
+            slidesPerView: 1.5,
+            spaceBetween: 20,
+          },
+          900: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+          },
+          1024: {
+            slidesPerView: 2,
+            spaceBetween: 25,
+          },
+          // Laptop breakpoints
+          1200: {
+            slidesPerView: 2.5,
+            spaceBetween: 25,
+          },
+          1440: {
+            slidesPerView: 3,
+            spaceBetween: 30,
+          },
+          // Large desktop
+          1920: {
+            slidesPerView: 3,
+            spaceBetween: 35,
+          },
+        }}
         onInit={(swiper) => {
           const wrapper = swiper.wrapperEl;
           if (hotels?.hotels?.length === 3) {

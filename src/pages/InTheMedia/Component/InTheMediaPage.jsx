@@ -205,7 +205,7 @@ const InTheMediaPage = () => {
               </button>
 
               <div className="max-w-md mx-auto lg:mx-0 lg:max-w-lg xl:max-w-xl">
-                <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-4 sm:mb-6 leading-tight text-center lg:text-left">
+                <h2 className="text-mobile/h2 md:text-desktop/h3 font-bold text-white mb-4 sm:mb-6 leading-tight text-center lg:text-left">
                   {mediaItems[currentSlide].title}
                 </h2>
                 <p className="text-white text-base sm:text-lg xl:text-xl leading-relaxed opacity-90 text-center lg:text-left">

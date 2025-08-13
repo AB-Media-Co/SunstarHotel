@@ -22,11 +22,11 @@ const Faq = () => {
   const [open, setOpen] = useState(false);
   const [selectedPage, setSelectedPage] = useState('Day Stays Rooms'); // Default page to select
 
-  const pages = [
+  const pages = [  
     'Day Stays Rooms',
     'Events & Conference',
     'corporate-booking',
-    // 'Social Events',
+    'Career',
     // 'Wedding & Pre-Wedding',
   ]; // List of pages to be shown in the dropdown
 

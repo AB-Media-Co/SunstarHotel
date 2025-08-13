@@ -31,7 +31,7 @@ const TourAndTravelPage = () => {
       <AdvantagesSection />
       <TopSellingPackages />
       <ImagesGallery />
-      <TestimonialSection Testimonials={Testimonials} />
+      <TestimonialSection page="tours and travel" />
     </div>
   )
 }

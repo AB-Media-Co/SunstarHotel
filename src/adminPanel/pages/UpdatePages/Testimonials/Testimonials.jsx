@@ -19,12 +19,21 @@ import { useBulkCreateTestimonials, useCreateTestimonial, useDeleteTestimonial, 
 import toast from 'react-hot-toast';
 
 const pages = [
-  '',
-  'tour&travel',
-  'corporate-booking',
-  // 'Social Events',
-  // 'Wedding & Pre-Wedding',
+  '', 
+  'home',
+  'whysunstar',
+  // 'coorporatebooking',
+  // 'dayuseroom', 
+  'developera and owners',
+  'event and conference',
+  'social event',
+  'Weddings & Special Occasions',
+  'Corporate Events',
+  'career',
+  'travel-agent',
+  'tours and travel'
 ];
+
 
 const Testimonials = () => {
   const [selectedPage, setSelectedPage] = useState('');
@@ -52,6 +61,10 @@ const Testimonials = () => {
     });
     setDeletedIds([]);
   }, [apiTestimonials]);
+
+  useEffect(()=>{
+    setSelectedPage('')
+  },[selectedPage])
 
   const handlePageChange = e => {
     setSelectedPage(e.target.value);
@@ -144,12 +157,7 @@ const Testimonials = () => {
 
       <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="md">
         <DialogTitle>Edit Testimonials for “{selectedPage || 'Default'}”</DialogTitle>
-
-
         <DialogContent dividers>
-
-
-
           <FormControl fullWidth margin="normal">
             <InputLabel>Choose Page</InputLabel>
             <Select
@@ -163,7 +171,7 @@ const Testimonials = () => {
               }
             >
               {pages.map(pg => (
-                <MenuItem key={pg} value={pg}>
+                <MenuItem key={pg} value={pg} className='capitalize'>
                   {pg === '' ? 'Default Testimonials' : pg}
                 </MenuItem>
               ))}
