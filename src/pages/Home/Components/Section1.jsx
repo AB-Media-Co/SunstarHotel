@@ -36,10 +36,10 @@ const Section1 = ({ section1Data }) => {
   const [delay, setDelay] = useState(false);
   const [hotelOpen, setHotelOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
-    
+
     let resizeTimer;
     const handleResize = () => {
       clearTimeout(resizeTimer);
@@ -47,7 +47,7 @@ const Section1 = ({ section1Data }) => {
         setIsMobile(window.innerWidth < 768);
       }, 250);
     };
-    
+
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -71,9 +71,8 @@ const Section1 = ({ section1Data }) => {
 
   // Memoize background style to prevent rerenders
   const backgroundStyle = useMemo(() => ({
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${
-      isMobile ? bgImageMobile : bgImage
-    })`,
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${isMobile ? bgImageMobile : bgImage
+      })`,
   }), [isMobile, bgImageMobile, bgImage]);
 
   // Memoize heading and description
@@ -83,7 +82,7 @@ const Section1 = ({ section1Data }) => {
   // Optimize typing animation with useCallback
   useEffect(() => {
     if (!words.length) return;
-    
+
     if (delay) {
       const delayTimer = setTimeout(() => setDelay(false), 1000);
       return () => clearTimeout(delayTimer);
@@ -138,14 +137,24 @@ const Section1 = ({ section1Data }) => {
           >
             {/* Decorative element */}
             <div
-              className="md:z-10 z-0 absolute left-[20%] md:left-auto md:top-[20rem] md:right-0 lg:right-[19rem] top-[33rem] lg:top-[27rem] 
-                       w-[300px] h-[300px] animate-spin-slow 
-                       bg-no-repeat bg-contain"
-              style={{
-                backgroundImage: `url("/images/HomepageImages/round.png")`
-              }}
+              className="
+    md:z-10 z-0 absolute left-[20%] md:left-auto md:top-[20rem] md:right-8 
+    lg:right-[19rem] top-[33rem] lg:top-[27rem]
+   md:w-[180px] lg:w-[300px] h-[300px] pointer-events-none select-none
+  "
               aria-hidden="true"
-            />
+            >
+              <img
+                src="/images/HomepageImages/round.png"
+                alt=""
+                className="
+      w-full h-full object-contain
+      origin-center
+      animate-[spin_18s_linear_infinite]
+      [will-change:transform]
+    "
+              />
+            </div>
 
             {/* Hero content with fixed dimensions */}
             <motion.div
@@ -166,7 +175,7 @@ const Section1 = ({ section1Data }) => {
               {/* Search button with fixed height to prevent layout shifts */}
               <div
                 onClick={handleHotelOpen}
-                className="mt-6 flex justify-between items-center lg:w-[490px] h-12 md:h-16
+                className="mt-6 flex justify-between items-center md:w-[490px] h-12 md:h-16
                          font-semibold cursor-pointer bg-primary-white 
                          rounded-full py-2 md:py-4 px-7 hover:bg-gray-50 transition-colors"
               >
@@ -188,12 +197,6 @@ const Section1 = ({ section1Data }) => {
         </div>
       </Suspense>
 
-
-      {/* <div>
-        <button onClick={handleOpen}>Open City Selection</button>
-
-      </div> */}
-        {/* <CityPagesOptions isOpen={isOpen} onClose={handleClose} /> */}
 
       {hotelOpen && (
         <AllHotelCard

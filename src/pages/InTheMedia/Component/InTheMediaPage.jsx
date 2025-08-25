@@ -173,7 +173,7 @@ const InTheMediaPage = () => {
       {/* Header */}
       <div className="bg-white">
 
-        <h1 className=" text-primary-green text-center lg:text-left text-mobile/h1 md:text-desktop/h2">
+        <h1 className=" text-primary-green text-left text-mobile/h1 md:text-desktop/h2">
           In the Media
         </h1>
       </div>

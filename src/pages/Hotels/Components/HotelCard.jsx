@@ -5,7 +5,7 @@ import Icon from "../../../Components/Icons";
 import Calendar from "../../../Components/Calendar";
 import { ArrowRightAlt } from "@mui/icons-material";
 import {
-  format,differenceInCalendarDays,
+  format, differenceInCalendarDays,
 } from "date-fns";
 import { usePricing } from "../../../Context/PricingContext";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,8 @@ const tabs = [
 ];
 
 const tabs2 = [
+  { iconName: "roundedbed", label: "Rooms", link: "#rooms", id: "rooms" },
+
   { iconName: "lamp", label: "Amenities", link: "#amenities", id: "amenities" },
   { iconName: "message", label: "Reviews", link: "#reviews", id: "reviews" },
   { iconName: "location", label: "Location", link: "#location", id: "location" },
@@ -45,39 +47,71 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
     }
   }, []);
 
-  useEffect(() => {
-    let timeout;
-    const handleScroll = () => {
-      const currentScrollPos = window.scrollY;
-      clearTimeout(timeout);
-  
-      timeout = setTimeout(() => {
-        setItemFixed(currentScrollPos > 600);
-      }, 50);
-      setItemFixed(currentScrollPos > 600);
+useEffect(() => {
+  let rafId = null;
 
-      const sections = tabs.map(tab => document.getElementById(tab.id));
-      let activeIndex = null;
-      
-      sections.forEach((section, index) => {
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= 200 || (index === sections.length - 1 && rect.bottom <= window.innerHeight)) {
-            activeIndex = index;
-          }
+  const sectionIds = tabs.map(t => t.id);
+  const getSections = () =>
+    sectionIds
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+  const computeActiveFromMiddle = () => {
+    const sections = getSections();
+    if (!sections.length) return;
+
+    const viewportMiddle = window.scrollY + window.innerHeight / 2;
+
+    // Find the section whose vertical range contains viewport middle
+    let foundIndex = null;
+    sections.forEach((section, idx) => {
+      const top = section.offsetTop;
+      const bottom = top + section.offsetHeight;
+      if (viewportMiddle >= top && viewportMiddle < bottom) {
+        foundIndex = idx;
+      }
+    });
+
+    // Fallback: choose the section whose center is closest to viewport middle
+    if (foundIndex === null) {
+      let closestIdx = 0;
+      let closestDist = Infinity;
+      sections.forEach((section, idx) => {
+        const center = section.offsetTop + section.offsetHeight / 2;
+        const dist = Math.abs(center - viewportMiddle);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestIdx = idx;
         }
       });
-      
-      if (activeIndex !== null && activeIndex !== activeTab) {
-        setActiveTab(activeIndex);
-      }
+      foundIndex = closestIdx;
+    }
 
-      setPrevScrollPos(currentScrollPos);
-    };
+    if (foundIndex !== null && foundIndex !== activeTab) {
+      setActiveTab(foundIndex);
+    }
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [activeTab, tabs]);
+    // Sticky header toggle
+    setItemFixed(window.scrollY > 600);
+  };
+
+  const onScroll = () => {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(computeActiveFromMiddle);
+  };
+
+  // Initial compute (covers "from the start" not active issue)
+  computeActiveFromMiddle();
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  return () => {
+    if (rafId) cancelAnimationFrame(rafId);
+    window.removeEventListener("scroll", onScroll);
+    window.removeEventListener("resize", onScroll);
+  };
+}, [activeTab]); // tabs array const hai; dep me include karne ki zaroorat nahi
+
 
   useEffect(() => {
     if (openCalender) {
@@ -115,13 +149,13 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
       key={index}
       href={tab.link}
       onClick={() => setActiveTab(index)}
-      className={`flex flex-col items-center cursor-pointer transition-colors duration-300 text-center min-w-0
+      className={`flex flex-col items-center cursor-pointer transition-colors duration-300 text-center ${isMobile ? 'min-w-[80px] flex-shrink-0' : 'min-w-0'}
         ${activeTab === index ? "text-[#FDC114]" : "text-primary-green"}
       `}
     >
       <Icon
         name={tab.iconName}
-        className={`h-5 w-5 md:h-6 md:w-6 transition-all duration-300 mb-1
+        className={`h-7 w-7 md:h-6 md:w-6 transition-all duration-300 mb-1
           ${activeTab === index ? "text-[#FDC114]" : "text-primary-green"}
         `}
         styleCss={{
@@ -195,7 +229,7 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
                   )}
                 </div>
               </div>
-              
+
               <button
                 onClick={handleBooking}
                 className="bg-primary-green text-primary-white text-sm md:text-xl font-medium rounded-xl md:rounded-full py-3 md:py-2 px-6 md:px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full md:w-auto"
@@ -241,13 +275,18 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
               </button>
 
               {/* Navigation tabs in fixed header - Mobile */}
-              <div className="flex justify-between items-center gap-1 w-full md:hidden overflow-x-auto">
-                {tabs2.map((tab, index) => renderTabItem(tab, index + 1, true))}
+              <div className="flex items-center gap-4 w-full md:hidden overflow-x-auto scrollbar-hide px-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                <style jsx>{`
+                  .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                  }
+                `}</style>
+                {tabs2.map((tab, index) => renderTabItem(tab, index, true))}
               </div>
 
               {/* Navigation tabs in fixed header - Desktop */}
-              <div className="hidden md:flex justify-between items-center gap-4 w-full">
-                {tabs2.map((tab, index) => renderTabItem(tab, index + 1))}
+              <div className="hidden md:flex justify-between items-center gap-4 w-full ">
+                {tabs2.map((tab, index) => renderTabItem(tab, index))}
               </div>
 
               <button
@@ -261,11 +300,17 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
 
           {/* Regular navigation tabs */}
           <div
-            className={`justify-between items-center mt-4 md:mt-6 gap-2 md:gap-4 w-full transition-opacity duration-300 ease-in-out
-              ${isItemFixed ? "opacity-0 h-0 overflow-hidden hidden" : "opacity-100 flex"}
+            className={`items-center mt-4 md:mt-6 gap-2 md:gap-4 w-full transition-opacity duration-300 ease-in-out
+              ${isItemFixed ? "opacity-0 h-0 overflow-hidden hidden" : "opacity-100 flex justify-between md:justify-between overflow-x-auto md:overflow-visible scrollbar-hide px-2 md:px-0"}
             `}
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {tabs.map((tab, index) => renderTabItem(tab, index))}
+            <style jsx>{`
+              .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
+            {tabs.map((tab, index) => renderTabItem(tab, index, true))}
           </div>
         </div>
       </div>
@@ -299,54 +344,51 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
             )}
           </div>
         )}
-        
+
         <div className="p-3 md:p-4">
-          <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
-            {/* Hotel Name and Price Section */}
-            <div className="flex flex-col space-y-3 md:space-y-0 md:flex-row md:items-center md:space-x-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 items-start md:items-center gap-4">
+            {/* Hotel Name + Price (span 2 on tablet/desktop) */}
+            <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row md:items-center gap-3 md:gap-5">
               <div className="min-w-0">
-                <h2 className="text-lg md:text-2xl font-bold text-gray-800 leading-tight">
+                <h2 className="text-lg md:text-2xl font-bold text-gray-800 leading-tight truncate">
                   {hotelData?.name}
                 </h2>
                 <div className="text-sm font-medium text-teal-500 mt-1">
-                  <a className="hover:underline">
-                    Book Direct for Lowest Prices!
-                  </a>
+                  <a className="hover:underline">Book Direct for Lowest Prices!</a>
                 </div>
               </div>
-              
+
               <div className="flex flex-col items-start md:items-center">
-                <div className="flex gap-2 md:gap-4 items-baseline">
-                  <span className="text-teal-500 text-xl md:text-2xl font-bold">
-                    ₹ {hotelData?.price}
+                <div className="flex items-baseline gap-2 md:gap-3">
+                  <span className="text-teal-500 text-xl md:text-2xl font-bold whitespace-nowrap leading-none">
+                    {/* NBSP after ₹ prevents line break */}
+                    ₹&nbsp;{Number(hotelData?.price ?? 0).toLocaleString('en-IN')}
                   </span>
-                  <span className="text-sm md:text-base font-normal text-gray-600">
+                  <span className="text-sm md:text-base font-normal text-gray-600 whitespace-nowrap">
                     / night
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">Incl. taxes</p>
               </div>
             </div>
-            
-            {/* Check-In/Check-Out Section */}
-            <div className="text-xs md:text-sm bg-teal-100 text-[#058FA2] font-medium rounded-full py-2 px-3 md:px-4 flex items-center justify-center shadow-sm">
-              <span className="whitespace-nowrap">
-                Check-In{" "}
-                <span className="font-bold text-teal-800">{hotelData?.checkIn}</span>
-              </span>
-              <span className="mx-2">|</span>
-              <span className="whitespace-nowrap">
-                Check-Out{" "}
-                <span className="font-bold text-teal-800">
-                  {hotelData?.checkOut}
+
+            {/* Check-In/Check-Out chip (right on tablet/desktop) */}
+            <div className="col-span-1 md:justify-self-end">
+              <div className="text-xs md:text-sm bg-teal-100 text-[#058FA2] font-medium rounded-full py-2 px-3 md:px-4 flex flex-wrap gap-x-2 gap-y-1 items-center justify-center shadow-sm">
+                <span className="whitespace-nowrap">
+                  Check-In <span className="font-bold text-teal-800">{hotelData?.checkIn}</span>
                 </span>
-              </span>
+                <span className="hidden md:inline">|</span>
+                <span className="whitespace-nowrap">
+                  Check-Out <span className="font-bold text-teal-800">{hotelData?.checkOut}</span>
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Divider */}
           <hr className="mt-4 border-gray-300" />
         </div>
+
       </div>
     </>
   );

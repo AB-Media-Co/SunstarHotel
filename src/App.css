@@ -56,17 +56,21 @@
 /* react-masonry-css required styles */
 .my-masonry-grid {
   display: flex;
-  margin-left: -16px; /* gutter size offset */
+  margin-left: -16px;
+  /* gutter size offset */
   width: auto;
 }
+
 .my-masonry-grid_column {
-  padding-left: 16px; /* gutter size */
+  padding-left: 16px;
+  /* gutter size */
   background-clip: padding-box;
 }
 
-.masonry-grid_column > div,
-.masonry-grid_column > img {
-  margin-bottom: 16px; /* Proper alignment */
+.masonry-grid_column>div,
+.masonry-grid_column>img {
+  margin-bottom: 16px;
+  /* Proper alignment */
   width: 100%;
   border-radius: 12px;
   transition: all 0.3s ease-in-out;
@@ -114,7 +118,8 @@
 .marquee-no-scale * {
   transform: none !important;
 }
-.rfm-marquee{
+
+.rfm-marquee {
   display: block !important;
   flex: auto !important;
 }
@@ -143,6 +148,15 @@
 
 @media screen and (max-width: 768px) {
   .swiper-slide.swiper-slide-active {
+    width: 56% !important;
+    /* Slightly smaller scale for medium screens */
+    margin-right: 123px;
+  }
+
+
+}
+@media screen and (max-width: 430px) {
+  .swiper-slide.swiper-slide-active {
     width: 100% !important;
     /* Slightly smaller scale for medium screens */
     margin-right: 123px;
@@ -157,7 +171,7 @@
     justify-content: flex-start !important;
     gap: 1.5rem;
   }
-  
+
   .hotelCardsHome .swiper .swiper-wrapper[data-cards="3"] {
     justify-content: space-between !important;
   }
@@ -168,7 +182,7 @@
 
 .swiper-wrapper {
   justify-content: space-between !important;
- }
+}
 
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   .swiper-wrapper {
@@ -183,23 +197,6 @@
 
 
 
-.my-masonry-grid {
-  display: flex;
-  width: 100vw;
-  /* Full viewport width */
-  overflow-x: hidden;
-  /* Allow horizontal scrolling */
-}
-
-.my-masonry-grid_column {
-  background-clip: padding-box;
-}
-
-.marquee-content {
-  display: flex;
-  flex-wrap: nowrap;
-  /* Ensures items are in a single line for Marquee */
-}
 
 
 @media screen and (min-width: 768px) {
@@ -400,7 +397,7 @@ padding-top: 5px;
 
 
 
-.iconb .css-1umw9bq-MuiSvgIcon-root .icon{
+.iconb .css-1umw9bq-MuiSvgIcon-root .icon {
   height: 50px !important;
   width: 50px !important;
 }
@@ -411,16 +408,18 @@ padding-top: 5px;
 }
 
 .hotelSelection {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 
-.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal{
+.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
   padding-top: 20px;
 }
 
-.sec2Swiper .swiper-wrapper{
+.sec2Swiper .swiper-wrapper {
   height: 435px !important;
 }
 
@@ -430,9 +429,11 @@ padding-top: 5px;
     width: 0;
     opacity: 0;
   }
+
   50% {
     opacity: 1;
   }
+
   100% {
     width: 120px;
   }
@@ -454,8 +455,9 @@ padding-top: 5px;
   justify-content: center;
   align-items: center;
 }
+
 .progress-circle {
-  transform: rotate(-90deg); 
+  transform: rotate(-90deg);
 }
 
 @media (max-width: 500px) {
@@ -467,7 +469,7 @@ padding-top: 5px;
   }
 }
 
-.HoverCard .Feedback .SocialProof .Footer{
+.HoverCard .Feedback .SocialProof .Footer {
   display: none !important;
 }
 
@@ -478,6 +480,7 @@ padding-top: 5px;
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -495,7 +498,7 @@ padding-top: 5px;
 
 
 
-.testiM .swiper-slide{
+.testiM .swiper-slide {
   padding: 32px 8px;
 }
 
@@ -503,23 +506,25 @@ padding-top: 5px;
 /* Add this to your CSS file */
 @keyframes wipeUp {
   from {
-      transform: translateY(100%);
-      opacity: 0;
+    transform: translateY(100%);
+    opacity: 0;
   }
+
   to {
-      transform: translateY(0);
-      opacity: 1;
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 
 @keyframes wipeDown {
   from {
-      transform: translateY(0);
-      opacity: 1;
+    transform: translateY(0);
+    opacity: 1;
   }
+
   to {
-      transform: translateY(100%);
-      opacity: 0;
+    transform: translateY(100%);
+    opacity: 0;
   }
 }
 
@@ -536,24 +541,44 @@ padding-top: 5px;
 
 
 /* Masonry Grid Styles */
+
+
+
+
+.marquee-content {
+  display: flex;
+  flex-wrap: nowrap;
+  /* Ensures items are in a single line for Marquee */
+}
+
 .my-masonry-grid {
   display: flex;
-  margin-left: -1rem; /* gutter size offset */
+  margin-left: 9px;
+  /* gutter size offset */
   width: auto;
 }
+
 .my-masonry-grid_column {
-  padding-left: 1rem; /* gutter size */
+  padding-left: 1rem;
+  /* gutter size */
   background-clip: padding-box;
 }
 
 /* Add bottom margin to each item */
-.my-masonry-grid_column > div {
+.my-masonry-grid_column>div {
   margin-bottom: 1rem;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fadeIn {

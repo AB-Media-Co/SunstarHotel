@@ -138,7 +138,7 @@ const HotelSelectingCards = ({ data, close }) => {
   return (
     <motion.div
       ref={ref}
-      className="grid grid-cols-1 items-stretch bg-primary-white sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6 p-6"
+      className="grid grid-cols-1 items-stretch bg-primary-white sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-3 gap-6 p-6"
       initial={{ opacity: 0 }}
       animate={isInView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 1.3, ease: "easeInOut" }}

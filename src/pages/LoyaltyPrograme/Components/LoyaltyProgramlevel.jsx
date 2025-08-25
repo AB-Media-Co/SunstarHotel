@@ -1,5 +1,4 @@
-import React from 'react';
-import { Shield, Gift, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 const LoyaltyProgramlevel = () => {
   const levels = [
@@ -49,7 +48,7 @@ const LoyaltyProgramlevel = () => {
             className={`$ border-2 border-gray-100 rounded-lg p-6 space-y-4 transition-all hover:shadow-lg`}
           >
             {/* Level Badge */}
-            <div className="flex items-center w-[100px] gap-2 text-sm bg-gray-100 text-primary-gray px-4  py-2 rounded-full">
+            <div className="flex items-center w-[120px] gap-2 text-sm bg-gray-100 text-primary-gray px-4  py-2 rounded-full">
               <Lock className="w-4 h-4" />
               <span>Level {level.id}</span>
             </div>

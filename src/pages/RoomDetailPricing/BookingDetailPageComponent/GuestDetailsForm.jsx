@@ -114,7 +114,7 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
       <div className="flex items-center mb-2 relative z-10">
         <div className="w-2 h-12 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-full mr-5 shadow-lg"></div>
         <div>
-          <h2 className="text-4xl font-bold text-gray-900 tracking-tight mb-1">Guest Details</h2>
+          <h2 className=" text-xl md:text-4xl font-bold text-gray-900 tracking-tight mb-1">Guest Details</h2>
           <p className="text-gray-600">Please provide your information to proceed</p>
         </div>
       </div>

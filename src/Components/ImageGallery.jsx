@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import useUpdatePagesHook from "../ApiHooks/useUpdatePagesHook";
 import Masonry from 'react-masonry-css';
 
@@ -37,42 +38,16 @@ const ImageGallery = () => {
     480: 2,
   };
 
-  const rowsToShow = 2;
+  const rowsToShow = 3;
   const columns = 4;
   const totalItems = rowsToShow * columns;
 
   const itemsToRender = shuffledItems.slice(0, totalItems);
-  
 
   return (
     <>
-      {/* CSS for infinite scroll animation */}
-      <style jsx>{`
-        .scroll-container {
-          overflow: hidden;
-          position: relative;
-        }
-        
-        .scroll-content {
-          display: flex;
-          animation: infiniteScroll 5s linear infinite;
-          will-change: transform;
-        }
-        
-        .scroll-item {
-          flex-shrink: 0;
-          width: 100%;
-        }
-        
-        @keyframes infiniteScroll {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        
+      {/* CSS for masonry grid styling */}
+      {/* <style jsx>{`
         .my-masonry-grid {
           display: -webkit-box;
           display: -ms-flexbox;
@@ -89,15 +64,24 @@ const ImageGallery = () => {
         .my-masonry-grid_column > div {
           margin-bottom: 16px;
         }
-        
-   
-      `}</style>
+      `}</style> */}
 
       <div className="relative z-10 w-full">
-        <div className="ps-4 sm:ps-6 py-8 scroll-container">
-          <div className="scroll-content">
+        <div className="ps-4 sm:ps-6 py-8 overflow-hidden">
+          <motion.div
+            initial={{ x: "0%" }}
+            animate={{ x: "-50%" }}
+            transition={{ 
+              duration: 12, 
+              repeat: Infinity, 
+              ease: "linear",
+              repeatType: "loop"
+            }}
+            className="flex flex-shrink-0"
+            style={{ width: "200%" }}
+          >
             {/* First set of items */}
-            <div className="scroll-item">
+            <div className="w-1/2 flex-shrink-0">
               <Masonry
                 breakpointCols={breakpointColumnsObj}
                 className="my-masonry-grid"
@@ -113,7 +97,7 @@ const ImageGallery = () => {
                         <img
                           src={item.src}
                           alt="Gallery item"
-                          className="w-full object-cover rounded-2xl"
+                          className="w-full h-auto rounded-2xl "
                           loading="lazy"
                         />
                       </div>
@@ -146,7 +130,7 @@ const ImageGallery = () => {
             </div>
 
             {/* Duplicate set for seamless loop */}
-            <div className="scroll-item">
+            <div className="w-1/2 flex-shrink-0">
               <Masonry
                 breakpointCols={breakpointColumnsObj}
                 className="my-masonry-grid"
@@ -162,7 +146,7 @@ const ImageGallery = () => {
                         <img
                           src={item.src}
                           alt="Gallery item"
-                          className="w-full object-cover rounded-2xl"
+                          className="w-full h-auto rounded-2xl"
                           loading="lazy"
                         />
                       </div>
@@ -193,7 +177,7 @@ const ImageGallery = () => {
                 })}
               </Masonry>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </>

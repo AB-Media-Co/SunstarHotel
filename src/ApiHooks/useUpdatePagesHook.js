@@ -18,8 +18,7 @@ const useUpdatePagesHook = () => {
     staleTime: 1000 * 60,
   });
 
-
-  // Mutations remain the same
+  // --- Amenities ---
   const addAmenityMutation = useMutation({
     mutationFn: async (amenity) => {
       const res = await axiosInstance.post('/api/websiteData/amenities', amenity);
@@ -62,6 +61,7 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- Grid / Gallery ---
   const addGalleryImagesMutation = useMutation({
     mutationFn: async (images) => {
       const res = await axiosInstance.post('/api/websiteData/images', images);
@@ -76,6 +76,7 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- Shine ---
   const whatMakesUsShineMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/shine', Data);
@@ -90,6 +91,7 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- Hero ---
   const HeroSectionMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/heroSection', Data);
@@ -104,6 +106,7 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- What we offer ---
   const whatWeOfferingMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/what-we-Offering', Data);
@@ -118,6 +121,7 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- Why Sunstar ---
   const whysunstarValueMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/whysunstarValue', Data);
@@ -132,6 +136,7 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- Testimonials ---
   const TestimonialsMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/testimonial', Data);
@@ -146,6 +151,7 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- Corporate Booking ---
   const CoorporateBookingMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/coorporate-Booking', Data);
@@ -160,6 +166,7 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- Home Page Description ---
   const HomePageDescriptionMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/homePageDescription', Data);
@@ -174,6 +181,7 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- FAQs ---
   const faqsSectionMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/updateFaqs', Data);
@@ -188,6 +196,7 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- Contact Us ---
   const updateContactUsDetailMutation = useMutation({
     mutationFn: async (Data) => {
       const res = await axiosInstance.post('/api/websiteData/contactUs', Data);
@@ -202,15 +211,31 @@ const useUpdatePagesHook = () => {
     },
   });
 
+  // --- ✅ Home Partners (single upsert) ---
+  // PUT /api/websiteData/home-partners
+  // body can include any of: { heading?, subheading?, layout?, logos?: [{src, alt?, link?}] }
+  const saveHomePartnersMutation = useMutation({
+    mutationFn: async (data) => {
+      const res = await axiosInstance.put('/api/websiteData/home-partners', data);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success('Home Partners saved successfully!');
+      queryClient.invalidateQueries({ queryKey: ['websiteData'] });
+    },
+    onError: (error) => {
+      const msg = error?.response?.data?.message || error?.message || 'Failed to save Home Partners';
+      toast.error(msg);
+    },
+  });
 
-    // If loading, return the Loader component
-    if (isLoading) {
-      return {
-        loading: true,
-        Loader: Loader // Returning Loader component
-      };
-    }
-  
+  // If loading, return the Loader component
+  if (isLoading) {
+    return {
+      loading: true,
+      Loader // Returning Loader component
+    };
+  }
 
   return {
     websiteData,
@@ -225,9 +250,12 @@ const useUpdatePagesHook = () => {
     homePageDescription: websiteData?.homePageDescription || [],
     faqs: websiteData?.faqs || [],
     ContactUsDetail: websiteData?.ContactUsDetail || [],
-    
+    // 👇 NEW
+    homePartners: websiteData?.HomePartners || { logos: [] },
+
     loading: isLoading,
     error,
+
     addAmenity: addAmenityMutation.mutateAsync,
     updateAmenity: updateAmenityMutation.mutateAsync,
     deleteAmenity: deleteAmenityMutation.mutateAsync,
@@ -241,6 +269,8 @@ const useUpdatePagesHook = () => {
     updateHomepageDescriptionData: HomePageDescriptionMutation.mutateAsync,
     updateFaq: faqsSectionMutation.mutateAsync,
     updateContactUs: updateContactUsDetailMutation.mutateAsync,
+    // 👇 NEW
+    saveHomePartners: saveHomePartnersMutation.mutateAsync,
   };
 };
 

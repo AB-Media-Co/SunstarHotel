@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { User, Star, Calendar, Phone, Mail, MapPin, FileText, MessageCircle, Shield, HelpCircle, Edit2, Save, X, Menu } from 'lucide-react';
+import { User, Star, Calendar, Phone, Mail, MapPin, FileText, MessageCircle, Shield, HelpCircle, Edit2, Save, X, Menu, ChevronDown } from 'lucide-react';
 import { usePricing } from '../../Context/PricingContext';
 import { useGetUserByEmail, useUpdateUserProfile } from '../../ApiHooks/useUser';
 import Bookings from './Bookings';
 import LoyaltyMain from './LoyaltyProgram/LoyaltyMain';
 import { useLocation } from 'react-router-dom';
+import AgentDashboard from './AgentDashboard';
+import { useGetAgentByEmail } from '../../ApiHooks/useAgentHook';
+import CorporateDashboard from './CorporateDashboard';
 
 const UserProfile = () => {
   const location = useLocation();
@@ -12,10 +15,19 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState(initialTab);
   const [editingField, setEditingField] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const { setIsNavColor } = usePricing()
 
   const userInfo = localStorage.getItem('user_email');
+
+  const { data: agentRec, isLoading: loadingAgent } = useGetAgentByEmail(userInfo);
+  const isAgent = !!agentRec && agentRec?.role === 'agent';
+  const isApproved = agentRec?.approved ?? false;
+
+  const isCorporate = !!agentRec && agentRec?.role === 'corporate';
+  const isCorpApproved = agentRec?.approved ?? false;
+
   const { data: userData } = useGetUserByEmail(userInfo);
   console.log(userData)
   const { mutate: updateUserProfile } = useUpdateUserProfile();
@@ -54,6 +66,28 @@ const UserProfile = () => {
 
   const [tempData, setTempData] = useState({});
 
+  // Define available tabs based on user permissions
+  const getAvailableTabs = () => {
+    const tabs = [
+      { id: 'loyalty', label: 'Loyalty', icon: Star },
+      { id: 'bookings', label: 'Bookings', icon: Calendar },
+      { id: 'profile', label: 'Profile', icon: User },
+    ];
+
+    if (!loadingAgent && isAgent && isApproved) {
+      tabs.push({ id: 'agent', label: 'Agent', icon: Shield });
+    }
+
+    if (!loadingAgent && isCorporate && isCorpApproved) {
+      tabs.push({ id: 'corporate', label: 'Corporate', icon: Shield });
+    }
+
+    return tabs;
+  };
+
+  const availableTabs = getAvailableTabs();
+  const currentTab = availableTabs.find(tab => tab.id === activeTab) || availableTabs[0];
+
   const handleEdit = (field) => {
     setEditingField(field);
     setTempData({ [field]: profileData[field] });
@@ -82,6 +116,11 @@ const UserProfile = () => {
     setTempData({});
   };
 
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    setDropdownOpen(false);
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'loyalty':
@@ -92,6 +131,17 @@ const UserProfile = () => {
       case 'bookings':
         return <Bookings />;
 
+      case 'corporate':
+        if (loadingAgent) return <div className="p-4">Loading corporate data...</div>;
+        if (!isCorporate) return <div className="p-4 text-red-600">Not authorized as Corporate.</div>;
+        if (!isCorpApproved) return <div className="p-4">Your corporate account is pending approval.</div>;
+        return <CorporateDashboard />;
+
+      case 'agent':
+        if (loadingAgent) return <div className="p-4">Loading agent data...</div>;
+        if (!isAgent) return <div className="p-4 text-red-600">Not authorized as Agent.</div>;
+        if (!isApproved) return <div className="p-4">Your agent account is pending approval.</div>;
+        return <AgentDashboard />;
       case 'profile':
       default:
         return (
@@ -382,15 +432,40 @@ const UserProfile = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="content mt-16 sm:mt-20 mx-auto px-4 sm:px-6">
-        {/* Mobile Header */}
+        {/* Mobile Dropdown */}
         <div className="lg:hidden mb-4 pt-6 mt-4">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="flex items-center space-x-2 text-gray-700 bg-white px-4 py-2 rounded-lg shadow-sm"
-          >
-            <Menu className="w-5 h-5" />
-            <span>Menu</span>
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center justify-between w-full text-gray-700 bg-white px-4 py-2 rounded-lg shadow-sm border"
+            >
+              <div className="flex items-center space-x-2">
+                <currentTab.icon className="w-5 h-5" />
+                <span>{currentTab.label}</span>
+              </div>
+              <ChevronDown className={`w-4 h-4 transform transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Menu */}
+            {dropdownOpen && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                {availableTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => handleTabChange(tab.id)}
+                    className={`w-full flex items-center space-x-2 px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg transition-colors ${
+                      activeTab === tab.id
+                        ? 'bg-primary-green text-white hover:bg-primary-green'
+                        : 'text-gray-700'
+                    }`}
+                  >
+                    <tab.icon className="w-5 h-5" />
+                    <span>{tab.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex gap-6 min-h-[calc(100vh-120px)]">
@@ -435,50 +510,25 @@ const UserProfile = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <button
-                      onClick={() => {
-                        setActiveTab('loyalty');
-                        setSidebarOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${activeTab === 'loyalty'
-                        ? 'bg-primary-green text-white'
-                        : 'hover:bg-gray-50 text-gray-700'
+                    {availableTabs.map((tab) => (
+                      <button
+                        key={tab.id}
+                        onClick={() => {
+                          setActiveTab(tab.id);
+                          setSidebarOpen(false);
+                        }}
+                        className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${
+                          activeTab === tab.id
+                            ? 'bg-primary-green text-white'
+                            : 'hover:bg-gray-50 text-gray-700'
                         }`}
-                    >
-                      <Star className="w-5 h-5" />
-                      <span className={activeTab === 'loyalty' ? 'font-medium' : ''}>Loyalty</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setActiveTab('bookings');
-                        setSidebarOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${activeTab === 'bookings'
-                        ? 'bg-primary-green text-white'
-                        : 'hover:bg-gray-50 text-gray-700'
-                        }`}
-                    >
-                      <Calendar className="w-5 h-5" />
-                      <span className={activeTab === 'bookings' ? 'font-medium' : ''}>Bookings</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setActiveTab('profile');
-                        setSidebarOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${activeTab === 'profile'
-                        ? 'bg-primary-green text-white'
-                        : 'hover:bg-gray-50 text-gray-700'
-                        }`}
-                    >
-                      <User className="w-5 h-5" />
-                      <span className={activeTab === 'profile' ? 'font-medium' : ''}>Profile</span>
-                    </button>
+                      >
+                        <tab.icon className="w-5 h-5" />
+                        <span className={activeTab === tab.id ? 'font-medium' : ''}>{tab.label}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
-
               </div>
 
               {/* Need Help Section */}
@@ -538,6 +588,7 @@ const UserProfile = () => {
                 </div>
               </div>
             )}
+
           </div>
         </div>
       </div>

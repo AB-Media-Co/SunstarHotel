@@ -89,15 +89,21 @@ const BookingDetailsPage = () => {
         <meta name="" content={``} />
       </Helmet>
       <div className="content flex justify-between items-center ">
-        <div className="py-4 md:py-10  flex items-center gap-2 text-mobile/h1 md:text-desktop/h2 text-white">
+        <div className="flex items-center gap-2 py-4 md:py-10 text-white">
           <button
             onClick={() => navigate(-1)}
             aria-label="Go back"
+            className="flex items-center"
           >
-            <ArrowBackIosNew className="text-white" style={{ height: "35px", width: "35px" }} />
+            <ArrowBackIosNew
+              className="text-white h-6 w-6 sm:h-7 sm:w-7 md:h-9 md:w-9"
+            />
           </button>
-          <span>Booking Details</span>
+          <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold">
+            Booking Details
+          </span>
         </div>
+
         <div className="">
           {userInfo ? (
             <div onClick={() => navigate('/user/profile')} className="bg-white cursor-pointer text-primary-yellow font-bold w-12 h-12 rounded-full flex items-center justify-center">

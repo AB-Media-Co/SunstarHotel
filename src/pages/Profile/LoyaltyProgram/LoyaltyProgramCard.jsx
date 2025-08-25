@@ -111,23 +111,7 @@ const LoyaltyProgramCard = ({ onViewAll }) => {
                     check-out. They will be counted towards loyalty benefits within 48hrs.
                 </p>
 
-                {/* <div className="bg-white border mt-10 rounded-lg p-4 md:p-6">
-                    <h4 className="font-medium text-gray-800 mb-4 text-sm md:text-base">Recent Activity</h4>
-                    <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                            <span className="text-gray-600 text-sm md:text-base">Booking #12345</span>
-                            <span className="text-teal-500 font-medium text-sm md:text-base">+150 pts</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-gray-600 text-sm md:text-base">Referral Bonus</span>
-                            <span className="text-teal-500 font-medium text-sm md:text-base">+100 pts</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-gray-600 text-sm md:text-base">Welcome Bonus</span>
-                            <span className="text-teal-500 font-medium text-sm md:text-base">+500 pts</span>
-                        </div>
-                    </div>
-                </div> */}
+      
 
                 {/* Card */}
                 <div className="mt-6 bg-gray-100 rounded-lg p-8 text-center">

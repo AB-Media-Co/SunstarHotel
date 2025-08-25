@@ -48,10 +48,10 @@ export default function SwiperComponent() {
       const width = window.innerWidth;
       setScreenInfo({
         width,
-        isMobile: width <= 768,
-        isTablet: width > 768 && width <= 1024,
-        isLaptop: width > 1024 && width <= 1440,
-        isDesktop: width > 1440,
+        isMobile: width <= 425,
+        isTablet: width > 425 && width <= 768,
+        isLaptop: width > 768 && width <= 1024,
+        isDesktop: width > 1024,
       });
       setTimeout(() => {
         window.dispatchEvent(new Event('resize'));
@@ -240,7 +240,7 @@ export default function SwiperComponent() {
   const getSlidesPerView = () => {
     if (screenInfo.isMobile) return 1;
     if (screenInfo.isTablet) return 2;
-    if (screenInfo.isLaptop) return 2.5;
+    if (screenInfo.isLaptop) return 2;
     return 3;
   };
 
@@ -277,12 +277,12 @@ export default function SwiperComponent() {
             spaceBetween: 15,
           },
           640: {
-            slidesPerView: 1,
+            slidesPerView: 2,
             spaceBetween: 20,
           },
           // Tablet breakpoints (including 1024)
           768: {
-            slidesPerView: 1.5,
+            slidesPerView: 2,
             spaceBetween: 20,
           },
           900: {
@@ -295,7 +295,7 @@ export default function SwiperComponent() {
           },
           // Laptop breakpoints
           1200: {
-            slidesPerView: 2.5,
+            slidesPerView: 2,
             spaceBetween: 25,
           },
           1440: {

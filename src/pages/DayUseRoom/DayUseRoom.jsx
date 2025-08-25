@@ -9,13 +9,13 @@ import DaysUseRoomFaq from "./Component/DaysUseRoomFaq";
 import Rooms from "./Component/Rooms";
 
 const DayUseRoom = () => {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+
     const { data: metas } = useGetMetas();
     const contactUsMeta = Array.isArray(metas)
         ? metas.find(meta => meta.page === "dayuseroom")
         : null;
+
+
     return (
         <div>
             <Helmet>

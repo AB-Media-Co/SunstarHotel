@@ -3,6 +3,9 @@ import { ExternalLink } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
+
+
+
 // eslint-disable-next-line react/prop-types
 const Location = ({ address }) => {
     // Destructure the passed object
@@ -271,6 +274,76 @@ const Location = ({ address }) => {
         }
     };
 
+
+    const renderMobileTransportationCards = () => {
+        const leftCategories = ['Airport', 'Railway Station', 'Metro Station'];
+        const leftIcons = {
+            'Airport': '/images/MapIcons/Airport.svg',
+            'Railway Station': '/images/MapIcons/Railway.svg',
+            'Metro Station': '/images/MapIcons/Metro.svg',
+        };
+
+        return (
+            <div className="space-y-4 mb-6">
+                {leftCategories.map(category => {
+                    const places = groupedPlaces[category] || [];
+                    const nearestPlace = places.length > 0 ? places[0] : null;
+                    const travelTime = nearestPlace ? calcTravelTime(nearestPlace.distance) : 0;
+
+                    return (
+                        <div
+                            key={category}
+                            className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow duration-200"
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1">
+                                    <h3 className="text-base font-semibold text-gray-800 mb-1">
+                                        {category}
+                                    </h3>
+                                    <div className='flex items-center gap-2 mb-2'>
+
+                                        <p className="text-sm text-gray-500 ">
+                                            {places.length} Nearby
+                                        </p>
+                                        {nearestPlace && (
+                                            <p className="text-xs text-gray-400">
+                                               ( {travelTime} Min away)
+                                            </p>
+                                        )}
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            // You can add popup logic here or scroll to map
+                                            if (nearestPlace) {
+                                                viewOnMap(nearestPlace);
+                                            }
+                                        }}
+                                        className="text-primary-green flex hover:text-green-600 text-sm font-medium hover:underline transition-colors duration-200"
+                                    >
+                                        View On                                         Map
+                                    </button>
+                                </div>
+
+                                <div className="flex-shrink-0 ml-4">
+                                    <img
+                                        src={leftIcons[category]}
+                                        alt={category}
+                                        className="w-12 h-12"
+                                    />
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    };
+
+
     return (
         <div className="content my-5" id='location'>
             {/* Top Section */}
@@ -289,7 +362,10 @@ const Location = ({ address }) => {
                 {/* Left Side */}
                 <div className="xl:w-[50%] flex flex-col-reverse xl:flex-col gap-6 xl:gap-0 overflow-y-auto">
                     {/* Transportation Cards */}
-                    <div className="flex flex-col sm:flex-row gap-4 xl:flex-nowrap justify-between items-stretch xl:items-center">
+                    <div className="block xl:hidden">
+                        {renderMobileTransportationCards()}
+                    </div>
+                    <div className="hidden xl:flex flex-col sm:flex-row gap-4 xl:flex-nowrap justify-between items-stretch xl:items-center">
                         {leftCategories.map(category => (
                             <div
                                 key={category}
@@ -301,7 +377,7 @@ const Location = ({ address }) => {
                                         return (
                                             <div
                                                 key={place.place_id}
-                                                className="flex flex-col gap-2 p-3 sm:p-4 lg:p-6 justify-center items-center"
+                                                className="flex flex-col gap-2 p-3 sm:p-4 lg:p-3 justify-center items-center"
                                             >
                                                 <img
                                                     src={leftIcons[category]}
@@ -362,10 +438,10 @@ const Location = ({ address }) => {
                                         View More
                                     </button>
                                 </div>
-                                <img 
-                                    src={popupIcons[category]} 
-                                    alt={category} 
-                                    className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 ml-2" 
+                                <img
+                                    src={popupIcons[category]}
+                                    alt={category}
+                                    className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 ml-2"
                                 />
                             </div>
                         ))}
@@ -415,7 +491,7 @@ const Location = ({ address }) => {
                         >
                             <CloseOutlined className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10" />
                         </button>
-                        
+
                         <motion.div
                             variants={popupVariants}
                             className="bg-white overflow-y-auto pb-20 w-full max-w-7xl h-full mt-12 sm:mt-16 rounded-t-[20px] sm:rounded-t-[40px] shadow-lg"
@@ -427,18 +503,16 @@ const Location = ({ address }) => {
                                         <button
                                             key={category}
                                             onClick={() => setActiveTab(category)}
-                                            className={`flex flex-col items-center px-2 sm:px-4 py-2 transition-all duration-200 flex-shrink-0 ${
-                                                activeTab === category
-                                                    ? 'border-b-2 border-primary-green text-primary-green font-medium'
-                                                    : 'text-gray-600'
-                                            }`}
+                                            className={`flex flex-col items-center px-2 sm:px-4 py-2 transition-all duration-200 flex-shrink-0 ${activeTab === category
+                                                ? 'border-b-2 border-primary-green text-primary-green font-medium'
+                                                : 'text-gray-600'
+                                                }`}
                                         >
                                             <img
                                                 src={popupIcons[category]}
                                                 alt={category}
-                                                className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 transition-transform duration-200 ${
-                                                    activeTab === category ? 'scale-110' : ''
-                                                }`}
+                                                className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 transition-transform duration-200 ${activeTab === category ? 'scale-110' : ''
+                                                    }`}
                                             />
                                             <span className="mt-1 text-xs sm:text-sm whitespace-nowrap">{category}</span>
                                         </button>

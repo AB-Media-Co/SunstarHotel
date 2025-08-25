@@ -43,8 +43,13 @@ const SeoMeta = () => {
         'Coorporate Events',
         'Social Events',
         'Wedding Pre Wedding Events',
+        'developersowners',
+        'career',
+        'in-the-media',
+        'travel-agent',
+        'TourAndTravel',
         // 'Coorporat Events',
-    ];
+    ]; 
 
     // Fetch existing meta entries
     const { data: metas, isLoading, isError } = useGetMetas();

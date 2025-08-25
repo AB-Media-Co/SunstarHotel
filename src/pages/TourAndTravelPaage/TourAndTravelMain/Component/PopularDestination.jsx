@@ -22,8 +22,8 @@ const PopularDestination = () => {
         />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
-      <div className="p-4 py-10 flex gap-2 justify-between items-center">
-        <h3 className="text-lg font-semibold text-primary-green">{item.name}</h3>
+      <div className="p-4 py-6 flex gap-2 justify-between items-center">
+        <h3 className="text-lg text-start font-semibold text-primary-green">{item.name}</h3>
         <p className="text-sm">
           Starting From{" "}
           <span className="text-primary-green font-bold">₹{item.lowestPrice}/-</span>
@@ -35,12 +35,10 @@ const PopularDestination = () => {
   return (
     <>
       <RoatinfImg
-        divClass="relative z-0"
-        position="absolute md:left-[-80px] top-[-100px] md:top-[-29px] left-[-80px] w-[200px]"
+        position=" md:left-[-80px] top-[-100px] md:top-[-29px] left-[-80px] w-[200px]"
       />
       <RoatinfImg
-        divClass="relative z-0"
-        position="absolute md:right-[-80px] top-[400px] md:top-[500px] right-[-80px] w-[200px]"
+        position=" md:right-[-80px] top-[400px] md:top-[500px] right-[-80px] w-[200px]"
       />
 
       <div className="flex relative flex-col justify-between content items-center py-10 z-20">

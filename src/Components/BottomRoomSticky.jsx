@@ -66,7 +66,7 @@ const BottomRoomSticky = () => {
               onClick={onContinueClick}
               className="bg-primary-green md:block hidden text-xs sm:text-sm md:text-lg py-2 px-4 rounded-lg text-white font-medium cursor-pointer hover:bg-primary-dark-green transition-colors"
             >
-              Continue Booking
+              Continue
             </div>
           </div>
 
@@ -74,9 +74,9 @@ const BottomRoomSticky = () => {
         </div>
         <div
           onClick={onContinueClick}
-          className="bg-primary-green md:hidden  text-sm md:text-lg py-2 px-4 rounded-lg text-white font-medium cursor-pointer hover:bg-primary-dark-green transition-colors"
+          className="bg-primary-green flex items-center md:hidden  text-md md:text-lg py-2 px-4 rounded-lg text-white font-medium cursor-pointer hover:bg-primary-dark-green transition-colors"
         >
-          Continue Booking
+          Continue
         </div>
       </div>
     </div>

@@ -97,7 +97,7 @@ export const HotelDetailsCard = () => {
                 alt="Hotel Room"
                 className="rounded-md w-full h-full object-cover"
               />
-              <div className="absolute top-4 left-5 bg-white bg-opacity-75 px-3 py-1 rounded-l-full">
+              <div className="absolute top-4 right-0 md:left-5 bg-white bg-opacity-75 px-3 py-1 rounded-l-full">
                 <p className="text-[10px] font-bold text-yellow-600 uppercase tracking-wider">
                   Best Choice
                 </p>

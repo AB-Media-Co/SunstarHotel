@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
 import {
     TextField,
@@ -26,11 +27,7 @@ const ImageUpload = ({ feature, handleFeatureChange, setImageUpload, index }) =>
         const file = event.target.files[0];
         if (!file) return;
 
-        // Check file type
-        if (!file.type.match('image/jpeg') && !file.type.match('image/png')) {
-            setFileTypeError('Please upload JPG or PNG files only.');
-            return;
-        }
+  
 
         setFileTypeError(null); // Clear file type error if valid file is selected
         setUploadError(null);

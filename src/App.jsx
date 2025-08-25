@@ -40,6 +40,7 @@ import InTheMediaPage from './pages/InTheMedia/Component/InTheMediaPage';
 import IntheMediaMain from './pages/InTheMedia/IntheMediaMain';
 import LoyaltyPrograme from './pages/LoyaltyPrograme/LoyaltyPrograme';
 import VenueManagement from './adminPanel/pages/VenueManagement/VenueManagement';
+import ScrollToTop from './ScrollToTop';
 
 // import PhoneAuth from './pages/PhoneAuth';
 
@@ -100,6 +101,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
+        <ScrollToTop />
         <PricingProvider>
           <Routes>
             <Route element={<Layout />}>
@@ -128,9 +130,9 @@ function App() {
               <Route path="/travel-agent" element={<TravelAgent />} />
               <Route path="/in-the-media" element={<IntheMediaMain />} />
               <Route path="/loyalty-program" element={<LoyaltyPrograme />} />
-              <Route path="/travel-booking-form" element={  <TravelBookingForm/>} />
-              <Route path="/my-bookings" element={  <MyBookings/>} />
-              <Route path="/user/profile" element={  <UserProfile/>} />
+              <Route path="/travel-booking-form" element={<TravelBookingForm />} />
+              <Route path="/my-bookings" element={<MyBookings />} />
+              <Route path="/user/profile" element={<UserProfile />} />
             </Route>
             <Route path="/room/details" element={<RoomsDetails />} />
             <Route path="/room/:id" element={<HotelRooms />} />

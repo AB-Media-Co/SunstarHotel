@@ -8,14 +8,15 @@ import TourHiglights from './component/TourHiglights';
 import PackageItinerary from './component/PackageItinerary';
 import PackageInclusionBlock from './component/PackageInclusionBlock';
 import TestimonialSection from '../../../Components/TestimonialSection';
+import { Helmet } from 'react-helmet';
 
 const PackageDetail = () => {
     const { state } = useLocation();
     const pkg = state?.pkg; // Navigation से मिला data
-    
+
     // API call with optimizations
     const { data: packageDetails, isLoading, isError, error } = usePackageById(
-        pkg?._id, 
+        pkg?._id,
         {
             enabled: !!pkg?._id,
             // अगर navigation से data है तो initial data के रूप में use करें
@@ -24,7 +25,7 @@ const PackageDetail = () => {
             cacheTime: 10 * 60 * 1000, // 10 minutes
         }
     );
-    
+
     const { setIsNavColor } = usePricing();
 
     // Early return अगर कोई data नहीं है
@@ -39,7 +40,7 @@ const PackageDetail = () => {
     useEffect(() => {
         setIsNavColor(true);
         return () => {
-            setIsNavColor(false); 
+            setIsNavColor(false);
         };
     }, [setIsNavColor]);
 
@@ -66,9 +67,14 @@ const PackageDetail = () => {
 
     // पहले updated data use करें, अगर नहीं मिला तो navigation data use करें
     const displayData = packageDetails || pkg;
-
+    console.log(displayData)
     return (
         <div className="fade-in">
+            <Helmet>
+                <title>{displayData?.title}</title>
+                <meta name="description" content={displayData?.description || ''} />
+
+            </Helmet>
             <HeroSectionCarousel packageDetails={displayData} />
             <TourHiglights packageDetails={displayData} />
             <PackageItinerary packageDetails={displayData} />

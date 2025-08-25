@@ -104,22 +104,33 @@ const HotelImageCarousel = ({ data }) => {
   );
 
   // Lazy load section images
+  // ⬇️ replace existing SectionImage
   const SectionImage = ({ src, alt }) => {
     const [loaded, setLoaded] = useState(false);
 
     return (
-      <div className="relative w-full h-full cursor-pointer" onClick={() => setFullScreenImage(src)}>
-        {!loaded && <LoadingPlaceholder />}
+      <button
+        type="button"
+        className="relative w-full aspect-[4/3] cursor-pointer"
+        onClick={() => setFullScreenImage(src)}
+      >
+        {!loaded && (
+          <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center rounded-xl">
+            <span className="text-gray-500 text-sm">Loading…</span>
+          </div>
+        )}
         <img
           src={src}
           alt={alt}
-          className={`w-full max-h-[125px] md:max-h-[162px] object-cover rounded-xl ${loaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute inset-0 w-full h-full object-cover rounded-xl transition-opacity ${loaded ? "opacity-100" : "opacity-0"
+            }`}
           onLoad={() => setLoaded(true)}
           loading="lazy"
         />
-      </div>
+      </button>
     );
   };
+
 
   return (
     <>
@@ -140,7 +151,7 @@ const HotelImageCarousel = ({ data }) => {
                   alt={`Slide ${currentIndex}`}
                   className={`w-full h-full object-cover ${imagesLoaded[currentIndex] ? 'opacity-100' : 'opacity-0'}`}
                 />
-                
+
                 {/* View All Button Overlay on Last Image */}
                 {isLastImage && (
                   <motion.div
@@ -159,7 +170,7 @@ const HotelImageCarousel = ({ data }) => {
                       <Eye className="w-5 h-5 md:w-6 md:h-6" />
                       <span>View All Photos</span>
                     </motion.button>
-                    
+
                     {/* Optional: Show total count */}
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
                       +{sections.reduce((total, section) => total + section.images.length, 0)} more photos
@@ -167,7 +178,7 @@ const HotelImageCarousel = ({ data }) => {
                   </motion.div>
                 )}
               </div>
-              
+
               {prevIndex !== null && (
                 <div
                   key={prevIndex}
@@ -208,9 +219,8 @@ const HotelImageCarousel = ({ data }) => {
           {carouselImages.map((_, index) => (
             <div
               key={index}
-              className={`w-28 rounded-full transition-all duration-500 ease-in-out h-[5px] mx-1 cursor-pointer ${
-                index === currentIndex ? 'bg-[#FDC114] w-44' : 'bg-primary-white'
-              }`}
+              className={`w-28 rounded-full transition-all duration-500 ease-in-out h-[5px] mx-1 cursor-pointer ${index === currentIndex ? 'bg-[#FDC114] w-44' : 'bg-primary-white'
+                }`}
               onClick={() => {
                 if (index !== currentIndex) {
                   setDirection(index > currentIndex ? 'next' : 'prev');
@@ -234,29 +244,34 @@ const HotelImageCarousel = ({ data }) => {
         </div>
 
         {/* Modal for viewing all images (sections) */}
+        {/* Modal for viewing all images (sections) */}
         <div
-          className={`fixed inset-0 bg-[#6EC4C2] flex justify-center items-start z-50 hotelSelection overflow-y-auto transition-transform duration-500 transform ${
-            showGallery ? 'translate-y-0' : 'translate-y-full pointer-events-none'
-          }`}
+          className={`fixed inset-0 bg-[#6EC4C2]/95 z-50 overflow-y-auto transition-transform duration-500
+    ${showGallery ? "translate-y-0" : "translate-y-full pointer-events-none"}`}
         >
-          <div className='flex flex-col'>
+          <div className="mx-auto w-full max-w-[95vw] md:max-w-3xl lg:max-w-5xl xl:max-w-[1280px]">
+            {/* Sticky header (better on tablets) */}
             <div
-              className=" my-6 md:my-10  flex  items-center cursor-pointer text-primary-white   rounded"
+              className="sticky top-0 z-10 flex items-center gap-3 bg-[#6EC4C2]/95 px-4 md:px-6 py-4 md:py-6 cursor-pointer"
               onClick={() => setShowGallery(false)}
               aria-label="Close gallery"
             >
-              <ArrowBackIosNew style={{ height: "30px", width: "30px", marginTop: "5px" }} /> 
-              <span className='text-4xl font-bold'>Sunstar Hotels</span>
+              <ArrowBackIosNew className="h-7 w-7 md:h-8 md:w-8" />
+              <span className="text-white font-bold text-2xl md:text-4xl">Sunstar Hotels</span>
             </div>
-            <div className="bg-primary-white  py-10 md:rounded-t-2xl w-full md:w-[1300px]">
+
+            {/* Body */}
+            <div className="bg-primary-white w-full md:rounded-t-2xl py-8 md:py-10">
               {sections.length > 0 ? (
-                sections.map((section, sectionIndex) => (
-                  section.images.length > 0 && (
-                    <div key={sectionIndex} className="mb-10 bg-primary-white px-4 md:px-8">
-                      <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold mb-10 text-primary-dark-green">
+                sections.map((section, sectionIndex) =>
+                  section.images.length > 0 ? (
+                    <div key={sectionIndex} className="mb-8 md:mb-10 px-4 md:px-8">
+                      <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold mb-6 md:mb-8 text-primary-dark-green">
                         {section.heading}
                       </h2>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+
+                      {/* 2 cols mobile, 3 cols tablet, 4 cols desktop */}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
                         {section.images.map((src, imgIndex) => (
                           <SectionImage
                             key={imgIndex}
@@ -266,14 +281,15 @@ const HotelImageCarousel = ({ data }) => {
                         ))}
                       </div>
                     </div>
-                  )
-                ))
+                  ) : null
+                )
               ) : (
-                <p className="text-gray-600 italic">No section images available.</p>
+                <p className="text-gray-600 italic px-4 md:px-8">No section images available.</p>
               )}
             </div>
           </div>
         </div>
+
       </div>
 
       {/* Full Screen Image Modal */}

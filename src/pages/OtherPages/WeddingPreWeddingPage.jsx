@@ -43,9 +43,9 @@ const WeddingPreWeddingPage = () => {
       <h1 className='text-mobile/h2 md:text-desktop/h3  font-bold text-primary-white max-w-full md:max-w-[680px]'>
         Celebrate love  at <span className='text-[#FDD304]'>Sunstar Hotels</span>   weddings & pre-weddings made magical.
       </h1>
-      <p className='py-4 text-mobile/body/2 md:text-desktop/body/2/regular md:max-w-[600px] text-white'>
+      {/* <p className='py-4 text-mobile/body/2 md:text-desktop/body/2/regular md:max-w-[600px] text-white'>
         Whether you are planning a birthday party, anniversary celebration, candle light dinner, baby shower, marriage proposal, or any other special occasion, we are excited to help make your personal event a truly unforgettable experience.
-      </p>
+      </p> */}
     </>
   )
 

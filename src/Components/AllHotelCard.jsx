@@ -92,8 +92,18 @@ const AllHotelCard = ({ isOpen, onClose }) => {
               className="flex  items-center px-4 py-2 z-10"
             // variants={headerVariants}
             >
-              <ArrowBackIos style={{ height: "40px", width: "40px", color: "white" }} onClick={onClose} className='cursor-pointer mt-2' />
-              <h2 className="text-[48px] font-semibold cursor-pointer text-white" onClick={onClose}>Hotels</h2>
+              <ArrowBackIos
+                style={{ height: "32px", width: "32px" }}
+                onClick={onClose}
+                className="cursor-pointer mt-2 sm:h-[36px] sm:w-[36px] md:h-[40px] md:w-[40px] text-white"
+              />
+
+              <h2
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-[48px] font-semibold cursor-pointer text-white"
+                onClick={onClose}
+              >
+                Hotels
+              </h2>
 
             </motion.div>
             <motion.div

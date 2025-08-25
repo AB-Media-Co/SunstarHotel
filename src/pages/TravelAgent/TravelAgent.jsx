@@ -1,27 +1,321 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
-import {
-
-  ArrowForward as ArrowForwardIcon,
-
-} from '@mui/icons-material';
+import { useState, useEffect, useMemo } from "react";
+import { ArrowForward as ArrowForwardIcon, Close as CloseIcon } from '@mui/icons-material';
 import TestimonialSection from "../../Components/TestimonialSection";
 import CommonUseEnquiryForm from "../../Components/CommonUseEnquiryForm";
 import { useEnquiryForm } from "../../ApiHooks/useEnquiryFormHook";
+import {
+  useGetAgentByEmail,
+  useLoginAgent,
+  useVerifyAgentOtp,
+  useResendAgentOtp
+} from "../../ApiHooks/useAgentHook"; // UPDATED: add OTP hooks
+import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { useGetMetas } from "../../ApiHooks/useMetaHook";
 
-const HeroSection = ({ title, description, imageSrc, buttonText, buttonLink }) => (
-  <section className="relative h-[100vh] md:h-[100vh] bg-cover bg-center" style={{ backgroundImage: `url(${imageSrc})` }}>
-    <div className="absolute inset-0 bg-black opacity-50" />
-    <div className="relative content mx-auto h-full flex flex-col justify-center pt-20 items-start px-4">
-      <h1 className="text-mobile/h3 md:text-desktop/h2 text-primary-white max-w-2xl font-bold">{title}</h1>
-      <p className="mt-4 text-mobile/body/2 md:text-desktop/body/2/regular text-primary-white max-w-2xl">{description}</p>
+/* --------------------- Modal --------------------- */
+const AgentSignupModal = ({ open, onClose }) => {
+  const loginMutation = useLoginAgent();
+  const verifyMutation = useVerifyAgentOtp();
+  const resendMutation = useResendAgentOtp();
 
-      <a href={buttonLink} className="mt-8  bg-primary-white text-primary-yellow px-8 py-3 rounded-lg font-bold hover:bg-opacity-90 transition duration-300 flex items-center">
-        {buttonText} <ArrowForwardIcon className="ml-2" />
-      </a>
+  const [step, setStep] = useState("form"); // 'form' | 'otp'
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    role: "agent",
+    companyName: ""
+  });
+  const [otp, setOtp] = useState("");
+  const [secondsLeft, setSecondsLeft] = useState(120); // resend cooldown
+
+  // reset on close
+  useEffect(() => {
+    if (!open) {
+      setStep("form");
+      setForm({ name: "", email: "", phone: "", role: "agent", companyName: "" });
+      setOtp("");
+      setSecondsLeft(120);
+    }
+  }, [open]);
+
+  // cooldown timer for resend
+  useEffect(() => {
+    if (step !== "otp") return;
+    if (secondsLeft <= 0) return;
+    const t = setInterval(() => setSecondsLeft((s) => s - 1), 1000);
+    return () => clearInterval(t);
+  }, [step, secondsLeft]);
+
+  const disabledForm = useMemo(() => {
+    return (
+      !form.name.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) ||
+      !/^\d{7,}$/.test(form.phone) ||
+      loginMutation.isPending
+    );
+  }, [form, loginMutation.isPending]);
+
+  const disabledOtp = useMemo(() => {
+    return otp.trim().length !== 6 || verifyMutation.isPending;
+  }, [otp, verifyMutation.isPending]);
+
+  const handleSubmitForm = (e) => {
+    e.preventDefault();
+    loginMutation.mutate(
+      {
+        name: form.name.trim(),
+        email: form.email.trim().toLowerCase(),
+        phone: form.phone.trim(),
+        role: "agent"
+      },
+      {
+        onSuccess: (resp) => {
+          // toast.success(resp?.message || "OTP sent to your email");
+          setStep("otp");
+          setSecondsLeft(120);
+        },
+        onError: (err) => {
+          const msg = err?.response?.data?.message || "Sign up / login failed";
+          console.error(msg);
+        }
+      }
+    );
+  };
+
+  const handleVerifyOtp = (e) => {
+    e.preventDefault();
+    verifyMutation.mutate(
+      { email: form.email.trim().toLowerCase(), otp: otp.trim() },
+      {
+        onSuccess: (resp) => {
+          if (resp?.ok) {
+            // toast.success(resp?.message || "Login successful");
+            // persist email for subsequent page loads
+            localStorage.setItem("user_email", resp?.data?.email || form.email.trim().toLowerCase());
+            onClose?.();
+          } else {
+            console.error(resp?.message || "Verification failed");
+          }
+        },
+        onError: (error) => {
+          const msg = error?.response?.data?.message || "Invalid or expired OTP";
+          console.error(msg);
+        }
+      }
+    );
+  };
+
+  const handleResend = () => {
+    if (secondsLeft > 0) return;
+    resendMutation.mutate(
+      {
+        email: form.email.trim().toLowerCase(),
+        phone: form.phone.trim(),
+        name: form.name.trim(),
+        role: "agent"
+      },
+      {
+        onSuccess: (resp) => {
+          // toast.success(resp?.message || "OTP re-sent");
+          setSecondsLeft(120);
+        },
+        onError: (err) => console.error(err?.response?.data?.message || "Failed to resend OTP")
+      }
+    );
+  };
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-[1000]">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      {/* Dialog */}
+      <div className="relative mx-auto mt-20 w-[92%] max-w-xl bg-white rounded-2xl shadow-xl p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold text-gray-900">
+            {step === "form" ? "Join as Travel Agent" : "Enter OTP"}
+          </h3>
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100">
+            <CloseIcon fontSize="small" />
+          </button>
+        </div>
+
+        {step === "form" ? (
+          <form onSubmit={handleSubmitForm} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <input
+                type="text"
+                value={form.name}
+                onChange={(e) => setForm((s) => ({ ...s, name: e.target.value }))}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-yellow"
+                placeholder="Agent Name"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm((s) => ({ ...s, email: e.target.value }))}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-yellow"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) =>
+                    setForm((s) => ({ ...s, phone: e.target.value.replace(/\D/g, "") }))
+                  }
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-yellow"
+                  placeholder="9876543210"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Company (optional)</label>
+              <input
+                type="text"
+                value={form.companyName}
+                onChange={(e) => setForm((s) => ({ ...s, companyName: e.target.value }))}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-yellow"
+                placeholder="Company Name"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={disabledForm}
+              className={`w-full flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-semibold text-white transition
+                ${disabledForm ? "bg-gray-400 cursor-not-allowed" : "bg-primary-yellow hover:brightness-110"}`}
+            >
+              {loginMutation.isPending ? "Sending OTP..." : "Get OTP"}
+              {!loginMutation.isPending && <ArrowForwardIcon fontSize="small" />}
+            </button>
+
+            <p className="text-xs text-gray-500 text-center">
+              By continuing you agree to receive a one-time password on your email.
+            </p>
+          </form>
+        ) : (
+          <form onSubmit={handleVerifyOtp} className="space-y-4">
+            <p className="text-sm text-gray-600">
+              We sent a 6-digit code to <b>{form.email}</b>. Enter it below to verify your login.
+            </p>
+
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="\d*"
+              maxLength={6}
+              value={otp}
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+              className="w-full text-center tracking-[0.5em] text-2xl rounded-lg border border-gray-300 px-3 py-3 focus:outline-none focus:ring-2 focus:ring-primary-yellow"
+              placeholder="______"
+              autoFocus
+            />
+
+            <button
+              type="submit"
+              disabled={disabledOtp}
+              className={`w-full flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-semibold text-white transition
+                ${disabledOtp ? "bg-gray-400 cursor-not-allowed" : "bg-primary-green hover:brightness-110"}`}
+            >
+              {verifyMutation.isPending ? "Verifying..." : "Verify & Continue"}
+            </button>
+
+            <div className="flex items-center justify-between text-sm text-gray-600">
+              <button
+                type="button"
+                onClick={() => setStep("form")}
+                className="underline underline-offset-2"
+              >
+                Change email
+              </button>
+
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={secondsLeft > 0 || resendMutation.isPending}
+                className={`underline underline-offset-2 ${secondsLeft > 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                title={secondsLeft > 0 ? `Resend in ${secondsLeft}s` : "Resend OTP"}
+              >
+                {secondsLeft > 0 ? `Resend in ${secondsLeft}s` : (resendMutation.isPending ? "Resending..." : "Resend OTP")}
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 text-center">
+              Didn’t receive the email? Check your spam folder or try resending.
+            </p>
+          </form>
+        )}
+      </div>
     </div>
-  </section>
-);
+  );
+};
+/* ------------------- end Modal ------------------- */
+
+/* ------------------ Sections (yours) -------------- */
+const HeroSection = ({ title, description, imageSrc, onSignupClick, buttonText, showProfileBtn, loadingAgent, isApprovalPending }) => {
+  const navigate = useNavigate();
+  const onViewProfile = () => {
+    navigate("/user/profile", { state: { tab: "agent" } });
+  };
+  return (
+    <section
+      className="relative h-[100vh] md:h-[100vh] bg-cover bg-center"
+      style={{ backgroundImage: `url(${imageSrc})` }}
+    >
+      <div className="absolute inset-0 bg-black opacity-50" />
+      <div className="relative content mx-auto h-full flex flex-col justify-center pt-20 items-start px-4">
+        <h1 className="text-mobile/h3 md:text-desktop/h2 text-primary-white max-w-2xl font-bold">{title}</h1>
+        <p className="mt-4 text-mobile/body/2 md:text-desktop/body/2/regular text-primary-white max-w-2xl">{description}</p>
+
+
+
+        {!loadingAgent && showProfileBtn ? (
+          <button
+            onClick={onViewProfile}
+            className="mt-8 bg-primary-white text-primary-yellow px-8 py-3 rounded-lg font-bold hover:bg-opacity-90 transition duration-300 flex items-center"
+          >
+            View My Profile
+          </button>
+
+        ) : isApprovalPending ? (
+          <button
+            disabled
+            title="Your account is verified but pending approval"
+            className="mt-8 bg-primary-white/70 text-primary-yellow/70 px-8 py-3 rounded-lg font-bold cursor-not-allowed transition duration-300 flex items-center"
+          >
+            Approval Pending
+          </button>
+        ) : (
+          <button
+            onClick={onSignupClick}
+            className="mt-8 bg-primary-white text-primary-yellow px-8 py-3 rounded-lg font-bold hover:bg-opacity-90 transition duration-300 flex items-center"
+          >
+            {buttonText} <ArrowForwardIcon className="ml-2" />
+          </button>
+        )
+        }
+      </div>
+    </section>
+  );
+};
 
 const BenefitsSection = ({ benefits = [], align = "left" }) => {
   const isCenter = align === "center";
@@ -29,37 +323,33 @@ const BenefitsSection = ({ benefits = [], align = "left" }) => {
   const itemAlign = isCenter ? "items-center" : "items-start";
 
   return (
-    <section className="py-16">
+    <section className="md:py-16 py-10">
       <div className="content max-w-screen-xl mx-auto px-4">
         <h2 className="text-mobile/h3 md:text-desktop/h3 text-gray-700 font-bold mb-12 text-start">
           Why Partner With Us?
         </h2>
 
-        {/* auto-rows-fr + h-full on cards => equal heights */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
           {benefits.map((item, index) => (
             <article
               key={index}
               className={`h-[93%] bg-white p-6 rounded-xl text-gray-700 border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex flex-col ${itemAlign} ${textAlign}`}
-
             >
-              {/* fixed-size icon box keeps all icons aligned */}
-              <div className={`${isCenter ? "mx-auto" : ""} mb-4  flex items-center justify-center`}>
+              <div className={`${isCenter ? "mx-auto" : ""} mb-4 flex items-center justify-center`}>
                 {item?.icon ? (
                   <img
                     src={item.icon}
                     alt={item.title ? `${item.title} icon` : "Benefit icon"}
-                    className="block  w-[4rem] object-contain"
+                    className="block w-[4rem] object-contain"
                     loading="lazy"
                   />
                 ) : null}
               </div>
 
               <h3 className="text-lg font-bold mb-2 text-gray-900">{item.title}</h3>
-              <p className="text-mobile/body/2  pb-4 md:text-desktop/body/1 text-primary-gray leading-relaxed">
+              <p className="text-mobile/body/2 pb-4 md:text-desktop/body/1 text-primary-gray leading-relaxed">
                 {item.desc}
               </p>
-              {/* nothing below; flex + auto-rows-fr keeps heights consistent */}
             </article>
           ))}
         </div>
@@ -69,17 +359,16 @@ const BenefitsSection = ({ benefits = [], align = "left" }) => {
 };
 
 const HowItWorksSection = ({ steps }) => (
-  <section className="py-16 bg-gray-50 ">
+  <section className="md:py-16 py-10 px-2 bg-gray-50">
     <div className="content mx-auto">
       <h2 className="text-mobile/h3 md:text-desktop/h3 text-gray-700 text-start font-bold mb-12">
         How It Works
       </h2>
 
-      <div className="flex flex-col md:flex-row justify-between items-start gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
         {steps.map((item, index) => (
-          <div key={index} className="flex flex-col items-start text-start w-full md:w-1/5">
+          <div key={index} className="flex flex-col items-start text-start">
             <div className="bg-primary-green text-white rounded-full w-24 h-24 flex items-center justify-center mb-4">
-
               <img src={item.icon} alt="" className="w-16 h-16" />
             </div>
             <h3 className="text-lg font-bold text-gray-700 mb-2">{item.title}</h3>
@@ -87,56 +376,22 @@ const HowItWorksSection = ({ steps }) => (
           </div>
         ))}
       </div>
+
     </div>
   </section>
 );
 
-
-
+/* ------------- Legacy enquiry form (unchanged) ------------- */
 const AgentRegistrationForm = ({ page = 'Agent Registration', gid = [0] }) => {
   const { mutate, isLoading } = useEnquiryForm();
-
   const formFields = [
-    {
-      name: "agentName",
-      placeholder: "Agent Name (Full Name)",
-      required: true,
-    },
-    {
-      name: "companyName",
-      placeholder: "Company Name",
-      required: true,
-    },
-    {
-      name: "phone",
-      type: "tel",
-      placeholder: "Phone Number",
-      required: true,
-    },
-    {
-      name: "email",
-      type: "email",
-      placeholder: "Email ID",
-      required: true,
-    },
-    {
-      name: "cityState",
-      placeholder: "City / State",
-      required: true,
-    },
-    {
-      name: "gstDetails",
-      placeholder: "Company GST Details",
-      required: true,
-    },
-    {
-      name: "requirements",
-      type: "textarea",
-      placeholder: "Your Requirements / Query",
-      rows: 4,
-      colSpan: "md:col-span-2",
-      required: true,
-    },
+    { name: "agentName", placeholder: "Agent Name (Full Name)", required: true },
+    { name: "companyName", placeholder: "Company Name", required: true },
+    { name: "phone", type: "tel", placeholder: "Phone Number", required: true },
+    { name: "email", type: "email", placeholder: "Email ID", required: true },
+    { name: "cityState", placeholder: "City / State", required: true },
+    { name: "gstDetails", placeholder: "Company GST Details", required: true },
+    { name: "requirements", type: "textarea", placeholder: "Your Requirements / Query", rows: 4, colSpan: "md:col-span-2", required: true },
   ];
 
   const handleSubmit = (formData, callbacks) => {
@@ -163,17 +418,32 @@ const AgentRegistrationForm = ({ page = 'Agent Registration', gid = [0] }) => {
     />
   );
 };
-
-
-
+/* ----------------- end legacy form ---------------- */
 
 const TravelAgent = () => {
+  const [openSignup, setOpenSignup] = useState(false);
+
+  const userInfo = localStorage.getItem('user_email') || ""; // ensure string
+  const { data: agentRec, isLoading: loadingAgent } = useGetAgentByEmail(userInfo);
+  const isAgent = !!agentRec && agentRec?.role === 'agent';
+  const isApproved = agentRec?.approved ?? false;
+  const isVerified = agentRec?.isVerified ?? false;
+
+     const { data: metas } = useGetMetas();
+
+    const travelagent = Array.isArray(metas)
+        ? metas.find(meta => meta.page === "travel-agent")
+        : null; 
+
+  const showProfileBtn = !loadingAgent && isAgent && isApproved;
+  const isApprovalPending = !loadingAgent && isAgent && isVerified && !isApproved;
+
+
   const heroContent = {
     title: "Earn More & Book Hassle-Free",
     description: "Join our travel agent network & enjoy high commissions, easy bookings, and exclusive perks.",
     imageSrc: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    buttonText: "Sign Up for Free",
-    buttonLink: "#form"
+    buttonText: "Login Or Sign Up "
   };
 
   const benefits = [
@@ -183,11 +453,7 @@ const TravelAgent = () => {
     { icon: '/images/t4.svg', title: 'Exclusive Gifts', desc: 'Enjoy surprise rewards and special gifts after every 25 nights booked through your account.' },
     { icon: '/images/t5.svg', title: 'Dedicated Support', desc: 'Quick resolutions and smooth coordination through our single-window partner support system.' },
     { icon: '/images/t6.svg', title: 'Marketing Materials', desc: 'Access to ready-to-use banners, booking kits, brochures, and other promotional content.' },
-    {
-      icon: '/images/t7.svg',
-      title: 'Award-Winning Hospitality',
-      desc: 'Recognized for excellence in service, cleanliness, dining, and guest satisfaction.'
-    }
+    { icon: '/images/t7.svg', title: 'Award-Winning Hospitality', desc: 'Recognized for excellence in service, cleanliness, dining, and guest satisfaction.' }
   ];
 
   const steps = [
@@ -198,21 +464,35 @@ const TravelAgent = () => {
     { icon: '/images/5a.svg', title: 'Unlock Exclusive Gifts', desc: 'Get surprise rewards like free meals, room upgrades, or special discounts — gifted after every 25 nights booked!' }
   ];
 
-
-
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
     <div>
-      <HeroSection {...heroContent} />
+
+      <Helmet>
+        <title>{travelagent?.metaTitle || 'Tour & Travel - Sunstar Hotels'}</title>
+        <meta name="description" content={travelagent?.metaDescription || ''} />
+        <meta name="keywords" content={travelagent?.metaKeywords?.join(', ') || ''} />
+      </Helmet>
+      <HeroSection
+        {...heroContent}
+        onSignupClick={() => setOpenSignup(true)}
+        showProfileBtn={showProfileBtn}
+        loadingAgent={loadingAgent}
+        isApprovalPending={isApprovalPending}
+
+      />
+
       <BenefitsSection benefits={benefits} />
       <HowItWorksSection steps={steps} />
+
+      {/* Legacy long form (keep or remove) */}
       <AgentRegistrationForm />
-      {/* <TestimonialsSection testimonials={testimonials} /> */}
+
       <TestimonialSection page="travel-agent" head="What Our Partners Say" />
+
+      {/* Modal */}
+      <AgentSignupModal open={openSignup} onClose={() => setOpenSignup(false)} />
     </div>
   );
 };

@@ -33,7 +33,7 @@ const AdvantagesSection = () => {
           You can rely on our experience and the quality of services we provide. Here are other reasons to book tours at Treat Holidays.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, idx) => (
             <div key={idx} className="flex flex-col items-center">
               <div className=" bg-white rounded-full p-8 flex items-center justify-center mb-4 shadow-md">

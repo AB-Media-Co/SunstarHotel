@@ -344,7 +344,7 @@ const EventandConference = () => {
             {/* Why Choose Us Features */}
             <section className="pb-12 md:px-4">
                 <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold content text-start">Making Your Celebrations Seamless</h2>
-                <div className="mt-8 grid grid-cols-1 content sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="mt-8 grid grid-cols-1 content sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {whyChooseUsFeatures.map((feature, index) => (
                         <div key={index} className="bg-primary-white p-6 text-center rounded-lg shadow-lg hover:scale-105 transition-all duration-300">
                             <div className="mb-4">

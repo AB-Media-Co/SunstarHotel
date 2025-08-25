@@ -5,6 +5,7 @@ import Section1 from './Components/Section1';
 import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
 import { useGetMetas } from '../../ApiHooks/useMetaHook';
 import { lazy, Suspense } from 'react';
+import Partnerlogos from './Components/Partnerlogos';
 
 const Section2Hotel = lazy(() => import('./Components/Section2Hotel'));
 const Section3 = lazy(() => import('./Components/Section3'));
@@ -16,8 +17,8 @@ const Home = () => {
   const { data: metas } = useGetMetas();
 
   const homeMeta = Array.isArray(metas)
-  ? metas.find(meta => meta.page === "home")
-  : null;
+    ? metas.find(meta => meta.page === "home")
+    : null;
 
   return (
     <div>
@@ -33,7 +34,7 @@ const Home = () => {
 
       <Section1 section1Data={section1Data} />
 
-     
+
 
       {/* ✅ Lazy load sections below the fold */}
       <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
@@ -48,12 +49,14 @@ const Home = () => {
         <Section4 />
       </Suspense>
 
+      <Partnerlogos />
+
       <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
         <Section5 cards={HomePageSection5cards} />
       </Suspense>
 
       <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
-        <TestimonialSection page='home'/>
+        <TestimonialSection page='home' />
       </Suspense>
     </div>
   );

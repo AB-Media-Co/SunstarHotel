@@ -29,10 +29,10 @@ const TourPackages = ({ stateName }) => {
 
 
   return (
-    <div className="min-h-screen bg-primary-green py-12 px-4">
+    <div className="min-h-screen bg-primary-green py-12">
       <div className="content mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="md:text-center mb-12">
       
           <h1 className="  text-mobile/h3 md:text-desktop/h3    text-white mb-2">{stateName.toUpperCase()} TOUR PACKAGES</h1>
           <p className="text-white/90 text-mobile/body/2 md:text-desktop/body/1 ">Explore India Tour Customize Tour Packages, Lowest</p>
@@ -52,6 +52,14 @@ const TourPackages = ({ stateName }) => {
                   alt={pkg.title}
                   className="w-full h-48 object-cover"
                 />
+                {/* Duration badge on image */}
+                <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2">
+                  <img src="/images/TourAndTravel/night.svg" alt="" className="w-4 h-4" />
+                  <span>{pkg.duration?.nights || 4}N</span>
+                  <img src="/images/TourAndTravel/day.svg" alt=""  className="w-4 h-4"/>
+                  <span>{pkg.duration?.days || 5}D</span>
+                </div>
+                
                 {pkg.topselling && (
                   <div className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                     <Star className="w-3 h-3" />
@@ -61,26 +69,27 @@ const TourPackages = ({ stateName }) => {
               </div>
 
               <div className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-bold text-lg text-gray-800 line-clamp-1">{pkg.title}</h3>
-                  <div className="flex items-center gap-1 text-primary-yellow flex-shrink-0 ml-2">
-                    <img src="/images/TourAndTravel/night.svg" alt="" className="w-5 h-5" />
-                    <span className="text-sm font-medium">{pkg.duration?.nights || 4} Nights</span>
-                    <img src="/images/TourAndTravel/day.svg" alt=""  className="w-5 h-5"/>
-                    <span className="text-sm font-medium">{pkg.duration?.days || 5} Day</span>
-                  </div>
+                {/* Full package title without truncation */}
+                <div className="mb-4">
+                  <h3 className="font-bold text-lg text-gray-800 leading-tight  flex items-start">
+                    {pkg.title}
+                  </h3>
                 </div>
 
                 {/* Highlights/Tags */}
-                <div className="flex flex-wrap h-[60px] gap-2 mb-4">
-                  {pkg.highlights?.slice(0, 4).map((highlight, index) => (
-                    <span key={index} className="px-2 py-1 h-[26px] text-xs bg-primary-green text-white rounded-full font-medium">
+                <div className="flex flex-wrap gap-2 mb-4 ">
+                  {pkg.highlights?.slice(0, 3).map((highlight, index) => (
+                    <span key={index} className="px-2 py-1 h-[26px] text-xs bg-primary-green text-white rounded-full font-medium flex items-center">
                       {highlight}
                     </span>
                   ))}
-                  {pkg.highlights?.length > 4 && (
-                    <span className="px-2 py-1 h-[26px] text-xs border border-gray-300 text-gray-600 rounded-full">
-                      +{pkg.highlights.length - 4} more
+                  {pkg.highlights?.length > 3 && (
+                    <span
+                      onClick={() => navigate(`/package-detail/${encodeURIComponent(pkg.title)}`, {
+                        state: { pkg }
+                      })}
+                      className="px-2 py-1 h-[26px] cursor-pointer text-xs border border-gray-300 text-gray-600 rounded-full flex items-center hover:bg-gray-50 transition-colors">
+                      +{pkg.highlights.length - 3} more
                     </span>
                   )}
                 </div>

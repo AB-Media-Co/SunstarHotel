@@ -132,7 +132,7 @@ const OtherPageLayout = ({
                 <img
                     src={heroImage}
                     alt={pageType}
-                    className="w-full h-[100vh] object-cover"
+                    className="w-full h-[80vh] object-center md:h-[100vh] object-cover"
                 />
                 <div className="absolute inset-0 bg-black opacity-60"></div>
                 <div className="absolute inset-0 capitalize content flex flex-col items-start justify-center text-start px-4">

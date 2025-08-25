@@ -1,90 +1,110 @@
 import { usePricing } from "../../../Context/PricingContext";
 import { useNavigate } from "react-router-dom";
-import Icon from "../../../Components/Icons";
-// import GuestsDropdown from "../../../Components/GuestsDropdown";
 import { ArrowRightAlt } from "@mui/icons-material";
-
-import {
-    differenceInCalendarDays,
-    format,
-} from "date-fns";
-
-
-
+import { differenceInCalendarDays, format } from "date-fns";
 
 export const HeaderHotel = () => {
-    const { details,  setEditAddPricing } = usePricing();
-    const getHotelDataLocal = localStorage.getItem("hotelInfo");
-    const getHotelData = JSON.parse(getHotelDataLocal);
+  const { details, setEditAddPricing } = usePricing();
+  const getHotelDataLocal = localStorage.getItem("hotelInfo");
+  const getHotelData = getHotelDataLocal ? JSON.parse(getHotelDataLocal) : null;
 
-    const checkIn = localStorage.getItem("checkInDate");
-    const checkOut = localStorage.getItem("checkOutDate");
-    console.log(getHotelData)
-    const navigate = useNavigate()
+  const checkInStr = localStorage.getItem("checkInDate");
+  const checkOutStr = localStorage.getItem("checkOutDate");
 
+  const checkInDate = checkInStr ? new Date(checkInStr) : null;
+  const checkOutDate = checkOutStr ? new Date(checkOutStr) : null;
 
-    const calculateNights = () => {
-        if (checkIn && checkOut) {
-            return (
-                <div>
-                    ({differenceInCalendarDays(new Date(checkOut), new Date(checkIn))}{" "}
-                    Nights)
-                </div>
-            );
-        }
-        return 0;
-    };
+  const navigate = useNavigate();
 
-    const handelChangeClick = () => {
-        setEditAddPricing(true);
-        localStorage.setItem("editAddPricing", true);
-        navigate(`/hotels/${details[0]?.hotelCode}`);
-    };
+  const calculateNights = () => {
+    if (checkInDate && checkOutDate) {
+      return differenceInCalendarDays(checkOutDate, checkInDate);
+    }
+    return 0;
+  };
 
-    return (
-        <div className="flex flex-col gap-4 py-6 border-b-2">
-            <div className="text-mobile/h3 text-gray-500 md:text-desktop/h3">{getHotelData?.name}</div>
-            <div className="text-mobile/small/body font-medium md:font-medium text-gray-500 md:text-desktop/body/1">{getHotelData?.location?.hotelAddress}</div>
+  const handleChangeClick = () => {
+    setEditAddPricing(true);
+    localStorage.setItem("editAddPricing", "true");
+    navigate(`/hotels/${details[0]?.hotelCode}`);
+  };
 
-            <div className="flex gap-4 flex-col">
-                <div
-                    className="flex flex-row items-center gap-4  md:gap-10 "
-                >
-                    <div className={`flex flex-col`}>
-                        <span className="font-semibold text-[14px] text-gray-500 md:text-xl">
-                            {checkIn ? format(checkIn, "dd MMM, EEEE") : "Check in"}
-                        </span>
-                        <p className="text-[9px] md:text-sm  font-medium text-gray-500">Check-in {details[0]?.checkIn || "1:00 PM"}</p>
-
-                    </div>
-                    <ArrowRightAlt className="text-yellow-500" />
-                    <div className={`flex flex-col`}>
-                        <span className="font-semibold text-[14px] text-gray-500 md:text-xl">
-                            {checkOut ? format(checkOut, "dd MMM, EEEE") : "Check-out"}
-                        </span>
-                        <p className="text-[9px] md:text-sm  font-medium text-gray-500">Check-out {details[0]?.checkOut || "11:00 AM"}</p>
-
-                    </div>
-                    {checkIn && checkOut && (
-                        <span className="flex items-center text-gray-500 justify-center font-semibold text-[10px] md:text-base rounded-full md:border border-gray-300 px-3 py-2 md:py-1">
-                            {calculateNights()}
-                        </span>
-                    )}
-                </div>
+  const DateDisplay = ({ date, label, time, isCheckOut = false }) => (
+    <div className="flex flex-col space-y-1">
+      <div className="text-sm md:text-base font-medium text-gray-600 uppercase tracking-wide">
+        {label}
+      </div>
+      <div className="text-lg md:text-xl font-semibold text-gray-900">
+        {date ? (
+          <>
+            <div className="md:hidden">
+              {format(date, "dd MMM")}
             </div>
-
-            <div className=" border-gray-200 flex items-center justify-between">
-
-                <button
-                    onClick={handelChangeClick}
-                    className="py-1 text-lg font-medium underline text-primary-yellow rounded-full transition"
-                >
-                    Change Date /Room Selection
-                </button>
+            <div className="hidden md:block">
+              {format(date, "dd MMM, EEEE")}
             </div>
+          </>
+        ) : (
+          <span className="text-gray-400">Select {label.toLowerCase()}</span>
+        )}
+      </div>
+      <div className="text-xs md:text-sm text-gray-500">
+        {time || (isCheckOut ? "11:00 AM" : "1:00 PM")}
+      </div>
+    </div>
+  );
+
+  const nights = calculateNights();
+
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-6 mt-10 shadow-sm">
+      {/* Hotel Information */}
+      <div className="mb-6">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+          {getHotelData?.name}
+        </h2>
+        <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+          {getHotelData?.location?.hotelAddress}
+        </p>
+      </div>
+
+      {/* Check-in/Check-out Section */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
+          <DateDisplay
+            date={checkInDate}
+            label="Check-in"
+            time={details[0]?.checkIn}
+          />
+
+          <div className="flex flex-col items-center mx-4">
+            <ArrowRightAlt className="text-yellow-500 text-2xl mb-1" />
+            {nights > 0 && (
+              <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs md:text-sm font-medium">
+                {nights} {nights === 1 ? 'Night' : 'Nights'}
+              </div>
+            )}
+          </div>
+
+          <DateDisplay
+            date={checkOutDate}
+            label="Check-out"
+            time={details[0]?.checkOut}
+            isCheckOut={true}
+          />
         </div>
+      </div>
 
-        // </div >
-    );
+      {/* Action Button */}
+      <div className="flex justify-start">
+        <button
+          onClick={handleChangeClick}
+          className="inline-flex items-center px-6 py-3 bg-primary-yellow hover:bg-yellow-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+        >
+          <span>Change Dates & Rooms</span>
+          <ArrowRightAlt className="ml-2 text-lg" />
+        </button>
+      </div>
+    </div>
+  );
 };
-

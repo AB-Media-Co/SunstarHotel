@@ -25,7 +25,7 @@ const HowItWorksSimple = () => {
 
   return (
   <div className="bg-[#38B6B4]">
-      <div className="py-16 px-6 text-white max-w-screen-xl mx-auto">
+      <div className="py-16 px-6 text-white content mx-auto">
         <h2 className="text-mobile/h4 md:text-desktop/h3 font-bold mb-12 text-start">
           How It Works
         </h2>

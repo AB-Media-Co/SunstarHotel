@@ -139,7 +139,7 @@ const ShineSection = () => {
                             className={`flex flex-col-reverse  items-center lg:items-start gap-6 lg:gap-16 md:justify-between  lg:flex-row ${index % 2 === 1 ? "lg:flex-row-reverse md:gap-10" : ""
                                 }`}
                         >
-                            <div className="w-full md:w-[320px] h-auto md:h-[282px] lg:w-[48%] flex flex-col gap-5 justify-center animation-on-scroll">
+                            <div className="w-full  h-auto md:mt-12 lg:mt-0 lg:w-[48%] flex flex-col gap-5 justify-center animation-on-scroll">
                                 <h3 className="lg:w-full text-mobile/h3 md:text-desktop/h3 text-primary-white">{item.title}</h3>
                                 <p className=" text-md text-mobile/body/2 whitespace-pre-line md:text-desktop/body/1 text-primary-white ">
                                     {item.description}
@@ -148,7 +148,7 @@ const ShineSection = () => {
                             <img
                                 src={item.image}
                                 alt={item.title}
-                                className="w-full md:w-[320px] h-[282px] lg:w-[48%] rounded-2xl lg:h-[350px] object-cover animation-on-scroll"
+                                className="w-full  h-[282px] lg:w-[48%] rounded-2xl lg:h-[350px] object-cover animation-on-scroll"
                             />
                         </div>
                     ))}

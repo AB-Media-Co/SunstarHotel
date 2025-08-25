@@ -227,7 +227,7 @@ const CommonSwiper = ({
         observeParents={true}
         resizeObserver={true}
       >
-        {items.map((item, index) => (
+        {items?.map((item, index) => (
           <SwiperSlide className="md:p-2 " key={index}>
             {renderItem(item, index, currentSlide === index)}
           </SwiperSlide>

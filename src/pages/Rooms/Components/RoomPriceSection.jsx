@@ -6,31 +6,23 @@ import { FlashOnRounded } from "@mui/icons-material";
 
 const RoomPriceSection = ({ roomData, hotelDetail }) => {
   const { guestDetails, selectedRooms, fetchRoomHotelDetails, sethotelData } = usePricing();
-  console.log(roomData);
   const roomQty = guestDetails?.rooms || 1;
   const [showAlert, setShowAlert] = useState(false);
-
   const navigate = useNavigate();
-
 
   const handleBooking = async () => {
     if (selectedRooms?.length > 0) {
-      navigate("/room/details")
+      navigate("/room/details");
     } else {
       await fetchRoomHotelDetails(roomData?._id, hotelDetail?.hotelCode);
-
       navigate("/room/details");
-
       localStorage.setItem("hotelData", JSON.stringify(hotelDetail));
-
-      sethotelData(hotelDetail)
+      sethotelData(hotelDetail);
     }
   };
 
-
   return (
-    <div className="content mx-auto bg-white pt-6 md:pt-8    relative ">
-
+    <div className="content mx-auto bg-white pt-6 md:pt-8 relative">
       {showAlert && (
         <div className="absolute top-16 right-4 bg-white border border-yellow-400 p-4 rounded-lg shadow-lg z-50 max-w-xs text-sm text-gray-700 animate-fadeIn">
           <p className="font-semibold text-yellow-600">Booking Limit Reached</p>
@@ -54,69 +46,61 @@ const RoomPriceSection = ({ roomData, hotelDetail }) => {
         </div>
       )}
 
-      {/* Room info */}
-      <div className="flex flex-col md:flex-row justify-between md:items-end items-start gap-4">
-
-        {/* Left - Room Name and Specs */}
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-2 items-end">
-            <h1 className="text-lg md:text-4xl font-bold text-gray-600">
+      {/* Top row */}
+      <div className="flex flex-col md:flex-row justify-between md:items-end items-start gap-4 md:gap-6">
+        {/* Left — name & specs */}
+        <div className="flex flex-col gap-2 md:gap-3 max-w-full md:max-w-[68%]">
+          <div className="flex flex-wrap items-end gap-2 md:gap-3">
+            <h1 className="text-lg md:text-2xl lg:text-4xl font-bold text-gray-600 leading-tight">
               {roomData?.RoomName}
             </h1>
-            <div className="flex flex-wrap gap-2 text-sm font-medium text-gray-500">
-              {roomData?.squareFeet && (
-                <span>{roomData.squareFeet} sq.ft area</span>
-              )}
-              {roomData?.maxGuests && (
-                <span>{roomData.maxGuests} Guests Max</span>
-              )}
-            </div>
 
+            <div className="flex flex-wrap gap-2 text-sm md:text-base font-medium text-gray-500">
+              {roomData?.squareFeet && <span className="whitespace-nowrap">{roomData.squareFeet} sq.ft area</span>}
+              {roomData?.maxGuests && <span className="whitespace-nowrap">{roomData.maxGuests} Guests Max</span>}
+            </div>
           </div>
 
-          <p className="text-xl md:text-3xl flex gap-2 items-end font-bold text-primary-green">
-            ₹ {roomData?.discountRate}
-            <span className="text-sm font-medium text-gray-500"> / night</span>
-            <span className="text-sm text-gray-500">Incl. taxes</span>
-          </p>
-
+          {/* Price line (tablet friendly) */}
+          <div className="mt-1">
+            <div className="flex items-baseline gap-2 md:gap-3">
+              <span className="text-primary-green text-xl md:text-2xl lg:text-3xl font-bold whitespace-nowrap leading-none">
+                ₹&nbsp;{Number(roomData?.discountRate ?? 0).toLocaleString("en-IN")}
+              </span>
+              <span className="text-sm md:text-base font-medium text-gray-500 whitespace-nowrap">
+                / night
+              </span>
+            </div>
+            <span className="block text-xs text-gray-500 mt-1">Incl. taxes</span>
+          </div>
         </div>
 
-        {/* Right - Pricing */}
-        <div className="flex flex-col md:items-end mt-2 md:mt-0">
-
-          {roomData?.Availability === 0 ? (<div className="flex gap-4 w-full items-center">
-
-
-
-            <p className="text-primary-green md:w-[280px] w-full text-sm  font-medium italic">
-              <FlashOnRounded className=" rotate-[20deg] font-extralight" />
-              Book directly for the lowest price
-            </p>
-            <div className="flex items-center w-[250px] md:w-auto justify-end gap-4 ">
-              <button
-                className="bg-gray-500  px-4 py-2 rounded-md text-white font-semibold text-lg"
-              >
-                Sold Out
-              </button>
+        {/* Right — CTA / status */}
+        <div className="flex flex-col md:items-end mt-2 md:mt-0 w-full md:w-auto">
+          {roomData?.Availability === 0 ? (
+            <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 w-full">
+              <p className="text-primary-green text-sm md:text-base font-medium italic">
+                <FlashOnRounded className="rotate-[20deg] mr-1 align-[-2px]" />
+                Book directly for the lowest price
+              </p>
+              <div className="flex justify-end">
+                <button className="bg-gray-500 px-4 py-2 rounded-md text-white font-semibold text-base md:text-lg w-full md:w-auto">
+                  Sold Out
+                </button>
+              </div>
             </div>
-          </div>) : (<>
-
-            <div className="flex items-center justify-end gap-4 ">
+          ) : (
+            <div className="flex justify-end">
               <button
                 onClick={handleBooking}
-                className="bg-primary-green px-4 py-2 rounded-md text-white font-semibold text-lg"
+                className="bg-primary-green px-5 md:px-6 py-2 rounded-md text-white font-semibold text-base md:text-lg w-full md:w-auto"
               >
                 Book Room
               </button>
             </div>
-          </>)}
-
-
-
+          )}
         </div>
       </div>
-
     </div>
   );
 };

@@ -171,7 +171,7 @@ const PaymentMethodContent = ({ hotelDetail, selectedPaymentMethod, handlePaymen
       <div className="flex items-center mb-8">
         <div className="w-2 h-10 bg-gradient-to-b from-teal-500 to-teal-600 rounded-full mr-4"></div>
         <div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-1">Payment Method</h2>
+          <h2 className="text-xl md:text-3xl font-bold text-gray-800 mb-1">Payment Method</h2>
           <p className="text-gray-500">Choose your preferred payment option</p>
         </div>
       </div>

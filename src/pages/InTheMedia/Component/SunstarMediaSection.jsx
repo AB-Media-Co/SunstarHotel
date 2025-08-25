@@ -45,7 +45,7 @@ const SunstarMediaSection = () => {
   
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
           {mediaItems.map((item) => (
-            <div key={item.id} className=" py-6 ">
+            <div key={item.id} className=" md:py-6 ">
               {/* Publication Name */}
               <h3 className="text-lg sm:text-xl font-bold text-primary-green mb-4">
                 {item.publication}
