@@ -70,7 +70,7 @@ const OtherPageLayout = ({
             </div>
             <div className="p-4">
                 <div className='flex justify-between'>
-                    <h3 className="text-xl font-semibold text-primary-dark-green">{venue.name}</h3>
+                    <h3 className="text-mobile/h4 md:text-desktop/h4 font-semibold text-primary-dark-green">{venue.name}</h3>
                     <div className="bg-primary-yellow text-white px-2 py-1 rounded-md flex items-center">
                         <span className="text-sm font-bold mr-1">{venue.rating}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -254,7 +254,7 @@ const OtherPageLayout = ({
                                 <div className="mb-4">
                                     <img src={feature.icon} alt="" className='w-[80px] h-[80px] mx-auto' />
                                 </div>
-                                <p className="text-lg text-center font-semibold text-primary-dark-green">{feature.title}</p>
+                                <p className="text-mobile/h4 md:text-desktop/h4 text-center font-semibold text-primary-dark-green">{feature.title}</p>
                             </div>
                         ))}
                     </div>

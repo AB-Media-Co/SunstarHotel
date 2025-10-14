@@ -22,20 +22,27 @@ const WhatWeOffering = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  // Initialize state with a default object structure
   const [offerings, setOfferings] = useState({ heading: '', offers: [] });
 
-  // Use useEffect to populate the state when offeringSection is available
   useEffect(() => {
     if (offeringSection) {
-      setOfferings(offeringSection);
+      const withLink = {
+        ...offeringSection,
+        offers: (offeringSection.offers || []).map(o => ({
+          title: o.title || '',
+          description: o.description || '',
+          image: o.image || '',
+          link: o.link || ''
+        }))
+      };
+      setOfferings(withLink);
     }
   }, [offeringSection]);
 
   const addOffering = () => {
     setOfferings((prev) => ({
       ...prev,
-      offers: [...prev.offers, { title: '', description: '', image: '' }]
+      offers: [...prev.offers, { title: '', description: '', image: '', link: '' }]
     }));
   };
 
@@ -46,15 +53,26 @@ const WhatWeOffering = () => {
     }));
   };
 
+  const isValidUrl = (url) => {
+    if (!url) return true; // empty is allowed
+    try {
+      // accept http/https only
+      const u = new URL(url);
+      return u.protocol === 'http:' || u.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  };
+
+
   const handleFieldChange = (index, field, value) => {
     setOfferings((prev) => {
-      const updatedOffers = [...prev.offers]; // Copy the offers array
-      updatedOffers[index] = { ...updatedOffers[index], [field]: value }; // Update the specific offering
-      return { ...prev, offers: updatedOffers }; // Return the updated state
+      const updatedOffers = [...prev.offers];
+      updatedOffers[index] = { ...updatedOffers[index], [field]: value };
+      return { ...prev, offers: updatedOffers };
     });
   };
 
-  // Handler to update the heading
   const handleHeadingChange = (event) => {
     setOfferings({ ...offerings, heading: event.target.value });
   };
@@ -81,7 +99,6 @@ const WhatWeOffering = () => {
       if (updateOfferingSection) {
         const updatedData = await updateOfferingSection({ whatWeOffers: offerings });
         setSuccess('Offerings updated successfully!');
-        // Optionally update local state with the returned data.
         setOfferings(updatedData.whatWeOffers);
       } else {
         setSuccess('Offerings updated successfully! (dummy)');
@@ -94,7 +111,6 @@ const WhatWeOffering = () => {
     }
   };
 
-  // Handlers for modal open/close
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -155,6 +171,22 @@ const WhatWeOffering = () => {
                   onChange={(e) => handleFieldChange(index, 'description', e.target.value)}
                   helperText={`${offering.description.trim().split(/\s+/).length}/60 words`}
                   error={offering.description.trim().split(/\s+/).length > 60}
+                />
+
+                <TextField
+                  label="Link (optional)"
+                  placeholder="https://example.com/your-service"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={offering.link || ''}
+                  onChange={(e) => handleFieldChange(index, 'link', e.target.value)}
+                  // error={offering.link && !isValidUrl(offering.link)}
+                  // helperText={
+                  //   offering.link && !isValidUrl(offering.link)
+                  //     ? 'Please enter a valid URL (http or https)'
+                  //     : 'Add a CTA or details URL'
+                  // }
                 />
 
                 {/* Image preview */}

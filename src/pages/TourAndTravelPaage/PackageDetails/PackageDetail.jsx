@@ -12,14 +12,12 @@ import { Helmet } from 'react-helmet';
 
 const PackageDetail = () => {
     const { state } = useLocation();
-    const pkg = state?.pkg; // Navigation से मिला data
+    const pkg = state?.pkg; 
 
-    // API call with optimizations
     const { data: packageDetails, isLoading, isError, error } = usePackageById(
         pkg?._id,
         {
             enabled: !!pkg?._id,
-            // अगर navigation से data है तो initial data के रूप में use करें
             initialData: pkg,
             staleTime: 5 * 60 * 1000, // 5 minutes
             cacheTime: 10 * 60 * 1000, // 10 minutes
@@ -27,15 +25,6 @@ const PackageDetail = () => {
     );
 
     const { setIsNavColor } = usePricing();
-
-    // Early return अगर कोई data नहीं है
-    if (!pkg && !packageDetails && !isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-xl text-gray-600">Package not found</div>
-            </div>
-        );
-    }
 
     useEffect(() => {
         setIsNavColor(true);
@@ -48,7 +37,16 @@ const PackageDetail = () => {
         window.scrollTo(0, 0);
     }, []);
 
-    // केवल तभी loading show करें जब कोई initial data नहीं है
+
+    if (!pkg && !packageDetails && !isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-xl text-gray-600">Package not found</div>
+            </div>
+        );
+    }
+
+
     if (isLoading && !pkg) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -65,7 +63,6 @@ const PackageDetail = () => {
         )
     }
 
-    // पहले updated data use करें, अगर नहीं मिला तो navigation data use करें
     const displayData = packageDetails || pkg;
     console.log(displayData)
     return (

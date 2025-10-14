@@ -14,7 +14,6 @@ import ImageUpload from '../../Components/ImageUpload';
 import toast from 'react-hot-toast';
 import { uploadImagesAPIV2 } from '../../../ApiHooks/useHotelHook2';
 
-
 const TourAndTravel = () => {
   const { data: states = [] } = useGetStates();
   const { data: packages = [] } = usePackages();
@@ -26,23 +25,25 @@ const TourAndTravel = () => {
   const deleteState = useDeleteState();
 
   const [stateForm, setStateForm] = useState({ name: '', image: '' });
-  
+
   const [newHighlight, setNewHighlight] = useState('');
   const [newInclusion, setNewInclusion] = useState('');
   const [newExclusion, setNewExclusion] = useState('');
   const [newItineraryDay, setNewItineraryDay] = useState('');
   const [newItineraryTitle, setNewItineraryTitle] = useState('');
   const [newItineraryDetails, setNewItineraryDetails] = useState('');
-  const [isUploadingImage, setUploadingImage] = useState(false);
+  const [isUploadingImage, setUploadingImage] = useState(false); // for state image
+  const [isUploadingMain, setUploadingMain] = useState(false);   // ✅ for main image (packages)
   const [activeTab, setActiveTab] = useState('states');
   const [images, setImages] = useState([]);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);         // for multiple images
 
   const [packageForm, setPackageForm] = useState({
     _id: undefined,
     stateId: '',
     title: '',
-    images:images,
+    image: '',            // ✅ NEW
+    images: images,
     duration: { nights: '', days: '' },
     price: '',
     highlights: [],
@@ -52,6 +53,7 @@ const TourAndTravel = () => {
     itinerary: [],
     topSelling: false,
   });
+
   const handleStateChange = (key, value) => {
     setStateForm((prev) => ({ ...prev, [key]: value }));
   };
@@ -67,6 +69,14 @@ const TourAndTravel = () => {
       setPackageForm((prev) => ({ ...prev, topSelling: !prev.topSelling }));
     } else if (key === 'images') {
       setPackageForm((prev) => ({ ...prev, images: value }));
+    } else if (key === 'image') {
+      // ✅ keep API image and also make it first in images array (without duplicate)
+      setPackageForm((prev) => {
+        const list = Array.isArray(prev.images) ? prev.images : [];
+        const withoutDup = list.filter((u) => u !== value);
+        const updated = value ? [value, ...withoutDup] : withoutDup;
+        return { ...prev, image: value, images: updated };
+      });
     } else {
       setPackageForm((prev) => ({ ...prev, [key]: value }));
     }
@@ -78,6 +88,7 @@ const TourAndTravel = () => {
       _id: undefined,
       stateId: '',
       title: '',
+      image: '',     // ✅ reset
       images: [],
       duration: { nights: '', days: '' },
       price: '',
@@ -92,8 +103,12 @@ const TourAndTravel = () => {
   };
 
   const handleCreateOrUpdatePackage = () => {
-    if (!packageForm.stateId || !packageForm.title || !packageForm.images) {
-      alert('Please fill in all required fields (State, Title, and Image)');
+    if (!packageForm.stateId || !packageForm.title) {
+      alert('Please fill in required fields (State and Title)');
+      return;
+    }
+    if (!packageForm.image) {
+      alert('Please upload the Main Image');
       return;
     }
     if (packageForm._id) {
@@ -103,19 +118,21 @@ const TourAndTravel = () => {
     }
   };
 
+
   const handleEditPackage = (pkg) => {
-    console.log(pkg)
-    setPackageForm(pkg);
+    const main = pkg.image || (Array.isArray(pkg.images) && pkg.images[0]) || '';
+    setPackageForm({ ...pkg, image: main });
+    setImages(pkg.images || []);
     setActiveTab('packages');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
 
   const handleDeletePackage = (id) => {
     if (window.confirm('Are you sure you want to delete this package?')) {
       deletePackage.mutate(id);
     }
   };
-
 
   const handleImageUpload = async (selectedFiles) => {
     if (selectedFiles.length === 0) {
@@ -130,7 +147,7 @@ const TourAndTravel = () => {
       setImages((prev) => [...prev, ...newImageUrls]);
       setPackageForm((prev) => ({
         ...prev,
-        images: [...prev.images, ...newImageUrls],
+        images: [...(prev.images || []), ...newImageUrls],
       }));
       toast.success("Images uploaded successfully!");
     } catch (error) {
@@ -141,52 +158,32 @@ const TourAndTravel = () => {
   };
 
   const handleRemoveImageUrl = (url) => {
-    setPackageForm(prev => ({
-      ...prev,
-      images: prev.images?.filter(img => img !== url)
-      ,
-    }));
+    setPackageForm(prev => {
+      const newImages = (prev.images || []).filter(img => img !== url);
+      const newMain = prev.image === url ? (newImages[0] || '') : prev.image;
+      return { ...prev, images: newImages, image: newMain };
+    });
   };
-
 
 
   const handleAddItinerary = () => {
     if (!newItineraryDay || !newItineraryTitle || !newItineraryDetails) return;
-
-    const newItem = {
-      day: newItineraryDay,
-      title: newItineraryTitle,
-      details: newItineraryDetails,
-    };
-
-    setPackageForm(prev => ({
-      ...prev,
-      itinerary: [...prev.itinerary, newItem],
-    }));
-
-    // Reset fields
-    setNewItineraryDay('');
-    setNewItineraryTitle('');
-    setNewItineraryDetails('');
+    const newItem = { day: newItineraryDay, title: newItineraryTitle, details: newItineraryDetails };
+    setPackageForm(prev => ({ ...prev, itinerary: [...prev.itinerary, newItem] }));
+    setNewItineraryDay(''); setNewItineraryTitle(''); setNewItineraryDetails('');
   };
 
   const handleRemoveItinerary = (index) => {
-    setPackageForm(prev => ({
-      ...prev,
-      itinerary: prev.itinerary.filter((_, i) => i !== index)
-    }));
+    setPackageForm(prev => ({ ...prev, itinerary: prev.itinerary.filter((_, i) => i !== index) }));
   };
 
-
-  const resetStateForm = () =>
-    setStateForm({ _id: '', name: '', image: '' });
+  const resetStateForm = () => setStateForm({ _id: '', name: '', image: '' });
 
   const handleCreateOrUpdateState = () => {
     if (!stateForm.name || !stateForm.image) {
       alert('Please fill in State Name and Image');
       return;
     }
-
     if (stateForm._id) {
       updateState.mutate(stateForm, { onSuccess: resetStateForm });
     } else {
@@ -204,8 +201,6 @@ const TourAndTravel = () => {
       deleteState.mutate(id);
     }
   };
-
-
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-gray-50 min-h-screen">
@@ -356,6 +351,24 @@ const TourAndTravel = () => {
                 onChange={(e) => handlePackageChange('title', e.target.value)}
               />
             </div>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Upload Main Image *</label>
+            <ImageUpload
+              feature={{ image: packageForm.image || '' }}     // ✅ API field name
+              handleFeatureChange={(field, value) => {
+                if (field === 'image') handlePackageChange('image', value);
+              }}
+              setImageUpload={setUploadingMain}
+              index={101}
+            />
+            {packageForm.image && (
+              <div className="mt-2">
+                <img src={packageForm.image} alt="Main preview" className="w-28 h-20 object-cover rounded border" />
+              </div>
+            )}
+
           </div>
 
           <div className="mb-6">

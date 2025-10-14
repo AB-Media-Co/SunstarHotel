@@ -11,7 +11,7 @@ const ShineSection = () => {
         // Select all the progress paths
         const progressPaths = document.querySelectorAll(".progress-path");
         const timelineFill = document.querySelector(".timeline-fill");
-
+ 
         // GSAP timeline for sequential circle animation
         const timeline = gsap.timeline({
             scrollTrigger: {
@@ -136,12 +136,12 @@ const ShineSection = () => {
                     {shineSection?.features?.map((item, index) => (
                         <div
                             key={index}
-                            className={`flex flex-col-reverse  items-center lg:items-start gap-6 lg:gap-16 md:justify-between  lg:flex-row ${index % 2 === 1 ? "lg:flex-row-reverse md:gap-10" : ""
+                            className={`flex flex-col-reverse  items-center  gap-6 lg:gap-16 md:justify-between  lg:flex-row ${index % 2 === 1 ? "lg:flex-row-reverse md:gap-10" : ""
                                 }`}
                         >
                             <div className="w-full  h-auto md:mt-12 lg:mt-0 lg:w-[48%] flex flex-col gap-5 justify-center animation-on-scroll">
-                                <h3 className="lg:w-full text-mobile/h3 md:text-desktop/h3 text-primary-white">{item.title}</h3>
-                                <p className=" text-md text-mobile/body/2 whitespace-pre-line md:text-desktop/body/1 text-primary-white ">
+                                <h3 className="text-mobile/h4 md:text-desktop/h4 text-primary-white">{item.title}</h3>
+                                <p className="text-mobile/body/2 md:text-desktop/body/1 text-primary-white ">
                                     {item.description}
                                 </p>
                             </div>

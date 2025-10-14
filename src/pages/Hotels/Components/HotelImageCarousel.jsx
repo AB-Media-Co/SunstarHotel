@@ -256,8 +256,8 @@ const HotelImageCarousel = ({ data }) => {
               onClick={() => setShowGallery(false)}
               aria-label="Close gallery"
             >
-              <ArrowBackIosNew className="h-7 w-7 md:h-8 md:w-8" />
-              <span className="text-white font-bold text-2xl md:text-4xl">Sunstar Hotels</span>
+              <ArrowBackIosNew className="h-7 w-7 md:h-8 md:w-8 text-white" />
+              <span className="text-white font-bold text-2xl md:text-4xl">Back to the Hotel</span>
             </div>
 
             {/* Body */}

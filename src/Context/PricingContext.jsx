@@ -45,7 +45,7 @@ export const PricingProvider = ({ children }) => {
   const [finalPrice, setFinalPrice] = useState(0);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [someOneElse, setSomeoneElse] = useState(false);
-  const [guestData,setGuestData]=useState([])
+  const [guestData, setGuestData] = useState([])
 
   const [guestDetails, setGuestDetails] = useState(() => {
     const storedGuestDetails = localStorage.getItem("guestDetails");
@@ -55,7 +55,6 @@ export const PricingProvider = ({ children }) => {
   const [isHotelModalOpen, setIsHotelModalOpen] = useState(false);
   const [navColor, setIsNavColor] = useState(false);
   const [dayUseRoom, setDayUseRoom] = useState(false);
-  console.log("hii",dayUseRoom)
 
 
   // Functions to control the Hotel Modal
@@ -75,6 +74,7 @@ export const PricingProvider = ({ children }) => {
     const daysFromStorage = localStorage.getItem("days");
     const days = daysFromStorage ? parseInt(daysFromStorage, 10) : 1;
 
+    // Base sum of other charges
     const sumOtherCharges = selectedOtherCharges.reduce((acc, charge) => {
       const amount = charge.rate?.amount || 0;
       const period = charge.rate?.period?.toLowerCase();
@@ -85,8 +85,27 @@ export const PricingProvider = ({ children }) => {
       return acc + amount;
     }, 0);
 
-    setTotalOtherCharges(sumOtherCharges);
-  }, [selectedOtherCharges]);
+    // ✅ Room total (base tariff)
+    const roomTotal = selectedRooms.reduce(
+      (acc, room) => acc + room.price * nights,
+      0
+    );
+
+    // ✅ GST Slab logic
+    let gstRate = 0;
+    if (roomTotal >= 1000 && roomTotal <= 7500) {
+      gstRate = 0.05;
+    } else if (roomTotal > 7500) {
+      gstRate = 0.18;
+    }
+
+    // ✅ Apply GST on roomTotal only (not on other charges, unless needed)
+    const gstAmount = roomTotal * gstRate;
+
+    // ✅ Final total other charges = existing charges + GST
+    setTotalOtherCharges(sumOtherCharges + gstAmount);
+  }, [selectedOtherCharges, selectedRooms, nights]);
+
 
   useEffect(() => {
     const roomTotal = selectedRooms.reduce(
@@ -144,6 +163,7 @@ export const PricingProvider = ({ children }) => {
           discountRate: response.data.room.discountRate,
           maxGuests: response.data.room.maxGuests,
           roomrateunkid: response?.data?.room?.roomrateunkid,
+          roomImage: response?.data?.room?.RoomImage
         },
       };
 
@@ -226,7 +246,7 @@ export const PricingProvider = ({ children }) => {
         navColor, setIsNavColor,
         someOneElse,
         setSomeoneElse,
-        guestData,setGuestData,
+        guestData, setGuestData,
         dayUseRoom, setDayUseRoom
       }}
     >

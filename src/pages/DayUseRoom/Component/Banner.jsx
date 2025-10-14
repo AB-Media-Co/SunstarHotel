@@ -32,7 +32,7 @@ const Banner = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
-                    className="text-primary-white text-mobile/body/2 md:text-desktop/body/1 md:text-lg  font-normal drop-shadow-xl mt-2 sm:mt-4 max-w-full md:max-w-[700px] mx-auto md:mx-0"
+                    className="text-primary-white text-mobile/body/2 md:text-desktop/body/1  font-normal drop-shadow-xl mt-2 sm:mt-4 max-w-full md:max-w-[700px] mx-auto md:mx-0"
                 >
                     <span className="hidden sm:inline">Need a refreshing break in the middle of the day? Hotel Sunstar Group's Day Use Rooms offer the perfect escape—whether you're a traveler on a layover, a professional seeking a productive workspace, or simply looking for a few hours of relaxation.</span>
                     <span className="inline sm:hidden">Perfect for layovers, workspace needs, or a few hours of relaxation. Enjoy our day rooms for a refreshing break.</span>

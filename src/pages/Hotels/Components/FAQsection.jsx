@@ -31,7 +31,7 @@ const FAQSection = ({ faqs }) => {
         >
 
             <div className="flex items-start w-full justify-between">
-                <p className="font-medium text-lg text-gray-800">{faq.question}</p>
+                <p className="font-medium text-mobile/h5 md:text-desktop/h5/medium text-gray-800">{faq.question}</p>
                 <div className="mt-1 text-yellow-500">
                     {activeIndex === index ? <RemoveIcon /> : <AddIcon />}
                 </div>
@@ -46,7 +46,7 @@ const FAQSection = ({ faqs }) => {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="overflow-hidden"
                     >
-                        <div className=" py-3 text-sm text-gray-600">
+                        <div className=" py-3 text-mobile/body/2 md:text-desktop/body/1  text-gray-600">
                             {faq.answer}
                         </div>
                     </motion.div>

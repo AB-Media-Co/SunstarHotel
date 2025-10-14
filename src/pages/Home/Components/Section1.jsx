@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AllHotelCard from "../../../Components/AllHotelCard";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 import { motion } from "framer-motion";
-// import CityPagesOptions from "../../Citypage/CityPagesOptions";
+import CityPagesOptions from "../../Citypage/CityPagesOptions";
 
 const useProgressiveImage = (src, placeholderSrc) => {
   const [sourceLoaded, setSourceLoaded] = useState(placeholderSrc);

@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { usePricing } from "../../../Context/PricingContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { BadgePercent } from "lucide-react";
 
 
 
@@ -18,6 +19,9 @@ export const ReservationSummarySidebar = ({
     setNights,
   } = usePricing();
 
+  const [isSticky, setIsSticky] = useState(false);
+
+
   useEffect(() => {
     if (days) {
       setNights(days);
@@ -29,20 +33,37 @@ export const ReservationSummarySidebar = ({
   const discount = baseFinalPrice - finalPrice;
   const hasDiscount = discount > 0;
 
-  return (
-    <div className="p-6 bg-white sticky top-4 border border-gray-200 rounded-xl shadow-md w-full md:w-96 mx-auto font-sans">
+  useEffect(() => {
+    const handleScroll = () => {
+      // Jab 100px se zyada scroll ho tab sticky activate ho
+      if (window.scrollY > 100) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    };
 
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div
+      className={`p-6 bg-white border border-gray-200 rounded-xl shadow-md w-full ${isSticky ? 'md:w-[384px]' : {}}  md:w-96 mx-auto font-sans transition-all duration-300 ${isSticky ? 'xl:fixed xl:top-4  xl:z-50' : 'relative'
+        }`}
+   
+    >
       {/* Header */}
       <div className="flex items-center pb-4 justify-between">
         <h2 className="text-xl md:text-2xl font-bold text-gray-800">Reservation Summary</h2>
-      
+
       </div>
 
 
       {/* Price Summary */}
       <div>
         <h3 className="text-base font-semibold text-gray-800 mb-3 flex items-center">
-      
+
           Your Price Summary
         </h3>
 
@@ -60,14 +81,14 @@ export const ReservationSummarySidebar = ({
           ))}
         </div>
 
-        <div className="flex justify-between text-sm text-gray-700 pb-2 border-b border-gray-200">
-          <p>Other Charges</p>
-          <p className="font-medium text-gray-800">₹ {totalOtherCharges}</p>
+        <div className="flex justify-between text-sm font-medium text-black/40 pb-2 border-b border-gray-200">
+          <p>Taxes & Other Charges</p>
+          <p className="font-medium ">₹ {totalOtherCharges}</p>
         </div>
       </div>
 
       {/* Final Pricing */}
-      <div className="pt-3 bg-gray-50 p-4 rounded-lg space-y-2">
+      <div className="pt-3 bg-gray-50 p-4 mt-5 rounded-lg space-y-2">
         <div className="flex justify-between text-sm text-gray-700">
           <p>Original Amount</p>
           <p className="font-medium">₹ {baseFinalPrice}</p>
@@ -76,7 +97,7 @@ export const ReservationSummarySidebar = ({
         {hasDiscount && (
           <div className="flex justify-between text-sm text-gray-700">
             <p>Discount</p>
-            <p className="font-medium text-green-600">- ₹ {discount}</p>
+            <p className="font-medium text-green-600">- ₹ {discount?.toFixed(2)}</p>
           </div>
         )}
 
@@ -86,14 +107,19 @@ export const ReservationSummarySidebar = ({
         </div>
       </div>
 
+      {/* <div className="flex items-center my-3 justify-center text-orange-400 font-semibold text-sm ">
+        <BadgePercent className="mr-2 text-base" />
+        <span>You are saving  by booking directly</span>
+      </div> */}
+
       {/* CTA Button */}
       {showButton && (
         <a href="#payment-method" className="block w-full">
           <button
             disabled={isPaymentVisible}
             className={`mt-6 w-full py-3.5 font-bold text-white rounded-lg transition-all duration-300 ${isPaymentVisible
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-primary-green hover:bg-primary-dark-green"
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-primary-green hover:bg-primary-dark-green"
               }`}
           >
             See Payment Options

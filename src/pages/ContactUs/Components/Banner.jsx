@@ -79,7 +79,7 @@ const Banner = () => {
         >
           <motion.a
             whileHover={{ scale: 1.05 }}
-            href="#contact"
+            href="https://wa.me/919310831646"
             className="inline-flex items-center px-6 py-3 bg-primary-white text-[#6EC4C3] font-semibold rounded-full shadow-md hover:shadow-xl transition-shadow duration-300"
           >
             <span>Contact Us</span>

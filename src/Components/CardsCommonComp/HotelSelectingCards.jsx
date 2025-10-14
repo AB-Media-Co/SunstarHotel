@@ -29,7 +29,7 @@ const HotelCard = ({ hotel, close }) => {
   const handleClick = () => {
     // navigate(`/hotels/${hotel.hotelCode}`, { replace: true });
     localStorage.setItem("hotelInfo", JSON.stringify(hotel));
-    setOpenCalender(true).then(() => {
+    setOpenCalender(true)?.then(() => {
       close()
     });
   };

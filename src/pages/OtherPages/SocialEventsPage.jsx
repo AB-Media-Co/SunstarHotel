@@ -59,19 +59,19 @@ const SocialEventsPage = () => {
         {
             name: "name",
             type: "text",
-            placeholder: "Your Name",
+            placeholder: "Name",
             colSpan: "col-span-2",
         },
         {
             name: "email",
             type: "email",
-            placeholder: "Email Address",
+            placeholder: "Email",
             colSpan: "md:col-span-1",
         },
         {
             name: "phone",
             type: "tel",
-            placeholder: "Phone Number",
+            placeholder: "Phone",
             colSpan: "md:col-span-1",
         },
         {

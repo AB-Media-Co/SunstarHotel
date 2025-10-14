@@ -33,11 +33,8 @@ const BookingDetailsPage = () => {
   const userInfo = localStorage.getItem('user_email');
   const { data: userData, } = useGetUserByEmail(userInfo);
   const [showLoginModal, setShowLoginModal] = useState(false);
-
-
   const getHotelDataLocal = localStorage.getItem("hotelInfo");
   const getHotelData = JSON.parse(getHotelDataLocal);
-
 
   const checkIn = localStorage.getItem("checkInDate");
   const checkOut = localStorage.getItem("checkOutDate");
@@ -46,7 +43,6 @@ const BookingDetailsPage = () => {
   const [isPaymentVisible, setIsPaymentVisible] = useState(false);
   const [showButton, setShowButton] = useState(true);
 
-  // Create a ref for GuestDetailsForm
   const guestFormRef = useRef();
 
   useEffect(() => {
@@ -78,7 +74,7 @@ const BookingDetailsPage = () => {
   }, [details, hotelData, hotelDetail, navigate, getHotelData]);
 
   if (!details || details.length === 0 || !hotelDetail) {
-    return null; // or a loading indicator
+    return null; 
   }
 
   return (
@@ -123,12 +119,10 @@ const BookingDetailsPage = () => {
         {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
 
       </div>
-      <div className="md:flex gap-5 content  bg-white rounded-t-3xl overflow-hidden ">
-        <div className="flex flex-col md:px-8 md:py-10 gap-8">
-
+      <div className="md:flex gap-5 content bg-white rounded-t-3xl overflow-visible relative">
+        <div className="flex-1 flex flex-col md:px-8 md:py-10 gap-8 min-w-0">
           <HeaderHotel />
           <HotelDetailsCard />
-          {/* Render GuestDetailsForm once and pass its ref */}
           <GuestDetailsForm ref={guestFormRef} setIsVerified={setIsVerified} />
           {hotelDetail.addToYourStay.length > 0 && <AddToYourStayOptions data={hotelDetail} />}
           <OfferCode hotelDetail={hotelDetail} checkIn={checkIn} verified={verified} />
@@ -142,7 +136,6 @@ const BookingDetailsPage = () => {
               isPaymentVisible={isPaymentVisible}
             />
           </div>
-          {/* Pass the guestFormRef to PaymentMethod */}
           <PaymentMethod hotelDetail={hotelDetail}
             verified={verified}
             checkIn={checkIn}
@@ -150,7 +143,7 @@ const BookingDetailsPage = () => {
           />
           <Footer ContactUsDetail={ContactUsDetail} />
         </div>
-        <div className=" md:px-8 py-10  hidden  xl:block">
+        <div className="hidden xl:block xl:w-[420px] flex-shrink-0 px-8 py-10">
           <ReservationSummarySidebar
             hotelDetail={hotelDetail}
             checkIn={checkIn}

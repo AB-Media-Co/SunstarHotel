@@ -13,7 +13,7 @@ const features = [
   {
     icon: '/images/TourAndTravel/network.svg',
     title: "Trusted Network",
-    desc: "A Trusted Network Of 7000+ Travel Agents",
+    desc: "A Trusted Network Of Travel Agents",
   },
   {
     icon: '/images/TourAndTravel/multipleoption.svg',

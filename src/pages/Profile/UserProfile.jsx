@@ -499,7 +499,7 @@ const UserProfile = () => {
               <div>
                 {/* Illustration */}
                 <div className="hidden lg:block">
-                  <img src="/images/loyalty-illustration.svg" alt="" className='mx-auto' />
+                  <img src="/images/loyalty-illustration.svg" alt="" className='mx-auto h-[180px]' />
                 </div>
 
                 {/* Account Details */}

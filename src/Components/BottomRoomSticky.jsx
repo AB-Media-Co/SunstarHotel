@@ -47,13 +47,10 @@ const BottomRoomSticky = () => {
                 {selectedRooms.length} {selectedRooms.length === 1 ? "Room" : "Rooms"}
               </h1>
             </div>
-            {
-              details.length > 1 &&
-
+       
               <p className="text-primary-gray text-xs sm:text-sm md:text-base">
                 {details[0]?.name || "Hotel"} - {details[0]?.cityLocation?.name || "Location"}
               </p>
-            }
           </div>
 
           <div className="flex gap-4 items-center">

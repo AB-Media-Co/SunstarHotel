@@ -29,13 +29,10 @@ export const AddToYourStayOptions = ({ data }) => {
   const isSelected = (id) => selectedOtherCharges.some((item) => item._id === id);
 
   return (
-    <div className="bg-white w-full mx-auto p-6">
+    <div className="bg-white w-full mx-auto">
       <div className="flex items-center mb-8">
-        <div
-          className="w-1 h-8 bg-primary-green rounded-full mr-4"
-          style={{ backgroundColor: "#058FA2" }}
-        ></div>
-        <h2 className="text-3xl font-bold text-gray-800 tracking-tight">Add To Your Stay</h2>
+     
+        <h2 className="text-mobile/h4 md:text-desktop/h4 font-bold text-gray-800 tracking-tight">Add To Your Stay</h2>
       </div>
 
       <div className="space-y-6">

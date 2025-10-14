@@ -1,10 +1,10 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
 
 const PackageInclusionBlock = ({ packageDetails }) => {
     const { inclusions = [], exclusions = [] } = packageDetails || {};
 
     return (
-        <div className="bg-[#C7EEF2] py-8 ">
+        <div className=" py-8 ">
             <div className='content'>
 
 

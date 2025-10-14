@@ -12,6 +12,7 @@ const RoomsCard = ({ room }) => {
   const { fetchRoomHotelDetails, selectedRooms, removeRoom, maxRoomSelection, setMaxRoomSelection } = usePricing();
   const [hotelData, setHotelData] = useState(null);
   const [showMaxAlert, setShowMaxAlert] = useState(false);
+
   const [isHovered, setIsHovered] = useState(false);
 
   const roomCount = selectedRooms.filter((r) => r.roomName === room.RoomName).length;
@@ -31,7 +32,8 @@ const RoomsCard = ({ room }) => {
   }, [room?.HotelCode]);
 
   const handleAddRoom = useCallback(() => {
-    const maxRooms = room?.Availability || 3; // Default to 3 if Availability is undefined
+    const maxRooms = room?.Availability > 3 ? 3 : room?.Availability;
+
     setMaxRoomSelection(maxRooms); // Set max room limit
 
     if (roomCount >= maxRooms) {
@@ -54,6 +56,8 @@ const RoomsCard = ({ room }) => {
   const handleDismissAlert = () => {
     setShowMaxAlert(false);
   };
+
+  // console.log(hotelData)
 
   return (
     <div className="bg-primary-white shadow-md rounded-lg overflow-hidden relative">
@@ -93,7 +97,7 @@ const RoomsCard = ({ room }) => {
 
         <div className="flex justify-between">
           <div className="flex items-center gap-2 text-mobile/body/2 md:text-desktop/body/1 font-semibold text-gray-600">
-            <Icon name="guests" className="w-5 h-5" />
+            <Icon name="User" className="w-5 h-5" />
             <span>{room.maxGuests || 0} Guest Max</span>
           </div>
           <div className="flex items-center gap-2">
@@ -162,10 +166,13 @@ const RoomsCard = ({ room }) => {
       {showMaxAlert && (
         <div className="absolute top-[11rem] right-1 z-10 bg-white border border-gray-300 px-4 py-5 rounded-md shadow-md w-72">
           <div className="flex items-start mb-3 gap-2">
-            <WarningIcon className="text-primary-yellow"/>
+            <WarningIcon className="text-primary-yellow" />
             <p className="text-gray-500 text-xs">
-              Booking limit reached. Maximum of {maxRoomSelection} {maxRoomSelection === 1 ? "room" : "rooms"} per reservation.
-              Please complete your current booking or adjust your selection to proceed.
+              {/* Booking limit reached. Maximum of {maxRoomSelection} {maxRoomSelection === 1 ? "room" : "rooms"} per reservation.
+              Please complete your current booking or adjust your selection to proceed. */}
+
+              For a stay of 1 night, only 3 rooms can be selected. Online bookings are limited to 30 units
+              (rooms x nights) and a maximum of 3 rooms per booking.
             </p>
           </div>
 

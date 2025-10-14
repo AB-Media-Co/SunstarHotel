@@ -11,7 +11,7 @@ const TestimonialSection = ({ backgroundImage, page = '', head = "Testimonials" 
     return (
       <motion.div
         id="reviews"
-        className="bg-primary-white rounded-[32px] border p-6 md:p-[22px] shadow-lg md:text-left flex flex-col  hover:shadow-xl transition-shadow duration-300 h-[260px]"
+        className="bg-primary-white rounded-xl border p-6 md:p-[22px] shadow-lg md:text-left flex flex-col  hover:shadow-xl transition-shadow duration-300 h-[260px]"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}

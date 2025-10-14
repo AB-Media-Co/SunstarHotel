@@ -58,7 +58,7 @@ const Rooms = () => {
         if (!checkInTime) return [];
 
         const checkInDate = parse(checkInTime, "h:mm a", new Date());
-        const maxStayTime = addHours(checkInDate, 7);
+        const maxStayTime = addHours(checkInDate, 6);
         const absoluteMaxTime = set(new Date(), { hours: 19, minutes: 0 });
         const effectiveMaxCheckout = min([maxStayTime, absoluteMaxTime]);
         const firstCheckoutTime = addHours(checkInDate, 1);
@@ -136,7 +136,7 @@ const Rooms = () => {
         <div className="bg-primary-green">
             <div className="content py-10">
                 <h1 className="text-mobile/h3 md:text-desktop/h3 font-bold text-white">Book A Day Use Hotel</h1>
-                <p className="mt-2 text-green-200">Select a date and time for your stay (max 7 hours).</p>
+                <p className="mt-2 text-green-200">Select a date and time for your stay (max 6 hours).</p>
 
                 <div className="my-6  ">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

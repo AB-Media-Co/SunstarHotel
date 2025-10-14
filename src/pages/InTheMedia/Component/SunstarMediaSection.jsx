@@ -42,24 +42,23 @@ const SunstarMediaSection = () => {
 
   return (
     <div className="w-full content ">
-  
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
-          {mediaItems.map((item) => (
-            <div key={item.id} className=" md:py-6 ">
-              {/* Publication Name */}
-              <h3 className="text-lg sm:text-xl font-bold text-primary-green mb-4">
-                {item.publication}
-              </h3>
-              
-              {/* Article Title */}
-              <p className="text-primary-gray text-sm sm:text-base leading-relaxed mb-6 sm:mb-8">
-                {item.title}
-              </p>
-              
-            
-            </div>
-          ))}
-        </div>
+
+      <div className="grid grid-cols-1  md:grid-cols-2 my-4 lg:grid-cols-3 gap-8 ">
+        {mediaItems.map((item) => (
+          <div key={item.id} className=" md:py-6 border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+            {/* Publication Name */}
+            <h3 className="text-lg sm:text-xl font-bold text-primary-green mb-4">
+              {item.publication}
+            </h3>
+
+            {/* Article Title */}
+            <p className="text-primary-gray text-sm sm:text-base leading-relaxed mb-6 sm:mb-8">
+              {item.title}
+            </p>
+
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

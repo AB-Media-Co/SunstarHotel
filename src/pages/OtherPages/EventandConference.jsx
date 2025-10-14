@@ -14,6 +14,7 @@ import { useVenues } from '../../ApiHooks/useVenues';
 import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 import TestimonialSection from '../../Components/TestimonialSection';
+import { useVenueLocations } from '../../ApiHooks/useVenueLocation';
 
 
 const EventCard = ({ image, title, description, link }) => {
@@ -45,11 +46,12 @@ const EventCard = ({ image, title, description, link }) => {
 
 
 const EventandConference = () => {
-
-
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
+    const { data: VenueLocations, error } = useVenueLocations();
+    console.log(VenueLocations)
 
     const [openIndex, setOpenIndex] = useState(null);
     const [copiedEmail, setCopiedEmail] = useState(null);
@@ -57,9 +59,7 @@ const EventandConference = () => {
     const { mutate, isLoading } = useEnquiryForm();
 
     const { data: venuesData, } = useVenues();
-
-
-    const { data: faqs } = useGetFAQsByPage('Events & Conference'); // Fetch FAQs for the selected page
+    const { data: faqs } = useGetFAQsByPage('Events & Conference');
 
 
     const toggle = (index) => {
@@ -81,7 +81,7 @@ const EventandConference = () => {
                 className="border-b flex flex-col gap-6 border-gray-300 pb-4 cursor-pointer"
             >
                 <div className="flex items-start justify-between">
-                    <p className="font-medium text-lg text-gray-800">{faq.question}</p>
+                    <p className="font-medium text-mobile/h5 md:text-desktop/h5/medium text-gray-800">{faq.question}</p>
                     <div className="mt-1 text-yellow-500">
                         {isOpen ? <Minus size={25} /> : <Plus size={25} />}
                     </div>
@@ -91,7 +91,7 @@ const EventandConference = () => {
                     className={`transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? "max-h-40 mt-2" : "max-h-0"
                         }`}
                 >
-                    <p className="text-sm text-gray-600">{faq.answer}</p>
+                    <p className="text-mobile/body/2 md:text-desktop/body/1  text-gray-600">{faq.answer}</p>
                 </div>
             </div>
         );
@@ -131,7 +131,7 @@ const EventandConference = () => {
             description: 'Every great relationship thrives on trust, which is why we obsess on being transparent.'
         },
         {
-            title: 'Personalized Event Planning & Services',
+            title: 'Personalized Event  & Services',
             icon: '/images/othericons/event.svg',
             description: 'Every great relationship thrives on trust, which is why we obsess on being transparent.'
         },
@@ -168,7 +168,7 @@ const EventandConference = () => {
             </div>
             <div className="p-4 bg-white">
                 <div className='flex justify-between '>
-                    <h3 className="text-xl font-semibold text-primary-dark-green">{venue.name}</h3>
+                    <h3 className="text-mobile/h4 md:text-desktop/h4 font-semibold text-primary-dark-green">{venue.name}</h3>
                     <div className="bg-primary-yellow text-white px-2 py-1 rounded-md flex items-center">
                         <span className="text-sm font-bold mr-1">{venue.rating}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -197,37 +197,6 @@ const EventandConference = () => {
 
 
 
-
-
-    const hotels = [
-        {
-            name: "Hotel Sunstar Grand",
-            imageUrl: "/images/HotelsImages/1.webp", // Replace with actual image URL
-            location: "7A/17, Channa Market Block 7A, WEA Karol Bagh, Delhi - 110 005",
-            mapUrl: "https://www.google.com/maps/dir//Hotel+Sunstar+Grand,+7A%2F17,+Channa+Market,+Block+7A,+WEA,+Karol+Bagh,+Delhi,+110005/@28.6457332,77.1810957,17z",
-            contacts: "+91 9310831647 ",
-            email: "booking@sunstarhospitality.com",
-        },
-        {
-            name: "Hotel Suncourt Yatri",
-            imageUrl: "/images/HotelsImages/2.webp", // Replace with actual image URL
-            location: "123/45, Suncourt Complex, Delhi - 110 005",
-            mapUrl: "https://www.google.com/maps/dir//Hotel+Suncourt+Yatri,+123%2F45,+Suncourt+Complex,+Delhi,+110005",
-            contacts: "+91 9310831647 ",
-            email: "booking@suncourtyatri.com",
-        },
-        {
-            name: "Hotel Sunstar Grand", // Repeated as requested
-            imageUrl: "/images/HotelsImages/3.webp", // Replace with actual image URL
-            location: "7A/17, Channa Market Block 7A, WEA Karol Bagh, Delhi - 110 005",
-            mapUrl: "https://www.google.com/maps/dir//Hotel+Sunstar+Grand,+7A%2F17,+Channa+Market,+Block+7A,+WEA,+Karol+Bagh,+Delhi,+110005/@28.6457332,77.1810957,17z",
-            contacts: "+91 9310831647 ",
-            email: "booking@sunstarhospitality.com",
-        }
-    ];
-
-
-
     const eventFormFields = [
         {
             name: "name",
@@ -244,7 +213,7 @@ const EventandConference = () => {
         {
             name: "phone",
             type: "tel",
-            placeholder: "Phone Number",
+            placeholder: "Phone",
             colSpan: "md:col-span-1",
         },
         {
@@ -350,8 +319,8 @@ const EventandConference = () => {
                             <div className="mb-4">
                                 <img src={feature.icon} alt={feature.title} className='w-[80px] h-[80px] m-auto' />
                             </div>
-                            <p className="text-lg font-semibold text-primary-dark-green">{feature.title}</p>
-                            <p className="text-lg pt-5 text-gray-500">{feature.description}</p>
+                            <p className="text-mobile/h4 md:text-desktop/h4  font-semibold text-primary-dark-green">{feature.title}</p>
+                            <p className="text-mobile/body/2 md:text-desktop/body/1  pt-5 text-gray-500">{feature.description}</p>
                         </div>
                     ))}
                 </div>
@@ -402,7 +371,7 @@ const EventandConference = () => {
 
 
 
-            <section id="contact" className="py-16">
+            <section id="contact" className="pb-16">
                 <CommonUseEnquiryForm
                     title="Plan Your Event or Conference"
                     subtitle="Share your event details and we’ll take care of the rest"
@@ -414,16 +383,17 @@ const EventandConference = () => {
             </section>
 
 
-            <section className="py-16 bg-gray-50">
+            {/* <section className="py-16 bg-gray-50">
                 <div className="content mx-auto md:px-4">
                     <h3 className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-900 mb-8 text-start md:text-left">
                         Venue Locations
                     </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {hotels.map((hotel, index) => (
-                            <div
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+                        {VenueLocations?.items.map((hotel, index) => (
+                            <article
                                 key={index}
-                                className="bg-white shadow-md rounded-xl overflow-hidden flex flex-col transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                                className="bg-white shadow-md rounded-xl overflow-hidden h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                                 role="article"
                                 aria-labelledby={`hotel-name-${index}`}
                             >
@@ -433,7 +403,7 @@ const EventandConference = () => {
                                         alt={`${hotel.name} venue`}
                                         className="w-full h-56 object-cover"
                                         loading="lazy"
-                                        onError={(e) => (e.target.src = '/fallback-image.jpg')} // Fallback image
+                                        onError={(e) => (e.currentTarget.src = '/fallback-image.jpg')}
                                     />
                                     {hotel.isFeatured && (
                                         <span className="absolute top-4 left-4 bg-teal-500 text-white text-xs font-semibold px-2 py-1 rounded">
@@ -441,51 +411,51 @@ const EventandConference = () => {
                                         </span>
                                     )}
                                 </div>
-                                <div className="p-6 flex flex-col flex-grow">
+
+                                <div className="p-6 flex flex-col flex-1">
                                     <h4
                                         id={`hotel-name-${index}`}
-                                        className="font-semibold text-gray-900 text-xl mb-2"
+                                        className="font-semibold text-gray-900 text-xl mb-2 leading-snug line-clamp-2 min-h-[48px]"
                                     >
                                         {hotel.name}
                                     </h4>
-                                    <p className="text-gray-600 flex items-center gap-2 mb-3">
+
+                                    <p className="text-gray-600 flex items-start gap-2 mb-3 line-clamp-2 min-h-[44px]">
                                         <LocationOnIcon aria-hidden="true" className="text-teal-600" />
-                                        <span>{hotel.location}</span>
+                                        <span>
+                                            {hotel.address?.line1}
+                                            {hotel.address?.area ? `, ${hotel.address.area}` : ''}
+                                            {hotel.address?.city ? `, ${hotel.address.city}` : ''}
+                                        </span>
                                     </p>
-                                    <a
-                                        href={hotel.mapUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-teal-600 font-semibold hover:text-teal-700 inline-flex items-center gap-1 mb-4 transition-colors duration-200"
-                                        aria-label={`View ${hotel.name} on map`}
-                                    >
-                                        View on Map
-                                        <LaunchIcon aria-hidden="true" fontSize="small" />
-                                    </a>
-                                    <div className="flex flex-col gap-2">
+
+                                    <div className="mt-auto flex flex-col gap-2">
                                         <span className="text-gray-600 text-sm flex items-center gap-2">
                                             <PhoneIcon aria-hidden="true" className="text-teal-600" />
-                                            {hotel.contacts}
+                                            {hotel.phone || '—'}
                                         </span>
+
                                         <button
                                             onClick={() => handleCopyEmail(hotel.email)}
                                             className="text-gray-600 text-sm flex items-center gap-2 hover:text-teal-600 transition-colors duration-200"
                                             aria-label={`Copy email address for ${hotel.name}`}
                                             title={copiedEmail === hotel.email ? 'Copied!' : 'Copy email'}
                                         >
-                                            <EmailIcon aria-hidden="true" className="text-teal-600" />
-                                            <span>{hotel.email}</span>
+                                                                                       <EmailIcon aria-hidden="true" className="text-teal-600" />
+
+                                            <span className="truncate">{hotel.email || '—'}</span>
                                             {copiedEmail === hotel.email && (
                                                 <span className="text-xs text-green-600">Copied!</span>
                                             )}
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </article>
                         ))}
                     </div>
                 </div>
-            </section>
+            </section> */}
+
 
 
 

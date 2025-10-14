@@ -13,6 +13,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useGetMetas } from "../../ApiHooks/useMetaHook";
+import Partnerlogos from "../Home/Components/Partnerlogos";
+import ImageGallery from "../../Components/ImageGallery";
 
 /* --------------------- Modal --------------------- */
 const AgentSignupModal = ({ open, onClose }) => {
@@ -385,13 +387,13 @@ const HowItWorksSection = ({ steps }) => (
 const AgentRegistrationForm = ({ page = 'Agent Registration', gid = [0] }) => {
   const { mutate, isLoading } = useEnquiryForm();
   const formFields = [
-    { name: "agentName", placeholder: "Agent Name (Full Name)", required: true },
+    { name: "agentName", placeholder: "Name", required: true },
     { name: "companyName", placeholder: "Company Name", required: true },
-    { name: "phone", type: "tel", placeholder: "Phone Number", required: true },
-    { name: "email", type: "email", placeholder: "Email ID", required: true },
+    { name: "phone", type: "tel", placeholder: "Phone", required: true },
+    { name: "email", type: "email", placeholder: "Email", required: true },
     { name: "cityState", placeholder: "City / State", required: true },
     { name: "gstDetails", placeholder: "Company GST Details", required: true },
-    { name: "requirements", type: "textarea", placeholder: "Your Requirements / Query", rows: 4, colSpan: "md:col-span-2", required: true },
+    { name: "requirements", type: "textarea", placeholder: "Your Requirements / Queries", rows: 4, colSpan: "md:col-span-2", required: true },
   ];
 
   const handleSubmit = (formData, callbacks) => {
@@ -429,11 +431,11 @@ const TravelAgent = () => {
   const isApproved = agentRec?.approved ?? false;
   const isVerified = agentRec?.isVerified ?? false;
 
-     const { data: metas } = useGetMetas();
+  const { data: metas } = useGetMetas();
 
-    const travelagent = Array.isArray(metas)
-        ? metas.find(meta => meta.page === "travel-agent")
-        : null; 
+  const travelagent = Array.isArray(metas)
+    ? metas.find(meta => meta.page === "travel-agent")
+    : null;
 
   const showProfileBtn = !loadingAgent && isAgent && isApproved;
   const isApprovalPending = !loadingAgent && isAgent && isVerified && !isApproved;
@@ -485,6 +487,14 @@ const TravelAgent = () => {
 
       <BenefitsSection benefits={benefits} />
       <HowItWorksSection steps={steps} />
+
+      <Partnerlogos />
+
+
+      <div className="relative flex  flex-col justify-between content items-center mt-10 py-10  z-0">
+     
+        <ImageGallery/>
+      </div>
 
       {/* Legacy long form (keep or remove) */}
       <AgentRegistrationForm />

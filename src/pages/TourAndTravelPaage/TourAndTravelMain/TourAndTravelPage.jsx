@@ -30,8 +30,8 @@ const TourAndTravelPage = () => {
       <PopularDestination />
       <AdvantagesSection />
       <TopSellingPackages />
-      <ImagesGallery />
-      <TestimonialSection page="tours and travel" />
+      <ImagesGallery path="travelAgent" />
+      <TestimonialSection page="tours and travel" head="Meet Our Stars" />
     </div>
   )
 }

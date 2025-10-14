@@ -61,7 +61,7 @@ export default function BlogEditorTabs() {
   const [content, setContent] = useState("")
   const [category, setCategory] = useState("")
   const [featuredImage, setFeaturedImage] = useState("")
-
+  const [tabIndex, setTabIndex] = useState(0);
   const [metaTitle, setMetaTitle] = useState("")          // New state for meta title
   const [metaDescription, setMetaDescription] = useState("") // New state for meta description
   const [metaKeywords, setMetaKeywords] = useState("")
@@ -119,6 +119,7 @@ export default function BlogEditorTabs() {
             setSelectedBlogId(null)
             resetForm()
             refetch()
+            setTabIndex(2);
           },
           onError: (error) => {
             console.error("Error updating blog:", error)
@@ -131,6 +132,7 @@ export default function BlogEditorTabs() {
         onSuccess: () => {
           resetForm()
           refetch()
+          setTabIndex(2);
         },
         onError: (error) => {
           console.error("Error creating blog:", error)
@@ -272,7 +274,7 @@ export default function BlogEditorTabs() {
             <p className="text-blue-100 mt-1">Create and manage your blog posts</p>
           </div>
 
-          <Tab.Group>
+          <Tab.Group selectedIndex={tabIndex} onChange={setTabIndex}>
             <Tab.List className="flex border-b border-gray-200 bg-gray-50">
               {[
                 { name: "Editor", icon: Edit3 },
@@ -349,7 +351,7 @@ export default function BlogEditorTabs() {
                     />
                   </div>
 
-                 
+
                 </div>
 
 
@@ -568,7 +570,11 @@ export default function BlogEditorTabs() {
                           </div>
                           <div className="flex items-center gap-2 ml-4">
                             <button
-                              onClick={() => setSelectedBlogId(blog._id)}
+                              onClick={() => {
+                                setSelectedBlogId(blog._id);
+                                setTabIndex(0); // go to Editor tab
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                              }}
                               className="flex items-center gap-1 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm font-medium"
                             >
                               <Edit3 className="h-4 w-4" />

@@ -9,6 +9,8 @@ const fetchWebsiteData = async () => {
   return res.data;
 };
 
+const DEFAULT_PATH = 'default';
+
 const useUpdatePagesHook = () => {
   const queryClient = useQueryClient();
 
@@ -61,20 +63,50 @@ const useUpdatePagesHook = () => {
     },
   });
 
-  // --- Grid / Gallery ---
+  // --- ✅ Grid / Gallery (PATH-AWARE) ---
   const addGalleryImagesMutation = useMutation({
+    /**
+     * images param (kept name for backward-compat) should be:
+     * { path?: 'default'|'travelAgent'|'career', massonaryGrid: { images: string[], content: any[] } }
+     */
     mutationFn: async (images) => {
-      const res = await axiosInstance.post('/api/websiteData/images', images);
+      // Handle old callers that might still send { images, content } shape
+      // If someone mistakenly calls mutate({ images:[], content:[] }) we convert it.
+      const maybeLegacy =
+        images && Array.isArray(images.images) && Array.isArray(images.content);
+
+      const payload = maybeLegacy
+        ? { path: DEFAULT_PATH, massonaryGrid: { images: images.images, content: images.content } }
+        : {
+            path: images?.path || DEFAULT_PATH,
+            massonaryGrid: images?.massonaryGrid || { images: [], content: [] },
+          };
+
+      const res = await axiosInstance.post('/api/websiteData/images', payload);
       return res.data;
     },
-    onSuccess: () => {
-      toast.success('Location added successfully!');
+    onSuccess: (_data, variables) => {
+      const p =
+        (variables && variables.path) ||
+        (variables && variables.massonaryGrid && DEFAULT_PATH) ||
+        DEFAULT_PATH;
+
+      toast.success(`Gallery updated for "${p}"!`);
+      // Invalidate the broad cache + any path-scoped cache if you add one later
       queryClient.invalidateQueries({ queryKey: ['websiteData'] });
+      queryClient.invalidateQueries({ queryKey: ['websiteData', 'gallery', p] });
     },
     onError: (error) => {
-      toast.error(`Failed to add location: ${error.message}`);
+      toast.error(`Failed to update gallery: ${error.message}`);
     },
   });
+
+  // Helper: pick grid by path from cached websiteData
+  const getGalleryByPath = (path = DEFAULT_PATH) => {
+    const grid = websiteData?.grid || {};
+    // Prefer specific path; fall back to default; else empty structure
+    return grid?.[path] ?? grid?.[DEFAULT_PATH] ?? { images: [], content: [] };
+  };
 
   // --- Shine ---
   const whatMakesUsShineMutation = useMutation({
@@ -212,8 +244,6 @@ const useUpdatePagesHook = () => {
   });
 
   // --- ✅ Home Partners (single upsert) ---
-  // PUT /api/websiteData/home-partners
-  // body can include any of: { heading?, subheading?, layout?, logos?: [{src, alt?, link?}] }
   const saveHomePartnersMutation = useMutation({
     mutationFn: async (data) => {
       const res = await axiosInstance.put('/api/websiteData/home-partners', data);
@@ -229,18 +259,23 @@ const useUpdatePagesHook = () => {
     },
   });
 
-  // If loading, return the Loader component
+  // Loader shortcut
   if (isLoading) {
     return {
       loading: true,
-      Loader // Returning Loader component
+      Loader,
     };
   }
 
   return {
     websiteData,
+
     amenities: websiteData?.amenities || [],
-    galleryImages: websiteData?.grid || [],
+    // ⬇️ Back-compat: if you used galleryImages directly, this returns default grid or the raw grid
+    galleryImages:
+      websiteData?.grid?.[DEFAULT_PATH] ||
+      websiteData?.grid ||
+      [],
     shineSection: websiteData?.shineSection || [],
     heroSectionUpdate: websiteData?.heroSection || [],
     offeringSection: websiteData?.whatWeOffers || [],
@@ -250,8 +285,10 @@ const useUpdatePagesHook = () => {
     homePageDescription: websiteData?.homePageDescription || [],
     faqs: websiteData?.faqs || [],
     ContactUsDetail: websiteData?.ContactUsDetail || [],
-    // 👇 NEW
     homePartners: websiteData?.HomePartners || { logos: [] },
+
+    // 🔹 Helper to fetch the correct grid from cached websiteData
+    getGalleryByPath,
 
     loading: isLoading,
     error,
@@ -259,7 +296,10 @@ const useUpdatePagesHook = () => {
     addAmenity: addAmenityMutation.mutateAsync,
     updateAmenity: updateAmenityMutation.mutateAsync,
     deleteAmenity: deleteAmenityMutation.mutateAsync,
+
+    // ⬇️ same name as before, now accepts { path, massonaryGrid }
     addGalleryImages: addGalleryImagesMutation.mutateAsync,
+
     whatMakesUsShine: whatMakesUsShineMutation.mutateAsync,
     updateHerosection: HeroSectionMutation.mutateAsync,
     updateOfferingSection: whatWeOfferingMutation.mutateAsync,
@@ -269,7 +309,6 @@ const useUpdatePagesHook = () => {
     updateHomepageDescriptionData: HomePageDescriptionMutation.mutateAsync,
     updateFaq: faqsSectionMutation.mutateAsync,
     updateContactUs: updateContactUsDetailMutation.mutateAsync,
-    // 👇 NEW
     saveHomePartners: saveHomePartnersMutation.mutateAsync,
   };
 };

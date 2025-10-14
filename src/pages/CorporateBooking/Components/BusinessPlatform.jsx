@@ -20,13 +20,13 @@ const BusinessPlatform = ({ features }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ scale: 1.05 }}
-              className="border border-teal-400 rounded-lg p-6 flex flex-col items-center md:items-start md:text-left text-center shadow-sm hover:shadow-lg transition-shadow animation-on-scroll"
+              className="border border-gray-400 rounded-lg p-6 flex flex-col items-center md:items-start md:text-left text-center shadow-sm hover:shadow-lg transition-shadow animation-on-scroll"
             >
               <motion.h3 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
-                className="text-mobile/h5 md:text-desktop/h5 font-bold text-black mb-2"
+                className="text-mobile/h5 md:text-desktop/h5/medium  text-black mb-2"
               >
                 {feature.title}
               </motion.h3>
@@ -34,7 +34,7 @@ const BusinessPlatform = ({ features }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3, delay: index * 0.1 + 0.3 }}
-                className="text-mobile/body/2 te md:text-desktop/body/1 text-gray-600 "
+                className="text-mobile/body/2 md:text-desktop/body/1 text-gray-600 "
               >
                 {feature.description}
               </motion.p>

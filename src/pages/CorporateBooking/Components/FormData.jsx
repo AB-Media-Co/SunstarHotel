@@ -13,7 +13,7 @@ import CommonUseEnquiryForm from "../../../Components/CommonUseEnquiryForm";
     {
       name: "email",
       type: "email",
-      placeholder: "Email*",
+      placeholder: "Email",
     },
     {
       name: "phone",
@@ -34,7 +34,7 @@ import CommonUseEnquiryForm from "../../../Components/CommonUseEnquiryForm";
       type: 'dropdown',
       placeholder: 'Corporate Booking',
       options: [
-        { value: 'general', label: 'General Inquiry' },
+        { value: 'general', label: 'General Enquiry' },
         { value: 'support', label: 'Support' },
         { value: 'sales', label: 'Sales' },
       ],

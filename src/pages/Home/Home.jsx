@@ -1,11 +1,8 @@
-// ✅ Updated Home.jsx with lazy-loaded sections and preloaded hero images
 import { Helmet } from 'react-helmet';
 import { HomePageSection5cards, section1Data, section2HotelData } from '../../Data/HomePageData';
 import Section1 from './Components/Section1';
-import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
 import { useGetMetas } from '../../ApiHooks/useMetaHook';
 import { lazy, Suspense } from 'react';
-import Partnerlogos from './Components/Partnerlogos';
 
 const Section2Hotel = lazy(() => import('./Components/Section2Hotel'));
 const Section3 = lazy(() => import('./Components/Section3'));
@@ -49,7 +46,6 @@ const Home = () => {
         <Section4 />
       </Suspense>
 
-      <Partnerlogos />
 
       <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
         <Section5 cards={HomePageSection5cards} />

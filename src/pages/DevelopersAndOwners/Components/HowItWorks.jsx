@@ -1,3 +1,5 @@
+import { FileText } from "lucide-react";
+
 const steps = [
   {
     id: 1,
@@ -47,6 +49,15 @@ const HowItWorks = () => {
               <p className="text-sm opacity-90 mt-2">{step.description}</p>
             </div>
           ))}
+        </div>
+        <div className="flex justify-center mt-12">
+          <a
+            href="#form"
+            className="bg-yellow-400 text-white font-semibold px-8 py-4 rounded-full flex items-center gap-2 hover:opacity-90 transition"
+          >
+            <FileText size={20} className="text-white" />
+            Partner With Us
+          </a>
         </div>
       </div>
     </div>

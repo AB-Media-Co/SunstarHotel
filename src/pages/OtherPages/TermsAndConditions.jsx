@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
+
 const TermsAndConditions = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);
+    }, []);
     return (
         <>
             <Helmet>
@@ -15,7 +16,7 @@ const TermsAndConditions = () => {
             <div className="bg-primary-green mx-auto pt-10">
                 <div className="bg-primary-green w-full h-full text-white">
                     <h1 className="text-mobile/h2 md:text-desktop/h3 content mt-14 font-bold mb-6 py-10 text-start">
-                    Terms & Conditions and Cancellation Policy
+                        Terms & Conditions and Cancellation Policy
                     </h1>
                 </div>
                 <div className="bg-white md:px-6">
@@ -150,6 +151,29 @@ const TermsAndConditions = () => {
                                 Room upgrades will be provided on request where possible. In cases of room upgrades, the payable amount will be the difference between the original rate and the upgraded room rate at the time of modification.
                             </p>
                         </section>
+
+                        {/* Refund Policy */}
+                        <section className="mb-8">
+                            <h2 className="text-2xl font-semibold mb-2">Refund Policy
+                            </h2>
+                            <p className="mb-4">
+                                Refunds are available only with the correct Booking Number and by sharing the refund form along with payment proof. Please note that no refunds are possible in case of a no-show or if the cancellation is made after the free cancellation period. Once approved, refunds are usually processed within 7 working days, but sometimes banks or payment providers may take a little longer. Refunds will always be credited back to the same payment method used during booking, as cash refunds are not given at the hotel. To avoid delays, kindly provide accurate details when submitting your request. For group bookings (5 or more rooms or 15 or more nights), cancellations must be made at least 15 days before check-in to qualify for a refund. If you need any help with refunds,
+                            </p>
+                            <p className="mb-4">
+                                please contact our CRM Team
+                                📧 <a href="mailto:crm1@sunstarhospitality.com" className="text-blue-600 underline">
+                                    crm1@sunstarhospitality.com
+                                </a>
+                                📞 <a href="tel:+919891764746" className="text-blue-600 underline">
+                                     +91 98917 64746
+                                </a>
+                            </p>
+
+                        </section>
+
+
+
+
 
                         {/* GST */}
                         <section className="mb-8">

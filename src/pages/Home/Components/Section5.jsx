@@ -30,14 +30,14 @@ const LazyImage = ({ src, alt = "", className = "" }) => {
   );
 };
 
-const Card = ({ image, title, description }) => {
+const Card = ({ image, title, description, link }) => {
   const navigate = useNavigate();
 
   return (
     <div
       className="rounded-[10px] overflow-hidden cursor-pointer h-full"
       onClick={() => {
-        navigate("/why-sunstar#what-we-offer");
+        navigate(link || "/why-sunstar#what-we-offer");
         setTimeout(() => {
           document.getElementById("what-we-offer")?.scrollIntoView({ behavior: "smooth" });
         }, 100);
@@ -52,7 +52,7 @@ const Card = ({ image, title, description }) => {
         <h3 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-800 mb-2">
           {title}
         </h3>
-        <p className="text-mobile/body/2 whitespace-pre-line md:text-desktop/body/large text-gray-600 line-clamp-3">
+        <p className="text-mobile/body/2 md:text-desktop/body/1 whitespace-pre-line text-gray-600 line-clamp-3">
           {description}
         </p>
       </div>
@@ -62,6 +62,7 @@ const Card = ({ image, title, description }) => {
 
 const Section5 = () => {
   const { offeringSection } = useUpdatePagesHook();
+  console.log(offeringSection)
 
   const renderCard = (card, index) => {
     return (
@@ -71,6 +72,7 @@ const Section5 = () => {
           image={card?.image}
           title={card?.title}
           description={card?.description}
+          link={card?.link}
         />
       </div>
     );

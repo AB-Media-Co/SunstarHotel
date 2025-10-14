@@ -84,6 +84,7 @@ const Icon = ({ name, className = 'w-6 h-6',styleCss={} }) => {
     Reservation: '/images/Icons/reservation.svg',
     TravelAgent: '/images/Icons/travelagent.svg',
     Career: '/images/Icons/career.svg',
+    User: '/images/Icons/singleuser.svg',
   };
  
   const iconPath = icons[name];

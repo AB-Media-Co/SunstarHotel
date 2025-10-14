@@ -4,16 +4,20 @@ import axiosInstance from '../services/axiosInstance';
 
 // Push Booking Hook
 export const usePushBooking = () => {
-//   const queryClient = useQueryClient();
+  //   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (bookingData) => {
       const response = await axiosInstance.post('/api/push-booking', bookingData);
       return response.data;
     },
-    onSuccess: () => {
-      toast.success('Booking pushed successfully');
+    onSuccess: (res) => {
+      console.log(res)
+      if (res.success) {
+        toast.success(res.message);
+      }
     },
     onError: (error) => {
+      console.log(error)
       toast.error(error?.response?.data?.message || 'Failed to push booking');
     }
   });

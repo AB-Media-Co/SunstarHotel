@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 
 // eslint-disable-next-line react/prop-types
-const Location = ({ address }) => {
+const Location = ({ address, hotelData  }) => {
     // Destructure the passed object
     const {
         hotelAddress,
@@ -68,7 +68,7 @@ const Location = ({ address }) => {
             return;
         }
         const geocoder = new window.google.maps.Geocoder();
-        geocoder.geocode({ address: hotelAddress }, (results, status) => {
+        geocoder.geocode({ address: hotelData?.name + ', ' + hotelAddress }, (results, status) => {
             if (status === 'OK' && results[0]) {
                 const hotelLoc = results[0].geometry.location;
                 setHotelLocation(hotelLoc);
@@ -245,7 +245,7 @@ const Location = ({ address }) => {
         setMapUnlocked(true);
         const map = mapInstanceRef.current;
         if (map && hotelLocation) {
-            smoothPanTo(map, hotelLocation);
+            smoothPanTo(map, 'HOTEL SUNSTAR GRAND, 7A/17, W.E.A. Channa Market, Karol Bagh, New Delhi-5');
             setTimeout(() => {
                 map.setZoom(zoom);
             }, 600);
@@ -307,7 +307,7 @@ const Location = ({ address }) => {
                                         </p>
                                         {nearestPlace && (
                                             <p className="text-xs text-gray-400">
-                                               ( {travelTime} Min away)
+                                                ( {travelTime} Min away)
                                             </p>
                                         )}
                                     </div>
@@ -320,7 +320,7 @@ const Location = ({ address }) => {
                                         }}
                                         className="text-primary-green flex hover:text-green-600 text-sm font-medium hover:underline transition-colors duration-200"
                                     >
-                                        View On                                         Map
+                                        View On Map
                                     </button>
                                 </div>
 

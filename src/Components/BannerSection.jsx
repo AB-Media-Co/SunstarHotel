@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 /* eslint-disable react/prop-types */
 const BannerSection = ({
     data,
-    text = "text-xl md:text-4xl lg:text-5xl",
-    ptext = "text-base md:text-lg lg:text-xl",
+    text = "text-mobile/h2 md:text-desktop/h2",
+    ptext = "text-mobile/body/2 md:text-desktop/body/1",
     lineh = "leading-tight md:leading-[60px] lg:leading-[75px]",
     bg = "bg-gradient-to-r from-primary-green to-teal-500",
     paddTop = "pt-10 md:pt-20 items-center",

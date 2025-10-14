@@ -1,10 +1,11 @@
 import { useState } from "react";
 import CommonUseEnquiryForm from "../../../Components/CommonUseEnquiryForm";
+import { useApplyForJob } from "../../../ApiHooks/useUser";
 
 /* --- Small custom component for file upload (works with CommonUseEnquiryForm's "custom" type) --- */
 const ResumeUpload = ({ value, error, onChange }) => (
   <div>
- 
+
     <input
       type="file"
       accept=".pdf,.doc,.docx"
@@ -24,14 +25,15 @@ const ResumeUpload = ({ value, error, onChange }) => (
 /* --- Page/section that uses CommonUseEnquiryForm --- */
 const JobApplicationForm = () => {
   // optional local loading state if you want to disable the button externally too
-  const [loading, setLoading] = useState(false);
+  const { mutate: applyForJob, isPending } = useApplyForJob();
+  const [loading, setLoading] = useState(false); // will mirror isPending for your existing prop
 
   const genderOptions = [
-    { label: "Select Gender", value: "" },
+    // { label: "Select Gender", value: "" },
     { label: "Male", value: "male" },
     { label: "Female", value: "female" },
-    { label: "Other", value: "other" },
-    { label: "Prefer not to say", value: "prefer-not-to-say" },
+    // { label: "Other", value: "other" },
+    // { label: "Prefer not to say", value: "prefer-not-to-say" },
   ];
 
   // fields config for CommonUseEnquiryForm
@@ -39,7 +41,7 @@ const JobApplicationForm = () => {
     {
       name: "name",
       type: "text",
-      placeholder: "Enter Your Name",
+      placeholder: "Name",
       required: true,
     },
     {
@@ -51,14 +53,14 @@ const JobApplicationForm = () => {
     {
       name: "phoneNumber",
       type: "tel",
-      placeholder: "Enter Phone Number",
+      placeholder: "Phone",
       required: true,
       className: "[-moz-appearance:textfield] [appearance:textfield]",
     },
     {
       name: "emailId",
       type: "email",
-      placeholder: "Enter Email Id",
+      placeholder: "Email",
       required: true,
     },
     {
@@ -105,7 +107,6 @@ const JobApplicationForm = () => {
   };
 
   const onSubmit = async (payload, callbacks) => {
-    // payload includes all fields; "resume" will be a File from the custom component
     const problems = extraValidate(payload);
     if (problems.length) {
       callbacks.onError(problems.join(" "));
@@ -114,28 +115,23 @@ const JobApplicationForm = () => {
     }
 
     setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append("name", payload.name);
-      formData.append("appliedFor", payload.appliedFor);
-      formData.append("phoneNumber", payload.phoneNumber);
-      formData.append("emailId", payload.emailId);
-      formData.append("gender", payload.gender);
-      formData.append("resume", payload.resume); // <-- file
-      formData.append("submittedAt", payload.submittedAt);
-
-      // TODO: replace with your real endpoint
-      // const res = await fetch("/api/jobs/apply", { method: "POST", body: formData });
-      // if (!res.ok) throw new Error("Network response was not ok");
-
-      console.log("Submitting to server...", Object.fromEntries(formData.entries()));
-      callbacks.onSuccess();
-    } catch (err) {
-      console.error(err);
-      callbacks.onError("Failed to submit form. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    applyForJob(
+      {
+        ...payload,
+        submittedAt: payload.submittedAt || new Date().toISOString(),
+      },
+      {
+        onSuccess: () => {
+          callbacks.onSuccess();
+        },
+        onError: (err) => {
+          callbacks.onError(err?.response?.data?.message || err.message || "Failed to submit form.");
+        },
+        onSettled: () => {
+          setLoading(false);
+        },
+      }
+    );
   };
 
   return (

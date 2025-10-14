@@ -4,9 +4,9 @@ import ImageGallery from "../../../Components/ImageGallery";
 const Section4 = () => {
   return (
     <div className="relative flex  flex-col justify-between content items-center mt-10 py-10  z-0">
-      <div className="absolute top-0 left-0 z-0 w-full h-full">
+      {/* <div className="absolute top-0 left-0 z-0 w-full h-full">
         <RoatinfImg position='md:left-0 top-[-60px] md:top-0 left-[-60px] ' />
-      </div>
+      </div> */}
         <ImageGallery />
     </div>
   );

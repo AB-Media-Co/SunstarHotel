@@ -4,7 +4,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { useNavigate } from "react-router-dom";
 
 export const HotelDetailsCard = () => {
-  const { details, setDetails, selectedRooms, setSelectedRooms ,setEditAddPricing} = usePricing();
+  const { details, setDetails, selectedRooms, setSelectedRooms, setEditAddPricing } = usePricing();
   const navigate = useNavigate()
   const handleOptionChange = (index, newOption) => {
     setSelectedRooms((prevSelectedRooms) => {
@@ -85,6 +85,7 @@ export const HotelDetailsCard = () => {
           return null;
         }
 
+
         return (
           <div
             key={index}
@@ -93,7 +94,7 @@ export const HotelDetailsCard = () => {
             {/* Image Section */}
             <div className="w-full lg:w-1/3 relative">
               <img
-                src={data?.aboutUs?.img}
+                src={data?.roomData?.roomImage[0]}
                 alt="Hotel Room"
                 className="rounded-md w-full h-full object-cover"
               />
@@ -106,7 +107,7 @@ export const HotelDetailsCard = () => {
 
             {/* Hotel/Room Info */}
             <div className="flex flex-col justify-center w-full gap-2">
-           
+
               <p className="text-2xl font-bold text-[#288592] mb-1">
                 {data?.roomData?.RoomName}
               </p>
@@ -145,15 +146,15 @@ export const HotelDetailsCard = () => {
                   <div className="flex items-start">
                     <WarningIcon size={18} className="text-primary-yellow mt-0.5 mr-2 flex-shrink-0" />
                     <div className="flex-1">
-                    
+
                       <p className="text-md text-gray-500 mt-1">
                         Guest Limit Reached
                         This room allows a maximum of {data?.roomData?.maxGuests} guests per booking. Please adjust your selection.
                       </p>
                       <div className="flex items-center justify-between gap-2 mt-3">
 
-                      <button
-                      onClick={handelChangeClick}
+                        <button
+                          onClick={handelChangeClick}
                           className=" text-primary-yellow  hover:underline text-lg font-medium   transition-colors"
                         >
                           Modify Rooms
@@ -170,7 +171,7 @@ export const HotelDetailsCard = () => {
                         >
                           Dismiss
                         </button>
-                      
+
                       </div>
                     </div>
 

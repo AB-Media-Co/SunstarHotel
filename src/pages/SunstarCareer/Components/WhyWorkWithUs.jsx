@@ -15,16 +15,16 @@ const WhyWorkWithUs = () => {
 
     return (
         <section className="content pb-10">
-            <div className="text-start space-y-6 mb-20">
+            <div className="text-start space-y-2 mb-20">
                 <h2 className="text-mobile/h3  md:text-desktop/h3 tracking-tight">
                     Why Work With Us?
                 </h2>
-                <p className="text-xl text-gray-600 max-w-3xl  leading-relaxed">
+                <p className="text-mobile/body/2  md:text-desktop/body/1  text-gray-600 max-w-3xl  leading-relaxed">
                     At Hotel Sunstar Group, we believe that our team is the heart of our hospitality.
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {motivationalPoints.map((point, index) => {
                     // const IconComponent = point.icon;
                     const isLarge = false;
@@ -38,14 +38,14 @@ const WhyWorkWithUs = () => {
                             <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 h-full p-6">
 
                                 {/* Icon */}
-                                <div className={`w-16 h-16 bg-gradient-to-br rounded-xl  flex items-center justify-center mb-4 group-hover:rotate-3 transition-transform duration-300`}>
+                                <div className={`w-16 h-16 bg-gradient-to-br rounded-xl  flex items-center justify-center mb-4 transition-transform duration-300`}>
                                     {/* <IconComponent className="w-8 h-8 text-white" /> */}
                                     <img src={point.icon} alt="" />
                                 </div>
 
                                 {/* Content */}
                                 <div className={isLarge ? 'space-y-4' : 'space-y-3'}>
-                                    <h3 className={`font-bold text-gray-900 group-hover:text-primary-green transition-colors duration-300 ${isLarge ? 'text-2xl' : 'text-lg'
+                                    <h3 className={`font-bold text-gray-900 group-hover:text-primary-green transition-colors duration-300 ${isLarge ? 'text-2xl' : 'text-md'
                                         }`}>
                                         {point.text}
                                     </h3>

@@ -1,10 +1,26 @@
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
+import parse from 'html-react-parser';  // For safely parsing HTML string to React elements
+import { useGetPolicy } from '../../ApiHooks/usePolicies';
+
+
+
+const PrivacyPolicyDisplay = ({ content }) => {
+    return (
+        <div className="policy-content">
+            {parse(content)}
+        </div>
+    );
+};
+
 
 const PrivacyPolicies = () => {
+
+    const { data, isLoading, error } = useGetPolicy('privacy-policy');
+
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);
+    }, []);
     return (
         <>
             <Helmet>
@@ -18,6 +34,7 @@ const PrivacyPolicies = () => {
                         Sunstar Hotel Privacy Policy
                     </h1>
                 </div>
+
                 <div className="bg-white md:px-6">
                     <div className="content py-10 flex flex-col gap-8">
                         {/* Privacy Note */}
@@ -127,6 +144,10 @@ const PrivacyPolicies = () => {
                             </p>
                         </footer>
                     </div>
+
+                    {/* <div className="privacy-policy-wrapper">
+                        {data?.content ? parse(data.content) : <p>No content available.</p>}
+                    </div> */}
                 </div>
             </div>
         </>

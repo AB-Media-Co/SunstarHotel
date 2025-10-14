@@ -50,10 +50,10 @@ const WhyPartner = () => {
             key={index}
             className="bg-white rounded-lg shadow-md p-6 border border-gray-100 hover:shadow-lg transition-all"
           >
-            <h3 className="text-lg font-semibold text-primary-green mb-2">
+            <h3 className="text-mobile/h5 md:text-desktop/h5/medium text-primary-green mb-2">
               {card.title}
             </h3>
-            <p className="text-gray-600 text-sm">{card.description}</p>
+            <p className="text-gray-600 text-mobile/body/2 md:text-desktop/body/1">{card.description}</p>
           </div>
         ))}
       </div>

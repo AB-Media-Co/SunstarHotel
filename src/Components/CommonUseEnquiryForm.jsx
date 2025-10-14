@@ -85,16 +85,45 @@ const CommonUseEnquiryForm = ({
   };
 
   const validateForm = () => {
-    let errors = {};
+    const errors = {};
+
+    const isEmpty = (val) => {
+      if (typeof val === "string") return val.trim() === "";
+      // treat null/undefined as empty; objects like File are "not empty" if truthy
+      return val == null;
+    };
+
     fields.forEach((field) => {
-      const isRequired = field.required !== false;
-      if (isRequired && !formValues[field.name]?.trim()) {
-        errors[field.name] = `${field.label || field.placeholder} is required.`;
+      const required = field.required !== false;
+      const val = formValues[field.name];
+
+      if (!required) return;
+
+      switch (field.type) {
+        case "custom": // e.g., File upload
+          if (val == null) {
+            errors[field.name] = `${field.label || field.placeholder} is required.`;
+          }
+          break;
+
+        // text-like inputs (including dropdown & textarea) are strings
+        case "text":
+        case "email":
+        case "tel":
+        case "textarea":
+        case "dropdown":
+        default:
+          if (isEmpty(val)) {
+            errors[field.name] = `${field.label || field.placeholder} is required.`;
+          }
+          break;
       }
     });
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -188,9 +217,8 @@ const CommonUseEnquiryForm = ({
               {fields.map((field) => (
                 <div
                   key={field.name}
-                  className={`w-full col-span-1 ${
-                    field.type === 'textarea' ? 'sm:col-span-2' : ''
-                  }`}
+                  className={`w-full col-span-1 ${field.type === 'textarea' ? 'sm:col-span-2' : ''
+                    }`}
                 >
                   {renderField(field)}
                 </div>

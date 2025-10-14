@@ -18,7 +18,7 @@ const HeroSection = () => {
           Come Shine with Us
 
         </h1>
-        <p className="text-lg mb-6 max-w-xl text-white ">
+        <p className="text-mobile/body/2 md:text-desktop/body/1 mb-6 max-w-xl text-white ">
           We believe in hiring locally in tourist destinations and looking beyond conventional industry backgrounds. At Sunstar, we want to build a team of entrepreneurial-minded individuals who can adapt and innovate. This mindset is critical for scaling our brand successfully. If you believe you have what it takes, apply with us.” - Always looking for great people
         </p>
         <a href='#form' className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-3 rounded-full">

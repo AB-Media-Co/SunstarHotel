@@ -26,52 +26,52 @@ const categories = [
   "Travel Essentials",
   "Scam Awareness"
 ];
- 
+
 const Blogs = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
-  
+
   // Get all blogs
   // const { data: allBlogs, isLoading: loadingAllBlogs } = useGetBlogs("", "");
-  const { data: allBlogs,isLoading: loadingAllBlogs } = useGetBlogs2({ status: "all" })
+  const { data: allBlogs, isLoading: loadingAllBlogs } = useGetBlogs2({ status: "all" })
   console.log(allBlogs)
 
-  
+
   // Handle filtering locally rather than relying on the API
   const [isFiltering, setIsFiltering] = useState(false);
   const [filteredBlogs, setFilteredBlogs] = useState([]);
-  
+
   // Filter blogs locally
   useEffect(() => {
     if (!allBlogs?.blogs) return;
-    
+
     setIsFiltering(true);
-    
+
     try {
       // Start with all blogs
       let results = [...allBlogs?.blogs];
-      
+
       // Apply search filter if provided
       if (searchQuery) {
         const searchLower = searchQuery.toLowerCase();
-        results = results.filter(blog => 
-          blog.title?.toLowerCase().includes(searchLower) || 
+        results = results.filter(blog =>
+          blog.title?.toLowerCase().includes(searchLower) ||
           blog.content?.toLowerCase().includes(searchLower) ||
           blog.category?.toLowerCase().includes(searchLower)
         );
       }
-      
+
       // Apply category filters if any are selected
       if (selectedCategories.length > 0) {
-        results = results.filter(blog => 
+        results = results.filter(blog =>
           selectedCategories.includes(blog.category)
         );
       }
-      
+
       setFilteredBlogs(results);
     } catch (err) {
       console.error("Error filtering blogs:", err);
@@ -79,17 +79,17 @@ const Blogs = () => {
       setIsFiltering(false);
     }
   }, [allBlogs, searchQuery, selectedCategories]);
-  
+
   // Determine which blogs to display
   const displayBlogs = {
-    data: (selectedCategories.length > 0 || searchQuery) 
-      ? filteredBlogs 
+    data: (selectedCategories.length > 0 || searchQuery)
+      ? filteredBlogs
       : allBlogs?.blogs
   };
-  
+
   const isLoading = loadingAllBlogs || isFiltering;
   const error = null; // No longer using API error
-  
+
   const navigate = useNavigate();
 
   const handleCardClick = (blog) => {
@@ -189,28 +189,7 @@ const Blogs = () => {
       {/* Cards Section */}
       <div className="bg-white">
         <section className="py-16 content mx-auto px-4">
-          {/* {selectedCategories.length > 0 && (
-            <div className="mb-4 flex flex-wrap gap-2">
-              <span className="font-semibold">Filtered by:</span>
-              {selectedCategories.map(cat => (
-                <span key={cat} className="px-3 py-1 bg-gray-200 rounded-full text-sm flex items-center">
-                  {cat}
-                  <button 
-                    onClick={() => setSelectedCategories(prev => prev.filter(c => c !== cat))}
-                    className="ml-2 text-gray-500 hover:text-gray-700"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-              <button 
-                onClick={() => setSelectedCategories([])}
-                className="text-blue-600 hover:underline text-sm ml-2"
-              >
-                Clear all
-              </button>
-            </div>
-          )} */}
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayBlogs?.data?.map((blog) => (
@@ -254,7 +233,7 @@ const Blogs = () => {
             (!displayBlogs?.data || displayBlogs.data.length === 0) && (
               <div className="text-center py-12">
                 <p className="text-gray-600 text-lg">
-                  {selectedCategories.length > 0 || searchQuery 
+                  {selectedCategories.length > 0 || searchQuery
                     ? "No blogs available for the selected filters. Try different categories or search terms."
                     : "No blogs available at the moment. Check back later!"}
                 </p>
@@ -262,6 +241,12 @@ const Blogs = () => {
             )
           )}
         </section>
+      </div>
+
+      <div
+        className="w-full h-[10rem] bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/HotelsSectionImg/Img.png')" }}
+      >
       </div>
     </>
   );

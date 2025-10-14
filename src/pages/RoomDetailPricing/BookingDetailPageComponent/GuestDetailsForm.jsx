@@ -9,7 +9,7 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
   const [email, setEmail] = useState(localStorage.getItem("user_email") || "");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isBookingForSomeoneElse, setIsBookingForSomeoneElse] = useState(false);
-  const {someOneElse, setSomeoneElse,setGuestData} = usePricing()
+  const { someOneElse, setSomeoneElse, setGuestData } = usePricing()
 
   const [focusedField, setFocusedField] = useState(null);
 
@@ -34,7 +34,7 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
       });
     }
   }, [verifiedUser, someOneElse, firstName, lastName, email, phoneNumber, setGuestData]);
-  
+
 
 
   const formFields = [
@@ -112,10 +112,10 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
 
       {/* Enhanced Header */}
       <div className="flex items-center mb-2 relative z-10">
-        <div className="w-2 h-12 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-full mr-5 shadow-lg"></div>
+        {/* <div className="w-2 h-12 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-full mr-5 shadow-lg"></div> */}
         <div>
-          <h2 className=" text-xl md:text-4xl font-bold text-gray-900 tracking-tight mb-1">Guest Details</h2>
-          <p className="text-gray-600">Please provide your information to proceed</p>
+          <h2 className="  text-mobile/h4 md:text-desktop/h4 text-gray-900 tracking-tight mb-1">Guest Details</h2>
+          <p className="text-gray-600 text-mobile/body/2 md:text-desktop/body/1">Please provide your information to proceed</p>
         </div>
       </div>
 
@@ -226,18 +226,7 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
                             disabled={id === "email"}
 
                           />
-                          {hasValue && (
-                            <button
-                              type="button"
-                              onClick={() => handleFieldChange(id, '')}
-                              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                              </svg>
-                            </button>
-                          )}
+
                         </div>
                       </div>
                     </div>
@@ -256,17 +245,20 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
                 !
               </div>
               <div>
-                <p className="font-semibold text-yellow-800">Verification Needed</p>
-                <p className="text-yellow-600 text-sm">Please verify your account to continue</p>
+                <p className="font-semibold text-yellow-800">Login Required</p>
+                <p className="text-yellow-600 text-sm">
+                  Please log in or verify your account to continue
+                </p>
               </div>
             </div>
             <button
               onClick={() => setShowLoginModal(true)}
               className="ml-4 px-5 py-2 rounded-lg bg-cyan-600 text-white hover:bg-cyan-700 transition"
             >
-              Please Verify
+              Login / Verify
             </button>
           </div>
+
         )}
         {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
       </div>

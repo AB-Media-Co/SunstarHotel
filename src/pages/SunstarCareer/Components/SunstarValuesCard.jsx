@@ -111,12 +111,12 @@ export default function SunstarValuesCard() {
       <div className="content max-w-screen-xl mx-auto px-4">
         <h1
           id="sunstar-values-heading"
-          className="text-mobile/h3 md:text-desktop/h3 font-bold text-black mb-4 text-start"
+          className="text-mobile/h3 md:text-desktop/h3 font-bold text-black mb-2 text-start"
         >
           Do you have what it takes to shine?
         </h1>
 
-        <p className="text-gray-600 max-w-3xl text-start mb-10">
+        <p className="text-gray-600 max-w-3xl text-mobile/body/2 md:text-desktop/body/1 text-start mb-10">
           These are the values that drive our culture and decisions every day.
         </p>
 

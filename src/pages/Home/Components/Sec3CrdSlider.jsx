@@ -37,11 +37,14 @@ const truncateText = (text, wordLimit) => {
   return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + "..." : text;
 };
 
+
+
 const Sec3CardSlider = () => {
   const { shineSection } = useUpdatePagesHook();
   const { heading, description, features } = shineSection || {};
   const navigate = useNavigate();
-
+  console.log(shineSection)
+  
   const renderItem = (item, index) => (
     <div
       className="max-w-full sm:max-w-lg relative "
@@ -88,13 +91,17 @@ const Sec3CardSlider = () => {
     );
   }
 
+  const normalizeNewlines = (s) => s?.replace(/\\n/g, '\n').replace(/\r\n/g, '\n') ?? '';
+
+
   return (
     <div className=" md:px-6 text-primary-white pb-5">
       <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-left mb-4">
         {heading}
       </h2>
       <p className="text-mobile/body/2 whitespace-pre-line md:text-desktop/body/1 text-left mb-4 md:mb-8">
-        {description}
+      {normalizeNewlines(description)}
+
       </p>
       <CommonSwiper
         items={features}

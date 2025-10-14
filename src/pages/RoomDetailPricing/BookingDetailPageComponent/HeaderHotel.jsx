@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { usePricing } from "../../../Context/PricingContext";
 import { useNavigate } from "react-router-dom";
 import { ArrowRightAlt } from "@mui/icons-material";
@@ -99,9 +100,9 @@ export const HeaderHotel = () => {
       <div className="flex justify-start">
         <button
           onClick={handleChangeClick}
-          className="inline-flex items-center px-6 py-3 bg-primary-yellow hover:bg-yellow-600 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+          className="inline-flex items-center  py-3 text-primary-yellow underline font-medium transition-colors duration-200 "
         >
-          <span>Change Dates & Rooms</span>
+          <span>Modify Date/Room Selection          </span>
           <ArrowRightAlt className="ml-2 text-lg" />
         </button>
       </div>

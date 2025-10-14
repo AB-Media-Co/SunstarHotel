@@ -16,15 +16,15 @@ const PackageItinerary = ({ packageDetails }) => {
                     {itinerary.map((item, index) => (
                         <div
                             key={item._id || index}
-                            className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition"
+                            className="bg-white flex flex-col gap-4 border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition"
                         >
-                            <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center justify-between ">
                                 <h3 className="text-teal-600 font-semibold text-mobile/h5 md:text-desktop/h5">
                                     {item.day}
                                 </h3>
                                 <CalendarDays className="w-5 h-5 text-gray-500" />
                             </div>
-                            <h4 className="text-gray-800 font-medium mb-1 text-mobile/body/2 md:text-desktop/body/1">
+                            <h4 className="text-gray-800 text-mobile/h5 md:text-desktop/h5/medium ">
                                 {item.title}
                             </h4>
                             <p className="text-gray-600 text-mobile/body/2 md:text-desktop/body/1">

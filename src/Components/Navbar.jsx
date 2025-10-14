@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -7,18 +7,18 @@ import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
 import BusinessIcon from "@mui/icons-material/Business";
 import HotelIcon from "@mui/icons-material/Hotel";
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PinterestIcon from '@mui/icons-material/Pinterest';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import ContactMailIcon from "@mui/icons-material/ContactMail";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AllHotelCard from "./AllHotelCard";
 import { hotels } from "../Data/AboutSectionData";
 import { usePricing } from "../Context/PricingContext";
 import { useGetUserByEmail } from "../ApiHooks/useUser";
 import LoginModal from "./LoginModal";
-import { LogIn } from "lucide-react";
-
 
 function getHotelPayLink(hotelCode) {
   switch (String(hotelCode)) {
@@ -42,11 +42,18 @@ const Navbar = () => {
   const [active, setActive] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const [openDropdown, setOpenDropdown] = useState(null); // desktop: string | null
+  const [mobileOpenDropdown, setMobileOpenDropdown] = useState(null); // mobile: string | null
+  const dropdownTimeoutRef = useRef(null);
+
+  const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
   const userInfo = localStorage.getItem('user_email');
   const { data: userData } = useGetUserByEmail(userInfo);
 
-  // Check if current path starts with "/hotels"
   const isHotelsPath = location.pathname.startsWith("/hotels");
   const hotelInfo = localStorage.getItem("hotelInfo");
   let hotelObj = null;
@@ -61,25 +68,103 @@ const Navbar = () => {
     }
   }
 
-  // Updated navItems using context function for Hotels
+
+
+  // Dropdown menu items for Corporate Booking
+  const corporateDropdownItems = [
+    { name: "Why Sunstar", route: "/why-sunstar" },
+    { name: "Tour & Travel", route: "/tour&travel" },
+    { name: "Corporate Bookings", route: "/corporate-booking" },
+    { name: "Contact Us", route: "/contact" },
+    { name: "Loyalty Program", route: "/loyalty-program" },
+    { name: "Event And Conference", route: "/eventandconference" },
+    { name: "Travel Agent", route: "/travel-agent" },
+    { name: "Blog & Buzz", route: "/sunstar-blogs" },
+    { name: "Come Shine With Us", route: "/career" },
+    { name: "Day Stays", route: "/dayuseroom" },
+    { name: "Developer And Owners", route: "/developers&owners" },
+    { name: "In the Media", route: "/in-the-media" },
+  ];
+
   const navItems = [
     { name: "Home", icon: <HomeIcon sx={{ fontSize: 20 }} />, route: "/" },
-    { name: "Why Sunstar?", icon: <InfoIcon sx={{ fontSize: 20 }} />, route: "/why-sunstar" },
+
+    {
+      name: "Why Sunstar",
+      icon: <InfoIcon sx={{ fontSize: 20 }} />,
+      hasDropdown: true,
+      items: [
+        { name: "Why Sunstar", route: "/why-sunstar" },
+        { name: "Loyalty Program", route: "/loyalty-program" },
+        { name: "Come Shine With Us", route: "/career" },
+      ],
+    },
+
     {
       name: "Hotels",
       icon: <HotelIcon sx={{ fontSize: 20 }} />,
-      action: openHotelModal
+      action: openHotelModal,
     },
-    { name: "Corporate Booking", icon: <BusinessIcon sx={{ fontSize: 20 }} />, route: "/corporate-booking" },
-    { name: "Day Use Room", icon: <BusinessIcon sx={{ fontSize: 20 }} />, route: "/dayuseroom" },
-    { name: "Contact", icon: <ContactMailIcon sx={{ fontSize: 20 }} />, route: "/contact" },
+
+    {
+      name: "Corporate Booking",
+      icon: <BusinessIcon sx={{ fontSize: 20 }} />,
+      hasDropdown: true,
+      items: [
+        { name: "Corporate Bookings", route: "/corporate-booking" },
+        { name: "Travel Agent", route: "/travel-agent" },
+        { name: "Developer And Owners", route: "/developers&owners" },
+      ],
+    },
+
+    {
+      name: "Tour & Travel",
+      icon: <BusinessIcon sx={{ fontSize: 20 }} />,
+      hasDropdown: true,
+      items: [
+        { name: "Tour & Travel", route: "/tour&travel" },
+        { name: "Event And Conference", route: "/eventandconference" },
+        { name: "Day Stays", route: "/dayuseroom" },
+      ],
+    },
+
+    {
+      name: "Contact Us",
+      icon: <ContactMailIcon sx={{ fontSize: 20 }} />,
+      hasDropdown: true,
+      items: [
+        { name: "Contact Us", route: "/contact" },
+        { name: "Blog & Buzz", route: "/sunstar-blogs" },
+        { name: "In the Media", route: "/in-the-media" },
+      ],
+    },
   ];
 
+
+  const handleMouseEnter = (name) => {
+    if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+    setOpenDropdown(name);
+  };
+
+  const handleMouseLeave = () => {
+    dropdownTimeoutRef.current = setTimeout(() => setOpenDropdown(null), 200);
+  };
+  const toggleMobileDropdown = (name) => {
+    setMobileOpenDropdown((prev) => (prev === name ? null : name));
+  };
+
+  // Cleanup timeout on unmount
   useEffect(() => {
-    // Close mobile menu when route changes
+    return () => {
+      if (dropdownTimeoutRef.current) {
+        clearTimeout(dropdownTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     setIsMenuOpen(false);
-    
-    // Improved active tab detection logic
+
     if (location.pathname === "/") {
       setActive("Home");
     } else if (location.pathname.startsWith("/hotels")) {
@@ -89,11 +174,10 @@ const Navbar = () => {
     } else if (location.pathname === "/corporate-booking") {
       setActive("Corporate Booking");
     } else if (location.pathname === "/dayuseroom") {
-      setActive("Day Use Room");
+      setActive("Day Stays");
     } else if (location.pathname === "/contact") {
       setActive("Contact");
     } else {
-      // For any other path, extract and format the name from the path
       const pathName = location.pathname
         .replace("/", "")
         .replace(/-/g, " ")
@@ -108,26 +192,32 @@ const Navbar = () => {
 
   const closeMobileMenu = () => {
     setIsMenuOpen(false);
+    setIsMobileDropdownOpen(false);
   };
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-    
-    // Cleanup on unmount
+
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isMenuOpen]);
 
+  const handleDropdownItemClick = (route) => {
+    navigate(route);
+    setIsDropdownOpen(false);
+    setIsMobileDropdownOpen(false);
+    closeMobileMenu();
+  };
+
   return (
     <>
       <nav className={`bg-transparent nav ${navColor ? 'text-black' : 'text-primary-white'} py-4 top-2 absolute w-full z-40`}>
-        <div className="content flex justify-between items-center min-h-[60px] px-4 md:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto flex justify-between items-center min-h-[60px] px-4 md:px-6 lg:px-8">
           {/* Logo */}
           <Link to="/" className="text-2xl font-bold flex-shrink-0">
             <img
@@ -138,67 +228,114 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex gap-10 items-center flex-1 justify-center">
-            <ul className="flex items-center space-x-6">
-              {navItems.map(({ name, route, action }, index) => (
-                <li key={index}>
-                  <button
-                    onClick={() => {
-                      if (action) {
-                        action();
-                      } else if (route) {
-                        navigate(route);
-                      }
-                    }}
-                    className={`flex items-center px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${
-                      active === name ? "text-primary-yellow" : "hover:text-primary-yellow"
-                    }`}
-                  >
-                    <span className="text-desktop/body/1 font-semibold whitespace-nowrap">{name}</span>
-                  </button>
-                </li>
+          <div className="hidden xl:flex gap-10 items-center flex-1 justify-center">
+            <ul className="flex items-center space-x-2">
+              {navItems.map(({ name, route, action, hasDropdown, items }, index) => (
+                <li
+                  key={index}
+                  className="relative"
+                  onMouseEnter={hasDropdown ? () => handleMouseEnter(name) : undefined}
+                  onMouseLeave={hasDropdown ? handleMouseLeave : undefined}
+                >
+                  {hasDropdown ? (
+                    <div>
+                      <button
+                        className={`flex items-center gap-1 px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name ? "text-primary-yellow" : "hover:text-primary-yellow"}`}
+                      >
+                        <span className="text-desktop/body/1 font-semibold whitespace-nowrap">{name}</span>
+                        <KeyboardArrowDownIcon
+                          sx={{
+                            fontSize: 20,
+                            transition: 'transform 0.3s ease',
+                            transform: openDropdown === name ? 'rotate(180deg)' : 'rotate(0deg)'
+                          }}
+                        />
+                      </button>
+
+                      {/* Dropdown */}
+                      <div
+                        className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded-xl shadow-2xl overflow-hidden transition-all duration-300 ease-out ${openDropdown === name ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+                          }`}
+                        style={{
+                          minWidth: '240px', // enough for 2–3 items
+                          maxWidth: '320px', pointerEvents: openDropdown === name ? 'auto' : 'none' }}
+                      >
+                      <div className="grid grid-cols-1 gap-1 p-3">
+                        {items?.map((item, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => handleDropdownItemClick(item.route)}
+                            className="group text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50 hover:text-primary-yellow rounded-lg transition-all duration-200 flex items-center justify-between"
+                          >
+                            <span>{item.name}</span>
+                            <svg
+                              className="w-4 h-4 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 transition-all duration-200"
+                              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    </div>
+              ) : (
+              <button
+                onClick={() => {
+                  if (action) action();
+                  else if (route) navigate(route);
+                }}
+                className={`flex items-center px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name ? "text-primary-yellow" : "hover:text-primary-yellow"}`}
+              >
+                <span className="text-desktop/body/1 font-semibold whitespace-nowrap">{name}</span>
+              </button>
+                  )}
+            </li>
               ))}
-            </ul>
+          </ul>
 
-            {/* Pay Now Button - Desktop */}
-            {isHotelsPath && (
-              <a href={payLink} target="_blank" rel="noopener noreferrer">
-                <button className="bg-primary-yellow px-4 py-4 text-sm text-black font-bold rounded-full mr-4">
-                  Pay Now
-                </button>
-              </a>
-            )}
-          </div>
 
+        </div>
+
+        <div className="flex gap-4">
+          {/* Pay Now Button - Desktop */}
+          {isHotelsPath && (
+            <a href={payLink} target="_blank" rel="noopener noreferrer">
+              <button className="bg-primary-yellow px-4 py-3 text-sm text-white hover:text-black font-bold rounded-full mr-4 hover:bg-yellow-500 transition-all duration-300 hover:shadow-lg">
+                Pay Now
+              </button>
+            </a>
+          )}
           {/* Desktop User Profile */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden xl:flex items-center">
             {userInfo ? (
-              <div 
-                onClick={() => navigate('/user/profile', { state: { tab: "profile" } })} 
-                className="bg-white border-2 cursor-pointer text-primary-yellow font-bold w-12 h-12 rounded-full flex items-center justify-center"
+              <div
+                onClick={() => navigate('/user/profile', { state: { tab: "profile" } })}
+                className="bg-white border-2 cursor-pointer text-primary-yellow font-bold w-12 h-12 rounded-full flex items-center justify-center hover:border-primary-yellow hover:shadow-lg transition-all duration-300"
               >
                 {userData?.data.firstName?.[0]?.toUpperCase()}{userData?.data.lastName?.[0]?.toUpperCase()}
-              </div> 
+              </div>
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="text-primary-yellow px-4 py-2 border-2 border-primary-yellow rounded-full font-bold"
+                className="text-primary-yellow px-4 py-2 border-2 border-primary-yellow rounded-full font-bold hover:bg-primary-yellow hover:text-black transition-all duration-300"
               >
                 Login
               </button>
             )}
           </div>
 
+
           {/* Mobile Menu Toggle and User Profile */}
-          <div className="flex gap-3 items-center lg:hidden">
+          <div className="flex gap-3 items-center xl:hidden">
             {/* User Profile for Mobile */}
             {userInfo ? (
-              <div 
-                onClick={() => navigate('/user/profile', { state: { tab: "profile" } })} 
+              <div
+                onClick={() => navigate('/user/profile', { state: { tab: "profile" } })}
                 className="bg-white border-2 cursor-pointer text-primary-yellow font-bold w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm flex-shrink-0"
               >
                 {userData?.data.firstName?.[0]?.toUpperCase()}{userData?.data.lastName?.[0]?.toUpperCase()}
-              </div> 
+              </div>
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
@@ -222,140 +359,190 @@ const Navbar = () => {
             </button>
           </div>
         </div>
-      </nav>
 
-      {/* Login Modal */}
-      {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
+      </div>
+    </nav >
 
-      {/* Mobile Menu Overlay */}
-      {isMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={closeMobileMenu}
-        />
-      )}
+      {/* Login Modal */ }
+  { showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} /> }
 
-      {/* Mobile and Tablet Menu (Slide-in Sidebar) */}
+  {/* Mobile Menu Overlay */ }
+  {
+    isMenuOpen && (
       <div
-        className={`fixed top-0 bottom-0 lg:hidden left-0 bg-primary-white text-[#A4A4A4] font-semibold w-80 max-w-[85vw] transform transition-transform ease-in-out duration-300 z-50 overflow-hidden ${
-          isMenuOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        {/* Header with Logo and Close Button */}
-        <div className="flex justify-between items-center p-4 border-b border-gray-200 bg-white">
-          <Link to="/" onClick={closeMobileMenu} className="flex-shrink-0">
-            <img
-              src="/images/Logo/mobileLogo.svg"
-              alt="Logo"
-              className="h-[26px] w-[100px]"
-            />
-          </Link>
-          <button
-            className="text-black focus:outline-none p-2 hover:bg-gray-100 rounded-full flex-shrink-0"
-            onClick={closeMobileMenu}
-            aria-label="Close menu"
-          >
-            <CloseIcon sx={{ fontSize: 24 }} />
-          </button>
-        </div>
+        className="fixed inset-0 bg-black bg-opacity-50 z-40 xl:hidden backdrop-blur-sm"
+        onClick={closeMobileMenu}
+      />
+    )
+  }
 
-        {/* Navigation Items - Scrollable Area */}
-        <div className="flex-1 overflow-y-auto max-h-[345px]" >
-          <div className="py-4">
-            <div className="space-y-1 px-4">
-              {navItems.map(({ name, icon, route, action }, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    if (action) {
-                      action();
-                    } else if (route) {
-                      navigate(route);
-                    }
-                    closeMobileMenu();
-                  }}
-                  className={`flex items-center space-x-3 w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${
-                    active === name 
-                      ? "text-primary-yellow bg-yellow-50 border-l-4 border-primary-yellow" 
-                      : "hover:text-primary-yellow hover:bg-gray-50"
-                  }`}
-                >
-                  <span className="flex-shrink-0">{icon}</span>
-                  <span className="text-base font-medium">{name}</span>
-                </button>
-              ))}
+  {/* Mobile and Tablet Menu (Slide-in Sidebar) */ }
+      <div
+        className={`fixed top-0 bottom-0 xl:hidden left-0 bg-primary-white text-[#A4A4A4] font-semibold w-80 max-w-[85vw] transform transition-transform ease-in-out duration-300 z-50 overflow-hidden shadow-2xl ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+      >
+        <div className="flex flex-col justify-between h-[100%]">
+          <div>
+            {/* Header with Logo and Close Button */}
+            <div className="flex justify-between items-center p-4 border-b border-gray-200 bg-white">
+              <Link to="/" onClick={closeMobileMenu} className="flex-shrink-0">
+                <img
+                  src="/images/Logo/mobileLogo.svg"
+                  alt="Logo"
+                  className="h-[26px] w-[100px]"
+                />
+              </Link>
+              <button
+                className="text-black focus:outline-none p-2 hover:bg-gray-100 rounded-full flex-shrink-0 transition-colors duration-200"
+                onClick={closeMobileMenu}
+                aria-label="Close menu"
+              >
+                <CloseIcon sx={{ fontSize: 24 }} />
+              </button>
             </div>
 
-            {/* Pay Now Button for Mobile - Only show when on hotels path */}
-            {isHotelsPath && (
-              <div className="px-4 mt-6">
-                <a href={payLink} target="_blank" rel="noopener noreferrer" onClick={closeMobileMenu}>
-                  <button className="w-full bg-primary-yellow text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors duration-300">
-                    Pay Now
-                  </button>
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
+            {/* Navigation Items - Scrollable Area */}
+            <div className="flex-1 overflow-y-auto max-h-[380px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+              <div className="py-4">
+                <div className="space-y-1 px-4">
+                  {navItems.map(({ name, icon, route, action, hasDropdown, items }, index) => (
+                    <div key={index}>
+                      {hasDropdown ? (
+                        <div>
+                          <button
+                            onClick={() => toggleMobileDropdown(name)}
+                            className={`flex items-center justify-between w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${active === name ? "text-primary-yellow bg-yellow-50 border-l-4 border-primary-yellow" : "hover:text-primary-yellow hover:bg-gray-50"
+                              }`}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <span className="flex-shrink-0">{icon}</span>
+                              <span className="text-base font-medium">{name}</span>
+                            </div>
+                            <KeyboardArrowDownIcon
+                              sx={{
+                                fontSize: 20,
+                                transition: 'transform 0.3s ease',
+                                transform: mobileOpenDropdown === name ? 'rotate(180deg)' : 'rotate(0deg)'
+                              }}
+                            />
+                          </button>
 
-        {/* Social Links Section - Fixed at Bottom */}
-        <div className="border-t border-gray-200 p-4 bg-gray-50" style={{ height: '180px' }}>
-          <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
-            Follow Us
-          </h3>
-          <div className="grid grid-cols-2 gap-2">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-white transition-colors duration-300"
-              onClick={closeMobileMenu}
-            >
-              <InstagramIcon sx={{ color: "#FDC114", fontSize: 18 }} />
-              <span className="text-xs">Instagram</span>
-            </a>
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-white transition-colors duration-300"
-              onClick={closeMobileMenu}
-            >
-              <FacebookIcon sx={{ color: "#FDC114", fontSize: 18 }} />
-              <span className="text-xs">Facebook</span>
-            </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-white transition-colors duration-300"
-              onClick={closeMobileMenu}
-            >
-              <YouTubeIcon sx={{ color: "#FDC114", fontSize: 18 }} />
-              <span className="text-xs">YouTube</span>
-            </a>
-            <a
-              href="https://www.linkedin.com/company/hotelsunstargroup/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-white transition-colors duration-300"
-              onClick={closeMobileMenu}
-            >
-              <LinkedInIcon sx={{ color: "#FDC114", fontSize: 18 }} />
-              <span className="text-xs">LinkedIn</span>
-            </a>
-            <a
-              href="https://in.pinterest.com/hotel_sunstar_groupm"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-white transition-colors duration-300 col-span-2 justify-center"
-              onClick={closeMobileMenu}
-            >
-              <PinterestIcon sx={{ color: "#FDC114", fontSize: 18 }} />
-              <span className="text-xs">Pinterest</span>
-            </a>
+                          <div
+                            className={`overflow-hidden transition-all duration-300 ease-in-out ${mobileOpenDropdown === name ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
+                              }`}
+                          >
+                            <div className="ml-4 mt-1 space-y-1 border-l-2 border-gray-200 pl-4">
+                              {items?.map((item, idx) => (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleDropdownItemClick(item.route)}
+                                  className="group flex items-center justify-between w-full text-left px-4 py-2.5 text-sm text-gray-600 hover:text-primary-yellow hover:bg-yellow-50 rounded-md transition-all duration-200"
+                                >
+                                  <span>{item.name}</span>
+                                  <svg
+                                    className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 transition-all duration-200"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                  >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                  </svg>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            if (action) action();
+                            else if (route) navigate(route);
+                            closeMobileMenu();
+                          }}
+                          className={`flex items-center space-x-3 w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${active === name ? "text-primary-yellow bg-yellow-50 border-l-4 border-primary-yellow" : "hover:text-primary-yellow hover:bg-gray-50"
+                            }`}
+                        >
+                          <span className="flex-shrink-0">{icon}</span>
+                          <span className="text-base font-medium">{name}</span>
+                        </button>
+                      )}
+                    </div>
+                  ))}
+
+                </div>
+
+                {/* Pay Now Button for Mobile */}
+                {/* {isHotelsPath && (
+                  <div className="px-4 mt-6">
+                    <a href={payLink} target="_blank" rel="noopener noreferrer" onClick={closeMobileMenu}>
+                      <button className="w-full bg-primary-yellow text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors duration-300 shadow-md hover:shadow-lg">
+                        Pay Now
+                      </button>
+                    </a>
+                  </div>
+                )} */}
+              </div>
+            </div>
+
           </div>
+
+          {/* Social Links Section - Fixed at Bottom */}
+          <div className="border-t border-gray-200 p-4 bg-gradient-to-b from-gray-50 to-gray-100" style={{ height: '180px' }}>
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
+              Follow Us
+            </h3>
+            <div className="grid grid-cols-2 gap-2">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 p-2 rounded-lg hover:bg-white transition-all duration-300 hover:shadow-sm"
+                onClick={closeMobileMenu}
+              >
+                <InstagramIcon sx={{ color: "#FDC114", fontSize: 18 }} />
+                <span className="text-xs">Instagram</span>
+              </a>
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 p-2 rounded-lg hover:bg-white transition-all duration-300 hover:shadow-sm"
+                onClick={closeMobileMenu}
+              >
+                <FacebookIcon sx={{ color: "#FDC114", fontSize: 18 }} />
+                <span className="text-xs">Facebook</span>
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 p-2 rounded-lg hover:bg-white transition-all duration-300 hover:shadow-sm"
+                onClick={closeMobileMenu}
+              >
+                <YouTubeIcon sx={{ color: "#FDC114", fontSize: 18 }} />
+                <span className="text-xs">YouTube</span>
+              </a>
+              <a
+                href="https://www.linkedin.com/company/hotelsunstargroup/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 p-2 rounded-lg hover:bg-white transition-all duration-300 hover:shadow-sm"
+                onClick={closeMobileMenu}
+              >
+                <LinkedInIcon sx={{ color: "#FDC114", fontSize: 18 }} />
+                <span className="text-xs">LinkedIn</span>
+              </a>
+              <a
+                href="https://in.pinterest.com/hotel_sunstar_groupm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 p-2 rounded-lg hover:bg-white transition-all duration-300 hover:shadow-sm col-span-2 justify-center"
+                onClick={closeMobileMenu}
+              >
+                <PinterestIcon sx={{ color: "#FDC114", fontSize: 18 }} />
+                <span className="text-xs">Pinterest</span>
+              </a>
+            </div>
+          </div>
+
         </div>
       </div>
 

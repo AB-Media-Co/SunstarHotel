@@ -7,6 +7,7 @@ import BenefitsCard from "./Component/BenefitsCard";
 import DayRoomTandC from "./Component/DayRoomTandC";
 import DaysUseRoomFaq from "./Component/DaysUseRoomFaq";
 import Rooms from "./Component/Rooms";
+import ImageGallery from "../../Components/ImageGallery";
 
 const DayUseRoom = () => {
 
@@ -28,8 +29,11 @@ const DayUseRoom = () => {
             <BenefitsCard />
             <Rooms />
             <DayRoomTandC />
+            {/* <ImageGallery /> */}
+            <div className="relative flex  flex-col justify-between content items-center  z-0">
+                <ImageGallery />
+            </div>
             <DaysUseRoomFaq />
-
         </div>
     )
 }

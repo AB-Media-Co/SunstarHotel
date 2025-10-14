@@ -11,8 +11,6 @@ const ReadBlog = () => {
   const { data: blogs, isLoading: blogsLoading } = useGetBlogs2({ status: "all" })
   const { data: blog, isLoading: blogLoading, error: blogError } = useGetBlogById2(state?.blog?._id);
 
-  console.log(blog, "blog data")
-
   const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -58,7 +56,7 @@ const ReadBlog = () => {
             />
             <div className="absolute inset-0 bg-black bg-opacity-50 transition duration-300"></div>
             <div className="absolute content bottom-[30%] left-0 right-0 p-4">
-              <h1 className="max-w-3xl text-3xl md:text-6xl font-bold text-white">{blog?.title}</h1>
+              <h1 className="max-w-3xl text-mobile/h2 md:text-desktop/h2 font-bold text-white">{blog?.title}</h1>
             </div>
           </div>
         )}

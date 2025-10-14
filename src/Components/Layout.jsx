@@ -1,12 +1,17 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 
 const Layout = () => {
+  const location = useLocation();
+
+  // check if current route is /thankyou
+  const hideNavbar = location.pathname === "/thankyou";
+
   return (
     <div className='home '>
-      <Navbar />
+      {!hideNavbar && <Navbar />}
       <Outlet />
       <Footer />
       {/* <HotelDropdown/> */}

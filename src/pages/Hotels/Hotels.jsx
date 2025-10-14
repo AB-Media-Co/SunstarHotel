@@ -20,12 +20,12 @@ import { useCallback, useEffect, useState } from "react"; // Add useCallback
 import {
   format,
 } from "date-fns";
+import RoomsCard from "../../Components/RoomsCard";
 
 const Hotels = () => {
   const { hotelCode } = useParams();
-    const { state } = useLocation();
-    console.log(state, "state in hotels page");
-  
+  const { state } = useLocation();
+
   const [hotelData, setHotelData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -86,7 +86,8 @@ const Hotels = () => {
   }
 
   console.log("Hotel Data:", hotelData);
-
+  const rooms = roomsData?.rooms
+  console.log("rooms Data:", rooms);
 
   return (
     <div className="bg-gray-100">
@@ -102,7 +103,29 @@ const Hotels = () => {
 
         <HotelCard hotelData={hotelData} openCalender={openCalender}
           setOpenCalender={setOpenCalender} />
-        <RoomLayout rooms={roomsData?.rooms} />
+        {/* <RoomLayout rooms={roomsData?.rooms} /> */}
+
+        <div id="rooms" className="content py-6 px-4">
+          <h1 className="text-mobile/h3 md:text-desktop/h3 font-bold mb-6">Rooms</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+            {rooms?.filter(room => room.show)?.length > 0 ?
+              (
+                <>
+                  {rooms?.filter(room => room.show)?.map((room, index) => (
+                    <div key={index}
+                      data-aos="fade-up"
+                      data-aos-delay={index * 100} >
+                      <RoomsCard key={room._id} room={room} />
+                    </div>
+                  ))}
+                </>
+
+              )
+              : (<>No data Available</>)
+
+            }
+          </div>
+        </div>
         <AmenitiesList2 amenities={hotelData?.amenities} />
         <div id="reviews">
 
@@ -112,7 +135,7 @@ const Hotels = () => {
           />
         </div>
         {hotelData?.imageSections && <HotelImageCarousel data={hotelData?.imageSections} />}
-        <Location address={hotelData?.location} city={hotelData?.cityLocation?.name} />
+        <Location hotelData={hotelData} address={hotelData?.location} city={hotelData?.cityLocation?.name} />
         <BannerSection
           data={hotelData?.aboutUs}
           text='text-mobile/h3 md:text-desktop/h3'
@@ -122,7 +145,7 @@ const Hotels = () => {
           lineh='[60px]'
           bg='bg-primary-white'
           paddTop='0 items-start gap-10'
-          
+
         />
         <div className="relative z-10 content">
           <ImageGallery breakpointColumnsObj={HotelPageImgGallery.breakpointColumnsObj} items={HotelPageImgGallery.items} />

@@ -1,155 +1,78 @@
-import React from 'react';
-import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
+// src/pages/Partnerlogos.jsx
+import { useGetPartners } from "../../../ApiHooks/usePartnersHooks";
+import { motion } from "framer-motion";
 
 const Partnerlogos = () => {
-  const { homePartners, loading, Loader } = useUpdatePagesHook();
-  console.log(homePartners);
-
-  // Show loader while data is being fetched
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        {Loader && <Loader />}
-      </div>
-    );
-  }
-
-  // Return null if no data
-  if (!homePartners || !homePartners.logos || homePartners.logos.length === 0) {
-    return null;
-  }
-
-  const { heading, subheading, layout, logos } = homePartners;
-
-  // Grid Layout Component
-  const GridLayout = () => (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
-      {logos.map((logo, index) => (
-        <div
-          key={index}
-          className="flex items-center justify-center transition-shadow duration-300 "
-        >
-          {logo.link ? (
-            <a
-              href={logo.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full h-full"
-            >
-              <img
-                src={logo.src}
-                alt={logo.alt || `Partner logo ${index + 1}`}
-                className="w-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                loading="lazy"
-              />
-            </a>
-          ) : (
-            <img
-              src={logo.src}
-              alt={logo.alt || `Partner logo ${index + 1}`}
-              className="w-full  object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-              loading="lazy"
-            />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-
-  // Carousel Layout Component
-  const CarouselLayout = () => (
-    <div className="relative overflow-hidden">
-      <div className="flex animate-scroll gap-8 md:gap-12">
-        {/* First set of logos */}
-        {logos.map((logo, index) => (
-          <div
-            key={`first-${index}`}
-            className="flex-shrink-0 flex items-center justify-center transition-shadow duration-300 "
-          >
-            {logo.link ? (
-              <a
-                href={logo.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full h-full"
-              >
-                <img
-                  src={logo.src}
-                  alt={logo.alt || `Partner logo ${index + 1}`}
-                  className="w-full  object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                  loading="lazy"
-                />
-              </a>
-            ) : (
-              <img
-                src={logo.src}
-                alt={logo.alt || `Partner logo ${index + 1}`}
-                className="w-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                loading="lazy"
-              />
-            )}
-          </div>
-        ))}
-        {/* Duplicate set for seamless loop */}
-        {logos.map((logo, index) => (
-          <div
-            key={`second-${index}`}
-            className="flex-shrink-0 flex items-center justify-center p-4 bg-white rounded-lg shadow-sm border border-gray-100 w-24 md:w-32"
-          >
-            {logo.link ? (
-              <a
-                href={logo.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full h-full"
-              >
-                <img
-                  src={logo.src}
-                  alt={logo.alt || `Partner logo ${index + 1}`}
-                  className="w-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                  loading="lazy"
-                />
-              </a>
-            ) : (
-              <img
-                src={logo.src}
-                alt={logo.alt || `Partner logo ${index + 1}`}
-                className="w-full  object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                loading="lazy"
-              />
-            )}
-          </div>
-        ))}
-      </div>
-      
-      {/* Add custom CSS for carousel animation */}
-      <style jsx>{`
-        @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-scroll {
-          animation: scroll 20s linear infinite;
-        }
-        .animate-scroll:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
-    </div>
-  );
+  const { data: partners = [], isLoading, isError } = useGetPartners();
 
   return (
-    <section className="py-12  bg-gray-50">
-      <div className="content mx-auto">
-        {/* Header */}
-       
+    <section className="py-12 bg-gray-50">
+      <div className="content mx-auto max-w-6xl px-4">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-mobile/h2 md:text-desktop/h3 font-bold md:font-bold text-black text-center md:text-left mb-8 text-reveal-animation">
+          Our Partners
+        </motion.h2>
 
-        {/* Logos */}
-        <div className=" mx-auto">
-          {layout === 'carousel' ? <CarouselLayout /> : <GridLayout />}
-        </div>
+        {/* Loading state */}
+        {isLoading && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={i}
+                className="h-28 bg-white rounded-lg shadow-sm border border-gray-100 animate-pulse"
+              />
+            ))}
+          </div>
+        )}
 
-        
+        {/* Error state */}
+        {isError && (
+          <div className="text-center text-red-600">
+            Failed to load partners. Please try again later.
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!isLoading && !isError && partners.length === 0 && (
+          <div className="text-center text-gray-500">
+            No partners added yet.
+          </div>
+        )}
+
+        {/* Grid */}
+        {!isLoading && !isError && partners.length > 0 && (
+          <ul
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
+            aria-label="Partner logos"
+          >
+            {partners.map((p) => (
+              <li
+                key={p._id}
+                className="group bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                title={p.description || "Partner"}
+              >
+                {/* Logo box */}
+                <div className="aspect-[4/3] w-full p-4 flex items-center justify-center">
+                  {p.imageUrl ? (
+                    <img
+                      src={p.imageUrl}
+                      alt={p.description ? `${p.description} logo` : "Partner logo"}
+                      loading="lazy"
+                      className="max-h-full max-w-full object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-200"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-gray-100 rounded-md" />
+                  )}
+                </div>
+
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );

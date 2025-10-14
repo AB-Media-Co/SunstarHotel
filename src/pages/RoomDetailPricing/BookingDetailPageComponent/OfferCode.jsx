@@ -154,18 +154,10 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
       {/* Enhanced Header */}
       <div className="flex items-center mb-10 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-50 to-transparent rounded-xl opacity-50 -z-10"></div>
-        <div
-          className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-700 text-white mr-4 shadow-lg transform transition-transform hover:scale-105"
-          style={{ backgroundColor: primaryColor }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-            <line x1="7" y1="7" x2="7.01" y2="7"></line>
-          </svg>
-        </div>
+     
         <div>
-          <h2 className="text-xl md:text-4xl font-bold text-gray-800 mb-1">Exclusive Offers</h2>
-          <p className="text-gray-500 text-sm">Save more on your booking with our special deals</p>
+          <h2 className="text-mobile/h4 md:text-desktop/h4 text-gray-800 mb-1">Exclusive Offers</h2>
+          <p className="text-gray-500 text-mobile/body/2 md:text-desktop/body/1">Save more on your booking with our special deals</p>
         </div>
       </div>
 
@@ -229,10 +221,10 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
       {!appliedOffer && data && data.length > 0 && (
         <div className="mb-10">
           <div className="flex items-center mb-6">
-            <div className="w-1.5 h-8 rounded-full mr-4 bg-gradient-to-b from-cyan-400 to-cyan-600"></div>
+            {/* <div className="w-1.5 h-8 rounded-full mr-4 bg-gradient-to-b from-cyan-400 to-cyan-600"></div> */}
             <div>
-              <h3 className="text-2xl font-bold text-gray-800">Available Offers</h3>
-              <p className="text-gray-500 text-sm">Click on any offer to apply instantly</p>
+              <h3 className="text-mobile/h4 md:text-desktop/h4 text-gray-800">Available Offers</h3>
+              <p className="text-gray-500 text-mobile/body/2 md:text-desktop/body/1">Click on any offer to apply instantly</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -304,10 +296,10 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center">
-              <div className="w-1.5 h-8 rounded-full mr-4 bg-gradient-to-b from-cyan-400 to-cyan-600"></div>
+              {/* <div className="w-1.5 h-8 rounded-full mr-4 bg-gradient-to-b from-cyan-400 to-cyan-600"></div> */}
               <div>
-                <h3 className="text-2xl font-bold text-gray-800">Applied Offer</h3>
-                <p className="text-gray-500 text-sm">Your discount has been applied</p>
+                <h3 className="text-mobile/h4 md:text-desktop/h4 text-gray-800">Applied Offer</h3>
+                <p className="text-gray-500 text-mobile/body/2 md:text-desktop/body/1">Your discount has been applied</p>
               </div>
             </div>
             <button

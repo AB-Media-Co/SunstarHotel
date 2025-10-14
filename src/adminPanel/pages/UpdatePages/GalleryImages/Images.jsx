@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { uploadImagesAPIV2 } from "../../../../ApiHooks/useHotelHook2";
 import useUpdatePagesHook from "../../../../ApiHooks/useUpdatePagesHook";
-import MultipleImageUpload from '../../../Components/MultipleImageUpload';
+import MultipleImageUpload from "../../../Components/MultipleImageUpload";
 import {
   Button,
   Modal,
@@ -12,46 +12,61 @@ import {
   Tabs,
   Tab,
   TextField,
+  MenuItem,
 } from "@mui/material";
 import { Edit, Delete, Save } from "lucide-react";
 
+const pathOptions = [
+  { value: "default", label: "Default (Global)" },
+  { value: "travelAgent", label: "Travel Agent" },
+  { value: "career", label: "Career" },
+];
+
 const Images = () => {
   const { galleryImages, addGalleryImages } = useUpdatePagesHook();
+
   const [isUploading, setIsUploading] = useState(false);
   const [images, setImages] = useState([]);
   const [content, setContent] = useState([]);
+
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  
-  const [editingContent, setEditingContent] = useState('');
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [selectedColor, setSelectedColor] = useState('#ffffff');
 
-  // Predefined colors
+  const [editingContent, setEditingContent] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("#ffffff");
+
+  // NEW: selected path (default / travelAgent / career)
+  const [path, setPath] = useState("default");
+
   const predefinedColors = [
-    '#4DB8B6', // Teal
-    '#4DD0E2', // Light Blue
-    '#C4C4C4', // Gray
-    '#FDD304', // Yellow
-    '#F1B300', // Golden Yellow
-    '#FFE566', // Light Yellow
-    '#FFE359', // Pale Yellow
-    '#00E0FF', // Cyan
-    '#BDD9D8', // Light Gray-Blue
+    "#4DB8B6",
+    "#4DD0E2",
+    "#C4C4C4",
+    "#FDD304",
+    "#F1B300",
+    "#FFE566",
+    "#FFE359",
+    "#00E0FF",
+    "#BDD9D8",
   ];
 
+  // hydrate images/content for the selected path
   useEffect(() => {
-    if (galleryImages) {
-      if (galleryImages.images) {
-        setImages(galleryImages.images.map((img) => img));
-      } else if (Array.isArray(galleryImages)) {
-        setImages(galleryImages);
-      }
-      if (galleryImages.content) {
-        setContent(galleryImages.content);
-      }
-    }
-  }, [galleryImages]);
+    if (!galleryImages) return;
+
+    const gridForPath =
+      galleryImages?.[path] || // preferred path
+      galleryImages?.default || // fallback to default
+      galleryImages;            // legacy shape
+
+    const imgs = Array.isArray(gridForPath?.images) ? gridForPath.images : [];
+    const cnt = Array.isArray(gridForPath?.content) ? gridForPath.content : [];
+
+    setImages(imgs);
+    setContent(cnt);
+  }, [galleryImages, path]);
+
 
   const handleImagesUpload = async (selectedFiles) => {
     if (selectedFiles.length === 0) {
@@ -61,15 +76,16 @@ const Images = () => {
     setIsUploading(true);
     try {
       const data = await uploadImagesAPIV2(selectedFiles);
-      const uploadedUrls = Array.isArray(data) ? data : [data];
-      const newImageUrls = uploadedUrls[0].imageUrls;
+      const uploaded = Array.isArray(data) ? data : [data];
+      const newImageUrls = uploaded[0].imageUrls || [];
       setImages((prev) => [...prev, ...newImageUrls]);
       toast.success("Images uploaded successfully!");
     } catch (error) {
       console.error("Error uploading images:", error);
       toast.error("Error uploading images");
+    } finally {
+      setIsUploading(false);
     }
-    setIsUploading(false);
   };
 
   const handleRemoveImageUrl = (url) => {
@@ -82,15 +98,15 @@ const Images = () => {
     resetContentForm();
   };
 
-  const handleTabChange = (event, newValue) => {
+  const handleTabChange = (_e, newValue) => {
     setActiveTab(newValue);
     resetContentForm();
   };
 
   const resetContentForm = () => {
     setEditingIndex(null);
-    setEditingContent('');
-    setSelectedColor('#ffffff');
+    setEditingContent("");
+    setSelectedColor("#ffffff");
   };
 
   const handleAddOrUpdateContent = () => {
@@ -99,16 +115,10 @@ const Images = () => {
       return;
     }
 
-    const newItem = {
-      type: "div",
-      content: editingContent,
-      bg: selectedColor,
-    };
+    const newItem = { type: "div", content: editingContent, bg: selectedColor };
 
     if (editingIndex !== null) {
-      setContent((prev) =>
-        prev.map((item, index) => (index === editingIndex ? newItem : item))
-      );
+      setContent((prev) => prev.map((it, i) => (i === editingIndex ? newItem : it)));
       toast.success("Content updated successfully!");
     } else {
       setContent((prev) => [...prev, newItem]);
@@ -121,8 +131,8 @@ const Images = () => {
   const handleEditContent = (index) => {
     const item = content[index];
     setEditingIndex(index);
-    setEditingContent(item.content);
-    setSelectedColor(item.bg);
+    setEditingContent(item.content || "");
+    setSelectedColor(item.bg || "#ffffff");
   };
 
   const handleDeleteContent = (index) => {
@@ -132,14 +142,11 @@ const Images = () => {
 
   const handleSaveAll = async () => {
     try {
-      const massonaryGrid = {
-        images: images,
-        content: content,
-      };
-      const payload = { massonaryGrid };
-  
+      const massonaryGrid = { images, content };
+      const payload = { massonaryGrid, path }; // <-- include path
+
       await addGalleryImages(payload);
-      toast.success("Gallery updated successfully!");
+      toast.success(`Gallery updated for "${path}"!`);
       handleClose();
     } catch (error) {
       console.error("Error saving gallery:", error);
@@ -148,16 +155,12 @@ const Images = () => {
   };
 
   return (
-    <div className="">
+    <div>
       <div className="myGlobalButton" onClick={handleOpen}>
         Edit Gallery
       </div>
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="gallery-modal-title"
-      >
+      <Modal open={open} onClose={handleClose} aria-labelledby="gallery-modal-title">
         <Box
           sx={{
             position: "absolute",
@@ -172,17 +175,38 @@ const Images = () => {
             overflow: "auto",
           }}
         >
-          <div className="flex justify-between items-center mb-4">
+          {/* Header Row */}
+          <div className="flex justify-between items-center mb-4 gap-4 flex-wrap">
             <Typography variant="h5" id="gallery-modal-title">
               Edit Gallery
             </Typography>
+
+            {/* Path selector */}
+            <TextField
+              select
+              size="small"
+              label="Path"
+              value={path}
+              onChange={(e) => setPath(e.target.value)}
+              sx={{ minWidth: 220 }}
+              helperText="Choose grid scope (keeps data separate)"
+            >
+              {pathOptions.map((opt) => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </MenuItem>
+              ))}
+            </TextField>
+
             <Button
               variant="contained"
               onClick={handleSaveAll}
               startIcon={<Save size={18} />}
+              disabled={isUploading}
             >
               Save All Changes
             </Button>
+
           </div>
 
           <Tabs value={activeTab} onChange={handleTabChange}>
@@ -194,7 +218,7 @@ const Images = () => {
             {activeTab === 0 && (
               <div>
                 <Typography variant="h6" className="mb-4">
-                  Image Gallery
+                  Image Gallery ({path})
                 </Typography>
                 <MultipleImageUpload
                   onUploadSuccess={handleImagesUpload}
@@ -208,7 +232,7 @@ const Images = () => {
             {activeTab === 1 && (
               <div>
                 <Typography variant="h6" className="mb-4">
-                  {editingIndex !== null ? "Edit Content" : "Add New Content"}
+                  {editingIndex !== null ? "Edit Content" : "Add New Content"} ({path})
                 </Typography>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -228,9 +252,8 @@ const Images = () => {
                         {predefinedColors.map((color) => (
                           <div
                             key={color}
-                            className={`w-8 h-8 rounded-full cursor-pointer border-2 ${
-                              selectedColor === color ? 'border-black' : 'border-transparent'
-                            }`}
+                            className={`w-8 h-8 rounded-full cursor-pointer border-2 ${selectedColor === color ? "border-black" : "border-transparent"
+                              }`}
                             style={{ backgroundColor: color }}
                             onClick={() => setSelectedColor(color)}
                           />
@@ -238,22 +261,13 @@ const Images = () => {
                       </div>
 
                       <div className="mt-4 flex items-center gap-4">
-                        <div
-                          className="w-24 h-24 rounded border"
-                          style={{ backgroundColor: selectedColor }}
-                        />
+                        <div className="w-24 h-24 rounded border" style={{ backgroundColor: selectedColor }} />
                         <div className="space-x-2">
-                          <Button
-                            variant="contained"
-                            onClick={handleAddOrUpdateContent}
-                          >
+                          <Button variant="contained" onClick={handleAddOrUpdateContent}>
                             {editingIndex !== null ? "Update" : "Add"}
                           </Button>
                           {editingIndex !== null && (
-                            <Button
-                              variant="outlined"
-                              onClick={resetContentForm}
-                            >
+                            <Button variant="outlined" onClick={resetContentForm}>
                               Cancel
                             </Button>
                           )}
@@ -270,7 +284,7 @@ const Images = () => {
                       {content.map((item, index) => (
                         <div
                           key={index}
-                          className={`p-4 rounded relative`}
+                          className="p-4 rounded relative"
                           style={{ backgroundColor: item.bg }}
                         >
                           <p>{item.content}</p>

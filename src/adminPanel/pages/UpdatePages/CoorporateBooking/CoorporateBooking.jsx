@@ -18,108 +18,102 @@ import ImageUpload from "../../../Components/ImageUpload";
 
 const CoorporateBooking = () => {
   const { CoorporateBooking, updtateCoorporateBooking } = useUpdatePagesHook();
+
   const [formData, setFormData] = useState({
-    CoorporateBookingHeadContent: {
-      title: "",
-      description: "",
-      image: "",
-    },
-    CoorporateBookingDescription: {
-      title: "",
-      description: "",
-      image: "",
-    },
+    CoorporateBookingHeadContent: { title: "", description: "", image: "" },
+    CoorporateBookingDescription: { title: "", description: "", image: "" },
     BusinessPlatformSection: [],
+    BenefitsSection: [], // <-- NEW
   });
 
   const [headImageUploading, setHeadImageUploading] = useState(false);
   const [descImageUploading, setDescImageUploading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // Load initial data from API (including BusinessPlatformSection)
   useEffect(() => {
     if (CoorporateBooking) {
       setFormData({
         CoorporateBookingHeadContent: {
           title: CoorporateBooking.CoorporateBookingHeadContent?.title || "",
-          description:
-            CoorporateBooking.CoorporateBookingHeadContent?.description || "",
+          description: CoorporateBooking.CoorporateBookingHeadContent?.description || "",
           image: CoorporateBooking.CoorporateBookingHeadContent?.image || "",
         },
         CoorporateBookingDescription: {
-          title:
-            CoorporateBooking.CoorporateBookingDescription?.title || "",
-          description:
-            CoorporateBooking.CoorporateBookingDescription?.description || "",
-          image:
-            CoorporateBooking.CoorporateBookingDescription?.image || "",
+          title: CoorporateBooking.CoorporateBookingDescription?.title || "",
+          description: CoorporateBooking.CoorporateBookingDescription?.description || "",
+          image: CoorporateBooking.CoorporateBookingDescription?.image || "",
         },
-        BusinessPlatformSection:
-          CoorporateBooking.BusinessPlatformSection || [],
+        BusinessPlatformSection: CoorporateBooking.BusinessPlatformSection || [],
+        BenefitsSection: CoorporateBooking.BenefitsSection || [], // <-- NEW
       });
     }
   }, [CoorporateBooking]);
 
-  // Generic handler for Head & Description sections
+  // generic handler (head/desc)
   const handleInputChange = (section, field, value) => {
     setFormData((prev) => ({
       ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value,
-      },
+      [section]: { ...prev[section], [field]: value },
     }));
   };
-
-  const handleHeadFeatureChange = (field, value) => {
+  const handleHeadFeatureChange = (field, value) =>
     handleInputChange("CoorporateBookingHeadContent", field, value);
-  };
-
-  const handleDescFeatureChange = (field, value) => {
+  const handleDescFeatureChange = (field, value) =>
     handleInputChange("CoorporateBookingDescription", field, value);
-  };
 
-  // Business Platform Section handlers
+  // Business Platform handlers
   const handleBusinessPlatformChange = (index, field, value) => {
-    const updatedBusinessPlatforms = formData.BusinessPlatformSection.map(
-      (item, idx) => {
-        if (idx === index) {
-          return { ...item, [field]: value };
-        }
-        return item;
-      }
+    setFormData((prev) => {
+      const arr = [...prev.BusinessPlatformSection];
+      arr[index] = { ...arr[index], [field]: value };
+      return { ...prev, BusinessPlatformSection: arr };
+    });
+  };
+  const addBusinessPlatformSection = () => {
+    setFormData((prev) =>
+      prev.BusinessPlatformSection.length >= 4
+        ? prev
+        : {
+            ...prev,
+            BusinessPlatformSection: [
+              ...prev.BusinessPlatformSection,
+              { title: "", description: "" },
+            ],
+          }
     );
+  };
+  const removeBusinessPlatformSection = (index) => {
     setFormData((prev) => ({
       ...prev,
-      BusinessPlatformSection: updatedBusinessPlatforms,
+      BusinessPlatformSection: prev.BusinessPlatformSection.filter((_, i) => i !== index),
     }));
   };
 
-  const addBusinessPlatformSection = () => {
-    if (formData.BusinessPlatformSection.length < 4) {
-      setFormData((prev) => ({
-        ...prev,
-        BusinessPlatformSection: [
-          ...prev.BusinessPlatformSection,
-          { title: "", description: "" },
-        ],
-      }));
-    }
+  // ✅ Benefits handlers (NEW)
+  const handleBenefitChange = (index, field, value) => {
+    setFormData((prev) => {
+      const arr = [...prev.BenefitsSection];
+      arr[index] = { ...arr[index], [field]: value };
+      return { ...prev, BenefitsSection: arr };
+    });
   };
-
-  const removeBusinessPlatformSection = (index) => {
-    const updatedBusinessPlatforms = formData.BusinessPlatformSection.filter(
-      (_, idx) => idx !== index
+  const addBenefit = () => {
+    setFormData((prev) =>
+      prev.BenefitsSection.length >= 6
+        ? prev
+        : { ...prev, BenefitsSection: [...prev.BenefitsSection, { title: "", description: "" }] }
     );
+  };
+  const removeBenefit = (index) => {
     setFormData((prev) => ({
       ...prev,
-      BusinessPlatformSection: updatedBusinessPlatforms,
+      BenefitsSection: prev.BenefitsSection.filter((_, i) => i !== index),
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Send entire formData (including the BusinessPlatformSection) to the API
+    // will now include BenefitsSection too
     updtateCoorporateBooking(formData);
     setOpen(false);
   };
@@ -130,193 +124,118 @@ const CoorporateBooking = () => {
         Corporate Booking Page
       </div>
 
-      {/* Modal (Dialog) containing the form */}
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
         <DialogTitle>Corporate Booking</DialogTitle>
         <form onSubmit={handleSubmit}>
           <DialogContent>
-            {/* Head Content Section */}
+            {/* Head */}
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h5" gutterBottom>
-                Head Content
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+              <Typography variant="h5" gutterBottom>Head Content</Typography>
+              <Grid container spacing={2} direction="column">
+                <Grid item>
                   <TextField
                     label="Title"
-                    variant="outlined"
                     fullWidth
                     value={formData.CoorporateBookingHeadContent.title}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "CoorporateBookingHeadContent",
-                        "title",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleInputChange("CoorporateBookingHeadContent","title",e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  {/* Image Upload for Head Content */}
+                <Grid item>
                   <ImageUpload
                     feature={formData.CoorporateBookingHeadContent}
                     handleFeatureChange={handleHeadFeatureChange}
                     index={0}
                     setImageUpload={setHeadImageUploading}
                   />
-                  {/* Small image preview */}
                   {formData.CoorporateBookingHeadContent.image && (
                     <Box mt={1}>
                       <img
                         src={formData.CoorporateBookingHeadContent.image}
                         alt="Preview"
-                        style={{
-                          width: 50,
-                          height: 50,
-                          objectFit: "cover",
-                          borderRadius: "4px",
-                        }}
+                        style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }}
                       />
                     </Box>
                   )}
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item>
                   <TextField
                     label="Description"
-                    variant="outlined"
                     fullWidth
                     multiline
                     rows={4}
                     value={formData.CoorporateBookingHeadContent.description}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "CoorporateBookingHeadContent",
-                        "description",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleInputChange("CoorporateBookingHeadContent","description",e.target.value)}
                   />
                 </Grid>
               </Grid>
             </Box>
 
-            {/* Description Content Section */}
+            {/* Description */}
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h5" gutterBottom>
-                Description Content
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+              <Typography variant="h5" gutterBottom>Description Content</Typography>
+              <Grid container spacing={2} direction="column">
+                <Grid item>
                   <TextField
                     label="Title"
-                    variant="outlined"
                     fullWidth
                     value={formData.CoorporateBookingDescription.title}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "CoorporateBookingDescription",
-                        "title",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleInputChange("CoorporateBookingDescription","title",e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  {/* Image Upload for Description Content */}
+                <Grid item>
                   <ImageUpload
                     feature={formData.CoorporateBookingDescription}
                     handleFeatureChange={handleDescFeatureChange}
                     index={1}
                     setImageUpload={setDescImageUploading}
                   />
-                  {/* Small image preview */}
                   {formData.CoorporateBookingDescription.image && (
                     <Box mt={1}>
                       <img
                         src={formData.CoorporateBookingDescription.image}
                         alt="Preview"
-                        style={{
-                          width: 50,
-                          height: 50,
-                          objectFit: "cover",
-                          borderRadius: "4px",
-                        }}
+                        style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }}
                       />
                     </Box>
                   )}
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item>
                   <TextField
                     label="Description"
-                    variant="outlined"
                     fullWidth
                     multiline
                     rows={4}
                     value={formData.CoorporateBookingDescription.description}
-                    onChange={(e) =>
-                      handleInputChange(
-                        "CoorporateBookingDescription",
-                        "description",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleInputChange("CoorporateBookingDescription","description",e.target.value)}
                   />
                 </Grid>
               </Grid>
             </Box>
 
-            {/* Business Platform Section */}
+            {/* Business Platform */}
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h5" gutterBottom>
-                Business Platform Section
-              </Typography>
-              {/* Display already added items (if any) as editable fields */}
+              <Typography variant="h5" gutterBottom>Business Platform Section</Typography>
               {formData.BusinessPlatformSection.map((platform, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    mb: 2,
-                    border: "1px solid #ccc",
-                    borderRadius: 1,
-                    p: 2,
-                  }}
-                >
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={5}>
+                <Box key={index} sx={{ mb: 2, border: "1px solid #ccc", borderRadius: 1, p: 2 }}>
+                  <Grid container spacing={2} direction="column">
+                    <Grid item>
                       <TextField
                         label="Title"
-                        variant="outlined"
                         fullWidth
                         value={platform.title}
-                        onChange={(e) =>
-                          handleBusinessPlatformChange(
-                            index,
-                            "title",
-                            e.target.value
-                          )
-                        }
+                        onChange={(e) => handleBusinessPlatformChange(index, "title", e.target.value)}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={5}>
+                    <Grid item>
                       <TextField
                         label="Description"
-                        variant="outlined"
                         fullWidth
                         value={platform.description}
-                        onChange={(e) =>
-                          handleBusinessPlatformChange(
-                            index,
-                            "description",
-                            e.target.value
-                          )
-                        }
+                        onChange={(e) => handleBusinessPlatformChange(index, "description", e.target.value)}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={2}>
-                      <IconButton
-                        onClick={() => removeBusinessPlatformSection(index)}
-                        color="error"
-                      >
+                    <Grid item>
+                      <IconButton onClick={() => removeBusinessPlatformSection(index)} color="error">
                         <DeleteIcon />
                       </IconButton>
                     </Grid>
@@ -331,7 +250,49 @@ const CoorporateBooking = () => {
                 Add Business Platform
               </Button>
             </Box>
+
+            {/* ✅ Benefits Section */}
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="h5" gutterBottom>Benefits Section</Typography>
+              {formData.BenefitsSection.map((benefit, index) => (
+                <Box key={index} sx={{ mb: 2, border: "1px solid #ccc", borderRadius: 1, p: 2 }}>
+                  <Grid container spacing={2} direction="column">
+                    <Grid item>
+                      <TextField
+                        label="Title"
+                        fullWidth
+                        value={benefit.title}
+                        onChange={(e) => handleBenefitChange(index, "title", e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        label="Description"
+                        fullWidth
+                        multiline
+                        minRows={2}
+                        value={benefit.description}
+                        onChange={(e) => handleBenefitChange(index, "description", e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <IconButton onClick={() => removeBenefit(index)} color="error">
+                        <DeleteIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Box>
+              ))}
+              <Button
+                variant="outlined"
+                onClick={addBenefit}
+                disabled={formData.BenefitsSection.length >= 6}
+              >
+                Add Benefit
+              </Button>
+            </Box>
           </DialogContent>
+
           <DialogActions>
             {headImageUploading || descImageUploading ? (
               <CircularProgress />

@@ -8,6 +8,9 @@ import FormData from "./Components/FormData";
 import { useEffect, useState } from "react";
 import CoorporateBookingFaqs from "./Components/CoorporateBookingFaqs";
 import CorporateSignupModal from "./Components/CorporateSignupModal"; // ⬅️ NEW
+import Partnerlogos from "../Home/Components/Partnerlogos";
+import ExclusiveBenifits from "./Components/ExclusiveBenifits";
+import TestimonialSection from "../../Components/TestimonialSection"
 
 const CorporateBooking = () => {
   const { CoorporateBooking } = useUpdatePagesHook();
@@ -36,7 +39,7 @@ const CorporateBooking = () => {
 
       <BannerSection
         data={CoorporateBooking?.CoorporateBookingHeadContent}
-        text="text-mobile/h3 md:text-desktop/h3"
+        text="text-mobile/h2 md:text-desktop/h2"
         lineh="text-mobile/body/1 md:leading-[50px]"
         paddTop="pt-[80px]"
         imgClass="px-10"
@@ -56,8 +59,13 @@ const CorporateBooking = () => {
       />
 
       <hr className="content" />
+
+      <ExclusiveBenifits data={CoorporateBooking?.BenefitsSection} />
       <BusinessPlatform features={CoorporateBooking?.BusinessPlatformSection} />
 
+      <Partnerlogos />
+
+      <TestimonialSection page="coorporatebooking" />
       {/* <SunstarEnquiryForm /> */}
       <FormData />
       <CoorporateBookingFaqs />

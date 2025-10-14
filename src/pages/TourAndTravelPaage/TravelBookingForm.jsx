@@ -131,7 +131,7 @@ export default function TravelBookingForm() {
                                 <input
                                     type="text"
                                     name="name"
-                                    placeholder="Type your Name"
+                                    placeholder="Name"
                                     value={formData.name}
                                     onChange={handleInputChange}
                                     className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-teal-300 rounded-lg focus:outline-none focus:border-teal-500 transition-colors text-sm md:text-base"
@@ -141,7 +141,7 @@ export default function TravelBookingForm() {
                                 <input
                                     type="email"
                                     name="email"
-                                    placeholder="Email id"
+                                    placeholder="Email"
                                     value={formData.email}
                                     onChange={handleInputChange}
                                     className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-teal-300 rounded-lg focus:outline-none focus:border-teal-500 transition-colors text-sm md:text-base"
@@ -155,7 +155,7 @@ export default function TravelBookingForm() {
                                 <input
                                     type="tel"
                                     name="contact"
-                                    placeholder="Contact No."
+                                    placeholder="Phone"
                                     value={formData.contact}
                                     onChange={handleInputChange}
                                     className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-teal-300 rounded-lg focus:outline-none focus:border-teal-500 transition-colors text-sm md:text-base"
@@ -165,7 +165,7 @@ export default function TravelBookingForm() {
                                 <input
                                     type="date"
                                     name="travelDate"
-                                    placeholder="Date of Travel"
+                                    placeholder="Tour start date"
                                     value={formData.travelDate}
                                     onChange={handleInputChange}
                                     className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-teal-300 rounded-lg focus:outline-none focus:border-teal-500 transition-colors text-sm md:text-base"
@@ -177,7 +177,7 @@ export default function TravelBookingForm() {
                         <div>
                             <textarea
                                 name="enquiry"
-                                placeholder="*Your Enquiry"
+                                placeholder="Your Enquiry"
                                 rows="4"
                                 value={formData.enquiry}
                                 onChange={handleInputChange}
@@ -210,7 +210,7 @@ export default function TravelBookingForm() {
                                 </div>
                                 <div className="flex items-center gap-2 md:gap-3">
                                     <Phone className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
-                                    <span className="text-xs md:text-sm">+91 11 4122 5666</span>
+                                    <span className="text-xs md:text-sm">+91 01142503285</span>
                                 </div>
                             </div>
                         </div>

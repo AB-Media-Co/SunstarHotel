@@ -90,13 +90,27 @@ const RoomPriceSection = ({ roomData, hotelDetail }) => {
               </div>
             </div>
           ) : (
-            <div className="flex justify-end">
-              <button
-                onClick={handleBooking}
-                className="bg-primary-green px-5 md:px-6 py-2 rounded-md text-white font-semibold text-base md:text-lg w-full md:w-auto"
-              >
-                Book Room
-              </button>
+            <div className="flex flex-col gap-4">
+
+              <div className="flex gap-2 justify-end items-center">
+                <img src="/images/tripadvisor-logo.svg" alt="" className="h-6" />
+                <p className="text-teal-500 text-xl md:text-2xl font-bold whitespace-nowrap leading-none">5.0</p>
+
+              </div>
+
+              <div className="flex justify-end items-center gap-2">
+                <p className="text-primary-green text-sm md:text-base flex items-center font-medium italic">
+                  <FlashOnRounded className="rotate-[20deg] mr-1 align-[-2px]" />
+                  Book directly for the lowest price
+                </p>
+
+                <button
+                  onClick={handleBooking}
+                  className="bg-primary-green px-5 md:px-6 py-2 rounded-md text-white font-semibold text-base md:text-lg w-full md:w-auto"
+                >
+                  Book Room
+                </button>
+              </div>
             </div>
           )}
         </div>

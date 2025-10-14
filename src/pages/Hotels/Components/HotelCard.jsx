@@ -47,70 +47,70 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
     }
   }, []);
 
-useEffect(() => {
-  let rafId = null;
+  useEffect(() => {
+    let rafId = null;
 
-  const sectionIds = tabs.map(t => t.id);
-  const getSections = () =>
-    sectionIds
-      .map(id => document.getElementById(id))
-      .filter(Boolean);
+    const sectionIds = tabs.map(t => t.id);
+    const getSections = () =>
+      sectionIds
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
 
-  const computeActiveFromMiddle = () => {
-    const sections = getSections();
-    if (!sections.length) return;
+    const computeActiveFromMiddle = () => {
+      const sections = getSections();
+      if (!sections.length) return;
 
-    const viewportMiddle = window.scrollY + window.innerHeight / 2;
+      const viewportMiddle = window.scrollY + window.innerHeight / 2;
 
-    // Find the section whose vertical range contains viewport middle
-    let foundIndex = null;
-    sections.forEach((section, idx) => {
-      const top = section.offsetTop;
-      const bottom = top + section.offsetHeight;
-      if (viewportMiddle >= top && viewportMiddle < bottom) {
-        foundIndex = idx;
-      }
-    });
-
-    // Fallback: choose the section whose center is closest to viewport middle
-    if (foundIndex === null) {
-      let closestIdx = 0;
-      let closestDist = Infinity;
+      // Find the section whose vertical range contains viewport middle
+      let foundIndex = null;
       sections.forEach((section, idx) => {
-        const center = section.offsetTop + section.offsetHeight / 2;
-        const dist = Math.abs(center - viewportMiddle);
-        if (dist < closestDist) {
-          closestDist = dist;
-          closestIdx = idx;
+        const top = section.offsetTop;
+        const bottom = top + section.offsetHeight;
+        if (viewportMiddle >= top && viewportMiddle < bottom) {
+          foundIndex = idx;
         }
       });
-      foundIndex = closestIdx;
-    }
 
-    if (foundIndex !== null && foundIndex !== activeTab) {
-      setActiveTab(foundIndex);
-    }
+      // Fallback: choose the section whose center is closest to viewport middle
+      if (foundIndex === null) {
+        let closestIdx = 0;
+        let closestDist = Infinity;
+        sections.forEach((section, idx) => {
+          const center = section.offsetTop + section.offsetHeight / 2;
+          const dist = Math.abs(center - viewportMiddle);
+          if (dist < closestDist) {
+            closestDist = dist;
+            closestIdx = idx;
+          }
+        });
+        foundIndex = closestIdx;
+      }
 
-    // Sticky header toggle
-    setItemFixed(window.scrollY > 600);
-  };
+      if (foundIndex !== null && foundIndex !== activeTab) {
+        setActiveTab(foundIndex);
+      }
 
-  const onScroll = () => {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(computeActiveFromMiddle);
-  };
+      // Sticky header toggle
+      setItemFixed(window.scrollY > 600);
+    };
 
-  // Initial compute (covers "from the start" not active issue)
-  computeActiveFromMiddle();
+    const onScroll = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(computeActiveFromMiddle);
+    };
 
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll);
-  return () => {
-    if (rafId) cancelAnimationFrame(rafId);
-    window.removeEventListener("scroll", onScroll);
-    window.removeEventListener("resize", onScroll);
-  };
-}, [activeTab]); // tabs array const hai; dep me include karne ki zaroorat nahi
+    // Initial compute (covers "from the start" not active issue)
+    computeActiveFromMiddle();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [activeTab]);
 
 
   useEffect(() => {
@@ -143,6 +143,8 @@ useEffect(() => {
     }
     return 0;
   };
+
+  console.log(hotelData)
 
   const renderTabItem = (tab, index, isMobile = false) => (
     <a
@@ -230,12 +232,20 @@ useEffect(() => {
                 </div>
               </div>
 
-              <button
-                onClick={handleBooking}
-                className="bg-primary-green text-primary-white text-sm md:text-xl font-medium rounded-xl md:rounded-full py-3 md:py-2 px-6 md:px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full md:w-auto"
-              >
-                {selectedRooms?.length > 0 ? "Continue" : "Select"}
-              </button>
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-2 items-center">
+                  <img src="/images/tripadvisor-logo.svg" alt="" className="h-6"/>
+                  <p className="text-teal-500 text-xl md:text-2xl font-bold whitespace-nowrap leading-none">{hotelData?.rating}.0</p>
+
+                </div>
+                <button
+                  onClick={handleBooking}
+                  className="bg-primary-green text-primary-white text-sm md:text-xl font-medium rounded-xl md:rounded-full py-3 md:py-2 px-6 md:px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full md:w-auto"
+                >
+                  {selectedRooms?.length > 0 ? "Continue" : "Select"}
+                </button>
+              </div>
+
             </div>
           </div>
 

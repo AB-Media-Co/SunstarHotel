@@ -7,15 +7,15 @@ const EnquieryForm = ({ page = 'Dev & Owners', gid = [1824860371] }) => {
 const contactFields = [
   {
     name: "firstName",
-    placeholder: "Your Name*",
+    placeholder: "Your Name",
   },
   {
     name: "company", // repurposed to capture property location
-    placeholder: "Property Location*",
+    placeholder: "Property Location",
   },
   {
     name: "lastName", // repurposed for number of rooms
-    placeholder: "Number of Rooms*",
+    placeholder: "Number of Rooms",
   },
   {
     name: "hotelType",
@@ -30,7 +30,7 @@ const contactFields = [
   },
   {
     name: "phone", // using phone for contact details
-    placeholder: "Contact Details*",
+    placeholder: "Phone",
   }
 ];
 

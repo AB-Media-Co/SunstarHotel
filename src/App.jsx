@@ -41,6 +41,7 @@ import IntheMediaMain from './pages/InTheMedia/IntheMediaMain';
 import LoyaltyPrograme from './pages/LoyaltyPrograme/LoyaltyPrograme';
 import VenueManagement from './adminPanel/pages/VenueManagement/VenueManagement';
 import ScrollToTop from './ScrollToTop';
+import ThankYouPage from './pages/OtherPages/ThankYouPage';
 
 // import PhoneAuth from './pages/PhoneAuth';
 
@@ -133,6 +134,7 @@ function App() {
               <Route path="/travel-booking-form" element={<TravelBookingForm />} />
               <Route path="/my-bookings" element={<MyBookings />} />
               <Route path="/user/profile" element={<UserProfile />} />
+              <Route path="/thankyou" element={<ThankYouPage />} />
             </Route>
             <Route path="/room/details" element={<RoomsDetails />} />
             <Route path="/room/:id" element={<HotelRooms />} />

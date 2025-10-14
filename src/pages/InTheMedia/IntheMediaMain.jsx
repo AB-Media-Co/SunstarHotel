@@ -5,13 +5,46 @@ import SunstarInfoCards from './Component/SunstarInfoCards'
 import ImageGallery from '../../Components/ImageGallery'
 import { Helmet } from 'react-helmet'
 import { useGetMetas } from '../../ApiHooks/useMetaHook'
+import { FileText, Star, Building, User, Monitor, Sun, Phone } from 'lucide-react';
 
 const IntheMediaMain = () => {
     const { data: metas } = useGetMetas();
 
     const inthemedia = Array.isArray(metas)
         ? metas.find(meta => meta.page === "in-the-media")
-        : null; 
+        : null;
+
+
+
+    const infoCards = [
+        {
+            id: 1,
+            title: "For the Press",
+            description: "Access everything you need to pen down an amazing article.",
+            buttonText: "Get the scoop",
+            icon: <FileText className="w-8 h-8 text-primary-green" />,
+            illustration: "/images/forthepress.svg"
+
+        },
+        {
+            id: 2,
+            title: "Why Sunstar?",
+            description: "Hear all about our story & see what makes us so special.",
+            buttonText: "Check us out",
+            icon: <Star className="w-8 h-8 text-primary-green" />,
+            illustration: "/images/whysunsar.svg"
+
+        },
+        {
+            id: 3,
+            title: "Developers & Owners",
+            description: "We're growing rapidly across the country, don't miss out.",
+            buttonText: "Partner with us",
+            icon: <Building className="w-8 h-8 text-primary-green" />,
+            illustration: "/images/dev.svg"
+
+        }
+    ];
     return (
         <div>
             <Helmet>
@@ -22,7 +55,7 @@ const IntheMediaMain = () => {
             <InTheMediaPage />
             <SunstarMediaSection />
 
-            <SunstarInfoCards />
+            <SunstarInfoCards infoCards={infoCards} />
             <div className='content'>
 
                 <ImageGallery />

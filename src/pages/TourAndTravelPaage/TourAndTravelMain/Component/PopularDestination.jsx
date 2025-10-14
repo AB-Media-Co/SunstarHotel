@@ -34,12 +34,12 @@ const PopularDestination = () => {
 
   return (
     <>
-      <RoatinfImg
+      {/* <RoatinfImg
         position=" md:left-[-80px] top-[-100px] md:top-[-29px] left-[-80px] w-[200px]"
       />
       <RoatinfImg
         position=" md:right-[-80px] top-[400px] md:top-[500px] right-[-80px] w-[200px]"
-      />
+      /> */}
 
       <div className="flex relative flex-col justify-between content items-center py-10 z-20">
         <div className="flex flex-col gap-2 text-center justify-center items-center">

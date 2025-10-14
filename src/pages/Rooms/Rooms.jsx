@@ -13,6 +13,7 @@ import BottomRoomSticky from "../../Components/BottomRoomSticky"
 import { Helmet } from "react-helmet"
 import { useGetMetas } from "../../ApiHooks/useMetaHook"
 import { usePricing } from "../../Context/PricingContext"
+import CheckInOutInfo from "./Components/CheckInOutInfo"
 
 const Rooms = () => {
   const { data: metas } = useGetMetas();
@@ -23,7 +24,18 @@ const Rooms = () => {
   const [error, setError] = useState(null);
   const { setEditAddPricing } = usePricing();
 
-
+  
+  const [hotelInfo, setHotelInfo] = useState(null);
+  console.log(hotelInfo)
+  useEffect(() => {
+    const storedData = localStorage.getItem("hotelInfo");
+    console.log(storedData)
+    if (storedData) {
+      setHotelInfo(JSON.parse(storedData));
+    }
+  }, []);
+  
+  // const { checkIn, checkOut } = hotelInfo;
   const [otherRoomData, setOtherRoomData] = useState(null);
   useEffect(() => {
     if (id) {
@@ -87,11 +99,12 @@ const Rooms = () => {
         <AmenitiesList2 amenities={roomData?.Amenities} />
         {/* <RoomsDescription roomData={roomData} /> */}
 
-        <hr className="mb-10 content h-[2px] bg-gray-400" />
+        {/* <hr className="mb-10 content h-[2px] bg-gray-400" /> */}
 
-        <RoomLayout rooms={otherRoomData?.rooms} title='Other Room' />
+        {/* <RoomLayout rooms={otherRoomData?.rooms} title='Other Room' /> */}
 
         <hr className="mt-10 content h-[2px] bg-gray-400" />
+        <CheckInOutInfo checkIn={hotelInfo?.checkIn} checkOut={hotelInfo?.checkOut} />
         {/* <FAQSection faqs={otherRoomData?.faqs} /> */}
       </div>
 

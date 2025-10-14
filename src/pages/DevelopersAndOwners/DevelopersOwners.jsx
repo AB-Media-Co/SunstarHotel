@@ -11,7 +11,6 @@ import TestimonialSection from '../../Components/TestimonialSection';
 import EnquieryForm from './Components/EnquieryForm';
 
 const DevelopersOwners = () => {
-
     useEffect(() => {
         window.scrollTo(0, 0);
       }, []);

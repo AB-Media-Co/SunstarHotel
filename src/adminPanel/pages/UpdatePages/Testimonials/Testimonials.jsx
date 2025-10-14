@@ -22,7 +22,7 @@ const pages = [
   '', 
   'home',
   'whysunstar',
-  // 'coorporatebooking',
+  'coorporatebooking',
   // 'dayuseroom', 
   'developera and owners',
   'event and conference',
@@ -33,7 +33,6 @@ const pages = [
   'travel-agent',
   'tours and travel'
 ];
-
 
 const Testimonials = () => {
   const [selectedPage, setSelectedPage] = useState('');
@@ -62,9 +61,10 @@ const Testimonials = () => {
     setDeletedIds([]);
   }, [apiTestimonials]);
 
-  useEffect(()=>{
-    setSelectedPage('')
-  },[selectedPage])
+  // REMOVED THE PROBLEMATIC useEffect THAT WAS CAUSING THE INFINITE LOOP
+  // useEffect(()=>{
+  //     setSelectedPage('')
+  // },[selectedPage])
 
   const handlePageChange = e => {
     setSelectedPage(e.target.value);
@@ -101,7 +101,6 @@ const Testimonials = () => {
   };
 
   const handleSaveChanges = () => {
-
     const tooLong = editingData.clients.some(c =>
       c.description.trim().split(/\s+/).length > 50
     );
@@ -109,6 +108,7 @@ const Testimonials = () => {
       toast.error('Each description must be 50 words or fewer.');
       return;
     }
+    
     // 1) updates
     editingData.clients
       .filter(c => c._id)
@@ -144,19 +144,16 @@ const Testimonials = () => {
 
     setOpenModal(false);
     toast.success('Testimonials saved successfully');
-
   };
 
   return (
     <div>
-
-
       <div className="myGlobalButton" onClick={handleOpenModal}>
         Edit Testimonials
       </div>
 
       <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="md">
-        <DialogTitle>Edit Testimonials for “{selectedPage || 'Default'}”</DialogTitle>
+        <DialogTitle>Edit Testimonials for "{selectedPage || 'Default'}"</DialogTitle>
         <DialogContent dividers>
           <FormControl fullWidth margin="normal">
             <InputLabel>Choose Page</InputLabel>
@@ -177,9 +174,6 @@ const Testimonials = () => {
               ))}
             </Select>
           </FormControl>
-
-
-
 
           {editingData.clients.map((client, idx) => (
             <Paper key={client._id || idx} sx={{ p: 2, mb: 2 }}>

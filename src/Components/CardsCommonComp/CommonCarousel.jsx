@@ -105,7 +105,7 @@ function Carousel({
                                     </h2>
                                     <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-6 text-center max-w-md">
                                         Take a look at our entire gallery for<br className="hidden sm:block"/>
-                                        more images of this Bloom
+                                        more images of this Sunstar
                                     </p>
                                     <button 
                                         onClick={() => setShowImageGallery(true)}

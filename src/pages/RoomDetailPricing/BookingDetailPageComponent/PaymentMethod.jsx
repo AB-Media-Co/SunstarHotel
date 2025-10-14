@@ -13,17 +13,17 @@ import {
   ArrowRight
 } from "lucide-react";
 import RazorpayPayment from "./RazorpayPayment";
-import { BookingSuccessPopup } from "./BookingSuccessPopup";
+import { useNavigate } from "react-router-dom";
 
 export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
   const email = localStorage.getItem("user_email");
   const { data: userData } = useGetUserByEmail(email);
-  console.log(userData)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   console.log(selectedPaymentMethod)
   const { selectedRooms, setIsConfirmationModalOpen, someOneElse, guestData } = usePricing();
   const pushBooking = usePushBooking();
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const navigate = useNavigate();
+
 
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
@@ -87,10 +87,32 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
     };
 
     pushBooking.mutate(payload, {
-      onSuccess: () => {
-        setShowSuccessPopup(true);
+      onSuccess: (res) => {
+        navigate("/thankyou", {
+          state: {
+            bookingResponse: res,
+            payload,
+            paymentMethod: selectedPaymentMethod,
+            checkIn,
+            checkOut,
+            hotel: {
+              hotelCode: hotelDetail?.hotelCode,
+              name: hotelDetail?.hotelName,
+              payAtHotel: hotelDetail?.payAtHotel,
+            },
+            user: {
+              email: userData?.data?.email,
+              firstName: userData?.data?.firstName,
+              lastName: userData?.data?.lastName,
+              phone: userData?.data?.phone,
+            },
+            rooms: selectedRooms,
+          },
+          replace: true,
+        });
       }
     });
+
   };
 
   if (pushBooking.isPending) {
@@ -143,19 +165,6 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
         isLoading={false}
       />
 
-      <BookingSuccessPopup
-        isOpen={showSuccessPopup}
-        onClose={() => setShowSuccessPopup(false)}
-        onSeeBookings={() => {
-          setShowSuccessPopup(false);
-          window.location.href = "/user/profile";  // Your bookings page route
-        }}
-        onContinueBooking={() => {
-          setShowSuccessPopup(false);
-          setIsConfirmationModalOpen(false);
-          window.location.href = "/";  // Your home page route
-        }}
-      />
 
 
     </>
@@ -169,10 +178,10 @@ const PaymentMethodContent = ({ hotelDetail, selectedPaymentMethod, handlePaymen
     <div id="payment-method" className="bg-white border-gray-100">
       {/* Header */}
       <div className="flex items-center mb-8">
-        <div className="w-2 h-10 bg-gradient-to-b from-teal-500 to-teal-600 rounded-full mr-4"></div>
+        {/* <div className="w-2 h-10 bg-gradient-to-b from-teal-500 to-teal-600 rounded-full mr-4"></div> */}
         <div>
-          <h2 className="text-xl md:text-3xl font-bold text-gray-800 mb-1">Payment Method</h2>
-          <p className="text-gray-500">Choose your preferred payment option</p>
+          <h2 className=" text-mobile/h4 md:text-desktop/h4 text-gray-800 mb-1">Payment Method</h2>
+          <p className="text-gray-500 text-mobile/body/2 md:text-desktop/body/1">Choose your preferred payment option</p>
         </div>
       </div>
 

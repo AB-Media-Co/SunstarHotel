@@ -1,5 +1,5 @@
 export const section1Data = {
-  words: ["Conferences", "Parties", "Functions"],
+  words: ["Conferences", "Parties", "Functions","Worry-Free Stays"],
   heading: "Hello Salut Hola",
   description: "Embarking on a journey to redefine mid-market hospitality in India, one hotel at a time.Opening soon in a city near you!!",
   buttonLabel: "Book us for",
