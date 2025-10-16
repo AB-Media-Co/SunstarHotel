@@ -52,6 +52,7 @@
     "react-router-dom": "^7.0.2",
     "react-select": "^5.9.0",
     "react-social-media-embed": "^2.5.17",
+    "react-type-animation": "^3.2.0",
     "swiper": "^11.2.0",
     "uuid": "^11.0.5",
     "yup": "^1.6.1"

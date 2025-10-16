@@ -1,5 +1,5 @@
 import RoatinfImg from "../../../Components/RoatinfImg";
-import { sec3CardSliderData } from "../../../Data/HomePageData";
+// import { sec3CardSliderData } from "../../../Data/HomePageData";
 import Sec3CardSlider from "./Sec3CrdSlider";
 
 const Section3 = () => {

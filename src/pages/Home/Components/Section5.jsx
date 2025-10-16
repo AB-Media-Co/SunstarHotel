@@ -1,31 +1,70 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 import CommonSwiper from "../../../Components/CommonSlider";
 import { useNavigate } from "react-router-dom";
 
-const LazyImage = ({ src, alt = "", className = "" }) => {
-  const ref = useRef();
-  const [loaded, setLoaded] = useState(false);
+/** Build Cloudinary URL with transforms */
+const cldUrl = (url, w) =>
+  url?.includes("/upload/")
+    ? url.replace("/upload/", `/upload/f_auto,q_auto,dpr_auto,w_${w}/`)
+    : url;
+
+/** Very tiny placeholder (Cloudinary blur) */
+const cldPlaceholder = (url) =>
+  url?.includes("/upload/")
+    ? url.replace("/upload/", "/upload/f_auto,q_10,w_20,e_blur:1200/")
+    : url;
+
+/** Invisible 1×1 fallback to avoid empty src */
+const TRANSPARENT_PX =
+  "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
+
+const LazyImage = ({ src, alt = "", className = "", width, height }) => {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  // Precompute responsive sources
+  const src400 = useMemo(() => cldUrl(src, 400), [src]);
+  const src800 = useMemo(() => cldUrl(src, 800), [src]);
+  const src1200 = useMemo(() => cldUrl(src, 1200), [src]);
+  const placeholder = useMemo(() => cldPlaceholder(src), [src]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setLoaded(true);
-        observer.disconnect();
-      }
-    });
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "200px 0px", threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   return (
     <img
       ref={ref}
-      src={loaded ? src.replace('/upload/', '/upload/f_auto,q_auto,w_800/') : ""}
+      // Always give a valid src so the element paints without warnings
+      src={inView ? src800 : placeholder || TRANSPARENT_PX}
+      srcSet={
+        inView
+          ? `${src400} 400w, ${src800} 800w, ${src1200} 1200w`
+          : undefined
+      }
+      sizes="(max-width: 768px) 100vw, 33vw"
       alt={alt}
-      className={className}
+      decoding="async"
       loading="lazy"
+      fetchpriority="low"
+      width={width}
+      height={height}
+      className={className}
+      style={{ backgroundColor: "#f3f4f6" }} // soft gray while loading
     />
   );
 };
@@ -33,19 +72,27 @@ const LazyImage = ({ src, alt = "", className = "" }) => {
 const Card = ({ image, title, description, link }) => {
   const navigate = useNavigate();
 
+  const go = () => {
+    // Use hash navigation without layout thrash
+    if (link) {
+      navigate(link);
+    } else {
+      navigate("/why-sunstar#what-we-offer");
+    }
+    // Scroll to anchor if present on current page
+    setTimeout(() => {
+      document.getElementById("what-we-offer")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+  };
+
   return (
-    <div
-      className="rounded-[10px] overflow-hidden cursor-pointer h-full"
-      onClick={() => {
-        navigate(link || "/why-sunstar#what-we-offer");
-        setTimeout(() => {
-          document.getElementById("what-we-offer")?.scrollIntoView({ behavior: "smooth" });
-        }, 100);
-      }}
-    >
+    <div className="rounded-[10px] overflow-hidden cursor-pointer h-full" onClick={go}>
+      {/* Give intrinsic dimensions to avoid CLS; height already set in class */}
       <LazyImage
         src={image}
         alt={title}
+        width={1200}
+        height={750}
         className="h-[250px] w-full object-cover"
       />
       <div className="md:px-6 h-[180px] md:py-6 py-4 px-4 bg-custom-bg bg-cover bg-left text-left shadow-lg bg-white">
@@ -62,21 +109,18 @@ const Card = ({ image, title, description, link }) => {
 
 const Section5 = () => {
   const { offeringSection } = useUpdatePagesHook();
-  console.log(offeringSection)
 
-  const renderCard = (card, index) => {
-    return (
-      <div data-aos="fade-up" data-aos-delay={index * 100}>
-        <Card
-          key={index}
-          image={card?.image}
-          title={card?.title}
-          description={card?.description}
-          link={card?.link}
-        />
-      </div>
-    );
-  };
+  const renderCard = (card, index) => (
+    // ✅ key on the outermost element returned to Swiper
+    <div key={card?.id || index} data-aos="fade-up" data-aos-delay={index * 100}>
+      <Card
+        image={card?.image}
+        title={card?.title}
+        description={card?.description}
+        link={card?.link}
+      />
+    </div>
+  );
 
   return (
     <div className="swiper-container bg-[#BAE9EF]">
@@ -84,8 +128,9 @@ const Section5 = () => {
         <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-left mb-8">
           {offeringSection?.heading}
         </h2>
+
         <CommonSwiper
-          items={offeringSection?.offers}
+          items={offeringSection?.offers || []}
           renderItem={renderCard}
           slidesPerViewDesktop={3.5}
           spaceBetween={0}
@@ -97,3 +142,4 @@ const Section5 = () => {
 };
 
 export default Section5;
+  

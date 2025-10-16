@@ -30,9 +30,6 @@ const Home = () => {
       </Helmet>
 
       <Section1 section1Data={section1Data} />
-
-
-
       {/* ✅ Lazy load sections below the fold */}
       <Suspense fallback={<div className="min-h-[200px] bg-gray-100 animate-pulse" />}>
         <Section2Hotel section2HotelData={section2HotelData} />
