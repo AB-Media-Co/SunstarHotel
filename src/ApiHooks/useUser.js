@@ -29,7 +29,8 @@ export const useGetUserByEmail = (email) => {
         throw error;
       }
     },
-    staleTime: 30000,
+    enabled: !!email && email.trim() !== '', // ✅ Only run query when email exists
+    staleTime: 10000, // ✅ Reduced from 30s to 10s for fresher data
     refetchOnWindowFocus: false,
   });
 };

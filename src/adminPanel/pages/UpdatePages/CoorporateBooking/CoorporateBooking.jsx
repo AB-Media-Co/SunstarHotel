@@ -213,7 +213,7 @@ const CoorporateBooking = () => {
             </Box>
 
             {/* Business Platform */}
-            <Box sx={{ mb: 4 }}>
+            {/* <Box sx={{ mb: 4 }}>
               <Typography variant="h5" gutterBottom>Business Platform Section</Typography>
               {formData.BusinessPlatformSection.map((platform, index) => (
                 <Box key={index} sx={{ mb: 2, border: "1px solid #ccc", borderRadius: 1, p: 2 }}>
@@ -249,10 +249,10 @@ const CoorporateBooking = () => {
               >
                 Add Business Platform
               </Button>
-            </Box>
+            </Box> */}
 
             {/* ✅ Benefits Section */}
-            <Box sx={{ mb: 2 }}>
+           <Box sx={{ mb: 2 }}>
               <Typography variant="h5" gutterBottom>Benefits Section</Typography>
               {formData.BenefitsSection.map((benefit, index) => (
                 <Box key={index} sx={{ mb: 2, border: "1px solid #ccc", borderRadius: 1, p: 2 }}>
@@ -290,7 +290,7 @@ const CoorporateBooking = () => {
               >
                 Add Benefit
               </Button>
-            </Box>
+            </Box> 
           </DialogContent>
 
           <DialogActions>

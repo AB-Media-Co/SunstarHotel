@@ -3,17 +3,14 @@ import { motion } from "framer-motion";
 
 const Banner = () => {
     return (
-
-      
-
-        <header className="relative">
+       <header className="relative">
         <img
              src='/images/DayUseRoom/banner.webp'
             alt='Events and Conferences'
             className="w-full h-[100vh] object-cover"
             loading="lazy"
         />
-        <div className="absolute inset-0 bg-black opacity-60"></div>
+        <div className="absolute inset-0 bg-black/30 opacity-60"></div>
         <div className="absolute inset-0 content flex flex-col items-start pt-20 md:pt-0 justify-center text-start">
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}

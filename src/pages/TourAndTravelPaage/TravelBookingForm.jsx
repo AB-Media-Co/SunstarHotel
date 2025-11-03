@@ -30,7 +30,7 @@ export default function TravelBookingForm() {
     };
 
     return (
-        <div className="bg-primary-green relative min-h-screen flex flex-col items-center justify-center border-b py-16 sm:py-20 md:py-28 px-4">
+        <div className="bg-primary-green relative min-h-screen flex flex-col items-center justify-center border-b py-24 md:py-28 px-4">
             {/* Header */}
             <h1 className='text-2xl font-bold sm:text-3xl md:text-4xl lg:text-mobile/h3 xl:text-desktop/h3 text-white py-4 md:py-6 text-center lg:text-start w-full max-w-7xl'>
                 Send Us Your Enquiry

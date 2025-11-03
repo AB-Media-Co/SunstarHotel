@@ -6,7 +6,7 @@ import SunstarEnquiryForm from "./Components/SunstarEnquiryForm";
 import { useGetMetas } from "../../ApiHooks/useMetaHook";
 import FormData from "./Components/FormData";
 import { useEffect, useState } from "react";
-import CoorporateBookingFaqs from "./Components/CoorporateBookingFaqs";
+import FAQSectionWithAPI from "../../Components/FAQSectionWithAPI";
 import CorporateSignupModal from "./Components/CorporateSignupModal"; // ⬅️ NEW
 import Partnerlogos from "../Home/Components/Partnerlogos";
 import ExclusiveBenifits from "./Components/ExclusiveBenifits";
@@ -61,14 +61,14 @@ const CorporateBooking = () => {
       <hr className="content" />
 
       <ExclusiveBenifits data={CoorporateBooking?.BenefitsSection} />
-      <BusinessPlatform features={CoorporateBooking?.BusinessPlatformSection} />
+      {/* <BusinessPlatform features={CoorporateBooking?.BusinessPlatformSection} /> */}
 
       <Partnerlogos />
 
       <TestimonialSection page="coorporatebooking" />
       {/* <SunstarEnquiryForm /> */}
       <FormData />
-      <CoorporateBookingFaqs />
+      <FAQSectionWithAPI pageName="corporate-booking" />
 
       {/* Modal */}
       <CorporateSignupModal open={openSignup} onClose={() => setOpenSignup(false)} />

@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import { usePricing } from "../../../Context/PricingContext";
 import { useNavigate } from "react-router-dom";
-import { ArrowRightAlt } from "@mui/icons-material";
 import { differenceInCalendarDays, format } from "date-fns";
+import { ArrowRight } from "lucide-react";
 
 export const HeaderHotel = () => {
   const { details, setEditAddPricing } = usePricing();
@@ -32,25 +32,37 @@ export const HeaderHotel = () => {
 
   const DateDisplay = ({ date, label, time, isCheckOut = false }) => (
     <div className="flex flex-col space-y-1">
-      <div className="text-sm md:text-base font-medium text-gray-600 uppercase tracking-wide">
-        {label}
-      </div>
-      <div className="text-lg md:text-xl font-semibold text-gray-900">
+      <div className="text-mobile/title md:text-desktop/h5/medium font-medium capitalize text-gray-900">
         {date ? (
           <>
+            {/* Mobile view */}
             <div className="md:hidden">
-              {format(date, "dd MMM")}
+              <span className="font-bold">{format(date, "dd MMM, ")}</span>{" "}
+              {format(date, "EEE")}
             </div>
+
+            {/* Desktop view */}
             <div className="hidden md:block">
-              {format(date, "dd MMM, EEEE")}
+              <span className="font-bold">{format(date, "dd MMM, ")}</span>{" "}
+              {format(date, "EEEE")}
             </div>
           </>
         ) : (
-          <span className="text-gray-400">Select {label.toLowerCase()}</span>
+          <span className="text-gray-400">
+            Select {label.toLowerCase()}
+          </span>
         )}
       </div>
-      <div className="text-xs md:text-sm text-gray-500">
-        {time || (isCheckOut ? "11:00 AM" : "1:00 PM")}
+
+
+      <div className="flex items-center gap-1">
+
+        <div className="text-sm capitalize hidden md:block  font-medium text-gray-600  tracking-wide">
+          {label}
+        </div>
+        <div className="text-xs md:text-sm font-semibold text-gray-500">
+          {time || (isCheckOut ? "11:00 am" : "1:00 pm")}
+        </div>
       </div>
     </div>
   );
@@ -58,10 +70,10 @@ export const HeaderHotel = () => {
   const nights = calculateNights();
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 mt-10 shadow-sm">
+    <div className=" border-b-2">
       {/* Hotel Information */}
-      <div className="mb-6">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+      <div className="md:mb-4 mb-2">
+        <h2 className="text-mobile/h4 md:text-desktop/h4 font-bold md:font-bold text-gray-900 md:mb-2">
           {getHotelData?.name}
         </h2>
         <p className="text-sm md:text-base text-gray-600 leading-relaxed">
@@ -70,22 +82,16 @@ export const HeaderHotel = () => {
       </div>
 
       {/* Check-in/Check-out Section */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between bg-gray-50 rounded-lg p-4">
+      <div className="mb-4">
+        <div className="flex items-center gap-4 ">
           <DateDisplay
             date={checkInDate}
             label="Check-in"
             time={details[0]?.checkIn}
           />
 
-          <div className="flex flex-col items-center mx-4">
-            <ArrowRightAlt className="text-yellow-500 text-2xl mb-1" />
-            {nights > 0 && (
-              <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs md:text-sm font-medium">
-                {nights} {nights === 1 ? 'Night' : 'Nights'}
-              </div>
-            )}
-          </div>
+          <ArrowRight className="text-primary-yellow text-2xl mb-1" />
+
 
           <DateDisplay
             date={checkOutDate}
@@ -93,19 +99,23 @@ export const HeaderHotel = () => {
             time={details[0]?.checkOut}
             isCheckOut={true}
           />
+
+          {nights > 0 && (
+            <div className="border-primary-yellow border text-primary-yellow px-3 py-1 rounded-full text-xs md:text-sm font-medium">
+              {nights} {nights === 1 ? 'Night' : 'Nights'}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Action Button */}
-      <div className="flex justify-start">
         <button
           onClick={handleChangeClick}
-          className="inline-flex items-center  py-3 text-primary-yellow underline font-medium transition-colors duration-200 "
+          className="inline-flex items-center  mb-2 text-primary-yellow underline font-medium transition-colors duration-200 "
         >
-          <span>Modify Date/Room Selection          </span>
-          <ArrowRightAlt className="ml-2 text-lg" />
+          <span>Modify Date/Room Selection  </span>
+          {/* <ArrowRight className="ml-2 text-lg" /> */}
         </button>
-      </div>
+     
     </div>
   );
 };

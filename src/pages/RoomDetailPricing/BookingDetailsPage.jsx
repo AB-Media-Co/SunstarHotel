@@ -74,7 +74,7 @@ const BookingDetailsPage = () => {
   }, [details, hotelData, hotelDetail, navigate, getHotelData]);
 
   if (!details || details.length === 0 || !hotelDetail) {
-    return null; 
+    return null;
   }
 
   return (
@@ -84,48 +84,71 @@ const BookingDetailsPage = () => {
         <meta name="" content={``} />
         <meta name="" content={``} />
       </Helmet>
-      <div className="content flex justify-between items-center ">
-        <div className="flex items-center gap-2 py-4 md:py-10 text-white">
-          <button
+      <div className="content flex gap-3 md:gap-5 lg:gap-6 flex-col py-3 md:py-6 lg:py-10 px-3 md:px-0">
+
+        {/* Header Row - Mobile optimized */}
+        <div className="flex justify-between items-center">
+
+          {/* Left: Back button + Logo */}
+          <div
+            className="flex items-center cursor-pointer gap-2 md:gap-6 text-white"
             onClick={() => navigate(-1)}
-            aria-label="Go back"
-            className="flex items-center"
           >
-            <ArrowBackIosNew
-              className="text-white h-6 w-6 sm:h-7 sm:w-7 md:h-9 md:w-9"
-            />
-          </button>
-          <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold">
-            Booking Details
-          </span>
-        </div>
-
-        <div className="">
-          {userInfo ? (
-            <div onClick={() => navigate('/user/profile')} className="bg-white cursor-pointer text-primary-yellow font-bold w-12 h-12 rounded-full flex items-center justify-center">
-              {userData?.data.firstName?.[0]?.toUpperCase()}{userData?.data.lastName?.[0]?.toUpperCase()}
-            </div>
-          ) : (
-            <button
-              onClick={() => setShowLoginModal(true)}
-              className="border-2 border-primary-yellow text-primary-yellow px-4 py-2 rounded-full font-bold hover:bg-primary-yellow hover:text-white transition"
-            >
-              Login or Join
+            <button aria-label="Go back" className="flex items-center flex-shrink-0">
+              <ArrowBackIosNew className="text-white h-5 w-5 sm:h-6 sm:w-6 md:h-9 md:w-9" />
             </button>
-          )}
+            <img
+              src="/images/Logo/logo.svg"
+              alt={hotelDetail?.name}
+              className="w-[100px] sm:w-[120px] md:w-[150px]"
+            />
+          </div>
 
+          {/* Right: User Profile / Login */}
+          <div className="flex-shrink-0">
+            {userInfo ? (
+              <div
+                onClick={() => navigate('/user/profile')}
+                className="bg-white cursor-pointer text-primary-yellow font-bold w-10 h-10 sm:w-12 sm:h-12 md:h-12 md:w-12 rounded-full flex items-center justify-center text-sm sm:text-base"
+              >
+                {userData?.data.firstName?.[0]?.toUpperCase()}{userData?.data.lastName?.[0]?.toUpperCase()}
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="border-2 border-primary-yellow text-primary-yellow px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-bold text-sm sm:text-base hover:bg-primary-yellow hover:text-white transition"
+              >
+                Login
+              </button>
+            )}
+          </div>
+
+          {showLoginModal && <div>Login Modal Here</div>}
         </div>
 
-        {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
+        {/* Title */}
+        <div className="text-white  text-mobile/head md:text-desktop/head">
+          Booking Details
+        </div>
 
       </div>
-      <div className="md:flex gap-5 content bg-white rounded-t-3xl overflow-visible relative">
-        <div className="flex-1 flex flex-col md:px-8 md:py-10 gap-8 min-w-0">
+      <div className="md:flex gap-5 content bg-white py-6 md:py-0 rounded-t-3xl overflow-visible relative">
+        <div className="flex-1 flex flex-col md:px-8 md:py-10 gap-4 md:gap-8 min-w-0">
           <HeaderHotel />
           <HotelDetailsCard />
-          <GuestDetailsForm ref={guestFormRef} setIsVerified={setIsVerified} />
           {hotelDetail.addToYourStay.length > 0 && <AddToYourStayOptions data={hotelDetail} />}
+
+          <GuestDetailsForm ref={guestFormRef} setIsVerified={setIsVerified} />
           <OfferCode hotelDetail={hotelDetail} checkIn={checkIn} verified={verified} />
+
+
+
+
+          <PaymentMethod hotelDetail={hotelDetail}
+            verified={verified}
+            checkIn={checkIn}
+            checkOut={checkOut}
+          />
           <div className="xl:hidden">
             <ReservationSummarySidebar
               hotelDetail={hotelDetail}
@@ -136,11 +159,6 @@ const BookingDetailsPage = () => {
               isPaymentVisible={isPaymentVisible}
             />
           </div>
-          <PaymentMethod hotelDetail={hotelDetail}
-            verified={verified}
-            checkIn={checkIn}
-            checkOut={checkOut}
-          />
           <Footer ContactUsDetail={ContactUsDetail} />
         </div>
         <div className="hidden xl:block xl:w-[420px] flex-shrink-0 px-8 py-10">

@@ -13,7 +13,7 @@ export const AmenitiesList2 = ({ amenities }) => {
         <section id="amenities" className="py-8 sm:py-12 bg-primary-white content">
             <div className=" mx-auto ">
                 <hr className="bg-[#A4A4A4] h-[2px] w-full" />
-                <h2 className="text-mobile/h3 sm:text-xl md:text-desktop/h3 font-bold my-4 text-reveal-animation transition-all duration-300">
+                <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold my-4 text-reveal-animation transition-all duration-300">
                     Popular Amenities
                 </h2>
                 <hr className="bg-[#A4A4A4] h-[2px] w-full mb-6" />

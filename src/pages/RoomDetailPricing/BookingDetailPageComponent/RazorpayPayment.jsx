@@ -3,7 +3,7 @@ import { useCreateRazorpayOrder, useVerifyRazorpayPayment } from "../../../ApiHo
 import toast from "react-hot-toast";
 
 const RazorpayPayment = ({ hotelDetail, amount, onSuccess }) => {
-  console.log("hi")
+  // console.log("hi")
   const createOrder = useCreateRazorpayOrder();
   const verifyPayment = useVerifyRazorpayPayment();
 
@@ -69,7 +69,7 @@ const RazorpayPayment = ({ hotelDetail, amount, onSuccess }) => {
 
   return (
     <button
-      className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-lg"
+              className="w-full md:w-auto px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-primary-green to-teal-600 text-white font-semibold rounded-lg md:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 flex items-center justify-center gap-2"
       onClick={handlePayment}
     >
       Confirm Booking

@@ -7,7 +7,7 @@ import SunstarValuesCard from "./Components/SunstarValuesCard"
 import WhyWorkWithUs from "./Components/WhyWorkWithUs"
 import SunstarCareersSection from "./Components/SunstarCareersSection"
 import TestimonialSection from "../../Components/TestimonialSection"
-import CareerPageFaq from "./Components/CareerPageFaq"
+import FAQSectionWithAPI from "../../Components/FAQSectionWithAPI"
 import { useGetMetas } from "../../ApiHooks/useMetaHook"
 import { Helmet } from "react-helmet"
 import SunstarInfoCards from "../InTheMedia/Component/SunstarInfoCards"
@@ -25,7 +25,7 @@ const CareerMain = () => {
   const infoCards = [
     {
       id: 1,
-      title: "Why Bloom?",
+      title: "Why Sunstar?",
       description: "Hear all about our story & see what makes us so special.",
       buttonText: "Check us out",
       icon: <FileText className="w-8 h-8 text-primary-green" />,
@@ -33,7 +33,7 @@ const CareerMain = () => {
     },
     {
       id: 2,
-      title: "In the Media",
+      title: "Blog & Buzz",
       description: "Who cares what we think, see what others are saying about us.",
       buttonText: "Catch the coverage",
       icon: <Mic className="w-8 h-8 text-primary-green" />,
@@ -41,7 +41,7 @@ const CareerMain = () => {
     },
     {
       id: 3,
-      title: "Developers & Owners",
+      title: "Our Hotels",
       description: "We're growing rapidly across the country, don’t miss out.",
       buttonText: "Partner with us",
       icon: <Building className="w-8 h-8 text-primary-green" />,
@@ -64,12 +64,12 @@ const CareerMain = () => {
       {/* <JobRoles/> */}
       <SunstarValuesCard />
       <JoinTeamSection />
-      <WhyWorkWithUs />
       <JobApplicationForm />
       <ImagesGallery />
-      <TestimonialSection page="career" />
+      <TestimonialSection page="career" head="Meet Our Stars" />
+      {/* <WhyWorkWithUs /> */}
       <SunstarCareersSection />
-      {/* <CareerPageFaq /> */}
+      {/* <FAQSectionWithAPI pageName="Career" /> */}
       <SunstarInfoCards infoCards={infoCards} />
 
     </div>

@@ -77,7 +77,7 @@ const DayUseRoomCards = ({ room, disabled, setShowLoginModal,setShowPaymentModal
             <p className="text-mobile/h5 md:text-desktop/h5 font-bold text-[#058FA2]">
               ₹ {room.dayUse.rate || 0}
               <span className="text-mobile/body/2 md:text-desktop/caption text-gray-600 font-normal">
-                /night <span className="text-gray-500 ml-2">incl. Taxes</span>
+                /day <span className="text-gray-500 ml-2">incl. Taxes</span>
               </span>
             </p>
           </div>

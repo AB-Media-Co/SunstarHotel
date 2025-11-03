@@ -1,12 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import useUpdatePagesHook from "../ApiHooks/useUpdatePagesHook";
 import Masonry from "react-masonry-css";
 
 const ImageGallery = ({ path = "default" }) => {
   const { galleryImages } = useUpdatePagesHook();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const gridForPath =
     galleryImages?.[path] ||
@@ -34,12 +43,12 @@ const ImageGallery = ({ path = "default" }) => {
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
-    const rowsToShow = 3;
-    const columns = 4;
+    const rowsToShow = isMobile ? 2 : 3;
+    const columns = isMobile ? 3 : 4;
     const totalItems = rowsToShow * columns;
 
     return shuffled.slice(0, totalItems);
-  }, [images, content]);
+  }, [images, content, isMobile]);
 
   if (!itemsToRender.length) {
     return (
@@ -113,12 +122,12 @@ const ImageGallery = ({ path = "default" }) => {
           style={{ width: "200%" }}
         >
           {/* First set */}
-          <div className="w-1/2 flex-shrink-0 pr-4">
+          <div className="w-1/2 flex-shrink-0 ">
             {renderItems("first")}
           </div>
 
           {/* Duplicate for seamless loop */}
-          <div className="w-1/2 flex-shrink-0 pl-4">
+          <div className="w-1/2 flex-shrink-0 pl-">
             {renderItems("second")}
           </div>
         </motion.div>

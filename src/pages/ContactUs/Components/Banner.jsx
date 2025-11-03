@@ -66,9 +66,9 @@ const Banner = () => {
           className="text-primary-white max-w-2xl text-mobile/body/2 md:text-desktop/body/1 mt-6 drop-shadow"
         >
           For further support, reach out via email, and we'll get back to you promptly.
-          <a href={emailHref} className="underline font-semibold ml-1">
+          {/* <a href={emailHref} className="underline font-semibold ml-1">
             {ContactUsDetail?.emailId}
-          </a>
+          </a> */}
         </motion.p>
 
         <motion.div

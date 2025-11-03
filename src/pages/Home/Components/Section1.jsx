@@ -3,12 +3,17 @@ import React, { Suspense, useState, useMemo, useCallback } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import AllHotelCard from "../../../Components/AllHotelCard";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
+import { useGetHotels } from "../../../ApiHooks/useHotelHook2";
 import { motion } from "framer-motion";
-import { TypeAnimation } from "react-type-animation"; // 👈 your typing effect
+import { TypeAnimation } from "react-type-animation";
+import { FlashOnRounded } from "@mui/icons-material";
 
 const Section1 = ({ section1Data }) => {
   const { heroSectionUpdate, loading, Loader } = useUpdatePagesHook();
   const { words = [], buttonLabel = "Search for" } = section1Data || {};
+
+  // Prefetch hotels data
+  const { data: hotelsData } = useGetHotels();
 
   const [hotelOpen, setHotelOpen] = useState(false);
   const handleHotelOpen = useCallback(() => setHotelOpen(true), []);
@@ -59,10 +64,10 @@ const Section1 = ({ section1Data }) => {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="absolute top-[60%] left-[5%] sm:top-[63%] sm:left-[53%]
-                       md:top-[45%] md:left-[10%] flex flex-col md:gap-4
+            className="absolute top-1/2 -translate-y-1/2 left-[5%] sm:left-1/2 sm:-translate-x-1/2
+                       md:top-[45%] md:left-[10%] md:translate-x-0 md:translate-y-0 flex flex-col md:gap-4 gap-2
                        text-left text-primary-white max-w-[90%]
-                       sm:max-w-[80%] md:max-w-7xl z-10"
+                       sm:max-w-[45%] md:max-w-7xl z-10"
           >
             <h1 className="text-mobile/h2 md:text-desktop/h2 font-semibold">
               {heading}
@@ -84,22 +89,32 @@ const Section1 = ({ section1Data }) => {
                   {buttonLabel}
                 </span>
                 {/* fixed width container to stop CLS during typing */}
-                <span className="text-mobile/button md:text-desktop/button text-[#FDC114] inline-block w-[120px] text-left truncate">
+                <span className="text-mobile/button md:text-desktop/button text-[#FDC114] inline-block w-[150px] text-left truncate">
                   <TypeAnimation
                     sequence={[
                       ...words.flatMap((word) => [word, 1500]),
-                      () => {}, // loop callback
+                      () => { }, // loop callback
                     ]}
                     wrapper="span"
                     cursor={true}
                     repeat={Infinity}
                   />
                 </span>
+
               </span>
               <span className="text-[#FDC114]">
                 <SearchIcon />
               </span>
             </button>
+
+            <div className="flex items-center mt-4 md:mt-0">
+
+              <FlashOnRounded className="rotate-[10deg] " style={{ height: "18px" }} />
+              <span className="text-mobile/body/2 md:text-desktop/body/1 font-bold">
+
+                Direct for Lowest Prices!
+              </span>
+            </div>
           </motion.div>
         </section>
       </Suspense>

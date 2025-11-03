@@ -5,7 +5,7 @@ import { OurClientsData, HotelPageImgGallery } from "../../Data/HotelRoomsData";
 import TestimonialSection from "../../Components/TestimonialSection";
 import BannerSection from "../../Components/BannerSection";
 import ImageGallery from "../../Components/ImageGallery";
-import FAQSection from "./Components/FAQsection";
+import CommonFAQSection from "../../Components/CommonFAQSection";
 import HotelImageCarousel from "./Components/HotelImageCarousel";
 import Location from "./Components/Location";
 import { useLocation, useParams } from "react-router-dom";
@@ -21,6 +21,7 @@ import {
   format,
 } from "date-fns";
 import RoomsCard from "../../Components/RoomsCard";
+import SwiperComponent from "../Home/Components/Sec2CardSlider";
 
 const Hotels = () => {
   const { hotelCode } = useParams();
@@ -85,9 +86,9 @@ const Hotels = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  console.log("Hotel Data:", hotelData);
+  // console.log("Hotel Data:", hotelData);
   const rooms = roomsData?.rooms
-  console.log("rooms Data:", rooms);
+  // console.log("rooms Data:", rooms);
 
   return (
     <div className="bg-gray-100">
@@ -141,16 +142,27 @@ const Hotels = () => {
           text='text-mobile/h3 md:text-desktop/h3'
           imgClass="rounded-[20px] max-h-[350px]"
           textC="black"
-          ptext='text-mobile/body/2 md:text-desktop/body/1'
+          ptext='text-mobile/small/body md:text-desktop/body/1'
           lineh='[60px]'
           bg='bg-primary-white'
           paddTop='0 items-start gap-10'
 
         />
+
+
+        <div className=" content">
+          <SwiperComponent />
+        </div>
+
+
         <div className="relative z-10 content">
           <ImageGallery breakpointColumnsObj={HotelPageImgGallery.breakpointColumnsObj} items={HotelPageImgGallery.items} />
         </div>
-        <FAQSection faqs={hotelData?.faqs} />
+        <CommonFAQSection 
+          faqs={hotelData?.faqs} 
+          subtitle="You need to come at least once in your life"
+          bgColor="bg-white"
+        />
         <img src="/images/HotelsSectionImg/Img.png" alt="" className="md:block hidden w-full" />
         <img src="/images/HotelsSectionImg/img2.png" alt="" className="block md:hidden w-full " />
       </div>

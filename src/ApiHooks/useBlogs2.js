@@ -87,7 +87,7 @@ export const useLikeBlog2 = () => {
       const response = await axiosInstance.post(`/api/blogs2/like/${id}`);
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success('Blog liked');
     },
     onError: (error) => {

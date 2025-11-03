@@ -44,21 +44,25 @@ export default function SwiperComponent() {
   const [hoveredCard, setHoveredCard] = useState(null);
 
   useEffect(() => {
+    let timeoutId;
     const handleResize = () => {
-      const width = window.innerWidth;
-      setScreenInfo({
-        width,
-        isMobile: width <= 425,
-        isTablet: width > 425 && width <= 768,
-        isLaptop: width > 768 && width <= 1024,
-        isDesktop: width > 1024,
-      });
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 100);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const width = window.innerWidth;
+        setScreenInfo({
+          width,
+          isMobile: width <= 425,
+          isTablet: width > 425 && width <= 768,
+          isLaptop: width > 768 && width <= 1024,
+          isDesktop: width > 1024,
+        });
+      }, 150); // Debounce resize
     };
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const features = [
@@ -90,7 +94,7 @@ export default function SwiperComponent() {
         ))}
       </div>
     );
-  }; 
+  };
 
   const renderCard = (card, index) => {
     return (
@@ -104,15 +108,15 @@ export default function SwiperComponent() {
             {/* Card Image */}
             <div
               className={`relative overflow-hidden rounded-t-lg z-10 transition-all duration-300
-                ${screenInfo.isMobile 
-                  ? 'h-60' 
-                  : screenInfo.isTablet 
-                    ? 'h-64' 
+                ${screenInfo.isMobile
+                  ? 'h-60'
+                  : screenInfo.isTablet
+                    ? 'h-64'
                     : 'h-60 lg:h-64 xl:h-60'
                 }`}
               onMouseEnter={() => setHoveredCard(index)}
               onMouseLeave={() => setHoveredCard(null)}
-              onClick={() => navigate(`hotels/${card?.hotelCode}`)}
+              onClick={() => navigate(`/hotels/${card?.hotelCode}`)}
             >
               <LazyBackground
                 src={card.images[0]?.replace('/upload/', '/upload/f_auto,q_auto,w_800/')}
@@ -121,18 +125,17 @@ export default function SwiperComponent() {
               />
 
               <div
-                className={`cursor-pointer absolute inset-0 bg-black transition-opacity duration-700 ease-in-out ${
-                  hoveredCard === index ? "opacity-20" : "opacity-0"
-                }`}
+                className={`cursor-pointer absolute inset-0 bg-black transition-opacity duration-700 ease-in-out ${hoveredCard === index ? "opacity-20" : "opacity-0"
+                  }`}
               />
             </div>
 
             {/* Card Content */}
             <div className={`absolute top-[100%] w-full shadow-lg border rounded-b-lg flex flex-col bg-primary-white
-              ${screenInfo.isMobile 
-                ? 'p-4 pt-8 h-[180px] gap-2' 
-                : screenInfo.isTablet 
-                  ? 'p-4 pt-6 h-[170px] gap-1.5' 
+              ${screenInfo.isMobile
+                ? 'p-4 pt-8 h-[180px] gap-2'
+                : screenInfo.isTablet
+                  ? 'p-4 pt-6 h-[170px] gap-1.5'
                   : 'p-4 pt-8 h-[180px] gap-2'
               }`}>
 
@@ -140,42 +143,44 @@ export default function SwiperComponent() {
               <div className={screenInfo.isMobile ? "mt-1 mb-1" : screenInfo.isTablet ? "mb-1" : "mt-1 mb-1"}>
                 {renderRatingStars(card.rating)}
               </div>
-              
+
               {/* Hotel Name */}
               <h2
-                onClick={() => navigate(`hotels/${card?.hotelCode}`, { state: { hotelData: card} })}
+                // onClick={() => navigate(`hotels/${card?.hotelCode}`, { state: { hotelData: card } })}
+
+                onClick={() => navigate(`/hotels/${card?.hotelCode}`)}
                 className={`cursor-pointer hover:text-primary-green font-bold text-start transition-colors duration-300
-                  ${screenInfo.isMobile 
-                    ? 'text-mobile/h5/medium md:text-desktop/h5' 
-                    : screenInfo.isTablet 
-                      ? 'text-lg leading-tight' 
+                  ${screenInfo.isMobile
+                    ? 'text-mobile/h5/medium md:text-desktop/h5'
+                    : screenInfo.isTablet
+                      ? 'text-lg leading-tight'
                       : 'text-desktop/h5 xl:text-xl'
                   }`}
               >
-                {card.name?.length > (screenInfo.isTablet ? 18 : 20) 
-                  ? `${card.name.slice(0, screenInfo.isTablet ? 18 : 20)}...` 
+                {card.name?.length > (screenInfo.isTablet ? 18 : 20)
+                  ? `${card.name.slice(0, screenInfo.isTablet ? 18 : 20)}...`
                   : card.name}
               </h2>
 
               {/* Location */}
               <div className={`flex items-end gap-1 text-[#707070] font-semibold
-                ${screenInfo.isMobile 
-                  ? 'text-mobile/body/2' 
-                  : screenInfo.isTablet 
-                    ? 'text-sm' 
+                ${screenInfo.isMobile
+                  ? 'text-mobile/body/2'
+                  : screenInfo.isTablet
+                    ? 'text-sm'
                     : 'text-mobile/body/2'
                 }`}>
-                <LocationOnSharp 
-                  className="text-[#4DB8B6]" 
-                  style={{ fontSize: "18px" }} 
+                <LocationOnSharp
+                  className="text-[#4DB8B6]"
+                  style={{ fontSize: "18px" }}
                 />
                 <span className={`truncate
-                  ${screenInfo.isMobile 
-                    ? 'max-w-[200px]' 
-                    : screenInfo.isTablet 
-                      ? 'max-w-[180px]' 
-                      : screenInfo.isLaptop 
-                        ? 'max-w-[220px]' 
+                  ${screenInfo.isMobile
+                    ? 'max-w-[200px]'
+                    : screenInfo.isTablet
+                      ? 'max-w-[180px]'
+                      : screenInfo.isLaptop
+                        ? 'max-w-[220px]'
                         : 'max-w-[280px]'
                   }`}>
                   {card.location?.hotelAddress}
@@ -198,27 +203,27 @@ export default function SwiperComponent() {
 
             {/* Features Badge */}
             <div className={`absolute z-40 flex flex-col items-center gap-[2px] bg-[#4DB8B6] rounded-xl shadow-lg
-              ${screenInfo.isMobile 
-                ? 'left-[77%] top-[2rem] w-[80px] p-4' 
-                : screenInfo.isTablet 
-                  ? 'left-[82%] top-[1.5rem] w-[75px] p-3' 
-                  : screenInfo.isLaptop 
-                    ? 'left-[86%] top-[2rem] w-[80px] p-4' 
+              ${screenInfo.isMobile
+                ? 'left-[77%] top-[2rem] w-[80px] p-4'
+                : screenInfo.isTablet
+                  ? 'left-[82%] top-[1.5rem] w-[75px] p-3'
+                  : screenInfo.isLaptop
+                    ? 'left-[86%] top-[2rem] w-[80px] p-4'
                     : 'left-[90%] top-[2rem] w-[80px] p-4'
               }`}>
               {features.map((feature, index) => (
                 <div key={index} className="flex flex-col items-center">
                   {feature.icon && (
-                    <feature.icon 
-                      className="text-primary-white" 
-                      style={{ 
-                        fontSize: screenInfo.isTablet ? "18px" : "20px" 
+                    <feature.icon
+                      className="text-primary-white"
+                      style={{
+                        fontSize: screenInfo.isTablet ? "18px" : "20px"
                       }}
                     />
                   )}
                   <span className={`text-primary-white text-center
-                    ${screenInfo.isTablet 
-                      ? 'text-[9px] leading-tight' 
+                    ${screenInfo.isTablet
+                      ? 'text-[9px] leading-tight'
                       : 'text-mobile/small/body'
                     }`}>
                     {feature.label}

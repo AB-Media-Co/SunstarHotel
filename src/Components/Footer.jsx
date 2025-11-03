@@ -14,7 +14,7 @@ const Footer = () => {
                     <div className='flex flex-col gap-4'>
                         {/* Logo for Desktop */}
                         <Link to='/' className="lg:flex hidden items-start space-y-2 transform hover:scale-105 transition-all duration-300">
-                            <img src="/images/Logo/logo.svg" alt="Logo" className='w-[180px] lg:w-[200px]' />
+                            <img src="/images/Logo/logo.svg" alt="Logo" className='w-[100px]' />
                         </Link>
 
                         {/* Social Icons for Desktop */}
@@ -45,7 +45,7 @@ const Footer = () => {
                     {/* Logo and Social Icons for Mobile/Tablet */}
                     <div className='flex flex-col gap-4 lg:hidden border-b border-[#67D0CF] pb-4 w-full justify-between items-start'>
                         <Link to='/' className="flex flex-col items-start space-y-2 transform hover:scale-105 transition-all duration-300">
-                            <img src="/images/Logo/logo.svg" alt="Logo" className='w-[160px] md:w-[180px]' />
+                            <img src="/images/Logo/logo.svg" alt="Logo" className='w-[100px]' />
                         </Link>
 
                         <div className="flex gap-6 justify-center md:justify-start w-full">
@@ -153,7 +153,7 @@ const Footer = () => {
                 {/* Bottom Section for Desktop/Tablet */}
                 <div className="md:flex hidden px-4 md:flex-row gap-6 md:items-center justify-center text-sm">
                     <span className="hover:text-primary-yellow transition-all duration-300">
-                        © {new Date().getFullYear()} Sunstar Hospitality. All rights reserved.
+                        © {new Date().getFullYear()} Hotel Sunstar Group. All rights reserved.
                     </span>
                     <hr className='bg-primary-white h-[20px] w-[1px] opacity-30' />
                     <Link to="/terms-conditions&cancellation" className="hover:text-primary-yellow transition-all duration-300">T & C and Cancellation Policy</Link>
@@ -168,7 +168,7 @@ const Footer = () => {
                     <Link to="/privacy-policies" className="hover:text-primary-yellow transition-all duration-300">Privacy & Cookie Policy</Link>
                 </div>
                 <div className="hover:text-primary-yellow mx-4 pt-2 transition-all duration-300 text-center text-sm md:hidden">
-                    © {new Date().getFullYear()} Sunstar Hospitality. All rights reserved.
+                    © {new Date().getFullYear()} Hotel Sunstar Group. All rights reserved.
                 </div>
             </div>
         </footer>

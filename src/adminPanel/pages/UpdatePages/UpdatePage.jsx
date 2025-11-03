@@ -5,6 +5,7 @@ import DevOwnersStats from "./dev&OwnersStats/devOwnersStats";
 import Faq from "./Faq/Faq";
 import Images from "./GalleryImages/Images";
 import EditHomePageData from "./HeroSection/EditHomePageData";
+import LoyaltyProgram from "./LoyaltyProgram/LoyaltyProgram";
 import OurValue from "./OurValue/OurValue";
 import PartnerLogos from "./PartnerLogos/PartnerLogos";
 import ManagePolicies from "./Policies/ManagePolicies";
@@ -22,6 +23,7 @@ const UpdatePage = () => {
         <CoorporateBooking />
         <ContactUsPage />
         <DevOwnersStats/>
+        <LoyaltyProgram/>
 
       </div>
       <h1 className="text-desktop/h3">Common Sections</h1>

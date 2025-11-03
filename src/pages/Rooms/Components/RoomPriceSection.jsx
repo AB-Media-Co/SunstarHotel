@@ -3,6 +3,7 @@ import { useState } from "react";
 import { usePricing } from "../../../Context/PricingContext";
 import { useNavigate } from "react-router-dom";
 import { FlashOnRounded } from "@mui/icons-material";
+import { formatINR } from "../../../utils/formatCurrency";
 
 const RoomPriceSection = ({ roomData, hotelDetail }) => {
   const { guestDetails, selectedRooms, fetchRoomHotelDetails, sethotelData } = usePricing();
@@ -65,7 +66,7 @@ const RoomPriceSection = ({ roomData, hotelDetail }) => {
           <div className="mt-1">
             <div className="flex items-baseline gap-2 md:gap-3">
               <span className="text-primary-green text-xl md:text-2xl lg:text-3xl font-bold whitespace-nowrap leading-none">
-                ₹&nbsp;{Number(roomData?.discountRate ?? 0).toLocaleString("en-IN")}
+                {formatINR(roomData?.discountRate ?? 0)}
               </span>
               <span className="text-sm md:text-base font-medium text-gray-500 whitespace-nowrap">
                 / night

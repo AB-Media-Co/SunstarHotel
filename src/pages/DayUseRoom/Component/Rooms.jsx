@@ -146,7 +146,7 @@ const Rooms = () => {
                             <Popover className="relative">
                                 {({ close }) => (
                                     <>
-                                        <Popover.Button className="flex items-center w-full justify-between rounded-md bg-white px-4 py-2.5 text-lg font-semibold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                        <Popover.Button className="flex rounded-full items-center w-full justify-between  bg-white px-4 py-2.5 text-lg font-semibold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                             <span>{format(selectedDate, "PPP")}</span>
                                             <CalendarIcon className="ml-3 h-6 w-6 text-gray-500" />
                                         </Popover.Button>
@@ -164,7 +164,7 @@ const Rooms = () => {
                         <div className="flex flex-col">
                             <label htmlFor="check-in-time" className="mb-2 font-semibold text-white">Check-in Time</label>
                             <div className="relative">
-                                <select id="check-in-time" value={checkInTime} onChange={handleCheckInChange} className="w-full appearance-none rounded-md bg-white px-4 py-2.5 text-lg font-semibold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                <select id="check-in-time" value={checkInTime} onChange={handleCheckInChange} className="w-full appearance-none rounded-full bg-white px-4 py-2.5 text-lg font-semibold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                                     {checkInSlots.map(time => <option key={time} value={time}>{time}</option>)}
                                 </select>
                                 <ClockIcon className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-500" />
@@ -175,7 +175,7 @@ const Rooms = () => {
                         <div className="flex flex-col">
                             <label htmlFor="check-out-time" className="mb-2 font-semibold text-white">Check-out Time</label>
                             <div className="relative">
-                                <select id="check-out-time" value={checkOutTime} onChange={handleCheckOutChange} className="w-full appearance-none rounded-md bg-white px-4 py-2.5 text-lg font-semibold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" disabled={checkOutSlots.length === 0}>
+                                <select id="check-out-time" value={checkOutTime} onChange={handleCheckOutChange} className="w-full appearance-none rounded-full bg-white px-4 py-2.5 text-lg font-semibold text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" disabled={checkOutSlots.length === 0}>
                                     {checkOutSlots.map(time => <option key={time} value={time}>{time}</option>)}
                                 </select>
                                 <ClockIcon className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-500" />

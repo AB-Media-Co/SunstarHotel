@@ -182,7 +182,7 @@ const LoginModal = ({ closeModal }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
-            <div className="bg-white rounded-2xl overflow-hidden shadow-2xl w-full max-w-sm sm:max-w-md md:max-w-4xl max-h-[95vh] sm:max-h-[90vh] flex flex-col md:flex-row">
+            <div className="bg-white rounded-2xl z-50 overflow-hidden shadow-2xl w-full max-w-sm sm:max-w-md md:max-w-4xl max-h-[95vh] sm:max-h-[90vh] flex flex-col md:flex-row">
                 
                 {/* Left Image Section - Hidden on mobile, visible on md+ */}
                 <div className="hidden md:block md:w-1/2">

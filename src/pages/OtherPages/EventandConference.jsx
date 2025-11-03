@@ -5,11 +5,10 @@ import CommonSwiper from '../../Components/CommonSlider';
 import { useEffect, useState } from 'react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LaunchIcon from '@mui/icons-material/Launch';
-import { Plus, Minus } from "lucide-react";
 import { Helmet } from 'react-helmet';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone'
-import { useGetFAQsByPage } from '../../ApiHooks/useFaqsHooks'
+import FAQSectionWithAPI from '../../Components/FAQSectionWithAPI';
 import { useVenues } from '../../ApiHooks/useVenues';
 import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
@@ -53,49 +52,11 @@ const EventandConference = () => {
     const { data: VenueLocations, error } = useVenueLocations();
     console.log(VenueLocations)
 
-    const [openIndex, setOpenIndex] = useState(null);
     const [copiedEmail, setCopiedEmail] = useState(null);
 
     const { mutate, isLoading } = useEnquiryForm();
 
     const { data: venuesData, } = useVenues();
-    const { data: faqs } = useGetFAQsByPage('Events & Conference');
-
-
-    const toggle = (index) => {
-        setOpenIndex(openIndex === index ? null : index);
-    };
-
-    // Split into 2 columns
-    const leftFAQs = faqs?.filter((_, i) => i % 2 === 0);
-    const rightFAQs = faqs?.filter((_, i) => i % 2 !== 0);
-
-
-    const renderFAQItem = (faq, index) => {
-        const isOpen = openIndex === index;
-
-        return (
-            <div
-                key={index}
-                onClick={() => toggle(index)}
-                className="border-b flex flex-col gap-6 border-gray-300 pb-4 cursor-pointer"
-            >
-                <div className="flex items-start justify-between">
-                    <p className="font-medium text-mobile/h5 md:text-desktop/h5/medium text-gray-800">{faq.question}</p>
-                    <div className="mt-1 text-yellow-500">
-                        {isOpen ? <Minus size={25} /> : <Plus size={25} />}
-                    </div>
-                </div>
-
-                <div
-                    className={`transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? "max-h-40 mt-2" : "max-h-0"
-                        }`}
-                >
-                    <p className="text-mobile/body/2 md:text-desktop/body/1  text-gray-600">{faq.answer}</p>
-                </div>
-            </div>
-        );
-    };
 
 
     const eventCards = [
@@ -459,20 +420,10 @@ const EventandConference = () => {
 
 
 
-            <section className="py-6  md:px-12 bg-gray-50">
-                <div className="content mx-auto">
-                    <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
-                    <p className="text-gray-500 mb-10">You need to come at least once in your life</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                        <div className="space-y-6">
-                            {leftFAQs?.map((faq, i) => renderFAQItem(faq, i * 2))}
-                        </div>
-                        <div className="space-y-6">
-                            {rightFAQs?.map((faq, i) => renderFAQItem(faq, i * 2 + 1))}
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <FAQSectionWithAPI 
+                pageName="Events & Conference" 
+                subtitle="You need to come at least once in your life"
+            />
 
         </div>
     );

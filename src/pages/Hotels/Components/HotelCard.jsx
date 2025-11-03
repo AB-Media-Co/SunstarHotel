@@ -144,7 +144,7 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
     return 0;
   };
 
-  console.log(hotelData)
+  // console.log(hotelData)
 
   const renderTabItem = (tab, index, isMobile = false) => (
     <a
@@ -232,12 +232,8 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-2 items-center">
-                  <img src="/images/tripadvisor-logo.svg" alt="" className="h-6"/>
-                  <p className="text-teal-500 text-xl md:text-2xl font-bold whitespace-nowrap leading-none">{hotelData?.rating}.0</p>
+              <div className="flex w-full">
 
-                </div>
                 <button
                   onClick={handleBooking}
                   className="bg-primary-green text-primary-white text-sm md:text-xl font-medium rounded-xl md:rounded-full py-3 md:py-2 px-6 md:px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full md:w-auto"
@@ -359,19 +355,28 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
           <div className="grid grid-cols-1 md:grid-cols-3 items-start md:items-center gap-4">
             {/* Hotel Name + Price (span 2 on tablet/desktop) */}
             <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row md:items-center gap-3 md:gap-5">
-              <div className="min-w-0">
-                <h2 className="text-lg md:text-2xl font-bold text-gray-800 leading-tight truncate">
-                  {hotelData?.name}
-                </h2>
-                <div className="text-sm font-medium text-teal-500 mt-1">
-                  <a className="hover:underline">Book Direct for Lowest Prices!</a>
+              <div className="flex justify-between">
+                <div className="min-w-0">
+                  <h2 className="text-mobile/h5 md:text-desktop/h3 text-gray-800 leading-tight">
+                    {hotelData?.name}
+                  </h2>
+                  <div className="text-sm font-medium text-teal-500 mt-1">
+                    <a className="hover:underline">Book Direct for Lowest Prices!</a>
+                  </div>
                 </div>
+
+                <div className="flex gap-2 md:hidden justify-end items-center">
+                  <img src="/images/tripadvisor-logo.svg" alt="" className="h-4" />
+                  <p className="text-teal-500 text-md md:text-2xl font-bold whitespace-nowrap leading-none">{hotelData?.rating}.0</p>
+
+                </div>
+
               </div>
 
               <div className="flex flex-col items-start md:items-center">
                 <div className="flex items-baseline gap-2 md:gap-3">
                   <span className="text-teal-500 text-xl md:text-2xl font-bold whitespace-nowrap leading-none">
-                    {/* NBSP after ₹ prevents line break */}
+                    {/* Already using Indian format */}
                     ₹&nbsp;{Number(hotelData?.price ?? 0).toLocaleString('en-IN')}
                   </span>
                   <span className="text-sm md:text-base font-normal text-gray-600 whitespace-nowrap">
@@ -384,6 +389,11 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
 
             {/* Check-In/Check-Out chip (right on tablet/desktop) */}
             <div className="col-span-1 md:justify-self-end">
+              <div className="md:flex gap-2 hidden justify-end items-center">
+                <img src="/images/tripadvisor-logo.svg" alt="" className="h-6" />
+                <p className="text-teal-500 text-xl md:text-2xl font-bold whitespace-nowrap leading-none">{hotelData?.rating}.0</p>
+
+              </div>
               <div className="text-xs md:text-sm bg-teal-100 text-[#058FA2] font-medium rounded-full py-2 px-3 md:px-4 flex flex-wrap gap-x-2 gap-y-1 items-center justify-center shadow-sm">
                 <span className="whitespace-nowrap">
                   Check-In <span className="font-bold text-teal-800">{hotelData?.checkIn}</span>

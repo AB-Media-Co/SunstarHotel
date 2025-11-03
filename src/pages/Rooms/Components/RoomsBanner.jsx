@@ -2,39 +2,15 @@
 import { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import Carousel from "../../../Components/CardsCommonComp/CommonCarousel";
-import Calendar from "../../../Components/Calendar";
-import Icon from "../../../Components/Icons";
-import { differenceInCalendarDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { usePricing } from "../../../Context/PricingContext";
-import { ArrowRightAlt, Close as CloseIcon, ArrowForward, CalendarToday, ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import { ArrowRightAlt, Close as CloseIcon, ArrowBackIos, ArrowForwardIos, ArrowBackIosNew } from "@mui/icons-material";
 
-import {
-  format,
-} from "date-fns";
-
-function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
-  const [checkIn, setCheckIn] = useState(null);
-  const [checkOut, setCheckOut] = useState(null);
-  // const [openCalender, setOpenCalender] = useState(false);
-  // const [bookingError, setBookingError] = useState(false);
+function RoomsBanner({ businessPlatformFeatures }) {
   const [showImageGallery, setShowImageGallery] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const { selectedRooms } = usePricing();
 
   const navigate = useNavigate();
-
-  const { fetchRoomHotelDetails, sethotelData } = usePricing();
-
-  useEffect(() => {
-    const storedCheckIn = localStorage.getItem("checkInDate");
-    const storedCheckOut = localStorage.getItem("checkOutDate");
-    if (storedCheckIn && storedCheckOut) {
-      setCheckIn(storedCheckIn);
-      setCheckOut(storedCheckOut);
-    }
-  }, []);
 
   // Disable scrolling when gallery is open
   useEffect(() => {
@@ -53,32 +29,6 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
   const carouselImages = businessPlatformFeatures?.RoomImage?.slice(0, 5) || [];
   const allImages = businessPlatformFeatures?.RoomImage || [];
 
-  // const handleBooking = async () => {
-  //   if (selectedRooms?.length > 0) {
-  //     navigate("/room/details")
-  //   } else {
-  //     setBookingError(false);
-  //     await fetchRoomHotelDetails(businessPlatformFeatures?._id, hotelDetail?.hotelCode);
-
-  //     navigate("/room/details");
-
-  //     localStorage.setItem("hotelData", JSON.stringify(hotelDetail));
-
-  //     sethotelData(hotelDetail)
-  //   }
-  // };
-
-  // const calculateNights = () => {
-  //   if (checkIn && checkOut) {
-  //     const nights = differenceInCalendarDays(
-  //       new Date(checkOut),
-  //       new Date(checkIn)
-  //     );
-  //     return <div>{nights} Nights</div>;
-  //   }
-  //   return 0;
-  // };
-
   const handleImageClick = (image, index) => {
     setSelectedImage(image);
     setSelectedImageIndex(index);
@@ -86,12 +36,10 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
   };
 
   const handlePrevImage = () => {
-    // First create a temporary div to initiate slide animation
     const imageContainer = document.querySelector('.image-slider-container');
     if (imageContainer) {
       imageContainer.classList.add('sliding-prev');
 
-      // After short delay, update the actual image
       setTimeout(() => {
         const newIndex = (selectedImageIndex - 1 + allImages.length) % allImages.length;
         setSelectedImage(allImages[newIndex]);
@@ -99,7 +47,6 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
         imageContainer.classList.remove('sliding-prev');
       }, 150);
     } else {
-      // Fallback if DOM manipulation fails
       const newIndex = (selectedImageIndex - 1 + allImages.length) % allImages.length;
       setSelectedImage(allImages[newIndex]);
       setSelectedImageIndex(newIndex);
@@ -107,12 +54,10 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
   };
 
   const handleNextImage = () => {
-    // First create a temporary div to initiate slide animation
     const imageContainer = document.querySelector('.image-slider-container');
     if (imageContainer) {
       imageContainer.classList.add('sliding-next');
 
-      // After short delay, update the actual image
       setTimeout(() => {
         const newIndex = (selectedImageIndex + 1) % allImages.length;
         setSelectedImage(allImages[newIndex]);
@@ -120,7 +65,6 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
         imageContainer.classList.remove('sliding-next');
       }, 150);
     } else {
-      // Fallback if DOM manipulation fails
       const newIndex = (selectedImageIndex + 1) % allImages.length;
       setSelectedImage(allImages[newIndex]);
       setSelectedImageIndex(newIndex);
@@ -133,17 +77,15 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
 
   return (
     <div className="relative">
-
-
-        <Carousel
-          features={carouselImages}
-          height="h-[600px] rounded-lg"
-          buttonColor="#FDC114"
-          iconSize="h-6 w-6 "
-          NavClass="bottom-[3rem] md:bottom-8"
-          viewAll={true}
-          setShowImageGallery={setShowImageGallery}
-        />
+      <Carousel
+        features={carouselImages}
+        height="h-[600px] rounded-lg"
+        buttonColor="#FDC114"
+        iconSize="h-6 w-6 "
+        NavClass="bottom-[3rem] md:bottom-8"
+        viewAll={true}
+        setShowImageGallery={setShowImageGallery}
+      />
       <div className="absolute top-8 right-2 md:right-20 z-50">
         <button
           onClick={() => navigate(-1)}
@@ -154,100 +96,47 @@ function RoomsBanner({ businessPlatformFeatures, hotelDetail }) {
         </button>
       </div>
 
-      {/* <div
-        className={`bg-primary-white bg-opacity-50 backdrop-blur-sm py-8 px-4 lg:left-[10%] transition-all duration-500 ease-in-out 
-          content absolute top-[60%] md:top-[70%]
-          md:px-8 lg:px-12 rounded-md shadow-lg lg:mx-auto  
-          z-10 flex flex-col items-center gap-6 mx-2
-        `}
-      >
-        <div
-          className={`flex justify-center flex-col md:flex-row items-center w-full space-y-4 md:space-y-0 space-x-0 md:space-x-4`}
-        >
-          <div onClick={() => setOpenCalender(true)} className="flex flex-row cursor-pointer items-center justify-evenly border max-w-full w-full px-4 py-3 md:px-8 md:py-4 rounded-full gap-3 shadow-md">
-            <CalendarToday className="w-5 h-5 md:w-6 md:h-6 text-primary-green" />
-            <div className={`flex flex-col`}>
-              <span className="font-semibold text-[8px] text-gray-700 md:text-base">
-                {checkIn ? format(new Date(checkIn), "dd MMM, EEEE") : "Check in"}
-              </span>
-            </div>
-            <ArrowRightAlt className="text-yellow-500" />
-            <div className={`flex flex-col`}>
-              <span className="font-semibold text-[8px] text-gray-700 md:text-base">
-                {checkOut ? format(new Date(checkOut), "dd MMM, EEEE") : "Check-out"}
-              </span>
-            </div>
-            {checkIn && checkOut && (
-              <span className="flex items-center text-gray-700 justify-center text-[8px] md:text-base rounded-full border border-gray-300 px-3 md:py-1">
-                {calculateNights()}
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center justify-end gap-4 w-full">
-            <button
-              onClick={handleBooking}
-              className="bg-[#006167] w-full md:w-auto text-primary-white text-sm sm:text-base lg:text-lg sm:w-auto rounded-full shadow-md px-6 py-3"
-            >
-              Book Room
-            </button>
-          </div>
-        </div>
-
-        {bookingError && (
-          <p className="text-red-500 text-sm">
-            Please select Check-In and Check-Out dates.
-          </p>
-        )}
-      </div> */}
-
-      {/* {openCalender && (
-        <div className="fixed inset-0 flex justify-center items-center z-50">
-          <Calendar
-            setCheckInDate={setCheckIn}
-            setCheckOutDate={setCheckOut}
-            setOpenCalender={setOpenCalender}
-          />
-        </div>
-      )} */}
-
-      {/* Full Image Gallery Modal */}
+      {/* Full Image Gallery Modal - Updated Layout */}
       {showImageGallery && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center">
-          <div
-            className="bg-white w-full max-h-full overflow-hidden animate-slideUp"
-            style={{
-              animation: 'slideUp 0.5s ease-out forwards',
-            }}
-          >
-            <div className="content">
-              <div className="p-4 flex justify-between items-center border-b">
-                <h3 className="text-4xl font-bold text-gray-800">Room Images</h3>
-                <button
-                  onClick={() => setShowImageGallery(false)}
-                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-                >
-                  <CloseIcon className="text-gray-700" />
-                </button>
-              </div>
+        <div
+          className={`fixed inset-0 bg-[#6EC4C2]/95 z-50 overflow-y-auto transition-transform duration-500 translate-y-0`}
+        >
+          <div className="mx-auto w-full max-w-[95vw] md:max-w-3xl lg:max-w-5xl xl:max-w-[1280px]">
+            {/* Sticky header */}
+            <div
+              className="sticky top-0 z-10 flex items-center gap-3 bg-[#6EC4C2]/95 px-4 md:px-6 py-4 md:py-6 cursor-pointer"
+              onClick={() => setShowImageGallery(false)}
+              aria-label="Close gallery"
+            >
+              <ArrowBackIosNew className="h-7 w-7 md:h-8 md:w-8 text-white" />
+              <span className="text-white text-lg md:text-xl font-semibold">Room Images</span>
+            </div>
 
-              <div className="p-4 overflow-y-auto max-h-[90vh]">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {businessPlatformFeatures?.RoomImage?.map((image, index) => (
-                    <div
-                      key={index}
-                      className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-md cursor-pointer"
-                      onClick={() => handleImageClick(image, index)}
-                    >
-                      <img
-                        src={image}
-                        alt={`Room image ${index + 1}`}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                  ))}
+            {/* Body */}
+            <div className="bg-white w-full md:rounded-t-2xl py-8 md:py-10 min-h-screen">
+              {allImages.length > 0 ? (
+                <div className="px-4 md:px-8">
+           
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+                    {allImages.map((image, imgIndex) => (
+                      <button
+                        type="button"
+                        key={imgIndex}
+                        className="relative w-full aspect-[4/3] cursor-pointer"
+                        onClick={() => handleImageClick(image, imgIndex)}
+                      >
+                        <img
+                          src={image}
+                          alt={`Room image ${imgIndex + 1}`}
+                          className="absolute inset-0 w-full h-full object-cover rounded-xl hover:scale-105 transition-transform duration-300"
+                        />
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <p className="text-gray-600 italic px-4 md:px-8">No images available.</p>
+              )}
             </div>
           </div>
         </div>

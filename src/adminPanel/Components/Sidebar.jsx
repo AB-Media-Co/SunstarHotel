@@ -95,7 +95,7 @@ export function Sidebar() {
         <nav className="h-full flex flex-col">
           <div className="p-4 pb-2 flex justify-between items-center transition-all duration-500 ease-in-out">
             <Link className={`overflow-hidden transition-all duration-500 ease-in-out ${expanded ? 'w-32' : 'w-0'}`}>
-              <img src="/images/Logo/mobileLogo.svg" alt="Logo" className="w-full" />
+              <img src="/images/Logo/mobileLogo.svg" alt="Logo" className="w-[100px]" />
             </Link>
             <button
               onClick={() => setExpanded((curr) => !curr)}

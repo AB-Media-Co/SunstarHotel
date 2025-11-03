@@ -5,7 +5,7 @@ export const Footer = ({ ContactUsDetail }) => {
   const phone = ContactUsDetail?.phoneNumber || "";
 
   return (
-    <footer className="w-full border-t border-gray-200">
+    <footer className="w-full md:border-t border-gray-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Layout: stack on mobile, split on md+ */}
         <div className="flex flex-col gap-6 py-6 text-gray-600   md:justify-between md:gap-10 md:py-8">

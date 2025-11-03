@@ -16,9 +16,24 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
 
   const verifiedUser = localStorage.getItem("user_email") !== null;
 
-  const { data: userData } = useGetUserByEmail(email);
+  const { data: userData, refetch } = useGetUserByEmail(email);
 
-  console.log(userData)
+  // ✅ Re-sync email from localStorage when component mounts or storage changes
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("user_email");
+    if (storedEmail && storedEmail !== email) {
+      setEmail(storedEmail);
+    }
+  }, [verifiedUser]);
+
+  // ✅ Refetch user data when email changes
+  useEffect(() => {
+    if (email && email.trim() !== '') {
+      refetch();
+    }
+  }, [email, refetch]);
+
+  // console.log(userData)
 
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -108,7 +123,7 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
 
 
   return (
-    <div id="guestDetail" className="flex flex-col gap-10 relative overflow-hidden" >
+    <div id="guestDetail" className="flex flex-col md:gap-4 relative overflow-hidden" >
 
       {/* Enhanced Header */}
       <div className="flex items-center mb-2 relative z-10">
@@ -124,7 +139,7 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
         {/* Verification Status Banner */}
         {verifiedUser && (
           <>
-            <div className="mb-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl flex items-center">
+            <div className="mb-4 md:mb-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl flex items-center">
               <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-500 rounded-full flex items-center justify-center mr-3 shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12"></polyline>
@@ -135,21 +150,17 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
                 <p className="text-green-600 text-sm">Your email and mobile number are verified</p>
               </div>
             </div>
-            <div className="mb-8 p-4 border rounded-xl bg-gray-50 flex items-center justify-between shadow-sm">
-              <div className="flex items-center gap-4">
-                {/* Avatar with initials */}
-                <div className="w-12 h-12 rounded-full bg-primary-green flex items-center justify-center text-white font-bold text-lg shadow">
-                  {userData?.data?.firstName?.charAt(0)}{userData?.data?.lastName?.charAt(0)}
-                </div>
-                {/* User Info */}
-                <div className="flex flex-col">
-                  <p className="text-gray-900 font-semibold text-lg">{userData?.data?.firstName} {userData?.data?.lastName}</p>
-                  <p className="text-sm text-gray-500">
-                    {userData?.data?.email?.replace(/^(.{2})(.*)(@.*)$/, (_, a, b, c) => `${a}${'*'.repeat(b.length)}${c}`)} |
-                    {' '}{userData?.data?.phone?.replace(/^(.{0,2})(.*)(.{4})$/, (_, a, b, c) => `${'*'.repeat(a.length ? a.length : 2)}${'*'.repeat(b.length)}${c}`)}
-                  </p>
-                </div>
+            <div className="mb-4 md:mb-8 p-4 border rounded-xl bg-gray-50 flex items-center justify-between shadow-sm">
+              <div className="w-12 h-12 mr-2 rounded-full bg-primary-green flex items-center justify-center text-white font-bold text-lg shadow">
+                {userData?.data?.firstName?.charAt(0)}{userData?.data?.lastName?.charAt(0)}
               </div>
+
+
+              <div className="flex flex-col min-w-0 flex-1 ">
+                <p className="text-gray-900 font-semibold text-sm truncate">{userData?.data?.firstName} {userData?.data?.lastName}</p>
+                <p className="text-xs text-gray-500 truncate">{userData?.data?.email}</p>
+              </div>
+
 
               {/* Log Out Link */}
               <button
@@ -157,14 +168,14 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
                   localStorage.removeItem("user_email");
                   window.location.reload();
                 }}
-                className="text-sm font-semibold text-gray-500 hover:underline"
+                className="text-xs font-semibold text-gray-600 hover:text-gray-900 whitespace-nowrap flex-shrink-0"
               >
                 Log Out
               </button>
             </div>
 
             {/* Checkbox Option */}
-            <label className="flex items-center gap-2 text-gray-700 text-sm mb-8">
+            <label className="flex items-center gap-2 text-gray-700 text-sm mb-4 md:mb-6">
               <input
                 type="checkbox"
                 className="form-checkbox h-5 w-5 text-yellow-500 border-gray-300 rounded"
@@ -180,7 +191,7 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
 
             {/* Guest Details Form - Optional, if needed */}
             {isBookingForSomeoneElse && (
-              <form className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {formFields.map(({ id, label, placeholder, type, icon }) => {
                   const fieldValue = getFieldValue(id);
                   const isFieldFocused = focusedField === id;
@@ -239,7 +250,7 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
         )}
 
         {!verifiedUser && (
-          <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-xl flex items-center justify-between">
+          <div className="mb-4 md:mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-xl flex flex-col gap-2  md:flex-row items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-yellow-400 text-white rounded-full flex items-center justify-center shadow">
                 !
@@ -253,14 +264,26 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
             </div>
             <button
               onClick={() => setShowLoginModal(true)}
-              className="ml-4 px-5 py-2 rounded-lg bg-cyan-600 text-white hover:bg-cyan-700 transition"
+              className="ml-4 px-5 py-2 rounded-lg bg-primary-green text-white  transition"
             >
               Login / Verify
             </button>
           </div>
 
         )}
-        {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
+        {showLoginModal && (
+          <LoginModal
+            closeModal={() => {
+              setShowLoginModal(false);
+              // ✅ Refetch user data after modal closes (login successful)
+              const storedEmail = localStorage.getItem("user_email");
+              if (storedEmail) {
+                setEmail(storedEmail);
+                setTimeout(() => refetch(), 200);
+              }
+            }}
+          />
+        )}
       </div>
     </div>
   );

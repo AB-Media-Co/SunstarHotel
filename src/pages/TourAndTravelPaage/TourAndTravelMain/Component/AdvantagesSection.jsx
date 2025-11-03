@@ -30,7 +30,7 @@ const AdvantagesSection = () => {
           Our Advantages
         </h2>
         <p className="text-sm md:text-base text-white mb-10 max-w-xl mx-auto">
-          You can rely on our experience and the quality of services we provide. Here are other reasons to book tours at Treat Holidays.
+          You can rely on our experience and the quality of services we provide. Here are other reasons to book tours at Hotel Sunstar Group.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">

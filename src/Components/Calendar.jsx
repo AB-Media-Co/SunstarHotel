@@ -122,7 +122,7 @@ const CalendarMonth = React.memo(function CalendarMonth({
 
 /** -------------------- Main Calendar -------------------- */
 const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode }) => {
-  console.log(hotelCode ? `Calendar mounted for hotelCode: ${hotelCode}` : "Calendar mounted without specific hotelCode");
+  // console.log(hotelCode ? `Calendar mounted for hotelCode: ${hotelCode}` : "Calendar mounted without specific hotelCode");
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const nextMonth = useMemo(() => addMonths(currentMonth, 1), [currentMonth]);
   const { closeHotelModal } = usePricing();
@@ -130,7 +130,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
   const [authkey, setAuthkey] = useState(null);
 
   const location = useLocation();
-  console.log(location);
+  // console.log(location);
   // Get from query params (like ?hotelCode=14494)
   const params = new URLSearchParams(location.search);
   let hotelCode2 = params.get("hotelCode");
@@ -149,13 +149,13 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
     const existing = localStorage.getItem("hotelInfo");
     if (existing || !hotelCode2) return;
 
-    console.log("Fetching hotel info for code:", hotelCode2);
+    // console.log("Fetching hotel info for code:", hotelCode2);
     (async () => {
       try {
         const data = await getSingleHotelWithCode(hotelCode2);
         localStorage.setItem("hotelInfo", JSON.stringify(data?.hotel));
         setAuthkey(data?.hotel?.authKey)
-        console.log("✅ Hotel info saved to localStorage:", data);
+        // console.log("✅ Hotel info saved to localStorage:", data);
       } catch (err) {
         console.error("❌ Failed to fetch hotel info:", err);
       }
@@ -188,7 +188,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
   }, []);
 
   // console.log("Using hotelCode:", hotelCode ?? hotelInfo?.hotelCode ?? hotelCode2 ?? "none");
-  console.log("Using authKey:", hotelInfo )
+  // console.log("Using authKey:", hotelInfo )
 
 
   // Restore dates: INVALID past selections are cleared (no auto-clamp to today/tomorrow)
@@ -297,7 +297,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
       return;
     }
 
-    console.log("Confirm button clicked");
+    // console.log("Confirm button clicked");
     setConfirmClicked(true);
 
     try {
@@ -314,7 +314,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
       const startStr = format(checkIn, "yyyy-MM-dd");
       const endStr = format(checkOut, "yyyy-MM-dd");
 
-      console.log("Selected Dates:", { checkIn: startStr, checkOut: endStr });
+      // console.log("Selected Dates:", { checkIn: startStr, checkOut: endStr });
 
       setCheckInDate(startStr);
       setCheckOutDate(endStr);
@@ -322,7 +322,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
       try {
         localStorage.setItem("checkInDate", startStr);
         localStorage.setItem("checkOutDate", endStr);
-        console.log("Dates saved to localStorage");
+        // console.log("Dates saved to localStorage");
       } catch (storageErr) {
         console.warn("Failed to save dates to localStorage:", storageErr);
       }
@@ -339,12 +339,12 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
       await queryClient.ensureQueryData({
         queryKey: ["rooms", code, authKey, startStr, endStr],
         queryFn: async ({ signal }) => {
-          console.log("→ API Request: /api/ezee/syncedRooms", {
-            hotelCode: code,
-            authCode: authKey,
-            fromDate: startStr,
-            toDate: endStr,
-          });
+          // console.log("→ API Request: /api/ezee/syncedRooms", {
+          //   hotelCode: code,
+          //   authCode: authKey,
+          //   fromDate: startStr,
+          //   toDate: endStr,
+          // });
           const res = await axiosInstance.get("/api/ezee/syncedRooms", {
             params: {
               hotelCode: code,
@@ -361,14 +361,17 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
         gcTime: 1000 * 60 * 30,
       });
 
-      console.log("Data pre-fetched and cached — navigating to:", `/hotels/${code}`);
+      // console.log("Data pre-fetched and cached — navigating to:", `/hotels/${code}`);
+      
+      // Navigate first for immediate transition
       navigate(`/hotels/${code}`);
-      closeHotelModal();
+      
+      // Then close modals (happens after navigation starts)
       setOpenCalender(false);
+      closeHotelModal();
     } catch (err) {
       console.error("Confirm error:", err);
     } finally {
-      console.log("Confirm flow complete");
       setConfirmClicked(false);
     }
   }, [

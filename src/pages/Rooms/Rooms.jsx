@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom"
-import FAQSection from "../Hotels/Components/FAQsection"
+import CommonFAQSection from "../../Components/CommonFAQSection"
 import RoomLayout from "../Hotels/Components/RoomLayout"
 import RoomPriceSection from "./Components/RoomPriceSection"
 import RoomsBanner from "./Components/RoomsBanner"
@@ -105,7 +105,11 @@ const Rooms = () => {
 
         <hr className="mt-10 content h-[2px] bg-gray-400" />
         <CheckInOutInfo checkIn={hotelInfo?.checkIn} checkOut={hotelInfo?.checkOut} />
-        {/* <FAQSection faqs={otherRoomData?.faqs} /> */}
+        <CommonFAQSection 
+          faqs={otherRoomData?.faqs} 
+          subtitle="You need to come at least once in your life"
+          bgColor="bg-white"
+        />
       </div>
 
       <BottomRoomSticky />

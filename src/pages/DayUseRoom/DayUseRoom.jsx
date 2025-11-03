@@ -5,7 +5,7 @@ import Banner from "./Component/Banner";
 import Description from "./Component/Description";
 import BenefitsCard from "./Component/BenefitsCard";
 import DayRoomTandC from "./Component/DayRoomTandC";
-import DaysUseRoomFaq from "./Component/DaysUseRoomFaq";
+import FAQSectionWithAPI from "../../Components/FAQSectionWithAPI";
 import Rooms from "./Component/Rooms";
 import ImageGallery from "../../Components/ImageGallery";
 
@@ -33,7 +33,7 @@ const DayUseRoom = () => {
             <div className="relative flex  flex-col justify-between content items-center  z-0">
                 <ImageGallery />
             </div>
-            <DaysUseRoomFaq />
+      <FAQSectionWithAPI pageName="Day Stays Rooms" />
         </div>
     )
 }

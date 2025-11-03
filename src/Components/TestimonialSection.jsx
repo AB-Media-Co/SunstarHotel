@@ -5,7 +5,7 @@ import { useGetTestimonials } from "../ApiHooks/useTestimonialHook";
 
 const TestimonialSection = ({ backgroundImage, page = '', head = "Testimonials" }) => {
   const { data: apiTestimonials = [] } = useGetTestimonials({ page: page });
-  console.log("Testimonials data:", apiTestimonials);
+  // console.log("Testimonials data:", apiTestimonials);
 
   const renderItem = (item) => {
     return (

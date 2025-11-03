@@ -7,6 +7,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import Icon from "./Icons";
 import WarningIcon from '@mui/icons-material/Warning';
+import { formatINR } from "../utils/formatCurrency";
 const RoomsCard = ({ room }) => {
   const navigate = useNavigate();
   const { fetchRoomHotelDetails, selectedRooms, removeRoom, maxRoomSelection, setMaxRoomSelection } = usePricing();
@@ -56,8 +57,6 @@ const RoomsCard = ({ room }) => {
   const handleDismissAlert = () => {
     setShowMaxAlert(false);
   };
-
-  // console.log(hotelData)
 
   return (
     <div className="bg-primary-white shadow-md rounded-lg overflow-hidden relative">
@@ -112,11 +111,11 @@ const RoomsCard = ({ room }) => {
           <div>
             {room.defaultRate && (
               <p className="text-mobile/body/1 md:text-desktop/h6/medium text-red-500 font-bold line-through">
-                ₹ {room.defaultRate}
+                {formatINR(room.defaultRate)}
               </p>
             )}
             <p className="text-mobile/h5 md:text-desktop/h5 font-bold text-[#058FA2]">
-              ₹ {room.discountRate || 0}
+              {formatINR(room.discountRate || 0)}
               <span className="text-mobile/body/2 md:text-desktop/caption text-gray-600 font-normal">
                 /night <span className="text-gray-500 ml-2">incl. Taxes</span>
               </span>

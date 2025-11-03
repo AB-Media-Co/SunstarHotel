@@ -29,8 +29,11 @@ export const PricingProvider = ({ children }) => {
       RoomTypeID: item?.roomData?.RoomTypeID,
       RateTypeID: item?.roomData?.RateTypeID,
       roomrateunkid: item?.roomData?.roomrateunkid,
+      guestQty: 2, // Default to 2 guests
+      showMaxGuestAlert: false,
     }))
   );
+
 
   const [selectedOtherCharges, setSelectedOtherCharges] = useState([]);
   const [totalOtherCharges, setTotalOtherCharges] = useState(0);
@@ -134,7 +137,8 @@ export const PricingProvider = ({ children }) => {
     if (details.length > 0 && routesToCheck.includes(location.pathname)) {
       openConfirmationModal();
     }
-  }, [location, details]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, details.length]);
 
   const handleConfirmCancel = () => {
     setDetails([]);
@@ -162,6 +166,10 @@ export const PricingProvider = ({ children }) => {
           RateTypeID: response.data.room.RateTypeID,
           discountRate: response.data.room.discountRate,
           maxGuests: response.data.room.maxGuests,
+          baseAdultOccupancy: response.data.room.baseAdultOccupancy || 2,
+          maxAdultOccupancy: response.data.room.maxAdultOccupancy || 3,
+          extraAdultRate: response.data.room.extraAdultRate || 0,
+          extraChildRate: response.data.room.extraChildRate || 0,
           roomrateunkid: response?.data?.room?.roomrateunkid,
           roomImage: response?.data?.room?.RoomImage
         },
@@ -179,12 +187,14 @@ export const PricingProvider = ({ children }) => {
           RateTypeID: response.data.room.RateTypeID,
           maxGuests: response.data.room.maxGuests,
           roomrateunkid: response?.data?.room?.roomrateunkid,
+          guestQty: 2, // Default to 2 guests
+          showMaxGuestAlert: false,
         },
       ]);
 
       return transformedData;
     } catch (error) {
-      console.error("Error fetching room and hotel details:", error);
+      // Error fetching room and hotel details
       throw error;
     }
   };

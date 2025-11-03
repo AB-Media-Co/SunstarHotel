@@ -431,7 +431,7 @@ const UserProfile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="content mt-16 sm:mt-20 mx-auto px-4 sm:px-6">
+      <div className="content mt-28 sm:mt-28 mx-auto px-4 sm:px-6">
         {/* Mobile Dropdown */}
         <div className="lg:hidden mb-4 pt-6 mt-4">
           <div className="relative">

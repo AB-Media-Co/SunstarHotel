@@ -42,8 +42,7 @@ import LoyaltyPrograme from './pages/LoyaltyPrograme/LoyaltyPrograme';
 import VenueManagement from './adminPanel/pages/VenueManagement/VenueManagement';
 import ScrollToTop from './ScrollToTop';
 import ThankYouPage from './pages/OtherPages/ThankYouPage';
-
-// import PhoneAuth from './pages/PhoneAuth';
+import NotFound from './pages/OtherPages/NotFound';
 
 
 const Layout = lazy(() => import(/* webpackChunkName: "layout" */ './Components/Layout'));
@@ -103,72 +102,69 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         <ScrollToTop />
-        <PricingProvider>
-          <Routes>
-            <Route element={<Layout />}>
-
-              <Route path="/" element={<Home />} />
-              <Route path="/why-sunstar" element={<AboutUs />} />
-              <Route path="/corporate-booking" element={<Corporatebooking />} />
-              <Route path="/hotels/:hotelCode" element={<Hotels />} />
-              <Route path="/contact" element={<ContactUs />} />
-              <Route path="/citypage/:cityName" element={<CityPage />} />
-              <Route path="/terms-conditions&cancellation" element={<TermsAndConditions />} />
-              <Route path="/privacy-policies" element={<CancellationPolicyPage />} />
-              <Route path="/sunstar-blogs" element={<BlogsPage />} />
-              <Route path="/sunstar-blogs/:slug" element={<ReadBlogPage />} />
-              <Route path="/coorporatevents" element={<CorporateEventsPage />} />
-              <Route path="/socialevents" element={<SocialEventsPage />} />
-              <Route path="/weddingpreWedding" element={<WeddingPreWeddingPage />} />
-              <Route path="/booking-form" element={<BookingForm />} />
-              <Route path="/developers&owners" element={<DevelopersOwners />} />
-              <Route path="/eventandconference" element={<EventandConference />} />
-              <Route path="/dayuseroom" element={<DayUseRoom />} />
-              <Route path="/career" element={<CareerMain />} />
-              <Route path="/tour&travel" element={<TourAndTravelPage />} />
-              <Route path="/destination/:state" element={<SelectedState />} />
-              <Route path="/package-detail/:title" element={<PackageDetails />} />
-              <Route path="/travel-agent" element={<TravelAgent />} />
-              <Route path="/in-the-media" element={<IntheMediaMain />} />
-              <Route path="/loyalty-program" element={<LoyaltyPrograme />} />
-              <Route path="/travel-booking-form" element={<TravelBookingForm />} />
-              <Route path="/my-bookings" element={<MyBookings />} />
-              <Route path="/user/profile" element={<UserProfile />} />
-              <Route path="/thankyou" element={<ThankYouPage />} />
-            </Route>
-            <Route path="/room/details" element={<RoomsDetails />} />
-            <Route path="/room/:id" element={<HotelRooms />} />
-
-            {/* <Route path="/otp" element={<PhoneAuth />} /> */}
-          </Routes>
-        </PricingProvider>
-
         <AdminProvider>
-          <Routes>
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/hotels" element={<PrivateRoute><AdminHotels /></PrivateRoute>} />
-            <Route path="/admin/hotels/edit/:hotelCode" element={<PrivateRoute><EditHotel /></PrivateRoute>} />
-            <Route path="/admin/hotels/add" element={<PrivateRoute><AddHotel /></PrivateRoute>} />
-            <Route path="/admin/pages" element={<PrivateRoute><UpdatePage /></PrivateRoute>} />
-            <Route path="/admin/offers" element={<PrivateRoute><DealsOffers /></PrivateRoute>} />
-            <Route path="/admin/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
-            <Route path="/admin/create_user" element={<PrivateRoute><CreateUser /></PrivateRoute>} />
-            <Route path="/admin/view-user" element={<PrivateRoute><ViewUser /></PrivateRoute>} />
-            <Route path="/admin/all-users" element={<PrivateRoute><AllUsers /></PrivateRoute>} />
-            <Route path="/admin/hotel-locations" element={<PrivateRoute><HotelLocations /></PrivateRoute>} />
-            {/* <Route path="/admin/manage-blogs" element={<PrivateRoute><ManageBlogs /></PrivateRoute>} /> */}
-            <Route path="/admin/manage-blogs" element={<PrivateRoute><BlogEditorTabs /></PrivateRoute>} />
-            <Route path="/admin/manage-seo" element={<PrivateRoute><SeoMeta /></PrivateRoute>} />
-            <Route path="/admin/tour&travel" element={<PrivateRoute><TourAndTravel /></PrivateRoute>} />
-            <Route path="/admin/jobs" element={<PrivateRoute><Jobs /></PrivateRoute>} />
-            <Route path="/admin/day-use-room" element={<PrivateRoute><ManageDayUseRoom /></PrivateRoute>} />
-            <Route path="/admin/venue-management" element={<PrivateRoute><VenueManagement /></PrivateRoute>} />
-          </Routes>
+          <PricingProvider>
+            <Routes>
+              {/* Admin Routes */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/hotels" element={<PrivateRoute><AdminHotels /></PrivateRoute>} />
+              <Route path="/admin/hotels/edit/:hotelCode" element={<PrivateRoute><EditHotel /></PrivateRoute>} />
+              <Route path="/admin/hotels/add" element={<PrivateRoute><AddHotel /></PrivateRoute>} />
+              <Route path="/admin/pages" element={<PrivateRoute><UpdatePage /></PrivateRoute>} />
+              <Route path="/admin/offers" element={<PrivateRoute><DealsOffers /></PrivateRoute>} />
+              <Route path="/admin/rooms" element={<PrivateRoute><Rooms /></PrivateRoute>} />
+              <Route path="/admin/create_user" element={<PrivateRoute><CreateUser /></PrivateRoute>} />
+              <Route path="/admin/view-user" element={<PrivateRoute><ViewUser /></PrivateRoute>} />
+              <Route path="/admin/all-users" element={<PrivateRoute><AllUsers /></PrivateRoute>} />
+              <Route path="/admin/hotel-locations" element={<PrivateRoute><HotelLocations /></PrivateRoute>} />
+              {/* <Route path="/admin/manage-blogs" element={<PrivateRoute><ManageBlogs /></PrivateRoute>} /> */}
+              <Route path="/admin/manage-blogs" element={<PrivateRoute><BlogEditorTabs /></PrivateRoute>} />
+              <Route path="/admin/manage-seo" element={<PrivateRoute><SeoMeta /></PrivateRoute>} />
+              <Route path="/admin/tour&travel" element={<PrivateRoute><TourAndTravel /></PrivateRoute>} />
+              <Route path="/admin/jobs" element={<PrivateRoute><Jobs /></PrivateRoute>} />
+              <Route path="/admin/day-use-room" element={<PrivateRoute><ManageDayUseRoom /></PrivateRoute>} />
+              <Route path="/admin/venue-management" element={<PrivateRoute><VenueManagement /></PrivateRoute>} />
+
+              {/* Main Website Routes */}
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/why-sunstar" element={<AboutUs />} />
+                <Route path="/corporate-booking" element={<Corporatebooking />} />
+                <Route path="/hotels/:hotelCode" element={<Hotels />} />
+                <Route path="/contact" element={<ContactUs />} />
+                <Route path="/citypage/:cityName" element={<CityPage />} />
+                <Route path="/terms-conditions&cancellation" element={<TermsAndConditions />} />
+                <Route path="/privacy-policies" element={<CancellationPolicyPage />} />
+                <Route path="/sunstar-blogs" element={<BlogsPage />} />
+                <Route path="/sunstar-blogs/:slug" element={<ReadBlogPage />} />
+                <Route path="/coorporatevents" element={<CorporateEventsPage />} />
+                <Route path="/socialevents" element={<SocialEventsPage />} />
+                <Route path="/weddingpreWedding" element={<WeddingPreWeddingPage />} />
+                <Route path="/booking-form" element={<BookingForm />} />
+                <Route path="/developers&owners" element={<DevelopersOwners />} />
+                <Route path="/eventandconference" element={<EventandConference />} />
+                <Route path="/dayuseroom" element={<DayUseRoom />} />
+                <Route path="/career" element={<CareerMain />} />
+                <Route path="/tour&travel" element={<TourAndTravelPage />} />
+                <Route path="/destination/:state" element={<SelectedState />} />
+                <Route path="/package-detail/:title" element={<PackageDetails />} />
+                <Route path="/travel-agent" element={<TravelAgent />} />
+                <Route path="/in-the-media" element={<IntheMediaMain />} />
+                <Route path="/loyalty-program" element={<LoyaltyPrograme />} />
+                <Route path="/travel-booking-form" element={<TravelBookingForm />} />
+                <Route path="/my-bookings" element={<MyBookings />} />
+                <Route path="/user/profile" element={<UserProfile />} />
+                <Route path="/thankyou" element={<ThankYouPage />} />
+              </Route>
+              <Route path="/room/details" element={<RoomsDetails />} />
+              <Route path="/room/:id" element={<HotelRooms />} />
+              
+              {/* 404 - Must be last */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </PricingProvider>
         </AdminProvider>
-        {/* <Suspense fallback={<Loader />}>
-          <LoaderWrapper>
-          </LoaderWrapper>
-        </Suspense> */}
+
       </Router>
       <CookieConsent />
       <Toaster />

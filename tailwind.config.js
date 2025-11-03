@@ -100,6 +100,16 @@ export default {
 			letterSpacing: '0.2px',
 			fontWeight: '400'
 		  }],
+		  'desktop/head': ['40px', {
+			lineHeight: '46px',
+			// letterSpacing: '0.2px',
+			fontWeight: '700'
+		  }],
+		  'mobile/head': ['32px', {
+			lineHeight: '46px',
+			// letterSpacing: '0.2px',
+			fontWeight: '700'
+		  }],
 		  // Font sizes for mobile
 		  'mobile/h1': ['36px', {
 			lineHeight: '43.2px',

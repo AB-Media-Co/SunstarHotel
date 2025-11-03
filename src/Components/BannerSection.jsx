@@ -91,7 +91,7 @@ const BannerSection = ({
                                     onClick={onButtonClick}
                                     className={`px-6 py-3 border-2 border-${textC} text-${textC} rounded-lg hover:bg-${textC} hover:text-${textC === "white" ? "black" : "white"} transition-all duration-300 font-medium bg-transparent`}
                                 >
-                                    Login Or Sign Up
+                                    Get In Touch
                                 </button>
                             )
                         )}

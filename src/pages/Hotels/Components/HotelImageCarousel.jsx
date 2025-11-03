@@ -8,7 +8,7 @@ import { Eye, View } from 'lucide-react';
 const HotelImageCarousel = ({ data }) => {
   const carouselImages = data?.carouselImages;
   const sections = data?.sections || [];
-  console.log(sections)
+  // console.log(sections)
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(null);
@@ -104,7 +104,6 @@ const HotelImageCarousel = ({ data }) => {
   );
 
   // Lazy load section images
-  // ⬇️ replace existing SectionImage
   const SectionImage = ({ src, alt }) => {
     const [loaded, setLoaded] = useState(false);
 
@@ -244,7 +243,6 @@ const HotelImageCarousel = ({ data }) => {
         </div>
 
         {/* Modal for viewing all images (sections) */}
-        {/* Modal for viewing all images (sections) */}
         <div
           className={`fixed inset-0 bg-[#6EC4C2]/95 z-50 overflow-y-auto transition-transform duration-500
     ${showGallery ? "translate-y-0" : "translate-y-full pointer-events-none"}`}
@@ -257,7 +255,7 @@ const HotelImageCarousel = ({ data }) => {
               aria-label="Close gallery"
             >
               <ArrowBackIosNew className="h-7 w-7 md:h-8 md:w-8 text-white" />
-              <span className="text-white font-bold text-2xl md:text-4xl">Back to the Hotel</span>
+              <span className="text-white text-mobile/head md:text-desktop/head">Back to the Hotel</span>
             </div>
 
             {/* Body */}

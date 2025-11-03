@@ -24,10 +24,7 @@ const SunstarInfoCards = ({infoCards}) => {
               {/* Illustration */}
               <div className="flex justify-end">
                 <img src={card.illustration} alt={card.title} className=" h-24 sm:h-[190px] " />
-
               </div>
-
-
             </div>
           ))}
         </div>

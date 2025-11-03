@@ -92,12 +92,13 @@ const Navbar = () => {
     {
       name: "Why Sunstar",
       icon: <InfoIcon sx={{ fontSize: 20 }} />,
-      hasDropdown: true,
-      items: [
-        { name: "Why Sunstar", route: "/why-sunstar" },
-        { name: "Loyalty Program", route: "/loyalty-program" },
-        { name: "Come Shine With Us", route: "/career" },
-      ],
+      hasDropdown: false,
+      route: "/why-sunstar"
+      // items: [
+      //   { name: "Why Sunstar", route: "/why-sunstar" },
+      //   { name: "Loyalty Program", route: "/loyalty-program" },
+      //   { name: "Come Shine With Us", route: "/career" },
+      // ],
     },
 
     {
@@ -106,37 +107,36 @@ const Navbar = () => {
       action: openHotelModal,
     },
 
-    {
-      name: "Corporate Booking",
-      icon: <BusinessIcon sx={{ fontSize: 20 }} />,
-      hasDropdown: true,
-      items: [
-        { name: "Corporate Bookings", route: "/corporate-booking" },
-        { name: "Travel Agent", route: "/travel-agent" },
-        { name: "Developer And Owners", route: "/developers&owners" },
-      ],
-    },
+    // {
+    //   name: "Corporate Booking",
+    //   icon: <BusinessIcon sx={{ fontSize: 20 }} />,
+    //   hasDropdown: false,
+    //   route: "/corporate-booking"
+
+    // },
 
     {
-      name: "Tour & Travel",
+      name: "Day Stays",
       icon: <BusinessIcon sx={{ fontSize: 20 }} />,
-      hasDropdown: true,
-      items: [
-        { name: "Tour & Travel", route: "/tour&travel" },
-        { name: "Event And Conference", route: "/eventandconference" },
-        { name: "Day Stays", route: "/dayuseroom" },
-      ],
+      hasDropdown: false,
+      route: "/dayuseroom"
+      // items: [
+      //   { name: "Tour & Travel", route: "/tour&travel" },
+      //   { name: "Event And Conference", route: "/eventandconference" },
+      //   { name: "Day Stays", route: "/dayuseroom" },
+      // ],
     },
 
     {
       name: "Contact Us",
       icon: <ContactMailIcon sx={{ fontSize: 20 }} />,
-      hasDropdown: true,
-      items: [
-        { name: "Contact Us", route: "/contact" },
-        { name: "Blog & Buzz", route: "/sunstar-blogs" },
-        { name: "In the Media", route: "/in-the-media" },
-      ],
+      hasDropdown: false,
+      route: "/contact"
+      // items: [
+      //   { name: "Contact Us", route: "/contact" },
+      //   { name: "Blog & Buzz", route: "/sunstar-blogs" },
+      //   { name: "In the Media", route: "/in-the-media" },
+      // ],
     },
   ];
 
@@ -216,14 +216,14 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`bg-transparent nav ${navColor ? 'text-black' : 'text-primary-white'} py-4 top-2 absolute w-full z-40`}>
-        <div className="max-w-[1400px] mx-auto flex justify-between items-center min-h-[60px] px-4 md:px-6 lg:px-8">
+      <nav className={`bg-transparent nav ${navColor ? 'text-black' : 'text-primary-white'} py-2 sm:py-4 top-2 absolute w-full z-40`}>
+        <div className="max-w-[1400px] mx-auto flex justify-between items-center min-h-[50px] sm:min-h-[60px] px-2 sm:px-4 md:px-6 lg:px-8 gap-2">
           {/* Logo */}
           <Link to="/" className="text-2xl font-bold flex-shrink-0">
             <img
               src={`${navColor ? '/images/Logo/logo2.svg' : '/images/Logo/logo.svg'}`}
               alt="Logo"
-              className="h-[40px] sm:h-[49px] w-[120px] sm:w-[150px]"
+              className="w-[60px] sm:w-[70px] md:w-[80px]"
             />
           </Link>
 
@@ -258,125 +258,128 @@ const Navbar = () => {
                           }`}
                         style={{
                           minWidth: '240px', // enough for 2–3 items
-                          maxWidth: '320px', pointerEvents: openDropdown === name ? 'auto' : 'none' }}
+                          maxWidth: '320px', pointerEvents: openDropdown === name ? 'auto' : 'none'
+                        }}
                       >
-                      <div className="grid grid-cols-1 gap-1 p-3">
-                        {items?.map((item, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => handleDropdownItemClick(item.route)}
-                            className="group text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50 hover:text-primary-yellow rounded-lg transition-all duration-200 flex items-center justify-between"
-                          >
-                            <span>{item.name}</span>
-                            <svg
-                              className="w-4 h-4 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 transition-all duration-200"
-                              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        <div className="grid grid-cols-1 gap-1 p-3">
+                          {items?.map((item, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => handleDropdownItemClick(item.route)}
+                              className="group text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50 hover:text-primary-yellow rounded-lg transition-all duration-200 flex items-center justify-between"
                             >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </button>
-                        ))}
+                              <span>{item.name}</span>
+                              <svg
+                                className="w-4 h-4 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-1 transition-all duration-200"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                    </div>
-              ) : (
-              <button
-                onClick={() => {
-                  if (action) action();
-                  else if (route) navigate(route);
-                }}
-                className={`flex items-center px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name ? "text-primary-yellow" : "hover:text-primary-yellow"}`}
-              >
-                <span className="text-desktop/body/1 font-semibold whitespace-nowrap">{name}</span>
-              </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        if (action) action();
+                        else if (route) navigate(route);
+                      }}
+                      className={`flex items-center px-3 py-2 rounded-md font-semibold uppercase transition-colors duration-300 ${active === name ? "text-primary-yellow" : "hover:text-primary-yellow"}`}
+                    >
+                      <span className="text-desktop/body/1 font-semibold whitespace-nowrap">{name}</span>
+                    </button>
                   )}
-            </li>
+                </li>
               ))}
-          </ul>
+            </ul>
 
 
-        </div>
-
-        <div className="flex gap-4">
-          {/* Pay Now Button - Desktop */}
-          {isHotelsPath && (
-            <a href={payLink} target="_blank" rel="noopener noreferrer">
-              <button className="bg-primary-yellow px-4 py-3 text-sm text-white hover:text-black font-bold rounded-full mr-4 hover:bg-yellow-500 transition-all duration-300 hover:shadow-lg">
-                Pay Now
-              </button>
-            </a>
-          )}
-          {/* Desktop User Profile */}
-          <div className="hidden xl:flex items-center">
-            {userInfo ? (
-              <div
-                onClick={() => navigate('/user/profile', { state: { tab: "profile" } })}
-                className="bg-white border-2 cursor-pointer text-primary-yellow font-bold w-12 h-12 rounded-full flex items-center justify-center hover:border-primary-yellow hover:shadow-lg transition-all duration-300"
-              >
-                {userData?.data.firstName?.[0]?.toUpperCase()}{userData?.data.lastName?.[0]?.toUpperCase()}
-              </div>
-            ) : (
-              <button
-                onClick={() => setShowLoginModal(true)}
-                className="text-primary-yellow px-4 py-2 border-2 border-primary-yellow rounded-full font-bold hover:bg-primary-yellow hover:text-black transition-all duration-300"
-              >
-                Login
-              </button>
-            )}
           </div>
 
-
-          {/* Mobile Menu Toggle and User Profile */}
-          <div className="flex gap-3 items-center xl:hidden">
-            {/* User Profile for Mobile */}
-            {userInfo ? (
-              <div
-                onClick={() => navigate('/user/profile', { state: { tab: "profile" } })}
-                className="bg-white border-2 cursor-pointer text-primary-yellow font-bold w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm flex-shrink-0"
-              >
-                {userData?.data.firstName?.[0]?.toUpperCase()}{userData?.data.lastName?.[0]?.toUpperCase()}
-              </div>
-            ) : (
-              <button
-                onClick={() => setShowLoginModal(true)}
-                className="text-primary-yellow px-2 sm:px-3 py-1 border-2 border-primary-yellow rounded-full font-bold text-xs sm:text-sm whitespace-nowrap"
-              >
-                Login
-              </button>
+          <div className="flex gap-4">
+            {/* Pay Now Button - Desktop */}
+            {isHotelsPath && (
+              <a href={payLink} target="_blank" rel="noopener noreferrer">
+                <button
+                  className="bg-primary-yellow text-[9px] md:text-sm px-4 py-1 md:py-3 border-2 border-primary-yellow rounded-full font-bold hover:bg-primary-yellow hover:text-black transition-all duration-300"
+                >
+                  Pay Now
+                </button>
+              </a>
             )}
-
-            {/* Mobile Menu Toggle */}
-            <button
-              className="focus:outline-none p-1 flex-shrink-0"
-              onClick={toggleMobileMenu}
-              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            >
-              {isMenuOpen ? (
-                <CloseIcon sx={{ fontSize: { xs: 24, sm: 28 }, color: navColor ? '#000' : '#fff' }} />
+            {/* Desktop User Profile */}
+            <div className="hidden xl:flex items-center">
+              {userInfo ? (
+                <div
+                  onClick={() => navigate('/user/profile', { state: { tab: "profile" } })}
+                  className="bg-white border-2 cursor-pointer text-primary-yellow font-bold w-12 h-12 rounded-full flex items-center justify-center hover:border-primary-yellow hover:shadow-lg transition-all duration-300"
+                >
+                  {userData?.data.firstName?.[0]?.toUpperCase()}{userData?.data.lastName?.[0]?.toUpperCase()}
+                </div>
               ) : (
-                <MenuIcon sx={{ fontSize: { xs: 24, sm: 28 }, color: navColor ? '#000' : '#fff' }} />
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="text-primary-yellow px-4 py-2 border-2 border-primary-yellow rounded-full font-bold hover:bg-primary-yellow hover:text-black transition-all duration-300"
+                >
+                  Login
+                </button>
               )}
-            </button>
+            </div>
+
+
+            {/* Mobile Menu Toggle and User Profile */}
+            <div className="flex gap-3 items-center xl:hidden">
+              {/* User Profile for Mobile */}
+              {userInfo ? (
+                <div
+                  onClick={() => navigate('/user/profile', { state: { tab: "profile" } })}
+                  className="bg-white border-2 cursor-pointer text-primary-yellow font-bold w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm flex-shrink-0"
+                >
+                  {userData?.data.firstName?.[0]?.toUpperCase()}{userData?.data.lastName?.[0]?.toUpperCase()}
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="text-primary-yellow px-2 sm:px-3 py-1 border-2 border-primary-yellow rounded-full font-bold text-xs sm:text-sm whitespace-nowrap"
+                >
+                  Login
+                </button>
+              )}
+
+              {/* Mobile Menu Toggle */}
+              <button
+                className="focus:outline-none p-1 flex-shrink-0"
+                onClick={toggleMobileMenu}
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              >
+                {isMenuOpen ? (
+                  <CloseIcon sx={{ fontSize: { xs: 24, sm: 28 }, color: navColor ? '#000' : '#fff' }} />
+                ) : (
+                  <MenuIcon sx={{ fontSize: { xs: 24, sm: 28 }, color: navColor ? '#000' : '#fff' }} />
+                )}
+              </button>
+            </div>
           </div>
+
         </div>
+      </nav >
 
-      </div>
-    </nav >
+      {/* Login Modal */}
+      {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
 
-      {/* Login Modal */ }
-  { showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} /> }
+      {/* Mobile Menu Overlay */}
+      {
+        isMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 xl:hidden backdrop-blur-sm"
+            onClick={closeMobileMenu}
+          />
+        )
+      }
 
-  {/* Mobile Menu Overlay */ }
-  {
-    isMenuOpen && (
-      <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40 xl:hidden backdrop-blur-sm"
-        onClick={closeMobileMenu}
-      />
-    )
-  }
-
-  {/* Mobile and Tablet Menu (Slide-in Sidebar) */ }
+      {/* Mobile and Tablet Menu (Slide-in Sidebar) */}
       <div
         className={`fixed top-0 bottom-0 xl:hidden left-0 bg-primary-white text-[#A4A4A4] font-semibold w-80 max-w-[85vw] transform transition-transform ease-in-out duration-300 z-50 overflow-hidden shadow-2xl ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}

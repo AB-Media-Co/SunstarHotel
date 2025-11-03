@@ -98,7 +98,7 @@ const ClockTimePicker = ({ initialTime, onChange, name }) => {
       setSelectedMinute(parseInt(minutes, 10));
       setSelectedAmPm(hour >= 12 ? 'PM' : 'AM');
     } catch (e) {
-      console.error('Error parsing time:', e);
+      // Error parsing time - using default values
     }
   };
 
