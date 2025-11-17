@@ -1,22 +1,27 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import WifiIcon from "@mui/icons-material/Wifi";
 import CommonSwiper from "../../../Components/CommonSlider";
 import { Star, LocationOnSharp, Restaurant, SmokeFreeSharp } from "@mui/icons-material";
 import { CctvIcon } from "lucide-react";
 import { useGetHotels } from "../../../ApiHooks/useHotelHook2";
 import { useNavigate } from "react-router-dom";
+import { generateHotelUrl } from "../../../utils/urlHelper";
 
+/* eslint-disable react/prop-types */
 const LazyBackground = ({ src, className, hovered }) => {
   const ref = useRef();
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setLoaded(true);
-        observer.disconnect();
-      }
-    });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setLoaded(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '50px' } // Start loading 50px before visible
+    );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
@@ -28,6 +33,7 @@ const LazyBackground = ({ src, className, hovered }) => {
       style={{
         backgroundImage: loaded ? `url(${src})` : "none",
         transform: hovered ? 'scale(1.1)' : 'scale(1)',
+        willChange: hovered ? 'transform' : 'auto',
       }}
     />
   );
@@ -56,26 +62,27 @@ export default function SwiperComponent() {
           isLaptop: width > 768 && width <= 1024,
           isDesktop: width > 1024,
         });
-      }, 150); // Debounce resize
+      }, 200); // Increased debounce
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  const features = [
+  const navigate = useNavigate();
+  const { data: hotels } = useGetHotels();
+
+  // Memoize features array
+  const features = useRef([
     { label: "Wifi", icon: WifiIcon },
     { label: "No Smoking", icon: SmokeFreeSharp },
     { label: "CCTV", icon: CctvIcon },
     { label: "Restaurant", icon: Restaurant },
-  ];
+  ]).current;
 
-  const navigate = useNavigate();
-  const { data: hotels } = useGetHotels();
-
-  const renderRatingStars = (rating) => {
+  const renderRatingStars = useCallback((rating) => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating - fullStars >= 0.5;
 
@@ -94,9 +101,9 @@ export default function SwiperComponent() {
         ))}
       </div>
     );
-  };
+  }, []);
 
-  const renderCard = (card, index) => {
+  const renderCard = useCallback((card, index) => {
     return (
       <>
         {card?.active && (
@@ -116,7 +123,7 @@ export default function SwiperComponent() {
                 }`}
               onMouseEnter={() => setHoveredCard(index)}
               onMouseLeave={() => setHoveredCard(null)}
-              onClick={() => navigate(`/hotels/${card?.hotelCode}`)}
+              onClick={() => navigate(generateHotelUrl(card?.hotelCode, card?.name))}
             >
               <LazyBackground
                 src={card.images[0]?.replace('/upload/', '/upload/f_auto,q_auto,w_800/')}
@@ -148,7 +155,7 @@ export default function SwiperComponent() {
               <h2
                 // onClick={() => navigate(`hotels/${card?.hotelCode}`, { state: { hotelData: card } })}
 
-                onClick={() => navigate(`/hotels/${card?.hotelCode}`)}
+                onClick={() => navigate(generateHotelUrl(card?.hotelCode, card?.name))}
                 className={`cursor-pointer hover:text-primary-green font-bold text-start transition-colors duration-300
                   ${screenInfo.isMobile
                     ? 'text-mobile/h5/medium md:text-desktop/h5'
@@ -239,7 +246,7 @@ export default function SwiperComponent() {
         )}
       </>
     );
-  };
+  }, [screenInfo, hoveredCard, navigate, renderRatingStars, features, hotels?.hotels?.length]);
 
   // Enhanced slides per view calculation
   const getSlidesPerView = () => {

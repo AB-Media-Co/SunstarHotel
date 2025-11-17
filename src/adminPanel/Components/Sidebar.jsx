@@ -62,7 +62,9 @@ export function Sidebar() {
   // Show loading state
   if (isLoading) {
     return (
-      <Loader/>
+      <aside className="fixed top-0 left-0 h-full z-50 bg-white border-r shadow-lg flex justify-center items-center w-64">
+        <Loader fullScreen={false} size="sm" />
+      </aside>
     );
   }
 

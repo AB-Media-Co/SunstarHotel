@@ -22,25 +22,35 @@ const Section1 = ({ section1Data }) => {
   const heading = useMemo(() => heroSectionUpdate?.heading || "", [heroSectionUpdate?.heading]);
   const description = useMemo(() => heroSectionUpdate?.description || "", [heroSectionUpdate?.description]);
 
-  if (loading) return <Loader />;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Loader fullScreen={false} size="md" />
+    </div>
+  );
 
   return (
     <div className="overflow-hidden md:overflow-visible">
       <Suspense fallback={<div className="w-full h-screen bg-gray-200 animate-pulse" />}>
         {/* HERO SECTION */}
         <section className="relative w-full h-screen">
-          {/* ✅ Responsive hero image for fast LCP */}
+          {/* ✅ Optimized hero image with modern format and preload */}
           <picture>
-
+            {/* WebP for modern browsers */}
+            <source 
+              srcSet="/images/HomepageImages/Section1Main.avif" 
+              type="image/avif"
+            />
+            {/* Fallback to AVIF */}
             <img
               src="/images/HomepageImages/Section1Main.avif"
               alt="Luxury hotel view"
-              width={1280}
-              height={700}
+              width={1920}
+              height={1080}
               loading="eager"
               fetchpriority="high"
-              decoding="async"
+              decoding="sync"
               className="absolute inset-0 h-full w-full object-cover"
+              style={{ contentVisibility: 'auto' }}
             />
           </picture>
 

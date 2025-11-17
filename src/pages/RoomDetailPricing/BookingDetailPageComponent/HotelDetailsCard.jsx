@@ -3,6 +3,7 @@ import { usePricing } from "../../../Context/PricingContext";
 import WarningIcon from '@mui/icons-material/Warning';
 import { useNavigate } from "react-router-dom";
 import { formatINR } from "../../../utils/formatCurrency";
+import { generateHotelUrl } from "../../../utils/urlHelper";
 
 export const HotelDetailsCard = () => {
   const { details, setDetails, selectedRooms, setSelectedRooms, setEditAddPricing } = usePricing();
@@ -100,7 +101,8 @@ export const HotelDetailsCard = () => {
   const handelChangeClick = () => {
     setEditAddPricing(true);
     localStorage.setItem("editAddPricing", true);
-    navigate(`/hotels/${details[0]?.hotelCode}`);
+    const hotelName = details[0]?.name || details[0]?.roomData?.hotelName;
+    navigate(generateHotelUrl(details[0]?.hotelCode, hotelName));
   };
 
   return (

@@ -74,7 +74,11 @@ const Rooms = () => {
 
 
   if (loading) {
-    return <div><Loader /></div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <Loader fullScreen={false} size="md" />
+      </div>
+    );
   }
 
   if (error) {

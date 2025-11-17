@@ -20,7 +20,11 @@ const ViewUser = () => {
   const { mutate: deleteProfile, isLoading: isDeletingProfile } = useDeleteAdminProfile();
   const navigate = useNavigate();
 
-  if (profileLoading) return <Loader />;
+  if (profileLoading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <Loader fullScreen={false} size="md" />
+    </div>
+  );
   if (profileError) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-100">

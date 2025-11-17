@@ -16,6 +16,7 @@ import BottomRoomSticky from "../../Components/BottomRoomSticky";
 import { Helmet } from "react-helmet";
 import { useRooms } from "../../ApiHooks/useRoomsHook";
 import { useCallback, useEffect, useState } from "react"; // Add useCallback
+import { extractHotelCode } from "../../utils/urlHelper";
 
 import {
   format,
@@ -24,8 +25,11 @@ import RoomsCard from "../../Components/RoomsCard";
 import SwiperComponent from "../Home/Components/Sec2CardSlider";
 
 const Hotels = () => {
-  const { hotelCode } = useParams();
+  const { hotelCode: hotelCodeParam } = useParams();
   const { state } = useLocation();
+  
+  // Extract hotelCode from URL (handles both old and new format)
+  const hotelCode = extractHotelCode(hotelCodeParam);
 
   const [hotelData, setHotelData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +83,11 @@ const Hotels = () => {
   }, []);
 
   if (loading || isLoading) {
-    return <div><Loader /></div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-">
+        <Loader fullScreen={false} size="md" />
+      </div>
+    );
   }
 
   if (error) {

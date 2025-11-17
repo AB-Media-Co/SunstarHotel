@@ -3,6 +3,7 @@ import { usePricing } from "../../../Context/PricingContext";
 import { useNavigate } from "react-router-dom";
 import { differenceInCalendarDays, format } from "date-fns";
 import { ArrowRight } from "lucide-react";
+import { generateHotelUrl } from "../../../utils/urlHelper";
 
 export const HeaderHotel = () => {
   const { details, setEditAddPricing } = usePricing();
@@ -27,7 +28,8 @@ export const HeaderHotel = () => {
   const handleChangeClick = () => {
     setEditAddPricing(true);
     localStorage.setItem("editAddPricing", "true");
-    navigate(`/hotels/${details[0]?.hotelCode}`);
+    const hotelName = getHotelData?.name || details[0]?.name;
+    navigate(generateHotelUrl(details[0]?.hotelCode, hotelName));
   };
 
   const DateDisplay = ({ date, label, time, isCheckOut = false }) => (

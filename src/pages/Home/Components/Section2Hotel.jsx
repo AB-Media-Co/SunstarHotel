@@ -46,8 +46,7 @@ const Section2Hotel = () => {
         {/* ✅ Wrap rotating image in a sized box to prevent layout shifts */}
         <div className="relative w-full">
           <div className="pointer-events-none absolute md:left-0 top-[0rem] sm:top-[-7rem] md:top-0 left-[-4rem] sm:left-[-6rem] z-0">
-            {/* Give RoatinfImg an intrinsic box via width/height props if supported;
-               otherwise this wrapper reserves space. */}
+     
             <div className="w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] md:w-[300px] md:h-[300px]">
               <RoatinfImg />
             </div>

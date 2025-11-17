@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Calendar from '../../Components/Calendar';
-import GuestsDropdown from '../../Components/GuestsDropdown';
 import { differenceInCalendarDays } from 'date-fns';
 import Icon from "../../Components/Icons";
 import HotelSelectingCards from '../../Components/CardsCommonComp/HotelSelectingCards';
@@ -21,7 +20,7 @@ const CityPage = () => {
     const { state } = useLocation();
     const cityId = state?.id; // ID passed from CityPagesOptions
 
-    const { data: singleLocationData } = useGetLocationById(cityId, { enabled: !!cityId });
+    const { data: singleLocationData, isLoading } = useGetLocationById(cityId, { enabled: !!cityId });
 
 
     useEffect(() => {
@@ -43,7 +42,11 @@ const CityPage = () => {
 
     return (
         <div className="">
-            {singleLocationData ? (
+            {isLoading ? (
+                <div className="min-h-screen flex items-center justify-center">
+                    <Loader fullScreen={false} size="md" />
+                </div>
+            ) : singleLocationData ? (
                 <>
                     <div
                         className="relative overflow-hidden bg-cover bg-center h-96"
@@ -147,9 +150,11 @@ const CityPage = () => {
 
                         <Section5 />
                     </div>
-                </>
+                </>  
             ) : (
-                <Loader />
+                <div className="min-h-screen flex items-center justify-center">
+                    <p className="text-gray-500">No location data found</p>
+                </div>
             )}
 
 

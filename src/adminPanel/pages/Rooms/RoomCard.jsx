@@ -88,7 +88,7 @@ const RoomCard = ({ room, onEdit, onToggleShow }) => {
 
       {showOverlay && (
         <OverlayContainer>
-          <Loader />
+          <Loader fullScreen={false} size="sm" />
           <Typography variant="h6" sx={{ mb: 1 }}>
             {isChecked ? 'Showing Room' : 'Hiding Room'}
           </Typography>

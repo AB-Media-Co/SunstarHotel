@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -44,8 +44,8 @@ const CommonSwiper = ({
   );
   const [shouldShowNavigation, setShouldShowNavigation] = useState(true);
 
-  // Default breakpoints if not provided
-  const defaultBreakpoints = {
+  // Default breakpoints if not provided - memoized
+  const defaultBreakpoints = useMemo(() => ({
     320: {
       slidesPerView: 1,
       spaceBetween: 10,
@@ -58,7 +58,7 @@ const CommonSwiper = ({
       slidesPerView: slidesPerViewDesktop,
       spaceBetween: spaceBetween,
     }
-  };
+  }), [slidesPerViewTablet, slidesPerViewDesktop, spaceBetween]);
 
   // Determine if mobile based on viewport width
   const isMobile = viewportWidth <= 768;
@@ -76,7 +76,7 @@ const CommonSwiper = ({
     setShouldShowNavigation(items.length > currentSlidesPerView);
   }, [items.length, slidesPerViewDesktop, slidesPerViewTablet, viewportWidth]);
 
-  // Handle window resize with debounce
+  // Handle window resize with debounce - optimized
   useEffect(() => {
     let resizeTimer;
     
@@ -84,10 +84,10 @@ const CommonSwiper = ({
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         setViewportWidth(window.innerWidth);
-      }, 100);
+      }, 200); // Increased debounce for better performance
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     return () => {
       window.removeEventListener("resize", handleResize);
       clearTimeout(resizeTimer);
@@ -204,7 +204,16 @@ const CommonSwiper = ({
         }
         effect={effect}
         mousewheel={true}
-        keyboard={true}
+        keyboard={{
+          enabled: true,
+          onlyInViewport: true,
+        }}
+        lazy={{
+          loadPrevNext: true,
+          loadPrevNextAmount: 2,
+        }}
+        watchSlidesProgress={true}
+        preloadImages={false}
         pagination={
           showPagination && (isMobile || !shouldShowNavigation)
             ? { 

@@ -65,11 +65,16 @@ const RoomsCard = ({ room }) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div
-          className="absolute inset-0 bg-center bg-cover transition-all duration-700 ease-in-out"
+        <img
+          src={room?.RoomImage[0] || "placeholder-image-url"}
+          alt={room?.RoomName || "Room"}
+          width={400}
+          height={256}
+          loading="lazy"
+          decoding="async"
           onClick={() => navigate(`/room/${room._id}`)}
+          className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out cursor-pointer"
           style={{
-            backgroundImage: `url(${room?.RoomImage[0] || "placeholder-image-url"})`,
             transform: isHovered ? 'scale(1.1)' : 'scale(1)',
           }}
         />

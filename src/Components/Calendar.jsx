@@ -22,6 +22,7 @@ import axiosInstance from "../services/axiosInstance";
 import { useRooms } from "../ApiHooks/useRoomsHook";
 import { usePricing } from "../Context/PricingContext";
 import { getSingleHotelWithCode } from "../ApiHooks/useHotelHook2";
+import { generateHotelUrl, extractHotelCode } from "../utils/urlHelper";
 
 /** -------------------- Memoized Month -------------------- */
 const CalendarMonth = React.memo(function CalendarMonth({
@@ -135,12 +136,12 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
   const params = new URLSearchParams(location.search);
   let hotelCode2 = params.get("hotelCode");
 
-  // If not present in query, try extracting from pathname (/hotels/14494)
+  // If not present in query, try extracting from pathname (/hotels/14494-hotel-name or /hotels/14494)
   if (!hotelCode2 && location.pathname.startsWith("/hotels/")) {
     // split by "/", take the 2nd segment after "hotels"
     const parts = location.pathname.split("/");
     if (parts.length > 2) {
-      hotelCode2 = parts[2];
+      hotelCode2 = extractHotelCode(parts[2]);
     }
   }
 
@@ -361,10 +362,10 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
         gcTime: 1000 * 60 * 30,
       });
 
-      // console.log("Data pre-fetched and cached — navigating to:", `/hotels/${code}`);
+      // console.log("Data pre-fetched and cached — navigating to:", generateHotelUrl(code, hotelInfo?.name));
       
       // Navigate first for immediate transition
-      navigate(`/hotels/${code}`);
+      navigate(generateHotelUrl(code, hotelInfo?.name));
       
       // Then close modals (happens after navigation starts)
       setOpenCalender(false);
