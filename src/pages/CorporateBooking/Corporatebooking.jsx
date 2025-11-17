@@ -11,6 +11,34 @@ import CorporateSignupModal from "./Components/CorporateSignupModal"; // ⬅️ 
 import Partnerlogos from "../Home/Components/Partnerlogos";
 import ExclusiveBenifits from "./Components/ExclusiveBenifits";
 import TestimonialSection from "../../Components/TestimonialSection"
+import SunstarInfoCards from "../InTheMedia/Component/SunstarInfoCards";
+import ImagesGallery from "../TourAndTravelPaage/TourAndTravelMain/Component/ImagesGallery";
+
+
+const infoCards = [
+  {
+    id: 1,
+    title: "Why Sunstar?",
+    description: "Discover who we are, what we believe in, and the purpose that drives our journey.",
+    buttonText: "Check us out",
+    illustration: "/images/whybloom.svg",
+  },
+  {
+    id: 2,
+    title: "Travel",
+    description: "Explore breathtaking destinations, curated experiences, and memorable stays with us.",
+    buttonText: "Discover trips",
+    illustration: "/images/travel.svg",
+  },
+  {
+    id: 3,
+    title: "Conference & Events",
+    description: "Plan business meets, celebrations, and gatherings with seamless support & venues.",
+    buttonText: "View event spaces",
+    illustration: "/images/conf.svg",
+  },
+];
+
 
 const CorporateBooking = () => {
   const { CoorporateBooking } = useUpdatePagesHook();
@@ -68,10 +96,14 @@ const CorporateBooking = () => {
       <TestimonialSection page="coorporatebooking" />
       {/* <SunstarEnquiryForm /> */}
       <FormData />
+      <ImagesGallery path="" />
+
+      <SunstarInfoCards infoCards={infoCards} />
       <FAQSectionWithAPI pageName="corporate-booking" />
 
       {/* Modal */}
       <CorporateSignupModal open={openSignup} onClose={() => setOpenSignup(false)} />
+
     </div>
   );
 };

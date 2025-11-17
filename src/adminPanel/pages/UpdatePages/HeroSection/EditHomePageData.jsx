@@ -19,6 +19,8 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import useUpdatePagesHook from '../../../../ApiHooks/useUpdatePagesHook';
 import { uploadImagesAPIV2 } from '../../../../ApiHooks/useHotelHook2';
+import ImageUpload from '../../../Components/ImageUpload';
+
 
 const EMPTY_ITEM = { image: '', heading: '', description: '' };
 
@@ -51,11 +53,6 @@ const EditHomePageData = () => {
   const [shineMain, setShineMain] = useState({ heading: '', description: '' });
   const [shineItems, setShineItems] = useState([EMPTY_ITEM, EMPTY_ITEM, EMPTY_ITEM]);
   const [uploadingIndex, setUploadingIndex] = useState(null);
-  console.log(shineItems)
-
-  // local previews for shine items
-  const [shinePreviews, setShinePreviews] = useState(['', '', '']);
-
 
   // Modal
   const [openModal, setOpenModal] = useState(false);
@@ -96,24 +93,23 @@ const EditHomePageData = () => {
             description: i.description || '',
           }))
         );
-        setShinePreviews(['', '', '']); // reset local previews on server fetch
       }
     }
   }, [whatMakesUsShineData]);
 
-  // Cleanup object URLs on unmount / change
+  // Cleanup hero object URL on unmount / change
   useEffect(() => {
     return () => {
       if (heroPreview) URL.revokeObjectURL(heroPreview);
-      shinePreviews.forEach((p) => p && URL.revokeObjectURL(p));
     };
-  }, [heroPreview, shinePreviews]);
+  }, [heroPreview]);
 
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => {
     setOpenModal(false);
-    if (heroPreview) URL.revokeObjectURL(heroPreview);
-    shinePreviews.forEach((p) => p && URL.revokeObjectURL(p));
+    if (heroPreview) {
+      try { URL.revokeObjectURL(heroPreview); } catch {}
+    }
     setHeroLocalFile(null);
     setHeroPreview('');
     setUploadingIndex(null);
@@ -127,7 +123,9 @@ const EditHomePageData = () => {
 
   const handleHeroFileChange = (file) => {
     if (!file) return;
-    if (heroPreview) URL.revokeObjectURL(heroPreview); // cleanup old
+    if (heroPreview) {
+      try { URL.revokeObjectURL(heroPreview); } catch {}
+    }
     const previewUrl = URL.createObjectURL(file);
     setHeroLocalFile(file);
     setHeroPreview(previewUrl);
@@ -154,57 +152,13 @@ const EditHomePageData = () => {
     });
   };
 
-  // Upload image for a specific shine item (with instant small preview)
-  const handleShineImageUpload = async (index, file) => {
-    try {
-      if (!file) return;
-
-      // 1) local preview first
-      setShinePreviews((prev) => {
-        const next = [...prev];
-        if (next[index]) URL.revokeObjectURL(next[index]); // cleanup old local URL if any
-        next[index] = URL.createObjectURL(file);
-        return next;
-      });
-
-      setUploadingIndex(index);
-
-      // 2) upload
-      const response = await uploadImagesAPIV2([file]); // expects { url } or [{ url }]
-      const url = response?.url || response?.[0]?.url || '';
-      if (!url) throw new Error('Upload failed: no URL returned');
-
-      // 3) update data + switch tiny preview to server URL (persisting)
-      setShineItems((prev) => {
-        const next = [...prev];
-        next[index] = { ...next[index], image: url };
-        return next;
-      });
-
-      setShinePreviews((prev) => {
-        const next = [...prev];
-        // revoke local object URL and use server URL for persistent tiny preview
-        if (next[index]?.startsWith('blob:')) {
-          try { URL.revokeObjectURL(next[index]); } catch { }
-        }
-        next[index] = url;
-        return next;
-      });
-    } catch (e) {
-      console.error('Image upload error:', e);
-    } finally {
-      setUploadingIndex(null);
-    }
-  };
-
-
   // Save Hero + Description
   const handleSaveBasic = async () => {
     try {
       let updatedHeroData = { ...heroFormData };
       if (heroLocalFile) {
         const res = await uploadImagesAPIV2([heroLocalFile]);
-        const url = res?.url || res?.[0]?.url || '';
+        const url = res?.url || res?.[0]?.url || res?.imageUrls?.[0] || '';
         if (url) updatedHeroData.image = url;
       }
       await updateHerosection({ heroSection: updatedHeroData });
@@ -234,7 +188,7 @@ const EditHomePageData = () => {
         description: shineMain.description,
         items: shineItems,
       });
-      // setOpenModal(false);
+      // Optionally close modal or show success
     } catch (e) {
       console.error('Saving Shine failed:', e);
     }
@@ -369,9 +323,8 @@ const EditHomePageData = () => {
 
             {/* 3 items */}
             <Grid container spacing={2}>
-              {shineItems.map((item, idx) => {
-                console.log(item)
-                return <Grid item xs={12} md={4} key={idx}>
+              {shineItems.map((item, idx) => (
+                <Grid item xs={12} md={4} key={idx}>
                   <Card variant="outlined" sx={{ height: '100%' }}>
                     {/* Main banner (existing saved image) */}
                     {item.image ? (
@@ -399,48 +352,14 @@ const EditHomePageData = () => {
 
                     <CardContent>
                       <Stack spacing={1}>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                          <Button
-                            variant="outlined"
-                            component="label"
-                            disabled={uploadingIndex === idx}
-                          >
-                            {uploadingIndex === idx ? 'Uploading...' : 'Upload Image'}
-                            <input
-                              type="file"
-                              accept="image/*"
-                              hidden
-                              onChange={(e) => handleShineImageUpload(idx, e.target.files?.[0])}
-                            />
-                          </Button>
-
-                          {/* Tiny local/server preview */}
-                          {(shinePreviews[idx] || item.image) && (
-                            <Tooltip title="Preview" arrow>
-                              <img
-                                src={shinePreviews[idx] || item.image}
-                                alt={`shine-preview-${idx}`}
-                                style={{
-                                  height: 40,
-                                  width: 40,
-                                  objectFit: 'cover',
-                                  borderRadius: 6,
-                                  border: '1px solid #eee',
-                                }}
-                                onError={(e) => (e.currentTarget.style.display = 'none')}
-                              />
-                            </Tooltip>
-                          )}
-                        </Stack>
-
-                        {/* 🔗 Manual Image URL input */}
-                        <TextField
-                          label="Or paste image URL"
-                          placeholder="https://example.com/image.jpg"
-                          value={item.image}
-                          onChange={(e) => handleShineItemChange(idx, 'image', e.target.value)}
-                          fullWidth
-                          size="small"
+                        {/* Reusable ImageUpload component */}
+                        <ImageUpload
+                          feature={item}
+                          index={idx}
+                          // setImageUpload receives boolean -> set uploading index for visual
+                          setImageUpload={(isUploading) => setUploadingIndex(isUploading ? idx : null)}
+                          // on change -> update shineItems state
+                          handleFeatureChange={(field, value) => handleShineItemChange(idx, field, value)}
                         />
 
                         <TextField
@@ -458,11 +377,10 @@ const EditHomePageData = () => {
                           rows={3}
                         />
                       </Stack>
-
                     </CardContent>
                   </Card>
                 </Grid>
-              })}
+              ))}
             </Grid>
 
             <Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>

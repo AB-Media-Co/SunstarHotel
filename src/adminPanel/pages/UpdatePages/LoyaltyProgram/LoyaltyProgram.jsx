@@ -82,7 +82,8 @@ const InputField = ({ label, value, onChange, placeholder, type = 'text', rows =
 );
 
 export default function LoyaltyProgram() {
-  const { data: program, isLoading, isError } = useGetLoyaltyProgram();
+  const { data, isLoading, isError } = useGetLoyaltyProgram();
+  const program = data?.data || data; // Handle both { data: {...} } and direct {...} response
   const upsertMutation = useUpsertLoyaltyProgram();
   const addTierMutation = useAddTier();
   const updateTierMutation = useUpdateTier();

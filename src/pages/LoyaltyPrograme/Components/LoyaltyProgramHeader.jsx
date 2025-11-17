@@ -15,7 +15,7 @@ const LoyaltyProgramHeader = () => {
     program?.subtitle ??
     'Sunstar’s loyalty program for frequent travelers—earn perks and exclusive benefits every time you stay with us.';
   const heroCtaText = program?.hero_cta?.text ?? 'See your benefits';
-  const heroCtaLink = program?.hero_cta?.link ?? '/benefits';
+  const heroCtaLink = program?.hero_cta?.link ?? '#';
 
   const stays = Number(userData?.data?.totalBookings) || 0;
 
@@ -105,7 +105,7 @@ const LoyaltyProgramHeader = () => {
           </div>
 
           <Link
-            to={heroCtaLink || '/user/profile'}
+            to={ '/user/profile'}
             state={{ tab: 'loyalty' }}
             className="bg-primary-green cursor-pointer rounded-b-xl px-6 py-4 flex justify-between items-center text-white font-medium"
           >

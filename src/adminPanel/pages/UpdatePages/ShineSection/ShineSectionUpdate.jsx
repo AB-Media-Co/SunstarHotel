@@ -16,7 +16,7 @@ import useUpdatePagesHook from '../../../../ApiHooks/useUpdatePagesHook';
 import ImageUpload from '../../../Components/ImageUpload';
 
 const ShineSectionUpdate = () => {
-    const { shineSection, whatMakesUsShine } = useUpdatePagesHook();
+    const { shineSection, updateShineSection } = useUpdatePagesHook();
     const [open, setOpen] = useState(false);
     const [ImageUploads, setImageUpload] = useState(false);
 
@@ -71,13 +71,24 @@ const ShineSectionUpdate = () => {
         }));
     };
 
-    const handleUpdateShine = () => {
+    const handleUpdateShine = async () => {
+        // Ensure we have required data
+        if (!shineData?.heading || !shineData?.description) {
+            alert('Heading and description are required.');
+            return;
+        }
+
+        if (!shineData?.features || shineData.features.length === 0) {
+            alert('At least one feature is required.');
+            return;
+        }
+
         // Check main description word count
         const mainDescWords = shineData?.description?.trim().split(/\s+/).length || 0;
         
         // Check feature descriptions word count
         const hasLongDescription = shineData?.features?.some(feature => {
-            const wordCount = feature.description.trim().split(/\s+/).length;
+            const wordCount = feature?.description?.trim().split(/\s+/).length || 0;
             return wordCount > 130;
         });
 
@@ -86,7 +97,26 @@ const ShineSectionUpdate = () => {
             return;
         }
 
-        whatMakesUsShine(shineData);
+        try {
+            // Allow any number of features - flexible
+            const featuresToSend = shineData.features
+                .filter(feature => feature.title || feature.description || feature.image)
+                .map(feature => ({
+                    title: feature.title || '',
+                    description: feature.description || '',
+                    image: feature.image || ''
+                }));
+
+            const payload = {
+                heading: shineData.heading,
+                description: shineData.description,
+                features: featuresToSend
+            };
+
+            await updateShineSection(payload);
+        } catch (error) {
+            console.error('Error updating shine section:', error);
+        }
     };
 
     return (

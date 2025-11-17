@@ -14,6 +14,8 @@ import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 import TestimonialSection from '../../Components/TestimonialSection';
 import { useVenueLocations } from '../../ApiHooks/useVenueLocation';
+import { useGetEventPageBySlug } from '../../ApiHooks/useEventPageHook';
+import Loader from '../../Components/Loader';
 
 
 const EventCard = ({ image, title, description, link }) => {
@@ -49,8 +51,9 @@ const EventandConference = () => {
         window.scrollTo(0, 0);
     }, []);
 
+    // Fetch dynamic content from API
+    const { data: pageContent, isLoading: contentLoading, error: contentError } = useGetEventPageBySlug('eventandconf');
     const { data: VenueLocations, error } = useVenueLocations();
-    console.log(VenueLocations)
 
     const [copiedEmail, setCopiedEmail] = useState(null);
 
@@ -58,58 +61,101 @@ const EventandConference = () => {
 
     const { data: venuesData, } = useVenues();
 
+    // Extract data from API or use defaults
+    const heroData = pageContent?.data?.heroSection || {};
+    const ourEventsData = pageContent?.data?.ourEvents || [];
+    const celebrationsData = pageContent?.data?.celebrationsSeamless || {};
 
-    const eventCards = [
-        {
-            image: '/images/OtherPageImages/PersonalCeleb.webp',
-            title: 'Personal Celebrations',
-            link: "/socialevents",
-            description: 'Birthdays, baby showers, anniversaries, or private dinners, celebrate life\'s moments with intimate, personalized flair.'
-        },
-        {
-            image: '/images/OtherPageImages/CoorporateE.webp',
-            title: 'Corporate Events',
-            link: "/coorporatevents",
-            description: 'Conferences, seminars, business dinners, or gala nights — host every corporate event with elegance and impact.'
-        },
-        {
-            image: '/images/OtherPageImages/SocialOcc.webp',
-            title: 'Weddings & Special Occasions',
-            link: "/weddingpreWedding",
-            description: 'From elegant engagements to vibrant pre-wedding functions and dreamy receptions make every moment unforgettable.'
-        }
+
+    // Map Our Events data to event cards with routes
+    const eventLinks = {
+        'Personal Celebrations': '/socialevents',
+        'Corporate Events': '/coorporatevents',
+        'Weddings & Special Occasions': '/weddingpreWedding',
+        'Social Events': '/socialevents',
+        'Social Celebrations': '/socialevents',
+    };
+
+    const eventCards = ourEventsData.length > 0
+        ? ourEventsData.map(event => ({
+            image: event.image || '/images/OtherPageImages/PersonalCeleb.webp',
+            title: event.title || 'Event',
+            link: eventLinks[event.title] || '/socialevents',
+            description: event.description || ''
+        }))
+        : [
+            {
+                image: '/images/OtherPageImages/PersonalCeleb.webp',
+                title: 'Personal Celebrations',
+                link: "/socialevents",
+                description: 'Birthdays, baby showers, anniversaries, or private dinners, celebrate life\'s moments with intimate, personalized flair.'
+            },
+            {
+                image: '/images/OtherPageImages/CoorporateE.webp',
+                title: 'Corporate Events',
+                link: "/coorporatevents",
+                description: 'Conferences, seminars, business dinners, or gala nights — host every corporate event with elegance and impact.'
+            },
+            {
+                image: '/images/OtherPageImages/SocialOcc.webp',
+                title: 'Weddings & Special Occasions',
+                link: "/weddingpreWedding",
+                description: 'From elegant engagements to vibrant pre-wedding functions and dreamy receptions make every moment unforgettable.'
+            }
+        ];
+
+
+    const benefitIconList = [
+        "/images/othericons/stunningvenue.svg",
+        "/images/othericons/excellence.svg",
+        "/images/othericons/event.svg",
+        "/images/othericons/businesscard.svg",
+        "/images/othericons/exclusiveevent.svg",
+        // add more icons here if you want more variety
     ];
 
-    const whyChooseUsFeatures = [
-        {
-            title: 'Stunning Venues',
-            icon: '/images/othericons/stunningvenue.svg',
-            description: 'Every great relationship thrives on trust, which is why we obsess on being transparent.'
-        },
-        {
-            title: 'Culinary Excellence',
-            icon: '/images/othericons/excellence.svg',
-            description: 'Every great relationship thrives on trust, which is why we obsess on being transparent.'
-        },
-        {
-            title: 'Personalized Event  & Services',
-            icon: '/images/othericons/event.svg',
-            description: 'Every great relationship thrives on trust, which is why we obsess on being transparent.'
-        },
-        {
-            title: 'Business & Corporate Event',
-            icon: '/images/othericons/businesscard.svg',
-            description: 'Every great relationship thrives on trust, which is why we obsess on being transparent.'
-        },
-        {
-            title: 'Exclusive Event Benefits',
-            icon: '/images/othericons/exclusiveevent.svg',
-            description: 'Every great relationship thrives on trust, which is why we obsess on being transparent.'
-        }
-    ];
+
+    // Map benefits data or use defaults
+    const whyChooseUsFeatures = Array.isArray(celebrationsData?.benefits) && celebrationsData.benefits.length > 0
+        ? celebrationsData.benefits.map((benefit, idx) => ({
+            // title and description come from API
+            title: benefit.title ?? "",
+            description: benefit.description ?? "",
+            // pick icon by index, cycle if necessary
+            icon: benefitIconList[idx % benefitIconList.length],
+            // keep id if present for keys
+            _id: benefit._id ?? `benefit-${idx}`
+        }))
+        : [
+            {
+                title: "Stunning Venues",
+                icon: "/images/othericons/stunningvenue.svg",
+                description: "Every great relationship thrives on trust, which is why we obsess on being transparent."
+            },
+            {
+                title: "Culinary Excellence",
+                icon: "/images/othericons/excellence.svg",
+                description: "Every great relationship thrives on trust, which is why we obsess on being transparent."
+            },
+            {
+                title: "Personalized Event & Services",
+                icon: "/images/othericons/event.svg",
+                description: "Every great relationship thrives on trust, which is why we obsess on being transparent."
+            },
+            {
+                title: "Business & Corporate Event",
+                icon: "/images/othericons/businesscard.svg",
+                description: "Every great relationship thrives on trust, which is why we obsess on being transparent."
+            },
+            {
+                title: "Exclusive Event Benefits",
+                icon: "/images/othericons/exclusiveevent.svg",
+                description: "Every great relationship thrives on trust, which is why we obsess on being transparent."
+            }
+        ];
 
 
-
+    console.log(whyChooseUsFeatures)
 
     const handleCopyEmail = (email) => {
         navigator.clipboard.writeText(email);
@@ -223,6 +269,11 @@ const EventandConference = () => {
         }, callbacks);
     };
 
+    // Show loading state
+    if (contentLoading) {
+        return <Loader />;
+    }
+
     return (
         <div className="min-h-screen">
 
@@ -243,14 +294,14 @@ const EventandConference = () => {
                 <div className="absolute inset-0 bg-black opacity-60"></div>
                 <div className="absolute inset-0 content flex flex-col items-start pt-20 md:pt-0 justify-center text-start px-4 md:px-8 lg:px-12">
                     <h1 className='text-3xl md:text-4xl lg:text-5xl font-bold text-primary-white leading-tight'>
-                        Host Exceptional Events with Hotel Sunstar Group
+                        {heroData.heading || 'Host Exceptional Events with Hotel Sunstar Group'}
                         <br />
                         <span className='text-[#FDD304] text-xl md:text-2xl lg:text-3xl block mt-3'>
-                            Seamless Planning | Exquisite Cuisine | Unforgettable Moments
+                            {heroData.subheading || 'Seamless Planning | Exquisite Cuisine | Unforgettable Moments'}
                         </span>
                     </h1>
                     <p className='py-4 md:py-6 text-base md:text-lg  max-w-[650px] text-white leading-relaxed'>
-                        Whether you're planning a corporate conference, wedding, milestone celebration, or an intimate gathering, Hotel Sunstar Group ensures a flawless experience from start to finish. With versatile venues, expert event planning, and an award-winning culinary team, we craft extraordinary moments that leave a lasting impression.
+                        {heroData.description || "Whether you're planning a corporate conference, wedding, milestone celebration, or an intimate gathering, Hotel Sunstar Group ensures a flawless experience from start to finish."}
                     </p>
                     <div className="text-center  mt-12">
                         <a href="#contact" className="bg-yellow-400 text-white px-6 py-3 rounded-md shadow hover:bg-yellow-500 transition">
@@ -262,7 +313,7 @@ const EventandConference = () => {
 
             <div className="py-8 md:py-16  content">
                 <h1 className="text-mobile/h3 md:text-desktop/h3 font-bold text-start mb-12">
-                    Our Events
+                    {ourEventsData.length > 0 ? 'Our Events' : 'Our Events'}
                 </h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {eventCards.map((card) => (
@@ -273,7 +324,14 @@ const EventandConference = () => {
 
             {/* Why Choose Us Features */}
             <section className="pb-12 md:px-4">
-                <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold content text-start">Making Your Celebrations Seamless</h2>
+                <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold content text-start">
+                    {celebrationsData.title || 'Making Your Celebrations Seamless'}
+                </h2>
+                {celebrationsData.description && (
+                    <p className="text-mobile/body/2 md:text-desktop/body/1 content text-gray-600 mt-4">
+                        {celebrationsData.description}
+                    </p>
+                )}
                 <div className="mt-8 grid grid-cols-1 content sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {whyChooseUsFeatures.map((feature, index) => (
                         <div key={index} className="bg-primary-white p-6 text-center rounded-lg shadow-lg hover:scale-105 transition-all duration-300">
@@ -420,8 +478,8 @@ const EventandConference = () => {
 
 
 
-            <FAQSectionWithAPI 
-                pageName="Events & Conference" 
+            <FAQSectionWithAPI
+                pageName="Events & Conference"
                 subtitle="You need to come at least once in your life"
             />
 

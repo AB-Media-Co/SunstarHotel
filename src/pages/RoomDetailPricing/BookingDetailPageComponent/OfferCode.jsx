@@ -15,7 +15,7 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
   const primaryColor = '#058FA2';
   const { mutate: fetchOfferCodes, data } = useOfferCodesForHotel();
   const { mutateAsync: getDiscountAsync } = useDiscountedRate();
-  const { finalPrice, setFinalPrice, baseFinalPrice } = usePricing();
+  const { finalPrice, setFinalPrice, baseFinalPrice, paymentMethod } = usePricing();
 
   const email = localStorage.getItem("user_email");
   const { data: userData, isLoading: userLoading } = useGetUserByEmail(email);

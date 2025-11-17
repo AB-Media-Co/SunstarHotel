@@ -4,12 +4,31 @@ import { Helmet } from "react-helmet";
 import { useEffect } from "react";
 import { useGetBlogById2, useGetBlogs2 } from "../../ApiHooks/useBlogs2";
 
+// Function to create URL-friendly slugs
+const createSlug = (title) => {
+  if (!title) return '';
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+};
+
 const ReadBlog = () => {
   const { slug } = useParams();
   const { state } = useLocation();
-  console.log(state,"aa")
+  console.log(state,slug,"aa")
   const { data: blogs, isLoading: blogsLoading } = useGetBlogs2({ status: "all" })
-  const { data: blog, isLoading: blogLoading, error: blogError } = useGetBlogById2(state?.blog?._id);
+  
+  // Find blog by slug if no state is provided (direct URL access)
+  let targetBlog = state?.blog;
+  if (!targetBlog && blogs?.blogs && slug) {
+    targetBlog = blogs.blogs.find(blog => createSlug(blog.title) === slug);
+  }
+  
+  const { data: blog, isLoading: blogLoading, error: blogError } = useGetBlogById2(targetBlog?._id);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -54,10 +73,10 @@ const ReadBlog = () => {
               className="w-full h-full object-cover object-center"
               onError={(e) => (e.target.src = "/fallback-image.jpg")} // Fallback image
             />
-            <div className="absolute inset-0 bg-black bg-opacity-50 transition duration-300"></div>
+            {/* <div className="absolute inset-0 bg-black bg-opacity-50 transition duration-300"></div>
             <div className="absolute content bottom-[30%] left-0 right-0 p-4">
               <h1 className="max-w-3xl text-mobile/h2 md:text-desktop/h2 font-bold text-white">{blog?.title}</h1>
-            </div>
+            </div> */}
           </div>
         )}
 
@@ -89,7 +108,7 @@ const ReadBlog = () => {
                     <div
                       key={blog._id}
                       className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group h-72"
-                      onClick={() => navigate(`/sunstar-blogs/${blog.title}`, { state: { blog } })}
+                      onClick={() => navigate(`/sunstar-blogs/${createSlug(blog.title)}`, { state: { blog } })}
                     >
                       {blog.featuredImage.url && (
                         <img

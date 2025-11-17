@@ -39,7 +39,8 @@ const truncateText = (text, wordLimit) => {
 
 const Sec3CardSlider = () => {
   const { whatMakesUsShineData } = useUpdatePagesHook();
-  const { heading, description, items } = whatMakesUsShineData || {};
+  
+  const { heading, description, items } = whatMakesUsShineData;
   const navigate = useNavigate();
 
   const filteredFeatures = items || [];

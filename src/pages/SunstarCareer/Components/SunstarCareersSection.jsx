@@ -1,40 +1,47 @@
-import { Mail } from 'lucide-react';
+import { Mail } from "lucide-react";
 
-export default function SunstarCareersSection() {
-    return (
-        <div className="bg-primary-green px-8 py-16 relative overflow-hidden">
+export default function SunstarCareersSection({ data }) {
+  return (
+    <div className="relative bg-primary-green px-8 py-16 overflow-hidden
+      pb-[180px] md:pb-[200px] lg:pb-[20px]  /* reserve space for image on mobile */
+    ">
 
-            {/* Main content container */}
-            <div className="content relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {/* Image - stays absolute ALWAYS, but scales per screen */}
+      <img
+        src="/images/joinus.svg"
+        alt="Join Us"
+        className="
+          absolute bottom-0 right-1/2 translate-x-1/2 
+          w-[240px] sm:w-[300px] md:w-[360px] 
+          lg:right-0 lg:translate-x-0 lg:w-[420px] xl:w-[520px]
+          pointer-events-none select-none
+        "
+      />
 
-                    {/* Left content */}
-                    <div className="space-y-6">
-                        <h2 className="text-mobile/h3  md:text-desktop/h3 text-white leading-tight">
-                            Ready to JoinUs
-                        </h2>
+      <div className="relative z-10 max-w-screen-xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-                        <p className="text-xl text-white leading-relaxed max-w-lg">
-                            Email us with your resume, including a few details about yourself & we'll take it from there.
-                        </p>
+          {/* LEFT CONTENT */}
+          <div className="space-y-6">
+            <h2 className="text-mobile/h3 md:text-desktop/h3 text-white leading-tight">
+              {data?.heading}
+            </h2>
 
-                        {/* Email contact */}
-                        <a
-                            href="mailto:hr.recruiter@sunstarhospitality.com"
-                            className="flex items-center space-x-3 bg-opacity-30 rounded-full py-4 hover:underline text-white transition"
-                        >
-                            <Mail className="w-6 h-6 text-white" />
-                            <span className="text-lg font-medium text-white">
-                                hr.recruiter@sunstarhospitality.com
-                            </span>
-                        </a>
+            <p className="text-lg md:text-xl text-white leading-relaxed max-w-lg">
+              {data?.description}
+            </p>
 
-                    </div>
-
-
-                </div>
-            </div>
+            <a
+              href={`mailto:${data?.email}`}
+              className="inline-flex items-center gap-3 text-white hover:underline transition"
+            >
+              <Mail className="w-6 h-6" />
+              <span className="text-sm md:text-lg font-medium">{data?.email}</span>
+            </a>
+          </div>
 
         </div>
-    );
+      </div>
+    </div>
+  );
 }

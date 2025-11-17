@@ -9,12 +9,13 @@ import {
   useLoginAgent,
   useVerifyAgentOtp,
   useResendAgentOtp
-} from "../../ApiHooks/useAgentHook"; // UPDATED: add OTP hooks
+} from "../../ApiHooks/useAgentHook";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useGetMetas } from "../../ApiHooks/useMetaHook";
 import Partnerlogos from "../Home/Components/Partnerlogos";
 import ImageGallery from "../../Components/ImageGallery";
+import { useGetTravelAgentPage } from "../../ApiHooks/useTravelAgentPage";
 
 /* --------------------- Modal --------------------- */
 const AgentSignupModal = ({ open, onClose }) => {
@@ -22,18 +23,11 @@ const AgentSignupModal = ({ open, onClose }) => {
   const verifyMutation = useVerifyAgentOtp();
   const resendMutation = useResendAgentOtp();
 
-  const [step, setStep] = useState("form"); // 'form' | 'otp'
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    role: "agent",
-    companyName: ""
-  });
+  const [step, setStep] = useState("form");
+  const [form, setForm] = useState({ name: "", email: "", phone: "", role: "agent", companyName: "" });
   const [otp, setOtp] = useState("");
-  const [secondsLeft, setSecondsLeft] = useState(120); // resend cooldown
+  const [secondsLeft, setSecondsLeft] = useState(120);
 
-  // reset on close
   useEffect(() => {
     if (!open) {
       setStep("form");
@@ -43,46 +37,28 @@ const AgentSignupModal = ({ open, onClose }) => {
     }
   }, [open]);
 
-  // cooldown timer for resend
   useEffect(() => {
-    if (step !== "otp") return;
-    if (secondsLeft <= 0) return;
+    if (step !== "otp" || secondsLeft <= 0) return;
     const t = setInterval(() => setSecondsLeft((s) => s - 1), 1000);
     return () => clearInterval(t);
   }, [step, secondsLeft]);
 
-  const disabledForm = useMemo(() => {
-    return (
-      !form.name.trim() ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) ||
-      !/^\d{7,}$/.test(form.phone) ||
-      loginMutation.isPending
-    );
-  }, [form, loginMutation.isPending]);
+  const disabledForm = useMemo(() =>
+    !form.name.trim() ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) ||
+    !/^\d{7,}$/.test(form.phone) ||
+    loginMutation.isPending
+  , [form, loginMutation.isPending]);
 
-  const disabledOtp = useMemo(() => {
-    return otp.trim().length !== 6 || verifyMutation.isPending;
-  }, [otp, verifyMutation.isPending]);
+  const disabledOtp = useMemo(() => otp.trim().length !== 6 || verifyMutation.isPending, [otp, verifyMutation.isPending]);
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
     loginMutation.mutate(
+      { name: form.name.trim(), email: form.email.trim().toLowerCase(), phone: form.phone.trim(), role: "agent" },
       {
-        name: form.name.trim(),
-        email: form.email.trim().toLowerCase(),
-        phone: form.phone.trim(),
-        role: "agent"
-      },
-      {
-        onSuccess: (resp) => {
-          // toast.success(resp?.message || "OTP sent to your email");
-          setStep("otp");
-          setSecondsLeft(120);
-        },
-        onError: (err) => {
-          const msg = err?.response?.data?.message || "Sign up / login failed";
-          console.error(msg);
-        }
+        onSuccess: () => { setStep("otp"); setSecondsLeft(120); },
+        onError: (err) => console.error(err?.response?.data?.message || "Sign up / login failed"),
       }
     );
   };
@@ -94,18 +70,11 @@ const AgentSignupModal = ({ open, onClose }) => {
       {
         onSuccess: (resp) => {
           if (resp?.ok) {
-            // toast.success(resp?.message || "Login successful");
-            // persist email for subsequent page loads
             localStorage.setItem("user_email", resp?.data?.email || form.email.trim().toLowerCase());
             onClose?.();
-          } else {
-            console.error(resp?.message || "Verification failed");
-          }
+          } else console.error(resp?.message || "Verification failed");
         },
-        onError: (error) => {
-          const msg = error?.response?.data?.message || "Invalid or expired OTP";
-          console.error(msg);
-        }
+        onError: (error) => console.error(error?.response?.data?.message || "Invalid or expired OTP"),
       }
     );
   };
@@ -113,18 +82,10 @@ const AgentSignupModal = ({ open, onClose }) => {
   const handleResend = () => {
     if (secondsLeft > 0) return;
     resendMutation.mutate(
+      { email: form.email.trim().toLowerCase(), phone: form.phone.trim(), name: form.name.trim(), role: "agent" },
       {
-        email: form.email.trim().toLowerCase(),
-        phone: form.phone.trim(),
-        name: form.name.trim(),
-        role: "agent"
-      },
-      {
-        onSuccess: (resp) => {
-          // toast.success(resp?.message || "OTP re-sent");
-          setSecondsLeft(120);
-        },
-        onError: (err) => console.error(err?.response?.data?.message || "Failed to resend OTP")
+        onSuccess: () => setSecondsLeft(120),
+        onError: (err) => console.error(err?.response?.data?.message || "Failed to resend OTP"),
       }
     );
   };
@@ -133,9 +94,7 @@ const AgentSignupModal = ({ open, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[1000]">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      {/* Dialog */}
       <div className="relative mx-auto mt-20 w-[92%] max-w-xl bg-white rounded-2xl shadow-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-gray-900">
@@ -178,9 +137,7 @@ const AgentSignupModal = ({ open, onClose }) => {
                 <input
                   type="tel"
                   value={form.phone}
-                  onChange={(e) =>
-                    setForm((s) => ({ ...s, phone: e.target.value.replace(/\D/g, "") }))
-                  }
+                  onChange={(e) => setForm((s) => ({ ...s, phone: e.target.value.replace(/\D/g, "") }))}
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-yellow"
                   placeholder="9876543210"
                   required
@@ -241,11 +198,7 @@ const AgentSignupModal = ({ open, onClose }) => {
             </button>
 
             <div className="flex items-center justify-between text-sm text-gray-600">
-              <button
-                type="button"
-                onClick={() => setStep("form")}
-                className="underline underline-offset-2"
-              >
+              <button type="button" onClick={() => setStep("form")} className="underline underline-offset-2">
                 Change email
               </button>
 
@@ -271,12 +224,11 @@ const AgentSignupModal = ({ open, onClose }) => {
 };
 /* ------------------- end Modal ------------------- */
 
-/* ------------------ Sections (yours) -------------- */
+/* ------------------ Sections ------------------ */
 const HeroSection = ({ title, description, imageSrc, onSignupClick, buttonText, showProfileBtn, loadingAgent, isApprovalPending }) => {
   const navigate = useNavigate();
-  const onViewProfile = () => {
-    navigate("/user/profile", { state: { tab: "agent" } });
-  };
+  const onViewProfile = () => navigate("/user/profile", { state: { tab: "agent" } });
+
   return (
     <section
       className="relative h-[100vh] md:h-[100vh] bg-cover bg-center"
@@ -287,33 +239,19 @@ const HeroSection = ({ title, description, imageSrc, onSignupClick, buttonText, 
         <h1 className="text-mobile/h3 md:text-desktop/h2 text-primary-white max-w-2xl font-bold">{title}</h1>
         <p className="mt-4 text-mobile/body/2 md:text-desktop/body/2/regular text-primary-white max-w-2xl">{description}</p>
 
-
-
         {!loadingAgent && showProfileBtn ? (
-          <button
-            onClick={onViewProfile}
-            className="mt-8 bg-primary-white text-primary-yellow px-8 py-3 rounded-lg font-bold hover:bg-opacity-90 transition duration-300 flex items-center"
-          >
+          <button onClick={onViewProfile} className="mt-8 bg-primary-white text-primary-yellow px-8 py-3 rounded-lg font-bold hover:bg-opacity-90 transition duration-300 flex items-center">
             View My Profile
           </button>
-
         ) : isApprovalPending ? (
-          <button
-            disabled
-            title="Your account is verified but pending approval"
-            className="mt-8 bg-primary-white/70 text-primary-yellow/70 px-8 py-3 rounded-lg font-bold cursor-not-allowed transition duration-300 flex items-center"
-          >
+          <button disabled title="Your account is verified but pending approval" className="mt-8 bg-primary-white/70 text-primary-yellow/70 px-8 py-3 rounded-lg font-bold cursor-not-allowed transition duration-300 flex items-center">
             Approval Pending
           </button>
         ) : (
-          <button
-            onClick={onSignupClick}
-            className="mt-8 bg-primary-white text-primary-yellow px-8 py-3 rounded-lg font-bold hover:bg-opacity-90 transition duration-300 flex items-center"
-          >
+          <button onClick={onSignupClick} className="mt-8 bg-primary-white text-primary-yellow px-8 py-3 rounded-lg font-bold hover:bg-opacity-90 transition duration-300 flex items-center">
             {buttonText} <ArrowForwardIcon className="ml-2" />
           </button>
-        )
-        }
+        )}
       </div>
     </section>
   );
@@ -339,12 +277,7 @@ const BenefitsSection = ({ benefits = [], align = "left" }) => {
             >
               <div className={`${isCenter ? "mx-auto" : ""} mb-4 flex items-center justify-center`}>
                 {item?.icon ? (
-                  <img
-                    src={item.icon}
-                    alt={item.title ? `${item.title} icon` : "Benefit icon"}
-                    className="block w-[4rem] object-contain"
-                    loading="lazy"
-                  />
+                  <img src={item.icon} alt={item.title ? `${item.title} icon` : "Benefit icon"} className="block w-[4rem] object-contain" loading="lazy" />
                 ) : null}
               </div>
 
@@ -383,8 +316,8 @@ const HowItWorksSection = ({ steps }) => (
   </section>
 );
 
-/* ------------- Legacy enquiry form (unchanged) ------------- */
-const AgentRegistrationForm = ({ page = 'Agent Registration', gid = [0] }) => {
+/* ------------- Enquiry form ------------- */
+const AgentRegistrationForm = ({ page = 'Agent Registration', gid = [226066483] }) => {
   const { mutate, isLoading } = useEnquiryForm();
   const formFields = [
     { name: "agentName", placeholder: "Name", required: true },
@@ -425,78 +358,120 @@ const AgentRegistrationForm = ({ page = 'Agent Registration', gid = [0] }) => {
 const TravelAgent = () => {
   const [openSignup, setOpenSignup] = useState(false);
 
-  const userInfo = localStorage.getItem('user_email') || ""; // ensure string
+  // meta
+  const { data: metas } = useGetMetas();
+  const travelagent = Array.isArray(metas) ? metas.find((m) => m.page === "travel-agent") : null;
+
+  // agent status
+  const userInfo = localStorage.getItem("user_email") || "";
   const { data: agentRec, isLoading: loadingAgent } = useGetAgentByEmail(userInfo);
-  const isAgent = !!agentRec && agentRec?.role === 'agent';
+  const isAgent = !!agentRec && agentRec?.role === "agent";
   const isApproved = agentRec?.approved ?? false;
   const isVerified = agentRec?.isVerified ?? false;
-
-  const { data: metas } = useGetMetas();
-
-  const travelagent = Array.isArray(metas)
-    ? metas.find(meta => meta.page === "travel-agent")
-    : null;
-
   const showProfileBtn = !loadingAgent && isAgent && isApproved;
   const isApprovalPending = !loadingAgent && isAgent && isVerified && !isApproved;
 
+  // ✅ API: Travel Agent page
+  const { data, isFetching } = useGetTravelAgentPage();
 
+
+  // ---------- HERO from API (fallback to static bg) ----------
   const heroContent = {
-    title: "Earn More & Book Hassle-Free",
-    description: "Join our travel agent network & enjoy high commissions, easy bookings, and exclusive perks.",
-    imageSrc: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    buttonText: "Login Or Sign Up "
+    title: data?.hero?.heading,
+    description: data?.hero?.description ,
+    imageSrc:
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    buttonText: "Login Or Sign Up"
   };
 
-  const benefits = [
-    { icon: '/images/t1.svg', title: 'Earn Commission', desc: 'Attractive commission structure to maximize your earnings on every booking.' },
-    { icon: '/images/t2.svg', title: 'Exclusive Discounts', desc: 'Offer your clients up to 5% off on standard online room rates.' },
-    { icon: '/images/t3.svg', title: 'Free Rooms', desc: 'Get 1 complimentary room for every 15 rooms booked (valid for group bookings only).' },
-    { icon: '/images/t4.svg', title: 'Exclusive Gifts', desc: 'Enjoy surprise rewards and special gifts after every 25 nights booked through your account.' },
-    { icon: '/images/t5.svg', title: 'Dedicated Support', desc: 'Quick resolutions and smooth coordination through our single-window partner support system.' },
-    { icon: '/images/t6.svg', title: 'Marketing Materials', desc: 'Access to ready-to-use banners, booking kits, brochures, and other promotional content.' },
-    { icon: '/images/t7.svg', title: 'Award-Winning Hospitality', desc: 'Recognized for excellence in service, cleanliness, dining, and guest satisfaction.' }
+  // ---------- PARTNER WITH US: keep your icons, use API text ----------
+  const partnerIcons = [
+    "/images/t1.svg",
+    "/images/t2.svg",
+    "/images/t3.svg",
+    "/images/t4.svg",
+    "/images/t5.svg",
+    "/images/t6.svg",
+    "/images/t7.svg"
   ];
 
-  const steps = [
-    { icon: '/images/1a.svg', title: 'Register', desc: 'Sign up as a travel agent with us — quick, simple, and absolutely free.' },
-    { icon: '/images/2a.svg', title: 'Submit for Approval', desc: 'Once registered, submit your details for verification. Our team will review and approve your application promptly.' },
-    { icon: '/images/3a.svg', title: 'Get Portal Access', desc: 'After approval, unlock your personal agent dashboard to manage bookings and track commissions with ease.' },
-    { icon: '/images/4a.svg', title: 'Book & Earn', desc: 'Start booking rooms with instant confirmation and earn attractive commissions on every successful booking.' },
-    { icon: '/images/5a.svg', title: 'Unlock Exclusive Gifts', desc: 'Get surprise rewards like free meals, room upgrades, or special discounts — gifted after every 25 nights booked!' }
+  const benefits = useMemo(() => {
+    const apiCards = data?.partnerWithUs?.cards || [];
+    if (!apiCards.length) {
+      // fallback to your old hardcoded text + icons
+      return [
+        { icon: '/images/t1.svg', title: 'Earn Commission', desc: 'Attractive commission structure to maximize your earnings on every booking.' },
+        { icon: '/images/t2.svg', title: 'Exclusive Discounts', desc: 'Offer your clients up to 5% off on standard online room rates.' },
+        { icon: '/images/t3.svg', title: 'Free Rooms', desc: 'Get 1 complimentary room for every 15 rooms booked (valid for group bookings only).' },
+        { icon: '/images/t4.svg', title: 'Exclusive Gifts', desc: 'Enjoy surprise rewards and special gifts after every 25 nights booked through your account.' },
+        { icon: '/images/t5.svg', title: 'Dedicated Support', desc: 'Quick resolutions and smooth coordination through our single-window partner support system.' },
+        { icon: '/images/t6.svg', title: 'Marketing Materials', desc: 'Access to ready-to-use banners, booking kits, brochures, and other promotional content.' },
+        { icon: '/images/t7.svg', title: 'Award-Winning Hospitality', desc: 'Recognized for excellence in service, cleanliness, dining, and guest satisfaction.' }
+      ];
+    }
+    // map api cards onto your icons by index
+    return apiCards.map((c, i) => ({
+      icon: partnerIcons[i % partnerIcons.length],
+      title: c.title,
+      desc: c.description
+    }));
+  }, [data]);
+
+  // ---------- HOW IT WORKS: keep your icons, use API text ----------
+  const howIcons = [
+    "/images/1a.svg",
+    "/images/2a.svg",
+    "/images/3a.svg",
+    "/images/4a.svg",
+    "/images/5a.svg",
   ];
+
+  const steps = useMemo(() => {
+    const apiCards = data?.howItWorks?.cards || [];
+    if (!apiCards.length) {
+      return [
+        { icon: '/images/1a.svg', title: 'Register', desc: 'Sign up as a travel agent with us — quick, simple, and absolutely free.' },
+        { icon: '/images/2a.svg', title: 'Submit for Approval', desc: 'Once registered, submit your details for verification. Our team will review and approve your application promptly.' },
+        { icon: '/images/3a.svg', title: 'Get Portal Access', desc: 'After approval, unlock your personal agent dashboard to manage bookings and track commissions with ease.' },
+        { icon: '/images/4a.svg', title: 'Book & Earn', desc: 'Start booking rooms with instant confirmation and earn attractive commissions on every successful booking.' },
+        { icon: '/images/5a.svg', title: 'Unlock Exclusive Gifts', desc: 'Get surprise rewards like free meals, room upgrades, or special discounts — gifted after every 25 nights booked!' }
+      ];
+    }
+    return apiCards.map((c, i) => ({
+      icon: howIcons[i % howIcons.length],
+      title: c.title,
+      desc: c.description
+    }));
+  }, [data]);
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
     <div>
-
       <Helmet>
         <title>{travelagent?.metaTitle || 'Tour & Travel - Sunstar Hotels'}</title>
         <meta name="description" content={travelagent?.metaDescription || ''} />
         <meta name="keywords" content={travelagent?.metaKeywords?.join(', ') || ''} />
       </Helmet>
+
       <HeroSection
         {...heroContent}
         onSignupClick={() => setOpenSignup(true)}
         showProfileBtn={showProfileBtn}
         loadingAgent={loadingAgent}
         isApprovalPending={isApprovalPending}
-
       />
 
+      {/* API-powered, icon-preserving sections */}
       <BenefitsSection benefits={benefits} />
       <HowItWorksSection steps={steps} />
 
       <Partnerlogos />
 
-
-      <div className="relative flex  flex-col justify-between content items-center mt-10 py-10  z-0">
-     
-        <ImageGallery/>
+      <div className="relative flex flex-col justify-between content items-center mt-10 py-10 z-0">
+        <ImageGallery />
       </div>
 
-      {/* Legacy long form (keep or remove) */}
       <AgentRegistrationForm />
 
       <TestimonialSection page="travel-agent" head="What Our Partners Say" />

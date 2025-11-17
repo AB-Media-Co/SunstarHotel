@@ -10,6 +10,7 @@ const API = {
   WEBSITE_DATA: '/api/websiteData',
   AMENITIES: '/api/websiteData/amenities',
   GRID: '/api/websiteData/images',
+  SHINE: '/api/websiteData/shine',                                        // ⬅️ OLD
   SHINE_UPSERT: '/api/websiteData/what-makes-us-shine',                 // ⬅️ NEW
   SHINE_GET: '/api/websiteData/what-makes-us-shine',                     // ⬅️ NEW
   SHINE_REPLACE_ITEMS: '/api/websiteData/what-makes-us-shine/items',     // ⬅️ NEW
@@ -101,9 +102,9 @@ const useUpdatePagesHook = () => {
       const payload = maybeLegacy
         ? { path: DEFAULT_PATH, massonaryGrid: { images: images.images, content: images.content } }
         : {
-            path: images?.path || DEFAULT_PATH,
-            massonaryGrid: images?.massonaryGrid || { images: [], content: [] },
-          };
+          path: images?.path || DEFAULT_PATH,
+          massonaryGrid: images?.massonaryGrid || { images: [], content: [] },
+        };
 
       const res = await axiosInstance.post(API.GRID, payload);
       return res.data;
@@ -126,6 +127,21 @@ const useUpdatePagesHook = () => {
     const grid = websiteData?.grid || {};
     return grid?.[path] ?? grid?.[DEFAULT_PATH] ?? { images: [], content: [] };
   };
+
+  // --- OLD Shine Section (Legacy) ---
+  const updateShineSectionMutation = useMutation({
+    mutationFn: async (data) => {
+      const res = await axiosInstance.post(API.SHINE, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success('Shine Section Updated successfully!');
+      queryClient.invalidateQueries({ queryKey: ['websiteData'] });
+    },
+    onError: (error) => toast.error(`Failed to update: ${error.message}`),
+  });
+
+
 
   // --- ⭐ What Makes Us Shine (NEW ENDPOINTS) ---
   // Upsert whole section (heading, description, exactly 3 items)
@@ -159,7 +175,8 @@ const useUpdatePagesHook = () => {
   // Patch a single item by index (0/1/2)
   const patchShineItemMutation = useMutation({
     mutationFn: async ({ index, patch }) => {
-      const res = await axiosInstance.patch(API.SHINE_PATCH_ITEM(index), patch);
+      console.log(index, patch)
+      const res = await axiosInstance.patch(`/api/websiteData/what-makes-us-shine/items/${index}`, patch);
       return res.data;
     },
     onSuccess: (_data, vars) => {
@@ -291,12 +308,8 @@ const useUpdatePagesHook = () => {
   });
 
   // Loader shortcut
-  if (isLoading) {
-    return {
-      loading: true,
-      Loader,
-    };
-  }
+  const loadingState = { loading: isLoading, Loader };
+
 
   return {
     websiteData,
@@ -305,10 +318,7 @@ const useUpdatePagesHook = () => {
     whatMakesUsShineData,
 
     amenities: websiteData?.amenities || [],
-    galleryImages:
-      websiteData?.grid?.[DEFAULT_PATH] ||
-      websiteData?.grid ||
-      [],
+    galleryImages: websiteData?.grid || {},
     shineSection: websiteData?.shineSection || [], // (legacy shine if you still use it)
     heroSectionUpdate: websiteData?.heroSection || [],
     offeringSection: websiteData?.whatWeOffers || [],
@@ -323,8 +333,6 @@ const useUpdatePagesHook = () => {
     // Helpers
     getGalleryByPath,
 
-    loading: isLoading,
-    error,
 
     // Amenity ops
     addAmenity: addAmenityMutation.mutateAsync,
@@ -335,6 +343,7 @@ const useUpdatePagesHook = () => {
     addGalleryImages: addGalleryImagesMutation.mutateAsync,
 
     // ⭐ Shine ops (NEW)
+    updateShineSection: updateShineSectionMutation.mutateAsync,          // ⬅️ OLD/LEGACY
     upsertWhatMakesUsShine: upsertWhatMakesUsShineMutation.mutateAsync,
     replaceShineItems: replaceShineItemsMutation.mutateAsync,
     patchShineItem: patchShineItemMutation.mutateAsync,
@@ -349,6 +358,12 @@ const useUpdatePagesHook = () => {
     updateFaq: faqsSectionMutation.mutateAsync,
     updateContactUs: updateContactUsDetailMutation.mutateAsync,
     saveHomePartners: saveHomePartnersMutation.mutateAsync,
+
+
+
+    loading: isLoading,
+    Loader,
+    error,
   };
 };
 

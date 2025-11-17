@@ -12,6 +12,7 @@ export const useGetLoyaltyProgram = (opts = {}) => {
     queryKey: ['loyaltyProgram'],
     queryFn: async () => {
       const res = await axiosInstance.get('/api/loyalty');
+      console.log(res,"ressss")
       // backend returns the page object directly (res.data)
       return res.data;
     },

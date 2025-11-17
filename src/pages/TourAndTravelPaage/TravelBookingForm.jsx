@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { Phone, Mail } from 'lucide-react';
+import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
+import toast from 'react-hot-toast';
 
 export default function TravelBookingForm() {
+    const { mutate, isLoading } = useEnquiryForm();
+    
     const [formData, setFormData] = useState({
         tourName: '',
         duration: '',
@@ -25,8 +29,53 @@ export default function TravelBookingForm() {
     };
 
     const handleSubmit = () => {
-        console.log('Form submitted:', formData);
-        // Handle form submission here
+        // Validation
+        if (!formData.name || !formData.email || !formData.contact) {
+            toast.error('Please fill in all required fields');
+            return;
+        }
+
+        // Send all fields directly to Google Sheets
+        const enquiryData = {
+            page: 'Travel Booking Form',
+            tourName: formData.tourName,
+            duration: formData.duration,
+            country: formData.country,
+            hotelCategory: formData.hotelCategory,
+            adults: formData.adults,
+            children: formData.children,
+            name: formData.name,
+            email: formData.email,
+            contact: formData.contact,
+            travelDate: formData.travelDate,
+            enquiry: formData.enquiry,
+            gid: ['1720220062'], // Your Google Sheet GID
+            submittedAt: new Date().toISOString(),
+        };
+
+        mutate(enquiryData, {
+            onSuccess: () => {
+                toast.success('Your travel enquiry has been submitted successfully!');
+                // Reset form on success
+                setFormData({
+                    tourName: '',
+                    duration: '',
+                    country: '',
+                    hotelCategory: '',
+                    adults: '',
+                    children: '',
+                    name: '',
+                    email: '',
+                    contact: '',
+                    travelDate: '',
+                    enquiry: ''
+                });
+            },
+            onError: (error) => {
+                console.error('Error submitting form:', error);
+                toast.error('Failed to submit enquiry. Please try again.');
+            }
+        });
     };
 
     return (
@@ -189,9 +238,10 @@ export default function TravelBookingForm() {
                         <div className="flex justify-center pt-2 md:pt-4">
                             <button
                                 onClick={handleSubmit}
-                                className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 md:py-3 px-8 md:px-12 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base w-full sm:w-auto"
+                                disabled={isLoading}
+                                className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 md:py-3 px-8 md:px-12 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Submit Enquiry
+                                {isLoading ? 'Submitting...' : 'Submit Enquiry'}
                             </button>
                         </div>
                     </div>

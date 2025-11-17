@@ -46,6 +46,7 @@ export const PricingProvider = ({ children }) => {
   const [nights, setNights] = useState(1);
   const [baseFinalPrice, setBaseFinalPrice] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [someOneElse, setSomeoneElse] = useState(false);
   const [guestData, setGuestData] = useState([])
@@ -117,8 +118,13 @@ export const PricingProvider = ({ children }) => {
     );
     const computedBaseFinal = roomTotal + totalOtherCharges;
     setBaseFinalPrice(computedBaseFinal);
-    setFinalPrice(computedBaseFinal);
-  }, [selectedRooms, totalOtherCharges, nights]);
+
+    if (paymentMethod === "pay-now") {
+      setFinalPrice(computedBaseFinal * 0.95);
+    } else {
+      setFinalPrice(computedBaseFinal);
+    }
+  }, [selectedRooms, totalOtherCharges, nights, paymentMethod]);
 
   useEffect(() => {
     localStorage.setItem("roomHotelDetails", JSON.stringify(details));
@@ -236,6 +242,8 @@ export const PricingProvider = ({ children }) => {
         baseFinalPrice,
         nights,
         setNights,
+        paymentMethod,
+        setPaymentMethod,
         maxRoomSelection,
         setMaxRoomSelection,
         resetMaxRoomSelection, // Added reset function

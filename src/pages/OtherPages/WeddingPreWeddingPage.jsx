@@ -3,15 +3,30 @@ import OtherPageLayout from './OtherPageLayout';
 import { Helmet } from 'react-helmet';
 import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
+import { useGetEventPageBySlug } from '../../ApiHooks/useEventPageHook';
+import Loader from '../../Components/Loader';
 const WeddingPreWeddingPage = () => {
   const { mutate, isLoading } = useEnquiryForm();
 
-  const eventTypes = [
-    { title: 'Wedding & Reception', image: '/images/OtherPageImages/Varmala.webp' },
-    { title: 'Cocktail', image: '/images/OtherPageImages/party.webp' },
-    { title: 'Roka & Sagan', image: '/images/OtherPageImages/shadi.webp' },
-    { title: 'Haldi & Mehndi', image: '/images/OtherPageImages/haldi.webp' },
-  ];
+  // Fetch dynamic content from API
+  const { data: pageContent, isLoading: contentLoading } = useGetEventPageBySlug('weddingprewedding');
+
+  // Extract data from API or use defaults
+  const heroData = pageContent?.data?.heroSection || {};
+  const descriptionText = pageContent?.data?.descriptionText || '';
+  const celebrationTypesData = pageContent?.data?.celebrationTypes || {};
+
+  const eventTypes = celebrationTypesData?.types?.length > 0
+    ? celebrationTypesData.types.map(type => ({
+        title: type.title || '',
+        image: type.image || '/images/OtherPageImages/Varmala.webp'
+      }))
+    : [
+        { title: 'Wedding & Reception', image: '/images/OtherPageImages/Varmala.webp' },
+        { title: 'Cocktail', image: '/images/OtherPageImages/party.webp' },
+        { title: 'Roka & Sagan', image: '/images/OtherPageImages/shadi.webp' },
+        { title: 'Haldi & Mehndi', image: '/images/OtherPageImages/haldi.webp' },
+      ];
 
   const whyChooseUsFeatures = [
     { title: 'On Time', icon: '/images/othericons/Ontime.svg' },
@@ -25,7 +40,7 @@ const WeddingPreWeddingPage = () => {
   ];
 
 
-  const introText = (
+  const introText = descriptionText || (
     <>
       Our hotel offers a range of beautiful and unique event spaces, each of which can be customised to suit your needs and preferences. Our event planning team will work with you to create a personalised event that reflects your style and vision, from selecting the perfect venue to choosing the décor, setting and the menu.      
       {/* <br /> */}
@@ -41,11 +56,8 @@ const WeddingPreWeddingPage = () => {
   const heroTitle = (
     <>
       <h1 className='text-mobile/h2 md:text-desktop/h3  font-bold text-primary-white max-w-full md:max-w-[680px]'>
-        Celebrate love  at <span className='text-[#FDD304]'>Sunstar Hotels</span>   weddings & pre-weddings made magical.
+        {heroData.heading || 'Celebrate love  at'} <span className='text-[#FDD304]'>{heroData.subheading || 'Sunstar Hotels'}</span> {heroData.description || 'weddings & pre-weddings made magical.'}
       </h1>
-      {/* <p className='py-4 text-mobile/body/2 md:text-desktop/body/2/regular md:max-w-[600px] text-white'>
-        Whether you are planning a birthday party, anniversary celebration, candle light dinner, baby shower, marriage proposal, or any other special occasion, we are excited to help make your personal event a truly unforgettable experience.
-      </p> */}
     </>
   )
 
@@ -114,6 +126,11 @@ const WeddingPreWeddingPage = () => {
     }, callbacks);
 };
 
+  // Show loading state
+  if (contentLoading) {
+    return <Loader />;
+  }
+
   return (
     <>
       <Helmet>
@@ -131,7 +148,8 @@ const WeddingPreWeddingPage = () => {
         // Intro section
         introText={introText}
         // Section titles
-        sectionMainTitle="Your Special Days"
+        sectionMainTitle={celebrationTypesData.heading || 'Your Special Days'}
+        sectionSubtitle={celebrationTypesData.description || ''}
         // Event types grid
         eventTypes={eventTypes}
         // Features grid

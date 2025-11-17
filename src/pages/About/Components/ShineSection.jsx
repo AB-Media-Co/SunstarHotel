@@ -101,6 +101,7 @@ const ShineSection = () => {
 
 
     const { shineSection } = useUpdatePagesHook();
+    console.log('shineSection:', shineSection)
 
     const baseTop = 0;
     const spacing = 400; 
@@ -141,7 +142,7 @@ const ShineSection = () => {
                         >
                             <div className="w-full  h-auto md:mt-12 lg:mt-0 lg:w-[48%] flex flex-col gap-5 justify-center animation-on-scroll">
                                 <h3 className="text-mobile/h4 md:text-desktop/h4 text-primary-white">{item.title}</h3>
-                                <p className="text-mobile/body/2 md:text-desktop/body/1 text-primary-white ">
+                                <p className="text-mobile/body/2 md:text-desktop/body/1 text-primary-white whitespace-pre-line">
                                     {item.description}
                                 </p>
                             </div>

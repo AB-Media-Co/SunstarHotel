@@ -51,23 +51,24 @@ export const ReservationSummarySidebar = ({
 
   return (
     <div
-      className={`md:p-6 bg-white md:border border-gray-200 rounded-xl md:shadow-md w-full ${isSticky ? 'md:w-[384px]' : {}}  md:w-96 mx-auto  font-sans transition-all duration-300 ${isSticky ? 'xl:fixed xl:top-4  ' : 'relative '
+      className={`md:p-6 p-4 bg-white md:border-2 border border-gray-200 rounded-2xl md:shadow-lg shadow-md w-full ${isSticky ? 'md:w-[384px]' : {}}  md:w-96 mx-auto  font-sans transition-all duration-300 ${isSticky ? 'xl:fixed xl:top-4  ' : 'relative '
         }`}
    
     >
       {/* Header */}
-        <h2 className="text-mobile/h4 md:text-desktop/h4 pb-4  text-gray-800">Reservation Summary</h2>
+      <div className="bg-primary-green  p-4 -mx-4 md:-mx-6 -mt-4 md:-mt-6 rounded-t-2xl mb-6">
+        <h2 className="text-lg md:text-xl font-bold text-white">Reservation Summary</h2>
+      </div>
     
 
 
       {/* Price Summary */}
       <div>
-        <h3 className="text-base font-semibold text-gray-800 mb-3 flex items-center">
-
+        <h3 className="text-base font-bold text-gray-800 mb-4 pb-2 border-b-2 border-primary-green/20">
           Your Price Summary
         </h3>
 
-        <div className="space-y-3 mb-4">
+        <div className="space-y-4 mb-5">
           {selectedRooms?.map((room, index) => {
             const hotelDetail = details[index];
             const baseRoomPrice = hotelDetail?.roomData?.discountRate || 0;
@@ -82,41 +83,41 @@ export const ReservationSummarySidebar = ({
             const totalContinentalCharge = continentalPrice * guestQty;
             
             return (
-              <div key={index} className="space-y-2 pb-3 border-b border-gray-200">
+              <div key={index} className="space-y-3 pb-4 mb-4 border-b-2 border-dashed border-gray-200 last:border-0">
                 {/* Room Base Price */}
-                <div className="flex justify-between text-sm text-gray-700">
-                  <div>
-                    <p className="font-medium">{room.roomName}</p>
-                    <p className="text-xs text-gray-500">
+                <div className="flex justify-between items-start text-sm bg-gray-50 p-3 rounded-lg">
+                  <div className="flex-1">
+                    <p className="font-semibold text-gray-800 text-base">{room.roomName}</p>
+                    <p className="text-xs text-gray-500 mt-1">
                       Room Only ({baseAdultOccupancy} {baseAdultOccupancy === 1 ? "Adult" : "Adults"}) × {days} {days === 1 ? "Night" : "Nights"}
                     </p>
                   </div>
-                  <p className="font-medium text-gray-800">{formatINR(baseRoomPrice * days)}</p>
+                  <p className="font-bold text-gray-900 text-base">{formatINR(baseRoomPrice * days)}</p>
                 </div>
                 
                 {/* Extra Adult Charges (if applicable) - eZee API */}
                 {extraAdults > 0 && extraAdultRate > 0 && (
-                  <div className="flex justify-between text-sm text-gray-600 pl-4">
-                    <div>
-                      <p className="font-medium text-orange-600">Extra Adult Charges</p>
-                      <p className="text-xs text-gray-500">
+                  <div className="flex justify-between items-start text-sm bg-orange-50 border-l-4 border-orange-500 p-3 rounded-r-lg">
+                    <div className="flex-1">
+                      <p className="font-semibold text-orange-700">Extra Adult Charges</p>
+                      <p className="text-xs text-orange-600 mt-1">
                         {formatINR(extraAdultRate)} × {extraAdults} {extraAdults === 1 ? "Adult" : "Adults"} × {days} {days === 1 ? "Night" : "Nights"}
                       </p>
                     </div>
-                    <p className="font-medium text-orange-600">{formatINR(totalExtraAdultCharge * days)}</p>
+                    <p className="font-bold text-orange-700">{formatINR(totalExtraAdultCharge * days)}</p>
                   </div>
                 )}
                 
                 {/* Continental Breakfast Charges (if selected) */}
                 {room.option === "continental" && continentalPrice > 0 && (
-                  <div className="flex justify-between text-sm text-gray-600 pl-4">
-                    <div>
-                      <p className="font-medium text-primary-green">Continental Breakfast</p>
-                      <p className="text-xs text-gray-500">
+                  <div className="flex justify-between items-start text-sm bg-green-50 border-l-4 border-primary-green p-3 rounded-r-lg">
+                    <div className="flex-1">
+                      <p className="font-semibold text-primary-green">Continental Breakfast</p>
+                      <p className="text-xs text-green-700 mt-1">
                         {formatINR(continentalPrice)} × {guestQty} {guestQty === 1 ? "Guest" : "Guests"} × {days} {days === 1 ? "Night" : "Nights"}
                       </p>
                     </div>
-                    <p className="font-medium text-primary-green">{formatINR(totalContinentalCharge * days)}</p>
+                    <p className="font-bold text-primary-green">{formatINR(totalContinentalCharge * days)}</p>
                   </div>
                 )}
               </div>
@@ -124,29 +125,33 @@ export const ReservationSummarySidebar = ({
           })}
         </div>
 
-        <div className="flex justify-between text-sm font-medium text-black/40 pb-2 border-b border-gray-200">
-          <p>Taxes & Other Charges</p>
-          <p className="font-medium ">{formatINR(totalOtherCharges)}</p>
+        <div className="flex justify-between items-center text-sm font-semibold text-gray-700 py-3 px-4 bg-blue-50 rounded-lg border border-blue-200">
+          <p className="flex items-center gap-2">
+            Taxes & Other Charges
+          </p>
+          <p className="font-bold text-gray-900">{formatINR(totalOtherCharges)}</p>
         </div>
       </div>
 
       {/* Final Pricing */}
-      <div className="pt-3  mt-5 rounded-lg space-y-2">
-        <div className="flex justify-between text-sm text-gray-700">
-          <p>Original Amount</p>
-          <p className="font-medium">{formatINR(baseFinalPrice)}</p>
+      <div className="pt-4 mt-5 bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-xl space-y-3 border border-gray-200">
+        <div className="flex justify-between items-center text-sm text-gray-700">
+          <span className="font-medium">Base Price</span>
+          <span className="font-semibold text-gray-900">{formatINR(baseFinalPrice)}</span>
         </div>
-
         {hasDiscount && (
-          <div className="flex justify-between text-sm text-gray-700">
-            <p>Discount</p>
-            <p className="font-medium text-green-600">- {formatINR(discount)}</p>
+          <div className="flex justify-between items-center text-sm bg-green-50 -mx-4 px-4 py-2">
+               <span className="font-medium">Pay Now Discount</span>
+            <span className="font-bold text-green-600">-{formatINR(discount)}</span>
           </div>
         )}
-
-        <div className="flex justify-between border-b-2 md:border-b-0  text-base font-bold py-2 border-t border-gray-200">
-          <p>Payable Amount</p>
-          <p className="text-primary-green">{formatINR(finalPrice)}</p>
+        <div className="flex justify-between items-center text-sm text-gray-700">
+          <span className="font-medium">Taxes & Fees</span>
+          <span className="font-semibold text-gray-900">{formatINR(totalOtherCharges)}</span>
+        </div>
+        <div className="flex justify-between items-center border-t-2 border-gray-300 pt-3 mt-3">
+          <p className="text-base md:text-lg font-bold text-gray-800">Payable Amount</p>
+          <p className="text-lg md:text-xl font-bold text-primary-green">{formatINR(finalPrice)}</p>
         </div>
       </div>
 
@@ -157,15 +162,18 @@ export const ReservationSummarySidebar = ({
 
       {/* CTA Button */}
       {showButton && (
-        <a href="#payment-method" className="hidden md:block  w-full">
+        <a href="#payment-method" className="hidden md:block w-full">
           <button
             disabled={isPaymentVisible}
-            className={`mt-6 w-full py-3.5 font-bold text-white rounded-lg transition-all duration-300 ${isPaymentVisible
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-primary-green hover:bg-primary-dark-green"
+            className={`mt-6 w-full py-4 font-bold text-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] ${isPaymentVisible
+              ? "bg-gray-300 cursor-not-allowed shadow-none"
+              : "bg-gradient-to-r from-primary-green to-primary-dark-green hover:shadow-xl"
               }`}
           >
-            See Payment Options
+            <span className="flex items-center justify-center gap-2">
+              <span>See Payment Options</span>
+              <span className="text-xl">→</span>
+            </span>
           </button>
         </a>
       )}

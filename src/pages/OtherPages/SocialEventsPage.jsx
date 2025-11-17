@@ -1,19 +1,33 @@
-
 import { testimonialData } from '../../Data/AboutSectionData';
 import OtherPageLayout from './OtherPageLayout';
 import { Helmet } from 'react-helmet';
 import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
+import { useGetEventPageBySlug } from '../../ApiHooks/useEventPageHook';
+import Loader from '../../Components/Loader';
 
 const SocialEventsPage = () => {
     const { mutate } = useEnquiryForm();
 
-    const eventTypes = [
-        { title: 'Birthday Celebrations', image: '/images/OtherPageImages/Bdy.webp' },
-        { title: 'Private Dinners', image: '/images/OtherPageImages/Aniv.webp' },
-        { title: 'Get Together', image: '/images/OtherPageImages/celeb.webp' },
-        { title: 'Baby Shower', image: '/images/OtherPageImages/bbyshower.webp' },
-    ];
+    // Fetch dynamic content from API
+    const { data: pageContent, isLoading: contentLoading } = useGetEventPageBySlug('socialevent');
+
+    // Extract data from API or use defaults
+    const heroData = pageContent?.data?.heroSection || {};
+    const descriptionText = pageContent?.data?.descriptionText || '';
+    const celebrationTypesData = pageContent?.data?.celebrationTypes || {};
+
+    const eventTypes = celebrationTypesData?.types?.length > 0
+        ? celebrationTypesData.types.map(type => ({
+            title: type.title || '',
+            image: type.image || '/images/OtherPageImages/Bdy.webp'
+          }))
+        : [
+            { title: 'Birthday Celebrations', image: '/images/OtherPageImages/Bdy.webp' },
+            { title: 'Private Dinners', image: '/images/OtherPageImages/Aniv.webp' },
+            { title: 'Get Together', image: '/images/OtherPageImages/celeb.webp' },
+            { title: 'Baby Shower', image: '/images/OtherPageImages/bbyshower.webp' },
+          ];
 
     const whyChooseUsFeatures = [
         { title: 'On Time', icon: '/images/othericons/Ontime.svg' },
@@ -28,7 +42,7 @@ const SocialEventsPage = () => {
 
    
 
-    const introText = (
+    const introText = descriptionText || (
         <>
             Our hotel offers a range of beautiful and unique event spaces, each of which can be customised to suit your needs and preferences. Our event planning team will work with you to create a personalised event that reflects your style and vision, from selecting the perfect venue to choosing the décor, setting and the menu.
             <p className='my-4'>
@@ -43,13 +57,11 @@ const SocialEventsPage = () => {
     const heroTitle = (
         <>
             <h1 className='text-mobile/h3 md:text-desktop/h3  font-bold text-primary-white max-w-[650px]'>
-                Welcome to the personalised events at <span className='text-[#FDD304]'>Sunstar Hotels !</span>
+                {heroData.heading || 'Welcome to the personalised events at'} <span className='text-[#FDD304]'>{heroData.subheading || 'Sunstar Hotels !'}</span>
             </h1>
             <p className='py-4 text-mobile/body/2 md:text-desktop/body/1 max-w-[600px] text-white'>
-                Whether you are planning a birthday party, anniversary celebration, candle light dinner, baby shower, marriage proposal, or any other special occasion, we are excited to help make your personal event a truly unforgettable experience.
-
+                {heroData.description || 'Whether you are planning a birthday party, anniversary celebration, candle light dinner, baby shower, marriage proposal, or any other special occasion, we are excited to help make your personal event a truly unforgettable experience.'}
             </p>
-
         </>
     )
 
@@ -120,6 +132,11 @@ const SocialEventsPage = () => {
         }, callbacks);
     };
 
+    // Show loading state
+    if (contentLoading) {
+        return <Loader />;
+    }
+
     return (
         <>
             <Helmet>
@@ -142,8 +159,8 @@ const SocialEventsPage = () => {
                 // sectionSubtitle="At Sunstar Hotels, we are committed to delivering exceptional service and support, ensuring the success of your corporate event."
                 // Event types grid
                 // eventTypes={eventTypes}
-                sectionMainTitleexp='Personalised Celebration'
-                sectionSubtitleexp='Our hotel offers a variety of beautiful and unique event spaces that can be tailored to your needs and preferences.'
+                sectionMainTitleexp={celebrationTypesData.heading || 'Personalised Celebration'}
+                sectionSubtitleexp={celebrationTypesData.description || 'Our hotel offers a variety of beautiful and unique event spaces that can be tailored to your needs and preferences.'}
                 eventTypesexp={eventTypes}
                 // Features grid
                 featureItems={whyChooseUsFeatures}

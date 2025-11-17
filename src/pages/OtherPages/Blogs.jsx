@@ -4,6 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { useGetBlogs } from "../../ApiHooks/useBlogHooks";
 import SearchIcon from '@mui/icons-material/Search';
 import { useGetBlogs2 } from "../../ApiHooks/useBlogs2";
+
+// Function to create URL-friendly slugs
+const createSlug = (title) => {
+  if (!title) return '';
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+};
+
 const categories = [
   "Hospitality",
   "First-Time Visitors",
@@ -93,7 +106,7 @@ const Blogs = () => {
   const navigate = useNavigate();
 
   const handleCardClick = (blog) => {
-    navigate(`/sunstar-blogs/${blog?.title}`, { state: { blog } });
+    navigate(`/sunstar-blogs/${createSlug(blog?.title)}`, { state: { blog } });
   };
 
   // Handle category button click

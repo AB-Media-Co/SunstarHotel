@@ -70,24 +70,18 @@ const LazyImage = ({ src, alt = "", className = "", width, height }) => {
 };
 
 const Card = ({ image, title, description, link }) => {
-  const navigate = useNavigate();
-
-  const go = () => {
-    // Use hash navigation without layout thrash
-    if (link) {
-      navigate(link);
-    } else {
-      navigate("/why-sunstar#what-we-offer");
-    }
-    // Scroll to anchor if present on current page
-    setTimeout(() => {
-      document.getElementById("what-we-offer")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 0);
-  };
+  // Ensure we have a valid string link
+  const linkHref =
+    typeof link === "string"
+      ? link
+      : link?.path || link?.url || "/why-sunstar#what-we-offer";
 
   return (
-    <div className="rounded-[10px] overflow-hidden cursor-pointer h-full" onClick={go}>
-      {/* Give intrinsic dimensions to avoid CLS; height already set in class */}
+    <a
+      href={linkHref}
+      className="block rounded-[10px] overflow-hidden cursor-pointer h-full transition-transform duration-200 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
+    >
+      {/* Image */}
       <LazyImage
         src={image}
         alt={title}
@@ -95,7 +89,9 @@ const Card = ({ image, title, description, link }) => {
         height={750}
         className="h-[250px] w-full object-cover"
       />
-      <div className="md:px-6 h-[180px] md:py-6 py-4 px-4 bg-custom-bg bg-cover bg-left text-left shadow-lg bg-white">
+
+      {/* Content */}
+      <div className="md:px-6 h-[180px] md:py-6 py-4 px-4 bg-white shadow-lg text-left">
         <h3 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-800 mb-2">
           {title}
         </h3>
@@ -103,7 +99,7 @@ const Card = ({ image, title, description, link }) => {
           {description}
         </p>
       </div>
-    </div>
+    </a>
   );
 };
 

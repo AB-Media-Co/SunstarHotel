@@ -173,6 +173,7 @@ const Bookings = () => {
     return acc;
   }, []);
 
+  console.log(allBookings)
   // Check if any query is loading
   const bookingsLoading = bookingQueries.some(query => query.isLoading);
 

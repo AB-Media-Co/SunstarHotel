@@ -6,7 +6,7 @@ import useUpdatePagesHook from "../ApiHooks/useUpdatePagesHook";
 import Masonry from "react-masonry-css";
 
 const ImageGallery = ({ path = "default" }) => {
-  const { galleryImages } = useUpdatePagesHook();
+  const { galleryImages, getGalleryByPath } = useUpdatePagesHook();
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile screen size
@@ -17,10 +17,12 @@ const ImageGallery = ({ path = "default" }) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const gridForPath =
-    galleryImages?.[path] ||
-    galleryImages?.default ||
-    galleryImages || {};
+
+    const gridForPath =
+   (typeof getGalleryByPath === "function" && getGalleryByPath(path)) ||
+   // fallback to older shapes in case getGalleryByPath isn't available yet
+   (galleryImages && (galleryImages[path] || galleryImages.default || galleryImages)) ||
+   {};
 
   const images = Array.isArray(gridForPath.images) ? gridForPath.images : [];
   const content = Array.isArray(gridForPath.content) ? gridForPath.content : [];

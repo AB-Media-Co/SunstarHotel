@@ -223,7 +223,7 @@ const Navbar = () => {
             <img
               src={`${navColor ? '/images/Logo/logo2.svg' : '/images/Logo/logo.svg'}`}
               alt="Logo"
-              className="w-[60px] sm:w-[70px] md:w-[80px]"
+              className="w-[120px] md:w-[160px]"
             />
           </Link>
 
@@ -392,7 +392,7 @@ const Navbar = () => {
                 <img
                   src="/images/Logo/mobileLogo.svg"
                   alt="Logo"
-                  className="h-[26px] w-[100px]"
+                  className="w-[120px] md:w-[160px]"
                 />
               </Link>
               <button

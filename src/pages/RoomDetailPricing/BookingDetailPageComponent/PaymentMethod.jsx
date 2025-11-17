@@ -10,7 +10,9 @@ import {
   Shield,
   Clock,
   CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  Tag,
+  Sparkles
 } from "lucide-react";
 import RazorpayPayment from "./RazorpayPayment";
 import { useNavigate } from "react-router-dom";
@@ -20,12 +22,15 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
   const email = localStorage.getItem("user_email");
   const { data: userData } = useGetUserByEmail(email);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
-  const { selectedRooms, setIsConfirmationModalOpen, someOneElse, guestData } = usePricing();
+  const { selectedRooms, setIsConfirmationModalOpen, someOneElse, guestData, setPaymentMethod, selectedOtherCharges } = usePricing();
   const pushBooking = usePushBooking();
   const navigate = useNavigate();
 
+  console.log(selectedOtherCharges)
+
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
+    setPaymentMethod(method);
   };
 
   const ContinueBtnClick = (paymenttypeunkid = "") => {
@@ -33,6 +38,26 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
       document.getElementById("guestDetail")?.scrollIntoView({ behavior: "smooth" });
       return;
     }
+
+    // --- Build add-ons text once ---
+    const addOns =
+      Array.isArray(selectedOtherCharges) && selectedOtherCharges.length > 0
+        ? selectedOtherCharges
+          .map((item) => {
+            const qty = item?.qty ? ` x${item.qty}` : "";
+            const note = item?.note ? ` (${item.note})` : "";
+            return `${item.heading || ""}${qty}${note}`.trim();
+          })
+          .filter(Boolean)
+          .join(", ")
+        : "";
+
+    const specialRequestBase =
+      selectedPaymentMethod === "pay-at-hotel" ? "pay-at-hotel" : paymenttypeunkid;
+
+    // Final SpecialRequest string (payment info + add-ons)
+    const specialRequest =
+      addOns ? `${specialRequestBase} | Add-ons: ${addOns}` : specialRequestBase;
 
     const Room_Details = {};
     selectedRooms.forEach((room, index) => {
@@ -45,19 +70,23 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
         Rateplan_Id: room?.roomrateunkid,
         Ratetype_Id: room.RateTypeID,
         Roomtype_Id: room.RoomTypeID,
-        baserate: baserate,
-        extradultrate: extradultrate,
-        extrachildrate: extrachildrate,
-        number_adults: room.guestQty?.toString() || '1',
+        baserate,
+        extradultrate,
+        extrachildrate,
+        number_adults: room.guestQty?.toString() || "1",
         number_children: "0",
         ExtraChild_Age: "",
         Title: "",
-        First_Name: someOneElse ? guestData.firstName || '' : userData?.data.firstName || '',
-        Last_Name: someOneElse ? guestData.lastName || '' : userData?.data.lastName || '',
-        Gender: userData?.data.gender || '',
-        SpecialRequest: selectedPaymentMethod === "pay-at-hotel" ? "pay-at-hotel" : paymenttypeunkid
+        First_Name: someOneElse ? guestData.firstName || "" : userData?.data.firstName || "",
+        Last_Name: someOneElse ? guestData.lastName || "" : userData?.data.lastName || "",
+        Gender: userData?.data.gender || "",
+        // ✅ add-ons included here
+        SpecialRequest: specialRequest,
       };
     });
+
+    // Keep remark too (optional but helpful)
+    const remarkText = addOns ? `Add To Your Stay: ${addOns}` : "";
 
     const BookingData = {
       Room_Details,
@@ -66,20 +95,21 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
       Booking_Payment_Mode: selectedPaymentMethod === "pay-at-hotel" ? "0" : "1",
       Email_Address: userData?.data.email,
       Source_Id: "",
-      MobileNo: someOneElse ? guestData.phone : userData?.data.phone || '',
-      Address: userData?.data.address || '',
-      State: userData?.data.state || '',
-      Country: userData?.data.country || '',
-      City: userData?.data.city || '',
+      MobileNo: someOneElse ? guestData.phone : userData?.data.phone || "",
+      Address: userData?.data.address || "",
+      State: userData?.data.state || "",
+      Country: userData?.data.country || "",
+      City: userData?.data.city || "",
       Zipcode: "",
       Fax: "",
       Device: "Web",
       Languagekey: "",
-      paymenttypeunkid: paymenttypeunkid
+      paymenttypeunkid,
+      remark: remarkText, // ✅ mirrors add-ons
     };
 
     const payload = {
-      BookingData: BookingData,
+      BookingData,
       HotelCode: hotelDetail?.hotelCode,
       APIKey: hotelDetail?.authKey,
       userEmail: userData?.data.email,
@@ -110,9 +140,10 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
           },
           replace: true,
         });
-      }
+      },
     });
   };
+
 
   if (pushBooking.isPending) {
     return (
@@ -164,9 +195,9 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
 
 const PaymentMethodContent = ({ hotelDetail, selectedPaymentMethod, handlePaymentMethodChange, ContinueBtnClick, isLoading }) => {
   const { finalPrice } = usePricing();
-  
+
   return (
-    <div id="payment-method" className="bg-white ">
+    <div id="payment-method" className="bg-white">
       {/* Header */}
       <div className="mb-6 md:mb-8">
         <h2 className="text-mobile/h4 md:text-desktop/h4 text-gray-900 mb-1">Payment Method</h2>
@@ -183,12 +214,15 @@ const PaymentMethodContent = ({ hotelDetail, selectedPaymentMethod, handlePaymen
           description="Complete your booking instantly with secure online payment"
           features={[
             { icon: <CheckCircle2 className="w-4 h-4" />, text: "Instant confirmation" },
-            { icon: <Shield className="w-4 h-4" />, text: "All major cards" }
+            { icon: <Shield className="w-4 h-4" />, text: "All major cards" },
+            { icon: <Sparkles className="w-4 h-4" />, text: "5% discount" }
           ]}
           badge={{ text: "Secure", color: "green" }}
+          discountBadge={{ text: "Save 5%", color: "red" }}
           isSelected={selectedPaymentMethod === "pay-now"}
           onClick={() => !isLoading && handlePaymentMethodChange("pay-now")}
           isLoading={isLoading}
+          isRecommended={true}
         />
 
         {/* Pay at Hotel Option */}
@@ -225,7 +259,6 @@ const PaymentMethodContent = ({ hotelDetail, selectedPaymentMethod, handlePaymen
               onClick={() => ContinueBtnClick()}
             >
               <span>Confirm Booking</span>
-              {/* <ArrowRight className="w-4 h-4 md:w-5 md:h-5" /> */}
             </button>
           )}
         </div>
@@ -250,24 +283,36 @@ const PaymentCard = ({
   description,
   features,
   badge,
+  discountBadge,
   isSelected,
   onClick,
-  isLoading
+  isLoading,
+  isRecommended = false
 }) => {
   const badgeColors = {
     green: "bg-green-100 text-green-800",
-    orange: "bg-orange-100 text-orange-800"
+    orange: "bg-orange-100 text-orange-800",
+    red: "bg-red-100 text-red-800"
   };
 
   return (
     <div
-      className={`relative overflow-hidden rounded-lg md:rounded-xl border-2 transition-all duration-300 cursor-pointer group ${
-        isSelected
-          ? "border-primary-green bg-teal-50/50 shadow-md md:shadow-lg"
+      className={`relative overflow-hidden rounded-lg md:rounded-xl border-2 transition-all duration-300 cursor-pointer group ${isSelected
+          ? "border-primary-green bg-gradient-to-br from-teal-50 to-emerald-50 shadow-lg"
           : "border-gray-200 bg-white hover:border-teal-300 hover:shadow-md"
-      } ${isLoading ? 'pointer-events-none opacity-50' : ''}`}
+        } ${isLoading ? 'pointer-events-none opacity-50' : ''}`}
       onClick={onClick}
     >
+      {/* Recommendation Badge */}
+      {isRecommended && (
+        <div className="absolute top-0 right-0 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
+          <div className="flex items-center gap-1">
+            <Tag className="w-3 h-3" />
+            RECOMMENDED
+          </div>
+        </div>
+      )}
+
       <label htmlFor={id} className="flex items-start gap-3 md:gap-4 p-3 md:p-5 cursor-pointer">
         {/* Radio Input */}
         <input
@@ -282,20 +327,18 @@ const PaymentCard = ({
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          {/* Title with Badge */}
+          {/* Title with Badges */}
           <div className="flex items-start justify-between gap-2 mb-1 md:mb-2">
             <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
               <div
-                className={`p-1.5 md:p-2 rounded-lg flex-shrink-0 ${
-                  isSelected
+                className={`p-1.5 md:p-2 rounded-lg flex-shrink-0 ${isSelected
                     ? "bg-primary-green"
                     : "bg-gray-100 group-hover:bg-teal-50"
-                }`}
+                  }`}
               >
                 <div
-                  className={`${
-                    isSelected ? "text-white" : "text-gray-600 group-hover:text-teal-600"
-                  }`}
+                  className={`${isSelected ? "text-white" : "text-gray-600 group-hover:text-teal-600"
+                    }`}
                 >
                   {icon}
                 </div>
@@ -304,15 +347,25 @@ const PaymentCard = ({
                 {title}
               </h3>
             </div>
-            {badge && (
-              <span
-                className={`inline-flex items-center gap-1 px-2 md:px-3 py-1 rounded-full text-xs font-medium flex-shrink-0 whitespace-nowrap ${
-                  badgeColors[badge.color]
-                }`}
-              >
-                {badge.text}
-              </span>
-            )}
+            <div className="flex flex-col gap-1">
+              {badge && (
+                <span
+                  className={`inline-flex items-center gap-1 px-2 md:px-3 py-1 rounded-full text-xs font-medium flex-shrink-0 whitespace-nowrap ${badgeColors[badge.color]
+                    }`}
+                >
+                  {badge.text}
+                </span>
+              )}
+              {discountBadge && (
+                <span
+                  className={`inline-flex items-center gap-1 px-2 md:px-3 py-1 rounded-full text-xs font-bold flex-shrink-0 whitespace-nowrap animate-pulse ${badgeColors[discountBadge.color]
+                    }`}
+                >
+                  <Tag className="w-3 h-3" />
+                  {discountBadge.text}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Description */}
@@ -325,9 +378,8 @@ const PaymentCard = ({
             {features.map((feature, idx) => (
               <div
                 key={idx}
-                className={`flex items-center gap-1 ${
-                  isSelected ? "text-teal-700" : "text-gray-600"
-                }`}
+                className={`flex items-center gap-1 ${isSelected ? "text-teal-700" : "text-gray-600"
+                  }`}
               >
                 <div className={isSelected ? "text-teal-600" : "text-gray-400"}>
                   {feature.icon}

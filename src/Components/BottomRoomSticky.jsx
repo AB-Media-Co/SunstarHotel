@@ -10,7 +10,7 @@ const BottomRoomSticky = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const isRooomHidden = location.pathname.startsWith("/room");
-  useEffect(() => {
+  useEffect(() => { 
     if (selectedRooms.length && details.length || isRooomHidden) {
       setIsVisible(true);
     } else {
@@ -43,9 +43,9 @@ const BottomRoomSticky = () => {
             <div className="flex items-center gap-4">
               {selectedRooms.length === 1 &&
                 <span className="text-primary-dark-green text-lg md:text-xl font-bold">
-                  {formatINR(totalPrice)}
+                  {formatINR(totalPrice)} <span className="text-gray-500 ml-2 text-sm font-normal">incl. Taxes</span>
                 </span>
-              }
+              } 
               <h1 className="font-bold text-primary-gray text-xs sm:text-sm md:text-xl">
                 {selectedRooms.length} {selectedRooms.length === 1 ? "Room" : "Rooms"}
               </h1>

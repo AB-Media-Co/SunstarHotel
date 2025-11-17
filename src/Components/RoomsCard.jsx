@@ -117,7 +117,7 @@ const RoomsCard = ({ room }) => {
             <p className="text-mobile/h5 md:text-desktop/h5 font-bold text-[#058FA2]">
               {formatINR(room.discountRate || 0)}
               <span className="text-mobile/body/2 md:text-desktop/caption text-gray-600 font-normal">
-                /night <span className="text-gray-500 ml-2">incl. Taxes</span>
+                /night 
               </span>
             </p>
           </div>

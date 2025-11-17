@@ -3,15 +3,31 @@ import OtherPageLayout from './OtherPageLayout';
 import { Helmet } from 'react-helmet';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
+import { useGetEventPageBySlug } from '../../ApiHooks/useEventPageHook';
+import Loader from '../../Components/Loader';
 
 const CorporateEventsPage = () => {
   const { mutate, isLoading } = useEnquiryForm();
-  const eventTypes = [
-    { title: 'Training & Development', image: '/images/OtherPageImages/Training.jpg' },
-    { title: 'Conference', image: '/images/OtherPageImages/Conference.jpg' },
-    { title: 'Gala Dinner', image: '/images/OtherPageImages/GalaDinner.jpg' },
-    { title: 'Awards Ceremony', image: '/images/OtherPageImages/AwardCeremony.webp' },
-  ];
+
+  // Fetch dynamic content from API
+  const { data: pageContent, isLoading: contentLoading } = useGetEventPageBySlug('corporateevent');
+
+  // Extract data from API or use defaults
+  const heroData = pageContent?.data?.heroSection || {};
+  const descriptionText = pageContent?.data?.descriptionText || '';
+  const celebrationTypesData = pageContent?.data?.celebrationTypes || {};
+
+  const eventTypes = celebrationTypesData?.types?.length > 0
+    ? celebrationTypesData.types.map(type => ({
+        title: type.title || '',
+        image: type.image || '/images/OtherPageImages/Training.jpg'
+      }))
+    : [
+        { title: 'Training & Development', image: '/images/OtherPageImages/Training.jpg' },
+        { title: 'Conference', image: '/images/OtherPageImages/Conference.jpg' },
+        { title: 'Gala Dinner', image: '/images/OtherPageImages/GalaDinner.jpg' },
+        { title: 'Awards Ceremony', image: '/images/OtherPageImages/AwardCeremony.webp' },
+      ];
 
   const whyChooseUsFeatures = [
     { title: 'On Time', icon: '/images/othericons/Ontime.svg' },
@@ -24,7 +40,7 @@ const CorporateEventsPage = () => {
     { title: 'Valet Parking', icon: '/images/othericons/valetParking.svg' },
   ];
 
-  const introText = (
+  const introText = descriptionText || (
     <>
       Introducing Sunstar Hotels, the ideal destination for corporate events. Our cutting-edge meeting rooms and event spaces accommodate groups of all sizes. With personalised menus featuring fresh, local ingredients, our catering team caters to diverse preferences and dietary restrictions.
       {/* <br /> */}
@@ -103,6 +119,11 @@ const CorporateEventsPage = () => {
     }, callbacks); 
   };
 
+  // Show loading state
+  if (contentLoading) {
+    return <Loader />;
+  }
+
   return (
     <>
       <Helmet>
@@ -116,15 +137,15 @@ const CorporateEventsPage = () => {
 
         // Hero section
         heroImage="/images/OtherPageImages/CoorporateEvents.webp"
-        heroTitle="Introducing Sunstar Hotels,"
-        heroHighlightedText="the ideal destination for corporate events"
+        heroTitle={heroData.heading || 'Introducing Sunstar Hotels,'}
+        heroHighlightedText={heroData.subheading || 'the ideal destination for corporate events'}
 
         // Intro section
         introText={introText}
 
         // Section titles
-        sectionMainTitle="MICE & Corporate Events"
-        sectionSubtitle="At Sunstar Hotels, we are committed to delivering exceptional service and support, ensuring the success of your corporate event."
+        sectionMainTitle={celebrationTypesData.heading || 'MICE & Corporate Events'}
+        sectionSubtitle={celebrationTypesData.description || 'At Sunstar Hotels, we are committed to delivering exceptional service and support, ensuring the success of your corporate event.'}
 
         // Event types grid
         eventTypes={eventTypes}
