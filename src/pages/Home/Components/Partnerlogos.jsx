@@ -2,8 +2,12 @@
 import { useGetPartners } from "../../../ApiHooks/usePartnersHooks";
 import { motion } from "framer-motion";
 
-const Partnerlogos = () => {
+const Partnerlogos = ({ category }) => {
   const { data: partners = [], isLoading, isError } = useGetPartners();
+
+  const filteredPartners = category
+    ? partners.filter(p => p.category === category || (!p.category && category === 'Corporate'))
+    : partners;
 
   return (
     <section className="py-12 bg-gray-50">
@@ -36,19 +40,19 @@ const Partnerlogos = () => {
         )}
 
         {/* Empty state */}
-        {!isLoading && !isError && partners.length === 0 && (
+        {!isLoading && !isError && filteredPartners.length === 0 && (
           <div className="text-center text-gray-500">
             No partners added yet.
           </div>
         )}
 
         {/* Grid */}
-        {!isLoading && !isError && partners.length > 0 && (
+        {!isLoading && !isError && filteredPartners.length > 0 && (
           <ul
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
             aria-label="Partner logos"
           >
-            {partners.map((p) => (
+            {filteredPartners.map((p) => (
               <li
                 key={p._id}
                 className="group bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow"

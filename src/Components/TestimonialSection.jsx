@@ -11,7 +11,7 @@ const TestimonialSection = ({ backgroundImage, page = '', head = "Testimonials" 
     return (
       <motion.div
         id="reviews"
-        className="bg-primary-white rounded-xl border p-6 md:p-[22px] shadow-lg md:text-left flex flex-col  hover:shadow-xl transition-shadow duration-300 h-[260px]"
+        className="bg-primary-white rounded-xl border p-6 md:p-[22px] overflow-hidden shadow-lg md:text-left flex flex-col justify-between hover:shadow-xl transition-shadow duration-300 h-[260px] "
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -22,9 +22,9 @@ const TestimonialSection = ({ backgroundImage, page = '', head = "Testimonials" 
           <h3 className="text-mobile/h5 md:text-desktop/h5 font-bold text-gray-800 mb-4">
             {item?.heading || item?.name}
           </h3>
-          <p className="text-mobile/body/2 md:text-desktop/body/1 text-gray-600 flex-grow">
-            {item.description.split(' ').length > 20
-              ? item.description.split(' ').slice(0, 20).join(' ') + '...'
+          <p className="text-mobile/body/2 md:text-desktop/body/1  text-gray-600 flex-grow">
+            {item.description.split(' ').length > 26
+              ? item.description.split(' ').slice(0, 26).join(' ') + '...'
               : item.description
             }
           </p>
@@ -69,6 +69,7 @@ const TestimonialSection = ({ backgroundImage, page = '', head = "Testimonials" 
           className="relative z-10 testiM mySwiper"
           slidesPerViewDesktop={3}
           arrow="pt-6"
+          
         />
       </div>
     </div>

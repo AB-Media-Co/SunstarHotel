@@ -130,6 +130,7 @@ const Rooms = () => {
     const formattedDateForApi = format(selectedDate, 'yyyy-MM-dd');
     const { data } = useDayUseRoomsByDate(formattedDateForApi);
     const rooms = data?.data;
+    console.log(rooms)
 
     // --- Render Component ---
     return (

@@ -35,7 +35,7 @@ const TourAndTravelPage = () => {
 
         <ImageGallery path='travelAgent' />
       </div>
-      <TestimonialSection page="tours and travel" head="Meet Our Stars" />
+      <TestimonialSection page="tours and travel" head="Review Section" />
     </div>
   )
 }

@@ -8,14 +8,13 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 
 export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
   const [inputValue, setInputValue] = useState('');
-  const [appliedOffers, setAppliedOffers] = useState([]);
   const [, setOfferResult] = useState(null);
   const [isApplying, setIsApplying] = useState(false);
   const [hoveredOffer, setHoveredOffer] = useState(null);
   const primaryColor = '#058FA2';
   const { mutate: fetchOfferCodes, data } = useOfferCodesForHotel();
   const { mutateAsync: getDiscountAsync } = useDiscountedRate();
-  const { finalPrice, setFinalPrice, baseFinalPrice, paymentMethod } = usePricing();
+  const { finalPrice, setFinalPrice, baseFinalPrice, paymentMethod, appliedOffers, setAppliedOffers, setOfferDiscount, payNowDiscount } = usePricing();
 
   const email = localStorage.getItem("user_email");
   const { data: userData, isLoading: userLoading } = useGetUserByEmail(email);
@@ -66,14 +65,15 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
   }
 
   const handleApplyCode = async () => {
+    console.log("hi")
     if (!inputValue.trim()) return;
-    
+
     // Check if code already applied
     if (appliedOffers.some(offer => offer.offerCode.toUpperCase() === inputValue.trim().toUpperCase())) {
       toast.error('This promo code is already applied');
       return;
     }
-    
+
     setIsApplying(true);
     try {
       const result = await getDiscountAsync({
@@ -90,8 +90,14 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
           discountPercent: result.discountPercent || 0,
           discountedRate: result.discountedRate
         };
-        
+
         setAppliedOffers(prev => [...prev, newOffer]);
+
+        // Calculate and set the offer discount amount
+        const offerDiscountAmount = finalPrice - result.discountedRate;
+        console.log(offerDiscountAmount);
+        setOfferDiscount(offerDiscountAmount);
+
         setFinalPrice(result.discountedRate);
         setInputValue('');
         toast.success("Offer applied successfully");
@@ -108,25 +114,31 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
   const handleRemoveOffer = (offerCodeToRemove) => {
     const updatedOffers = appliedOffers.filter(offer => offer.offerCode !== offerCodeToRemove);
     setAppliedOffers(updatedOffers);
-    
+
     if (updatedOffers.length === 0) {
-      setFinalPrice(baseFinalPrice);
+      setFinalPrice(baseFinalPrice - payNowDiscount);
+      setOfferDiscount(0); // Reset offer discount
     } else {
       // Recalculate price with remaining offers
       const lastOffer = updatedOffers[updatedOffers.length - 1];
       setFinalPrice(lastOffer.discountedRate);
+
+      // Calculate and set the offer discount amount
+      const offerDiscountAmount = baseFinalPrice - payNowDiscount - lastOffer.discountedRate;
+      setOfferDiscount(offerDiscountAmount);
     }
-    
+
     toast.success('Promo code removed');
   };
 
   const handlePredefinedOfferClick = async (offer) => {
+    console.log("hi")
     // Check if already applied
     if (appliedOffers.some(o => o.offerCode === offer.offerCode)) {
       toast.error('This promo code is already applied');
       return;
     }
-    
+
     setIsApplying(true);
     try {
       const result = await getDiscountAsync({
@@ -142,8 +154,14 @@ export const OfferCode = ({ hotelDetail, checkIn, verified }) => {
           discountPercent: offer.discountPercent,
           discountedRate: result.discountedRate
         };
-        
+
         setAppliedOffers(prev => [...prev, newAppliedOffer]);
+
+        // Calculate and set the offer discount amount
+        const offerDiscountAmount = finalPrice - result.discountedRate;
+        console.log(offerDiscountAmount);
+        setOfferDiscount(offerDiscountAmount);
+
         setFinalPrice(result.discountedRate);
         toast.success('Offer applied successfully!');
       } else {

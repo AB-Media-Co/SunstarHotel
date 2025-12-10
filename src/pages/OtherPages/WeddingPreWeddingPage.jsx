@@ -56,7 +56,7 @@ const WeddingPreWeddingPage = () => {
   const heroTitle = (
     <>
       <h1 className='text-mobile/h2 md:text-desktop/h3  font-bold text-primary-white max-w-full md:max-w-[680px]'>
-        {heroData.heading || 'Celebrate love  at'} <span className='text-[#FDD304]'>{heroData.subheading || 'Sunstar Hotels'}</span> {heroData.description || 'weddings & pre-weddings made magical.'}
+        {heroData.heading || 'Celebrate love  at'} <span className='text-[#FDD304]'>{heroData.subheading || 'Sunstar Hotels'}</span>
       </h1>
     </>
   )
@@ -144,6 +144,9 @@ const WeddingPreWeddingPage = () => {
         // Hero section
         heroImage="/images/OtherPageImages/weddinghead.webp"
         anotherText={heroTitle}
+        bannerDescription={heroData.description || 'weddings & pre-weddings made magical.'}
+        bannerButtonText="Book Your Event Now"
+        formId="wedding-event-form"
         // heroHighlightedText="the ideal destination for corporate events"
         // Intro section
         introText={introText}
@@ -161,14 +164,16 @@ const WeddingPreWeddingPage = () => {
       />
 
 
-      <CommonUseEnquiryForm
-        title="Wedding & Pre-Wedding Enquiry"
-        subtitle="Let us make your special day truly unforgettable"
-        fields={eventFormFields}
-        onSubmit={handleSubmit}
-        buttonLabel="Submit Enquiry"
-        containerClassName=""
-      />
+      <section id="wedding-event-form">
+        <CommonUseEnquiryForm
+          title="Wedding & Pre-Wedding Enquiry"
+          subtitle="Let us make your special day truly unforgettable"
+          fields={eventFormFields}
+          onSubmit={handleSubmit}
+          buttonLabel="Submit Enquiry"
+          containerClassName=""
+        />
+      </section>
     </>
   );
 };

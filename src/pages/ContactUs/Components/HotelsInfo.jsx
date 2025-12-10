@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { PhoneIcon, MapPin, Mail, ExternalLink } from "lucide-react";
+import { PhoneIcon, MessageCircle, MapPin, Mail, ExternalLink } from "lucide-react";
 
 
 
@@ -18,7 +18,7 @@ const HotelsInfo = ({ hotels }) => {
   const buildPlaceUrl = (hotel) => {
     const name = hotel?.name;
     const addr = hotel?.location?.hotelAddress;
-    const q = joinParts(name,  "India"); // India fallback
+    const q = joinParts(name, "India"); // India fallback
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
   };
 
@@ -26,7 +26,7 @@ const HotelsInfo = ({ hotels }) => {
   const buildDirectionsUrl = (hotel) => {
     const name = hotel?.name;
     // const addr = hotel?.location?.hotelAddress;
-    const dest = joinParts(name,  "India");
+    const dest = joinParts(name, "India");
     return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
       dest
     )}&travelmode=driving&dir_action=navigate`;
@@ -77,9 +77,12 @@ const HotelsInfo = ({ hotels }) => {
                   <div className="flex items-center gap-4 text-gray-700">
                     <div className="w-10 h-10 rounded-full bg-primary-green/10 flex items-center justify-center ">
                       <PhoneIcon size={18} className="text-primary-green" />
+                      {/* <img src="/images/wpG.svg" alt="" className="h-6" /> */}
                     </div>
                     <a
-                      href={`tel:+91${hotel.phoneNumber}`}
+                      href={`tel:${hotel.phoneNumber}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="hover:text-primary-green transition-colors"
                     >
                       +91 {hotel.phoneNumber}
@@ -121,10 +124,14 @@ const HotelsInfo = ({ hotels }) => {
                 {/* Action Buttons */}
                 <div className="pt-3 flex space-x-3 border-t border-gray-100">
                   <a
-                    href={`tel:+91${hotel.phoneNumber}`}
-                    className="flex-1 py-2 text-center rounded-lg bg-primary-green text-white font-medium hover:bg-primary-green/90 transition-colors"
+                    href={`https://wa.me/91${hotel.phoneNumber}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-2 text-center rounded-lg bg-primary-green text-white font-medium hover:bg-primary-green/90 transition-colors flex items-center justify-center"
                   >
-                    Call Now
+                    {/* <MessageCircle size={18} className="mr-2" /> */}
+
+                    <img src="/images/wpW.svg" alt="" className="h-6  mr-2" />  Chat With Us
                   </a>
                   <a
                     href={buildDirectionsUrl(hotel)}

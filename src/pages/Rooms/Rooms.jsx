@@ -24,7 +24,7 @@ const Rooms = () => {
   const [error, setError] = useState(null);
   const { setEditAddPricing } = usePricing();
 
-  
+
   const [hotelInfo, setHotelInfo] = useState(null);
   console.log(hotelInfo)
   useEffect(() => {
@@ -34,7 +34,7 @@ const Rooms = () => {
       setHotelInfo(JSON.parse(storedData));
     }
   }, []);
-  
+
   // const { checkIn, checkOut } = hotelInfo;
   const [otherRoomData, setOtherRoomData] = useState(null);
   useEffect(() => {
@@ -75,7 +75,7 @@ const Rooms = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center ">
         <Loader fullScreen={false} size="md" />
       </div>
     );
@@ -109,8 +109,8 @@ const Rooms = () => {
 
         <hr className="mt-10 content h-[2px] bg-gray-400" />
         <CheckInOutInfo checkIn={hotelInfo?.checkIn} checkOut={hotelInfo?.checkOut} />
-        <CommonFAQSection 
-          faqs={otherRoomData?.faqs} 
+        <CommonFAQSection
+          faqs={otherRoomData?.faqs}
           subtitle="You need to come at least once in your life"
           bgColor="bg-white"
         />

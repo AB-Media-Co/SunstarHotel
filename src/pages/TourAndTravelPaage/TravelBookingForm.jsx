@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Phone, Mail } from 'lucide-react';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
 
 export default function TravelBookingForm() {
     const { mutate, isLoading } = useEnquiryForm();
+    const { state } = useLocation();
     
     const [formData, setFormData] = useState({
         tourName: '',
@@ -19,6 +21,20 @@ export default function TravelBookingForm() {
         travelDate: '',
         enquiry: ''
     });
+
+    // Pre-fill form with package data if available
+    useEffect(() => {
+        if (state?.packageData) {
+            const packageData = state.packageData;
+            setFormData(prev => ({
+                ...prev,
+                tourName: packageData.title || '',
+                duration: `${packageData.duration?.nights || ''}N ${packageData.duration?.days || ''}D`,
+                country: 'India', // Default for domestic tours
+                // Other fields remain empty for user to fill
+            }));
+        }
+    }, [state]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;

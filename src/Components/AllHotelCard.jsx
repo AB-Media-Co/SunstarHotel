@@ -25,33 +25,6 @@ const AllHotelCard = ({ isOpen, onClose }) => {
     exit: { opacity: 0, transition: { duration: 0.2 } }
   }), []);
 
-  // const containerVariants = useMemo(() => ({
-  //   hidden: { opacity: 0 },
-  //   visible: {
-  //     opacity: 1,
-  //     transition: {
-  //       duration: 0.9,
-  //       when: 'beforeChildren',
-  //       staggerChildren: 0.2, // Slight delay to stagger child elements
-  //       ease: [0.22, 1, 0.36, 1],
-  //     },
-  //   },
-  // }), []);
-
-  // const headerVariants = useMemo(() => ({
-  //   hidden: { opacity: 0, y: -20 },
-  //   visible: {
-  //     opacity: 1,
-  //     y: 0,
-  //     transition: {
-  //       type: 'spring',
-  //       damping: 25,
-  //       stiffness: 100, // More stiffness for a snappier effect
-  //       duration: 1.1,
-  //     },
-  //   },
-  // }), []);
-
   const contentVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 30 },
     visible: {

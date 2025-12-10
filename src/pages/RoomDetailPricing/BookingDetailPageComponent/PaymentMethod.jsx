@@ -1,32 +1,38 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePricing } from "../../../Context/PricingContext";
 import { useGetUserByEmail } from "../../../ApiHooks/useUser";
 import { usePushBooking } from "../../../ApiHooks/pushBookingHook";
-import Loader from "../../../Components/Loader";
+import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 import {
   CreditCard,
   Building2,
   Shield,
   Clock,
   CheckCircle2,
-  ArrowRight,
   Tag,
-  Sparkles
+  Sparkles,
+  PhoneCall
 } from "lucide-react";
 import RazorpayPayment from "./RazorpayPayment";
 import { useNavigate } from "react-router-dom";
 import { formatINR } from "../../../utils/formatCurrency";
 
+const DEFAULT_PAYMENT_METHOD = "pay-now";
+
 export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
   const email = localStorage.getItem("user_email");
   const { data: userData } = useGetUserByEmail(email);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
-  const { selectedRooms, setIsConfirmationModalOpen, someOneElse, guestData, setPaymentMethod, selectedOtherCharges } = usePricing();
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(DEFAULT_PAYMENT_METHOD);
+  const { selectedRooms, someOneElse, guestData, setPaymentMethod, selectedOtherCharges, finalPrice, baseFinalPrice, totalOtherCharges, payNowDiscount, offerDiscount, totalAddOns } = usePricing();
   const pushBooking = usePushBooking();
   const navigate = useNavigate();
 
   console.log(selectedOtherCharges)
+
+  useEffect(() => {
+    setPaymentMethod(DEFAULT_PAYMENT_METHOD);
+  }, [setPaymentMethod]);
 
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
@@ -137,6 +143,14 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
               phone: userData?.data?.phone,
             },
             rooms: selectedRooms,
+            pricing: {
+              finalPrice,
+              baseFinalPrice,
+              totalOtherCharges,
+              payNowDiscount,
+              offerDiscount,
+              totalAddOns
+            }
           },
           replace: true,
         });
@@ -194,7 +208,12 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
 };
 
 const PaymentMethodContent = ({ hotelDetail, selectedPaymentMethod, handlePaymentMethodChange, ContinueBtnClick, isLoading }) => {
-  const { finalPrice } = usePricing();
+  const { finalPrice, baseFinalPrice } = usePricing();
+  const { ContactUsDetail } = useUpdatePagesHook();
+  const phoneNumber = ContactUsDetail?.phoneNumber || "";
+  const payNowPrice = (baseFinalPrice || 0) * 0.95;
+  const savingAmount = Math.max((baseFinalPrice || 0) - payNowPrice, 0);
+  const savingText = `Saving ${formatINR(savingAmount)} if you book now`;
 
   return (
     <div id="payment-method" className="bg-white">
@@ -218,7 +237,7 @@ const PaymentMethodContent = ({ hotelDetail, selectedPaymentMethod, handlePaymen
             { icon: <Sparkles className="w-4 h-4" />, text: "5% discount" }
           ]}
           badge={{ text: "Secure", color: "green" }}
-          discountBadge={{ text: "Save 5%", color: "red" }}
+          discountBadge={{ text: savingText, color: "red" }}
           isSelected={selectedPaymentMethod === "pay-now"}
           onClick={() => !isLoading && handlePaymentMethodChange("pay-now")}
           isLoading={isLoading}
@@ -246,22 +265,37 @@ const PaymentMethodContent = ({ hotelDetail, selectedPaymentMethod, handlePaymen
 
       {/* Continue Button */}
       {selectedPaymentMethod && (
-        <div className="flex justify-end mb-6 md:mb-8">
-          {selectedPaymentMethod === "pay-now" ? (
-            <RazorpayPayment
-              hotelDetail={hotelDetail}
-              amount={finalPrice}
-              onSuccess={(paymenttypeunkid) => ContinueBtnClick(paymenttypeunkid)}
+        <>
+          <div className="flex justify-end mb-4 md:mb-6">
+            {selectedPaymentMethod === "pay-now" ? (
+              <RazorpayPayment
+                hotelDetail={hotelDetail}
+                amount={Math.round(finalPrice)}
+                onSuccess={(paymenttypeunkid) => ContinueBtnClick(paymenttypeunkid)}
+              />
+            ) : (
+              <button
+                className="w-full md:w-auto px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-primary-green to-teal-600 text-white font-semibold rounded-lg md:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 flex items-center justify-center gap-2"
+                onClick={() => ContinueBtnClick()}
+              >
+                <span>Confirm Booking</span>
+              </button>
+            )}
+          </div>
+
+          {/* Assurance Points */}
+          <div className="mb-6 md:mb-8 grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 bg-gray-50 rounded-2xl p-4 border border-gray-200">
+            <AssurancePoint icon={<Shield className="w-4 h-4 text-green-600" />} text="100% Secure SSL" />
+            <AssurancePoint icon={<CheckCircle2 className="w-4 h-4 text-teal-600" />} text="Verified payment processing by Razorpay" />
+            {/* <AssurancePoint icon={<RefreshCcw className="w-4 h-4 text-orange-500" />} text="Cancel anytime (if applicable)" /> */}
+            <AssurancePoint
+              icon={<PhoneCall className="w-4 h-4 text-primary-green" />}
+              text="24/7 helpline number"
+              phoneNumber={phoneNumber}
+              isClickable={true}
             />
-          ) : (
-            <button
-              className="w-full md:w-auto px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-primary-green to-teal-600 text-white font-semibold rounded-lg md:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 flex items-center justify-center gap-2"
-              onClick={() => ContinueBtnClick()}
-            >
-              <span>Confirm Booking</span>
-            </button>
-          )}
-        </div>
+          </div>
+        </>
       )}
 
       {/* Security Notice */}
@@ -276,6 +310,27 @@ const PaymentMethodContent = ({ hotelDetail, selectedPaymentMethod, handlePaymen
 };
 
 // Reusable Payment Card Component
+const AssurancePoint = ({ icon, text, phoneNumber, isClickable = false }) => {
+  if (isClickable && phoneNumber) {
+    return (
+      <a
+        href={`tel:${phoneNumber}`}
+        className="flex items-center gap-2 text-xs md:text-sm text-gray-700 hover:text-primary-green transition-colors cursor-pointer"
+      >
+        {icon}
+        <span>{text}</span>
+      </a>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2 text-xs md:text-sm text-gray-700">
+      {icon}
+      <span>{text}</span>
+    </div>
+  );
+};
+
 const PaymentCard = ({
   id,
   icon,
@@ -298,8 +353,8 @@ const PaymentCard = ({
   return (
     <div
       className={`relative overflow-hidden rounded-lg md:rounded-xl border-2 transition-all duration-300 cursor-pointer group ${isSelected
-          ? "border-primary-green bg-gradient-to-br from-teal-50 to-emerald-50 shadow-lg"
-          : "border-gray-200 bg-white hover:border-teal-300 hover:shadow-md"
+        ? "border-primary-green bg-gradient-to-br from-teal-50 to-emerald-50 shadow-lg"
+        : "border-gray-200 bg-white hover:border-teal-300 hover:shadow-md"
         } ${isLoading ? 'pointer-events-none opacity-50' : ''}`}
       onClick={onClick}
     >
@@ -332,8 +387,8 @@ const PaymentCard = ({
             <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
               <div
                 className={`p-1.5 md:p-2 rounded-lg flex-shrink-0 ${isSelected
-                    ? "bg-primary-green"
-                    : "bg-gray-100 group-hover:bg-teal-50"
+                  ? "bg-primary-green"
+                  : "bg-gray-100 group-hover:bg-teal-50"
                   }`}
               >
                 <div
@@ -358,7 +413,7 @@ const PaymentCard = ({
               )}
               {discountBadge && (
                 <span
-                  className={`inline-flex items-center gap-1 px-2 md:px-3 py-1 rounded-full text-xs font-bold flex-shrink-0 whitespace-nowrap animate-pulse ${badgeColors[discountBadge.color]
+                  className={`inline-flex items-center gap-1 px-2 md:px-3 py-1 rounded-full text-xs font-bold flex-shrink-0 whitespace-nowrap  ${badgeColors[discountBadge.color]
                     }`}
                 >
                   <Tag className="w-3 h-3" />

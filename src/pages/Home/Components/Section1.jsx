@@ -1,26 +1,46 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
-import React, { Suspense, useState, useMemo, useCallback } from "react";
+import React, { Suspense, useState, useCallback, useEffect, useRef } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import AllHotelCard from "../../../Components/AllHotelCard";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
-import { useGetHotels } from "../../../ApiHooks/useHotelHook2";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { FlashOnRounded } from "@mui/icons-material";
+
+// Lazy load the hotel card modal
+const AllHotelCard = React.lazy(() => import("../../../Components/AllHotelCard"));
 
 const Section1 = ({ section1Data }) => {
   const { heroSectionUpdate, loading, Loader } = useUpdatePagesHook();
   const { words = [], buttonLabel = "Search for" } = section1Data || {};
 
-  // Prefetch hotels data
-  const { data: hotelsData } = useGetHotels();
-
   const [hotelOpen, setHotelOpen] = useState(false);
+  const [showFloatingBtn, setShowFloatingBtn] = useState(false);
+  const sectionRef = useRef(null);
+
   const handleHotelOpen = useCallback(() => setHotelOpen(true), []);
   const handleHotelClose = useCallback(() => setHotelOpen(false), []);
 
-  const heading = useMemo(() => heroSectionUpdate?.heading || "", [heroSectionUpdate?.heading]);
-  const description = useMemo(() => heroSectionUpdate?.description || "", [heroSectionUpdate?.description]);
+  const heading = heroSectionUpdate?.heading || "";
+  const description = heroSectionUpdate?.description || "";
+
+  // Scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      if (sectionRef.current) {
+        const sectionBottom = sectionRef.current.offsetTop + sectionRef.current.offsetHeight;
+        const scrollPosition = window.scrollY + window.innerHeight;
+        
+        // Show button when user scrolls past this section
+        setShowFloatingBtn(window.scrollY > sectionRef.current.offsetHeight - 100);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial position
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
@@ -32,18 +52,17 @@ const Section1 = ({ section1Data }) => {
     <div className="overflow-hidden md:overflow-visible">
       <Suspense fallback={<div className="w-full h-screen bg-gray-200 animate-pulse" />}>
         {/* HERO SECTION */}
-        <section className="relative w-full h-screen">
-          {/* ✅ Optimized hero image with modern format and preload */}
+        <section ref={sectionRef} className="relative w-full h-screen">
           <picture>
             {/* WebP for modern browsers */}
-            <source 
-              srcSet="/images/HomepageImages/Section1Main.avif" 
+            <source
+              srcSet="/images/HomepageImages/Section1Main.avif"
               type="image/avif"
             />
             {/* Fallback to AVIF */}
             <img
               src="/images/HomepageImages/Section1Main.avif"
-              alt="Luxury hotel view"
+              alt="hotels near karol bagh"
               width={1920}
               height={1080}
               loading="eager"
@@ -117,25 +136,55 @@ const Section1 = ({ section1Data }) => {
               </span>
             </button>
 
-            <div className="flex items-center mt-4 md:mt-0">
-
-              <FlashOnRounded className="rotate-[10deg] " style={{ height: "18px" }} />
-              <span className="text-mobile/body/2 md:text-desktop/body/1 font-bold">
-
-                Direct for Lowest Prices!
+            <div className="flex items-center mt-4 md:mt-0 ">
+              <FlashOnRounded className="rotate-[10deg] text-primary-green" style={{ height: "18px" }} />
+              <span className="text-mobile/body/2 md:text-desktop/body/1 md:font-bold capitalize">
+                Book Direct for Lowest Prices!
               </span>
             </div>
+
+            <div className="flex items-center mt-4 md:mt-0 border rounded-full  border-primary-green px-4 py-1 md:max-w-[39%]">
+              {/* <FlashOnRounded className="rotate-[10deg] " style={{ height: "18px" }} /> */}
+              <span className="text-mobile/body/2 md:text-desktop/body/1 md:font-bold capitalize">
+                Get up to <span className="text-primary-green">15% off</span>  extra on your stays!
+              </span>
+            </div>
+
           </motion.div>
         </section>
       </Suspense>
 
+      {/* FLOATING SEARCH BUTTON - Mobile Only (Shows after scrolling past section) */}
+      <AnimatePresence>
+        {showFloatingBtn && (
+          <motion.button
+            onClick={handleHotelOpen}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden fixed right-5 bottom-4 z-40 
+                       bg-[#FDC114] text-white rounded-full 
+                       w-14 h-14 flex items-center justify-center
+                       shadow-lg hover:shadow-xl transition-shadow
+                       active:bg-[#e5ad0f]"
+            aria-label="Search Hotels"
+          >
+            <SearchIcon className="text-white" sx={{ fontSize: 28 }} />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       {/* MODAL */}
       {hotelOpen && (
-        <AllHotelCard
-          isOpen={hotelOpen}
-          onClose={handleHotelClose}
-          className="fixed top-0 left-0 w-screen h-screen z-50"
-        />
+        <Suspense fallback={null}>
+          <AllHotelCard
+            isOpen={hotelOpen}
+            onClose={handleHotelClose}
+            className="fixed top-0 left-0 w-screen h-screen z-50"
+          />
+        </Suspense>
       )}
     </div>
   );

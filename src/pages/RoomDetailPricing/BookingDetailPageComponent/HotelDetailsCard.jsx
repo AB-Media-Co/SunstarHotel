@@ -4,6 +4,14 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { useNavigate } from "react-router-dom";
 import { formatINR } from "../../../utils/formatCurrency";
 import { generateHotelUrl } from "../../../utils/urlHelper";
+import { AlertTriangle } from "lucide-react";
+
+const LimitedPriceBadge = () => (
+  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-cyan-200 bg-cyan-50 text-primary-green text-[11px] md:text-xs font-semibold uppercase tracking-wide">
+    <AlertTriangle className="w-3.5 h-3.5" />
+    Limited rooms at this price
+  </span>
+);
 
 export const HotelDetailsCard = () => {
   const { details, setDetails, selectedRooms, setSelectedRooms, setEditAddPricing } = usePricing();
@@ -150,8 +158,16 @@ export const HotelDetailsCard = () => {
                 </p>
 
                 <div className=" text-gray-800">
-                  <div className="text-primary-green font-bold text-xl ">{formatINR(roomSelection.price)}</div>
-                  <div className="text-xs font-semibold">Incl. taxes</div>
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <div className="text-primary-green font-bold text-xl ">{formatINR(roomSelection.price)}</div>
+                      <LimitedPriceBadge />
+                    </div>
+                    <p className="text-[11px] font-medium text-red-500">
+                      High demand · lock this rate now
+                    </p>
+                  </div>
+                  <div className="text-xs font-semibold text-gray-500">Incl. taxes</div>
                 </div>
               </div>
 
@@ -230,8 +246,16 @@ export const HotelDetailsCard = () => {
 
                 <div className="flex justify-between mt-4 gap-2 w-full">
                   <div className=" text-gray-800">
-                    <div className="text-primary-green font-bold text-md md:text-xl ">{formatINR(roomSelection.price)}</div>
-                    <div className="text-xs font-semibold">Incl. taxes</div>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <div className="text-primary-green font-bold text-md md:text-xl ">{formatINR(roomSelection.price)}</div>
+                        <LimitedPriceBadge />
+                      </div>
+                      <p className="text-[10px] font-medium text-red-500">
+                        Hurry! Limited rooms at this rate
+                      </p>
+                    </div>
+                    <div className="text-xs font-semibold text-gray-500">Incl. taxes</div>
                   </div>
                   {/* Guest Qty and Options */}
                   <div className="md:hidden flex flex-col justify-end  gap-4 relative">

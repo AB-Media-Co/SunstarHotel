@@ -1,6 +1,14 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import { lazy, Suspense } from 'react';
+
+// Lazy load non-critical components
+const Navbar = lazy(() => import("./Navbar"));
+const Footer = lazy(() => import("./Footer"));
+
+// Minimal navbar skeleton
+const NavbarSkeleton = () => (
+  <div className="h-20 bg-white border-b animate-pulse" />
+);
 
 
 const Layout = () => {
@@ -11,9 +19,15 @@ const Layout = () => {
 
   return (
     <div className='home '>
-      {!hideNavbar && <Navbar />}
+      {!hideNavbar && (
+        <Suspense fallback={<NavbarSkeleton />}>
+          <Navbar />
+        </Suspense>
+      )}
       <Outlet />
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
       {/* <HotelDropdown/> */}
     </div>
   );

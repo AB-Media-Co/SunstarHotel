@@ -11,12 +11,17 @@ const RazorpayPayment = ({ hotelDetail, amount, onSuccess }) => {
     14496: "rzp_live_KZSDFi3qOgrIgC",
     14492: "rzp_live_IQdcqeX4foVUM3",
     14494: "rzp_live_SxbRIhkDqyGEOM",
-    14493: "rzp_live_uUlevuP8MoleGg", 
+    14493: "rzp_live_uUlevuP8MoleGg",
   };
   const razorpayKeyId = razorpayKeys[hotelDetail?.hotelCode];
 
 
   const handlePayment = () => {
+    if (!razorpayKeyId) {
+      toast.error("Online payment is not enabled for this hotel.");
+      return;
+    }
+
     const orderPayload = {
       amount: amount,
       currency: "INR",
@@ -69,7 +74,7 @@ const RazorpayPayment = ({ hotelDetail, amount, onSuccess }) => {
 
   return (
     <button
-              className="w-full md:w-auto px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-primary-green to-teal-600 text-white font-semibold rounded-lg md:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 flex items-center justify-center gap-2"
+      className="w-full md:w-auto px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-primary-green to-teal-600 text-white font-semibold rounded-lg md:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 flex items-center justify-center gap-2"
       onClick={handlePayment}
     >
       Confirm Booking

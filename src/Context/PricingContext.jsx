@@ -37,16 +37,25 @@ export const PricingProvider = ({ children }) => {
 
   const [selectedOtherCharges, setSelectedOtherCharges] = useState([]);
   const [totalOtherCharges, setTotalOtherCharges] = useState(0);
+  const [totalAddOns, setTotalAddOns] = useState(0);
+  const [gstAmount, setGstAmount] = useState(0);
 
   const [hotelData, sethotelData] = useState(() => {
     const storedHotelData = localStorage.getItem("hotelData");
     return storedHotelData ? JSON.parse(storedHotelData) : null;
   });
 
-  const [nights, setNights] = useState(1);
+  const [nights, setNights] = useState(() => {
+    const saved = localStorage.getItem("days");
+    return saved ? parseInt(saved, 10) : 1;
+  });
   const [baseFinalPrice, setBaseFinalPrice] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [appliedOffers, setAppliedOffers] = useState([]); // Track applied offer codes
+  const [payNowDiscount, setPayNowDiscount] = useState(0); // Track Pay Now discount amount
+  const [offerDiscount, setOfferDiscount] = useState(0); // Track offer code discount amount
+  console.log(offerDiscount);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [someOneElse, setSomeoneElse] = useState(false);
   const [guestData, setGuestData] = useState([])
@@ -78,8 +87,8 @@ export const PricingProvider = ({ children }) => {
     const daysFromStorage = localStorage.getItem("days");
     const days = daysFromStorage ? parseInt(daysFromStorage, 10) : 1;
 
-    // Base sum of other charges
-    const sumOtherCharges = selectedOtherCharges.reduce((acc, charge) => {
+    // Calculate add-ons total separately
+    const sumAddOns = selectedOtherCharges.reduce((acc, charge) => {
       const amount = charge.rate?.amount || 0;
       const period = charge.rate?.period?.toLowerCase();
 
@@ -88,6 +97,7 @@ export const PricingProvider = ({ children }) => {
       }
       return acc + amount;
     }, 0);
+    setTotalAddOns(sumAddOns);
 
     // ✅ Room total (base tariff)
     const roomTotal = selectedRooms.reduce(
@@ -103,11 +113,12 @@ export const PricingProvider = ({ children }) => {
       gstRate = 0.18;
     }
 
-    // ✅ Apply GST on roomTotal only (not on other charges, unless needed)
-    const gstAmount = roomTotal * gstRate;
+    // ✅ Apply GST on roomTotal only (not on add-ons)
+    const calculatedGstAmount = roomTotal * gstRate;
+    setGstAmount(calculatedGstAmount);
 
-    // ✅ Final total other charges = existing charges + GST
-    setTotalOtherCharges(sumOtherCharges + gstAmount);
+    // ✅ Total other charges = only GST (add-ons are shown separately)
+    setTotalOtherCharges(calculatedGstAmount);
   }, [selectedOtherCharges, selectedRooms, nights]);
 
 
@@ -116,15 +127,18 @@ export const PricingProvider = ({ children }) => {
       (acc, room) => acc + room.price * nights,
       0
     );
-    const computedBaseFinal = roomTotal + totalOtherCharges;
+    // Base final price = room total + add-ons + GST
+    const computedBaseFinal = roomTotal + totalAddOns + totalOtherCharges;
     setBaseFinalPrice(computedBaseFinal);
 
-    if (paymentMethod === "pay-now") {
-      setFinalPrice(computedBaseFinal * 0.95);
-    } else {
-      setFinalPrice(computedBaseFinal);
-    }
-  }, [selectedRooms, totalOtherCharges, nights, paymentMethod]);
+    // Calculate Pay Now discount (5%)
+    const payNowDiscountAmount = paymentMethod === "pay-now" ? computedBaseFinal * 0.05 : 0;
+    setPayNowDiscount(payNowDiscountAmount);
+
+
+    // Always calculate final price based on base price, pay now discount, and offer discount
+    setFinalPrice(computedBaseFinal - payNowDiscountAmount - offerDiscount);
+  }, [selectedRooms, totalAddOns, totalOtherCharges, nights, paymentMethod, appliedOffers.length, offerDiscount]);
 
   useEffect(() => {
     localStorage.setItem("roomHotelDetails", JSON.stringify(details));
@@ -143,7 +157,7 @@ export const PricingProvider = ({ children }) => {
     if (details.length > 0 && routesToCheck.includes(location.pathname)) {
       openConfirmationModal();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, details.length]);
 
   const handleConfirmCancel = () => {
@@ -237,6 +251,8 @@ export const PricingProvider = ({ children }) => {
         selectedOtherCharges,
         setSelectedOtherCharges,
         totalOtherCharges,
+        totalAddOns,
+        gstAmount,
         finalPrice,
         setFinalPrice,
         baseFinalPrice,
@@ -244,6 +260,12 @@ export const PricingProvider = ({ children }) => {
         setNights,
         paymentMethod,
         setPaymentMethod,
+        appliedOffers, // Add appliedOffers to context
+        setAppliedOffers, // Add setAppliedOffers to context
+        payNowDiscount, // Add payNowDiscount to context
+        setPayNowDiscount, // Add setPayNowDiscount to context
+        offerDiscount, // Add offerDiscount to context
+        setOfferDiscount, // Add setOfferDiscount to context
         maxRoomSelection,
         setMaxRoomSelection,
         resetMaxRoomSelection, // Added reset function

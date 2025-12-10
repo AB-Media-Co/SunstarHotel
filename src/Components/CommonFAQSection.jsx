@@ -139,10 +139,10 @@ const CommonFAQSection = ({
                 )}
 
                 {showViewMore && faqs?.length > initialLimit && (
-                    <div className="text-center mt-6">
+                    <div className=" mt-6">
                         <button
                             onClick={handleViewMore}
-                            className="px-5 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition"
+                            className=" py-2 text-primary-gray font-bold text-lg underline hover:text-primary-green transition"
                         >
                             {useAnimations ? (
                                 <AnimatePresence mode="wait">

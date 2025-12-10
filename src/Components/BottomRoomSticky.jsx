@@ -10,7 +10,7 @@ const BottomRoomSticky = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const isRooomHidden = location.pathname.startsWith("/room");
-  useEffect(() => { 
+  useEffect(() => {
     if (selectedRooms.length && details.length || isRooomHidden) {
       setIsVisible(true);
     } else {
@@ -23,8 +23,8 @@ const BottomRoomSticky = () => {
     navigate("/room/details");
   };
 
-  const days = parseInt(localStorage.getItem("days"), 10) || nights; // Fallback to context nights
-  const totalPrice = finalPrice * days;
+  // Calculate Base Price (Room Price * Nights)
+  const totalPrice = selectedRooms.reduce((acc, room) => acc + (room.price * nights), 0);
 
   if ((!selectedRooms.length || !details.length) && !isRooomHidden) return null;
 
@@ -43,14 +43,14 @@ const BottomRoomSticky = () => {
             <div className="flex items-center gap-4">
               {selectedRooms.length === 1 &&
                 <span className="text-primary-dark-green text-lg md:text-xl font-bold">
-                  {formatINR(totalPrice)} <span className="text-gray-500 ml-2 text-sm font-normal">incl. Taxes</span>
+                  {formatINR(totalPrice)} <span className="text-gray-500  text-sm font-normal"></span>
                 </span>
-              } 
+              }
               <h1 className="font-bold text-primary-gray text-xs sm:text-sm md:text-xl">
                 {selectedRooms.length} {selectedRooms.length === 1 ? "Room" : "Rooms"}
               </h1>
             </div>
-       
+
             <p className="text-primary-gray text-xs sm:text-sm md:text-base">
               {details[0]?.name || "Hotel"} - {details[0]?.cityLocation?.name || "Location"}
             </p>
@@ -70,7 +70,7 @@ const BottomRoomSticky = () => {
             </div>
           </div>
         </div>
-        
+
         <div
           onClick={onContinueClick}
           className="bg-primary-green flex items-center md:hidden h-[40px] mt-8 mr-3 text-md md:text-lg py-2 px-4 rounded-lg text-white font-medium cursor-pointer hover:bg-primary-dark-green transition-colors"

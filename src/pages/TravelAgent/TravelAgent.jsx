@@ -16,6 +16,10 @@ import { useGetMetas } from "../../ApiHooks/useMetaHook";
 import Partnerlogos from "../Home/Components/Partnerlogos";
 import ImageGallery from "../../Components/ImageGallery";
 import { useGetTravelAgentPage } from "../../ApiHooks/useTravelAgentPage";
+import FAQSectionWithAPI from "../../Components/FAQSectionWithAPI";
+import useUpdatePagesHook from "../../ApiHooks/useUpdatePagesHook";
+import CompnayCards from "../About/Components/CompnayCards";
+import SunstarInfoCards from "../InTheMedia/Component/SunstarInfoCards";
 
 /* --------------------- Modal --------------------- */
 const AgentSignupModal = ({ open, onClose }) => {
@@ -48,7 +52,7 @@ const AgentSignupModal = ({ open, onClose }) => {
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) ||
     !/^\d{7,}$/.test(form.phone) ||
     loginMutation.isPending
-  , [form, loginMutation.isPending]);
+    , [form, loginMutation.isPending]);
 
   const disabledOtp = useMemo(() => otp.trim().length !== 6 || verifyMutation.isPending, [otp, verifyMutation.isPending]);
 
@@ -357,6 +361,7 @@ const AgentRegistrationForm = ({ page = 'Agent Registration', gid = [226066483] 
 
 const TravelAgent = () => {
   const [openSignup, setOpenSignup] = useState(false);
+  const { offeringSection } = useUpdatePagesHook();
 
   // meta
   const { data: metas } = useGetMetas();
@@ -378,7 +383,7 @@ const TravelAgent = () => {
   // ---------- HERO from API (fallback to static bg) ----------
   const heroContent = {
     title: data?.hero?.heading,
-    description: data?.hero?.description ,
+    description: data?.hero?.description,
     imageSrc:
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
     buttonText: "Login Or Sign Up"
@@ -464,17 +469,22 @@ const TravelAgent = () => {
 
       {/* API-powered, icon-preserving sections */}
       <BenefitsSection benefits={benefits} />
+      {/* <CompnayCards data={offeringSection?.travelAgent} /> */}
+      <Partnerlogos category="Travel Agent" />
+      <TestimonialSection page="travel-agent" head="What Our Partners Say" />
       <HowItWorksSection steps={steps} />
 
-      <Partnerlogos />
+      <AgentRegistrationForm />
 
       <div className="relative flex flex-col justify-between content items-center mt-10 py-10 z-0">
         <ImageGallery />
       </div>
 
-      <AgentRegistrationForm />
+      {/* <SunstarInfoCards
+        infoCards={offeringSection?.travelAgent}
+      /> */}
 
-      <TestimonialSection page="travel-agent" head="What Our Partners Say" />
+      <FAQSectionWithAPI pageName="Travel Agent" />
 
       {/* Modal */}
       <AgentSignupModal open={openSignup} onClose={() => setOpenSignup(false)} />

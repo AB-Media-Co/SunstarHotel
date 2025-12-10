@@ -69,7 +69,7 @@ const LazyImage = ({ src, alt = "", className = "", width, height }) => {
   );
 };
 
-const Card = ({ image, title, description, link }) => {
+const Card = ({ image, title, description, link, buttonText }) => {
   // Ensure we have a valid string link
   const linkHref =
     typeof link === "string"
@@ -105,6 +105,7 @@ const Card = ({ image, title, description, link }) => {
 
 const Section5 = () => {
   const { offeringSection } = useUpdatePagesHook();
+  const homeOfferings = offeringSection?.home || {};
 
   const renderCard = (card, index) => (
     // ✅ key on the outermost element returned to Swiper
@@ -114,6 +115,7 @@ const Section5 = () => {
         title={card?.title}
         description={card?.description}
         link={card?.link}
+        buttonText={card?.buttonText}
       />
     </div>
   );
@@ -121,21 +123,22 @@ const Section5 = () => {
   return (
     <div className="swiper-container bg-[#BAE9EF]">
       <div className="py-12 p-5 content">
-        <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-left mb-8">
-          {offeringSection?.heading}
-        </h2>
+        {/* <h2 className="text-mobile/h3 md:text-desktop/h3 font-bold text-left mb-8">
+          {homeOfferings?.heading}
+        </h2> */}
 
         <CommonSwiper
-          items={offeringSection?.offers || []}
+          items={homeOfferings?.offers || []}
           renderItem={renderCard}
           slidesPerViewDesktop={3.5}
           spaceBetween={0}
           loop={true}
         />
+
+
       </div>
     </div>
   );
 };
 
 export default Section5;
-  

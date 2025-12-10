@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Herosection from "./Components/Herosection";
 import JobApplicationForm from "./Components/JobApplicationForm";
 import JoinTeamSection from "./Components/JoinTeamSection";
@@ -12,41 +12,27 @@ import SunstarInfoCards from "../InTheMedia/Component/SunstarInfoCards";
 import { FileText, Mic, Building } from "lucide-react";
 import { useGetCareersPage } from "../../ApiHooks/use-Career-Page";
 import ImageGallery from "../../Components/ImageGallery";
+import AllHotelCard from "../../Components/AllHotelCard";
+import useUpdatePagesHook from "../../ApiHooks/useUpdatePagesHook";
+import CompnayCards from "../About/Components/CompnayCards";
 
 const CareerMain = () => {
   const { data: metas } = useGetMetas();
   const { data: careerPageData } = useGetCareersPage();
-  console.log(careerPageData)
+  const { offeringSection } = useUpdatePagesHook();
+  const [isHotelOpen, setIsHotelOpen] = useState(false);
 
   const career = Array.isArray(metas)
     ? metas.find((meta) => meta.page === "career")
     : null;
 
-  const staticInfoCards = [
-    {
-      id: 1,
-      buttonText: "Check us out",
-      icon: <FileText className="w-8 h-8 text-primary-green" />,
-      illustration: "/images/whybloom.svg",
-    },
-    {
-      id: 2,
-      buttonText: "Catch the coverage",
-      icon: <Mic className="w-8 h-8 text-primary-green" />,
-      illustration: "/images/blog.svg",
-    },
-    {
-      id: 3,
-      buttonText: "Partner with us",
-      icon: <Building className="w-8 h-8 text-primary-green" />,
-      illustration: "/images/dev&owner.svg",
-    },
-  ];
 
-  const mergedInfoCards = careerPageData?.simpleCards?.map((apiCard, index) => ({
-    ...apiCard,
-    ...(staticInfoCards[index] || {}),
-  }));
+  const handleCardClick = (card) => {
+    // Check if this is the "View Hotels" card (id: 3)
+    if (card.id === 3) {
+      setIsHotelOpen(true);
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -70,16 +56,21 @@ const CareerMain = () => {
       />
       <JoinTeamSection
         data={careerPageData?.joinTeam}
-
       />
-      <JobApplicationForm />
       <div className="relative flex  flex-col justify-between content items-center  z-0">
-
-      <ImageGallery path="career" />
+        <ImageGallery path="career" />
       </div>
       <TestimonialSection page="career" head="Meet Our Stars" />
+      <JobApplicationForm />
       <SunstarCareersSection data={careerPageData?.readyToJoin} />
-      <SunstarInfoCards infoCards={mergedInfoCards || staticInfoCards} />
+      <SunstarInfoCards
+        infoCards={offeringSection?.comeShineWithUs}
+        onCardClick={handleCardClick}
+      />
+      <AllHotelCard
+        isOpen={isHotelOpen}
+        onClose={() => setIsHotelOpen(false)}
+      />
     </div>
   );
 };

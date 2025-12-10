@@ -9,6 +9,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel
 } from '@mui/material';
 import useUpdatePagesHook from '../../../../ApiHooks/useUpdatePagesHook';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -21,28 +25,42 @@ const WhatWeOffering = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [selectedPage, setSelectedPage] = useState('home');
 
   const [offerings, setOfferings] = useState({ heading: '', offers: [] });
 
+  const pages = [
+    { value: 'home', label: 'Home Page' },
+    { value: 'whySunstar', label: 'Why Sunstar' },
+    { value: 'corporate', label: 'Corporate' },
+    // { value: 'travelAgent', label: 'Travel Agent' },
+    { value: 'comeShineWithUs', label: 'Come Shine With Us' }
+  ];
+
   useEffect(() => {
     if (offeringSection) {
+      // If offeringSection is the new object structure, pick the selected page
+      // If it's the old array/object structure (legacy), fallback to it for 'home' or handle migration
+      const pageData = offeringSection[selectedPage] || { heading: '', offers: [] };
+
       const withLink = {
-        ...offeringSection,
-        offers: (offeringSection.offers || []).map(o => ({
+        ...pageData,
+        offers: (pageData.offers || []).map(o => ({
           title: o.title || '',
           description: o.description || '',
           image: o.image || '',
-          link: o.link || ''
+          link: o.link || '',
+          buttonText: o.buttonText || ''
         }))
       };
       setOfferings(withLink);
     }
-  }, [offeringSection]);
+  }, [offeringSection, selectedPage]);
 
   const addOffering = () => {
     setOfferings((prev) => ({
       ...prev,
-      offers: [...prev.offers, { title: '', description: '', image: '', link: '' }]
+      offers: [...prev.offers, { title: '', description: '', image: '', link: '', buttonText: '' }]
     }));
   };
 
@@ -52,18 +70,6 @@ const WhatWeOffering = () => {
       offers: prev.offers.filter((_, i) => i !== index)
     }));
   };
-
-  const isValidUrl = (url) => {
-    if (!url) return true; // empty is allowed
-    try {
-      // accept http/https only
-      const u = new URL(url);
-      return u.protocol === 'http:' || u.protocol === 'https:';
-    } catch {
-      return false;
-    }
-  };
-
 
   const handleFieldChange = (index, field, value) => {
     setOfferings((prev) => {
@@ -97,9 +103,11 @@ const WhatWeOffering = () => {
 
     try {
       if (updateOfferingSection) {
-        const updatedData = await updateOfferingSection({ whatWeOffers: offerings });
+        // Pass the selected page along with the data
+        const updatedData = await updateOfferingSection({ whatWeOffers: offerings, page: selectedPage });
         setSuccess('Offerings updated successfully!');
-        setOfferings(updatedData.whatWeOffers);
+        // Update local state with the response for the specific page
+        // Note: The hook invalidates queries, so offeringSection will update automatically via useEffect
       } else {
         setSuccess('Offerings updated successfully! (dummy)');
       }
@@ -126,8 +134,25 @@ const WhatWeOffering = () => {
         <Box component="form" onSubmit={handleSubmit}>
           <DialogTitle>What We Offers Section</DialogTitle>
           <DialogContent>
+            <Box sx={{ mb: 3, mt: 1 }}>
+              <FormControl fullWidth>
+                <InputLabel>Select Page</InputLabel>
+                <Select
+                  value={selectedPage}
+                  label="Select Page"
+                  onChange={(e) => setSelectedPage(e.target.value)}
+                >
+                  {pages.map((page) => (
+                    <MenuItem key={page.value} value={page.value}>
+                      {page.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
             <Typography variant="h5" gutterBottom>
-              What We Offers Section
+              Edit Content for: {pages.find(p => p.value === selectedPage)?.label}
             </Typography>
             <TextField
               label="Heading"
@@ -181,12 +206,16 @@ const WhatWeOffering = () => {
                   margin="normal"
                   value={offering.link || ''}
                   onChange={(e) => handleFieldChange(index, 'link', e.target.value)}
-                  // error={offering.link && !isValidUrl(offering.link)}
-                  // helperText={
-                  //   offering.link && !isValidUrl(offering.link)
-                  //     ? 'Please enter a valid URL (http or https)'
-                  //     : 'Add a CTA or details URL'
-                  // }
+                />
+
+                <TextField
+                  label="Button Text (optional)"
+                  placeholder="e.g. Read More, Book Now"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={offering.buttonText || ''}
+                  onChange={(e) => handleFieldChange(index, 'buttonText', e.target.value)}
                 />
 
                 {/* Image preview */}

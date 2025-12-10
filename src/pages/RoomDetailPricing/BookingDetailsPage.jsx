@@ -46,17 +46,29 @@ const BookingDetailsPage = () => {
   const guestFormRef = useRef();
 
   useEffect(() => {
-    const paymentMethodElement = document.querySelector("#payment-method");
-    if (paymentMethodElement) {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          setIsPaymentVisible(entry.isIntersecting);
-        },
-        { threshold: 0.1 }
-      );
-      observer.observe(paymentMethodElement);
-      return () => observer.disconnect();
-    }
+    const handleVisibilityCheck = () => {
+      const paymentMethodElement = document.getElementById("payment-method");
+      if (!paymentMethodElement) {
+        return;
+      }
+
+      const rect = paymentMethodElement.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+      const isVisible =
+        rect.top <= viewportHeight * 0.9 && rect.bottom >= viewportHeight * 0.1;
+
+      setIsPaymentVisible((prev) => (prev === isVisible ? prev : isVisible));
+    };
+
+    handleVisibilityCheck();
+    window.addEventListener("scroll", handleVisibilityCheck, { passive: true });
+    window.addEventListener("resize", handleVisibilityCheck);
+
+    return () => {
+      window.removeEventListener("scroll", handleVisibilityCheck);
+      window.removeEventListener("resize", handleVisibilityCheck);
+    };
   }, []);
 
   useEffect(() => {
@@ -123,7 +135,7 @@ const BookingDetailsPage = () => {
             )}
           </div>
 
-          {showLoginModal && <div>Login Modal Here</div>}
+          {showLoginModal && <LoginModal closeModal={() => setShowLoginModal(false)} />}
         </div>
 
         {/* Title */}

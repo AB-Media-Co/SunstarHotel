@@ -11,13 +11,28 @@
   <link rel="preload" as="image" href="/images/HomepageImages/Section1Main.avif" fetchpriority="high" />
   <link rel="preload" as="image" href="/images/Logo/spinner.svg" fetchpriority="high" />
   <link rel="modulepreload" href="data:text/jsx;base64,aW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0Jw0KaW1wb3J0IFJlYWN0RE9NIGZyb20gJ3JlYWN0LWRvbS9jbGllbnQnDQppbXBvcnQgQXBwIGZyb20gJy4vQXBwLmpzeCcNCmltcG9ydCAnLi9pbmRleC5jc3MnDQoNClJlYWN0RE9NLmNyZWF0ZVJvb3QoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3Jvb3QnKSkucmVuZGVyKA0KICA8UmVhY3QuU3RyaWN0TW9kZT4NCiAgICA8QXBwIC8+DQogIDwvUmVhY3QuU3RyaWN0TW9kZT4sDQop" />
-  <link rel="modulepreload" href="/assets/App-CNUQr3vk.jsx" />
+  <link rel="modulepreload" href="/assets/App-c6TBR954.jsx" />
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
   <link rel="dns-prefetch" href="https://maps.googleapis.com" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <!-- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" /> -->
+
+  <!-- Critical CSS for instant rendering -->
+  <style>
+    /* Prevent layout shift */
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    #root { min-height: 100vh; }
+    
+    /* Hero section critical styles */
+    .hero-container { position: relative; width: 100%; height: 100vh; overflow: hidden; }
+    .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; -o-object-fit: cover; object-fit: cover; }
+    
+    /* Prevent flash of unstyled content */
+    .animate-spin { animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  </style>
 
   <!-- Defer non-critical scripts -->
   <script defer>(function (w, d, s, l, i) {
@@ -206,8 +221,8 @@
     content="https://opengraph.b-cdn.net/production/images/ec7e76f2-3675-4010-9bb9-d0367172e1cd.svg?token=08yEmc6Onflpps0LP0jAdMZDPbjPvJJuNpCrU9hkNN8&height=49&width=195&expires=33297657891">
 
   <!-- Meta Tags Generated via https://www.opengraph.xyz -->
-  <script type="module" crossorigin src="/assets/index-Kj3knSog.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-DN5148tQ.css">
+  <script type="module" crossorigin src="/assets/index-Dkp8bbAB.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DAP2NcdM.css">
 </head>
 
 <body>

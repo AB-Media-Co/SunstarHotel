@@ -22,11 +22,12 @@ const Faq = () => {
   const [open, setOpen] = useState(false);
   const [selectedPage, setSelectedPage] = useState('Day Stays Rooms'); // Default page to select
 
-  const pages = [  
+  const pages = [
     'Day Stays Rooms',
     'Events & Conference',
     'corporate-booking',
     'Career',
+    'Travel Agent'
     // 'Wedding & Pre-Wedding',
   ]; // List of pages to be shown in the dropdown
 
@@ -117,6 +118,9 @@ const Faq = () => {
           {/* Display FAQs for the selected page */}
           {isLoading && <p>Loading...</p>}
           {error && <p>Error: {error.message}</p>}
+          {!isLoading && !error && localFaqs.length === 0 && (
+            <p className="text-gray-500 text-center my-4">No FAQ found. Click "Add FAQ" to create one.</p>
+          )}
           {localFaqs.map((faq, index) => (
             <Paper key={index} sx={{ p: 2, mb: 2, position: 'relative' }} elevation={3}>
               <IconButton

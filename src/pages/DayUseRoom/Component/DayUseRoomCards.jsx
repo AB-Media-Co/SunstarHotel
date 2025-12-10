@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import Icon from "../../../Components/Icons";
 
-const DayUseRoomCards = ({ room, disabled, setShowLoginModal,setShowPaymentModal,setDayUseRoomData }) => {
+const DayUseRoomCards = ({ room, disabled, setShowLoginModal, setShowPaymentModal, setDayUseRoomData }) => {
   const [isHovered, setIsHovered] = useState(false);
   const verifiedUser = localStorage.getItem("user_email") !== null;
 
@@ -16,8 +16,6 @@ const DayUseRoomCards = ({ room, disabled, setShowLoginModal,setShowPaymentModal
     setShowPaymentModal(true);
   };
 
-
-
   return (
     <div className="bg-primary-white  shadow-md rounded-lg overflow-hidden relative">
       <div
@@ -28,7 +26,7 @@ const DayUseRoomCards = ({ room, disabled, setShowLoginModal,setShowPaymentModal
         <div
           className="absolute inset-0 bg-center bg-cover transition-all duration-700 ease-in-out"
           style={{
-            backgroundImage: `url(${room?.room?.RoomImage[0] || "placeholder-image-url"})`,
+            backgroundImage: `url(${room?.room?.RoomImage?.[0] || "/images/HotelsImages/1.webp"})`,
             transform: isHovered ? 'scale(1.1)' : 'scale(1)',
           }}
         />
@@ -96,7 +94,7 @@ const DayUseRoomCards = ({ room, disabled, setShowLoginModal,setShowPaymentModal
         </div>
       </div>
 
- 
+
 
     </div>
   );

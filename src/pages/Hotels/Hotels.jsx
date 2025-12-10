@@ -2,7 +2,6 @@ import Banner from "./Components/Banner";
 import HotelCard from "./Components/HotelCard";
 import RoomLayout from "./Components/RoomLayout";
 import { OurClientsData, HotelPageImgGallery } from "../../Data/HotelRoomsData";
-import TestimonialSection from "../../Components/TestimonialSection";
 import BannerSection from "../../Components/BannerSection";
 import ImageGallery from "../../Components/ImageGallery";
 import CommonFAQSection from "../../Components/CommonFAQSection";
@@ -23,6 +22,7 @@ import {
 } from "date-fns";
 import RoomsCard from "../../Components/RoomsCard";
 import SwiperComponent from "../Home/Components/Sec2CardSlider";
+import HotelTestimonial from "./Components/HotelTestimonial";
 
 const Hotels = () => {
   const { hotelCode: hotelCodeParam } = useParams();
@@ -138,8 +138,12 @@ const Hotels = () => {
         <AmenitiesList2 amenities={hotelData?.amenities} />
         <div id="reviews">
 
-          <TestimonialSection
+          {/* <TestimonialSection
             Testimonials={hotelData?.testimonials}
+            backgroundImage={OurClientsData.backgroundImage}
+          /> */}
+          <HotelTestimonial
+            apiTestimonials={hotelData?.testimonials}
             backgroundImage={OurClientsData.backgroundImage}
           />
         </div>

@@ -32,8 +32,7 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
   const [checkOut, setCheckOut] = useState(null);
   const [activeTab, setActiveTab] = useState(null);
   const [isItemFixed, setItemFixed] = useState(false);
-  const [isTopSectionHidden, setIsTopSectionHidden] = useState(false);
-  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [isTopSectionHidden] = useState(false);
 
   const { selectedRooms } = usePricing();
   const navigate = useNavigate();
@@ -184,28 +183,27 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
       <div
         className={`bg-primary-white rounded-md shadow-lg -mt-6 
           z-10 flex flex-col items-center gap-3 md:gap-6 border border-gray-200
-          transition-all duration-700 w-full ease-in-out will-change-transform
+          transition-all duration-300 ease-in-out w-full will-change-transform transform
           ${isItemFixed
-            ? "fixed top-0 right-0 left-0 pt-2 md:pt-4 z-50 opacity-100 transform translate-y-0 scale-100"
-            : "relative opacity-100 py-2 md:py-2 transform translate-y-[-10px]"
+            ? "fixed top-0 right-0 left-0 pt-2 md:pt-4 z-50 opacity-100 translate-y-0"
+            : "relative opacity-100 py-2 md:py-2 -translate-y-2"
           }
           ${isTopSectionHidden
-            ? "opacity-0 transform -translate-y-full scale-95"
-            : "opacity-100 transform translate-y-0 scale-100"
+            ? "opacity-0 -translate-y-full scale-95"
+            : "opacity-100 translate-y-0 scale-100"
           } 
         `}
         style={{
-          visibility: isTopSectionHidden ? "hidden" : "visible",
-          transitionProperty: "transform, opacity, scale",
-          transitionDuration: "700ms",
+          transitionProperty: "all",
+          transitionDuration: "300ms",
           transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
           transformOrigin: "top",
-          willChange: "transform, opacity, scale"
+          willChange: "transform, opacity",
         }}
       >
         <div className="w-full flex py-2 md:py-3 max-w-6xl flex-col items-center px-2 md:px-4">
           {/* Top Section: Dates and Guests - Non-fixed state */}
-          <div className={`gap-2 justify-center ${isItemFixed ? 'hidden' : "flex"} items-center w-full`}>
+          <div className={`gap-2 justify-center ${isItemFixed ? 'hidden' : "flex"} items-center w-full transition-all duration-300`}>
             <div className="flex flex-col md:flex-row gap-3 md:gap-8 items-center justify-between w-full">
               <div className="w-full md:w-auto">
                 <div
@@ -238,7 +236,7 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
                   onClick={handleBooking}
                   className="bg-primary-green text-primary-white text-sm md:text-xl font-medium rounded-xl md:rounded-full py-3 md:py-2 px-6 md:px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full md:w-auto"
                 >
-                  {selectedRooms?.length > 0 ? "Continue" : "Select"}
+                  {selectedRooms?.length > 0 ? "Continue" : "Select Rooms"}
                 </button>
               </div>
 
@@ -246,7 +244,7 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
           </div>
 
           {/* Fixed header content */}
-          <div className={`${isItemFixed ? 'flex' : "hidden"} flex-col md:flex-row gap-3 md:gap-8 items-center w-full`}>
+          <div className={`${isItemFixed ? 'flex' : "hidden"} flex-col md:flex-row gap-3 md:gap-8 items-center w-full transition-all duration-300`}>
             <div className="flex flex-col md:flex-row gap-3 md:gap-8 mt-4 md:mt-0 items-center w-full">
               <div className="w-full md:w-auto">
                 <div
@@ -282,11 +280,6 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
 
               {/* Navigation tabs in fixed header - Mobile */}
               <div className="flex items-center gap-4 w-full md:hidden overflow-x-auto scrollbar-hide px-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                <style jsx>{`
-                  .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
-                  }
-                `}</style>
                 {tabs2.map((tab, index) => renderTabItem(tab, index, true))}
               </div>
 
@@ -306,16 +299,11 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
 
           {/* Regular navigation tabs */}
           <div
-            className={`items-center mt-4 md:mt-6 gap-2 md:gap-4 w-full transition-opacity duration-300 ease-in-out
-              ${isItemFixed ? "opacity-0 h-0 overflow-hidden hidden" : "opacity-100 flex justify-between md:justify-between overflow-x-auto md:overflow-visible scrollbar-hide px-2 md:px-0"}
+            className={`items-center mt-4 md:mt-6 gap-2 md:gap-4 w-full transition-all duration-300 ease-in-out
+              ${isItemFixed ? "opacity-0 h-0 overflow-hidden" : "opacity-100 flex justify-between md:justify-between overflow-x-auto md:overflow-visible scrollbar-hide px-2 md:px-0"}
             `}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            <style jsx>{`
-              .scrollbar-hide::-webkit-scrollbar {
-                display: none;
-              }
-            `}</style>
             {tabs.map((tab, index) => renderTabItem(tab, index, true))}
           </div>
         </div>
@@ -367,7 +355,7 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
 
                 <div className="flex gap-2 md:hidden justify-end items-center">
                   <img src="/images/tripadvisor-logo.svg" alt="" className="h-4" />
-                  <p className="text-teal-500 text-md md:text-2xl font-bold whitespace-nowrap leading-none">{hotelData?.rating}.0</p>
+                  <p className="text-teal-500 text-md md:text-2xl font-bold whitespace-nowrap leading-none">{hotelData?.rating}</p>
 
                 </div>
 
@@ -377,7 +365,7 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
                 <div className="flex items-baseline gap-2 md:gap-3">
                   <span className="text-teal-500 text-xl md:text-2xl font-bold whitespace-nowrap leading-none">
                     {/* Already using Indian format */}
-                    ₹&nbsp;{Number(hotelData?.price ?? 0).toLocaleString('en-IN')}
+                    &#8377;&nbsp;{Number(hotelData?.price ?? 0).toLocaleString('en-IN')}
                   </span>
                   <span className="text-sm md:text-base font-normal text-gray-600 whitespace-nowrap">
                     / night
@@ -391,7 +379,7 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
             <div className="col-span-1 md:justify-self-end">
               <div className="md:flex gap-2 hidden justify-end items-center">
                 <img src="/images/tripadvisor-logo.svg" alt="" className="h-6" />
-                <p className="text-teal-500 text-xl md:text-2xl font-bold whitespace-nowrap leading-none">{hotelData?.rating}.0</p>
+                <p className="text-teal-500 text-xl md:text-2xl font-bold whitespace-nowrap leading-none">{hotelData?.rating}</p>
 
               </div>
               <div className="text-xs md:text-sm bg-teal-100 text-[#058FA2] font-medium rounded-full py-2 px-3 md:px-4 flex flex-wrap gap-x-2 gap-y-1 items-center justify-center shadow-sm">

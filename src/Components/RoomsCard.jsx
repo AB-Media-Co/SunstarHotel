@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, memo } from "react";
 import { getSingleHotelWithCode } from "../ApiHooks/useHotelHook2";
 import { usePricing } from "../Context/PricingContext";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -8,12 +8,12 @@ import AddIcon from "@mui/icons-material/Add";
 import Icon from "./Icons";
 import WarningIcon from '@mui/icons-material/Warning';
 import { formatINR } from "../utils/formatCurrency";
-const RoomsCard = ({ room }) => {
+
+const RoomsCard = memo(({ room }) => {
   const navigate = useNavigate();
-  const { fetchRoomHotelDetails, selectedRooms, removeRoom, maxRoomSelection, setMaxRoomSelection } = usePricing();
+  const { fetchRoomHotelDetails, selectedRooms, removeRoom, setMaxRoomSelection } = usePricing();
   const [hotelData, setHotelData] = useState(null);
   const [showMaxAlert, setShowMaxAlert] = useState(false);
-
   const [isHovered, setIsHovered] = useState(false);
 
   const roomCount = selectedRooms.filter((r) => r.roomName === room.RoomName).length;
@@ -134,30 +134,26 @@ const RoomsCard = ({ room }) => {
           ) : (
             <div className="flex items-center border border-primary-yellow rounded-lg px-2 py-2 gap-4">
               <button
-                className={`font-bold  text-primary-yellow cursor-pointer ${roomCount === 0 ? "opacity-50 cursor-not-allowed hidden" : ""
-                  }`}
+                className={`font-bold text-primary-yellow cursor-pointer ${roomCount === 0 ? "opacity-50 cursor-not-allowed hidden" : ""}`}
                 onClick={handleRemoveRoom}
-              // disabled={roomCount === 0}
+                disabled={roomCount === 0}
               >
                 <RemoveIcon />
               </button>
               {roomCount === 0 ? (
-                <>
-                  <span className="font-semibold  text-primary-yellow cursor-pointer" onClick={handleAddRoom} >
-                    Add Room
-                  </span>
-                </>
+                <span 
+                  className="font-semibold text-primary-yellow cursor-pointer select-none" 
+                  onClick={handleAddRoom}
+                >
+                  Add Room
+                </span>
               ) : (
-                <>
-                  <span className="font-semibold w-[65px] text-primary-yellow" >
-
-                    {roomCount} {roomCount === 1 ? "Room" : "Rooms"}
-                  </span></>
-              )
-              }
-
+                <span className="font-semibold w-[65px] text-primary-yellow">
+                  {roomCount} {roomCount === 1 ? "Room" : "Rooms"}
+                </span>
+              )}
               <button
-                className={`font-bold  text-primary-yellow cursor-pointer ${roomCount === 0 ? "hidden" : ""} `}
+                className={`font-bold text-primary-yellow cursor-pointer  ${roomCount === 0 ? "opacity-50 cursor-not-allowed hidden" : ""}`}
                 onClick={handleAddRoom}
               >
                 <AddIcon />
@@ -165,16 +161,13 @@ const RoomsCard = ({ room }) => {
             </div>
           )}
         </div>
-      </div >
+      </div>
 
       {showMaxAlert && (
         <div className="absolute top-[11rem] right-1 z-10 bg-white border border-gray-300 px-4 py-5 rounded-md shadow-md w-72">
           <div className="flex items-start mb-3 gap-2">
             <WarningIcon className="text-primary-yellow" />
             <p className="text-gray-500 text-xs">
-              {/* Booking limit reached. Maximum of {maxRoomSelection} {maxRoomSelection === 1 ? "room" : "rooms"} per reservation.
-              Please complete your current booking or adjust your selection to proceed. */}
-
               For a stay of 1 night, only 3 rooms can be selected. Online bookings are limited to 30 units
               (rooms x nights) and a maximum of 3 rooms per booking.
             </p>
@@ -196,9 +189,11 @@ const RoomsCard = ({ room }) => {
           </div>
         </div>
       )}
-    </div >
+    </div>
   );
-};
+});
+
+RoomsCard.displayName = 'RoomsCard';
 
 RoomsCard.propTypes = {
   room: PropTypes.shape({

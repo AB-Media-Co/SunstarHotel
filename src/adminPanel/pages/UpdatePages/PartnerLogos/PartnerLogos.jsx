@@ -15,6 +15,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -40,6 +42,9 @@ const PartnerLogos = () => {
   const editPartner = useEditPartner();
   const deletePartner = useDeletePartner();
 
+  // Tabs state
+  const [activeTab, setActiveTab] = useState('Corporate');
+
   // local state for "add new"
   const [creating, setCreating] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
@@ -48,8 +53,8 @@ const PartnerLogos = () => {
 
   // edit dialog state
   const [openEdit, setOpenEdit] = useState(false);
-  const [current, setCurrent] = useState(null); // {_id, imageUrl, description}
-  const [editModel, setEditModel] = useState({ image: '', description: '' });
+  const [current, setCurrent] = useState(null); // {_id, imageUrl, description, category}
+  const [editModel, setEditModel] = useState({ image: '', description: '', category: 'Corporate' });
   const [uploadingEdit, setUploadingEdit] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
 
@@ -65,6 +70,7 @@ const PartnerLogos = () => {
       await addPartner.mutateAsync({
         imageUrl: newPartner.image.trim(),
         description: newPartner.description.trim(),
+        category: activeTab,
       });
       resetCreate();
       refetch();
@@ -77,7 +83,11 @@ const PartnerLogos = () => {
 
   const handleOpenEdit = (p) => {
     setCurrent(p);
-    setEditModel({ image: p.imageUrl || '', description: p.description || '' });
+    setEditModel({
+      image: p.imageUrl || '',
+      description: p.description || '',
+      category: p.category || 'Corporate'
+    });
     setOpenEdit(true);
   };
 
@@ -90,6 +100,7 @@ const PartnerLogos = () => {
         data: {
           imageUrl: editModel.image?.trim(),
           description: editModel.description?.trim(),
+          category: editModel.category,
         },
       });
       setOpenEdit(false);
@@ -118,6 +129,14 @@ const PartnerLogos = () => {
   const handleEditFieldChange = (field, value) =>
     setEditModel((prev) => ({ ...prev, [field]: value }));
 
+  // Filter partners based on active tab
+  const filteredPartners = partners.filter(p => {
+    if (activeTab === 'Corporate') {
+      return p.category === 'Corporate' || !p.category;
+    }
+    return p.category === activeTab;
+  });
+
   return (
     <Box>
       {/* This button opens the MAIN popup */}
@@ -140,12 +159,19 @@ const PartnerLogos = () => {
             ) : null}
           </Box>
 
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+            <Tabs value={activeTab} onChange={(e, val) => setActiveTab(val)}>
+              <Tab label="Corporate" value="Corporate" />
+              <Tab label="Travel Agent" value="Travel Agent" />
+            </Tabs>
+          </Box>
+
           {/* Create / Add new card */}
           {creating && (
             <Card sx={{ mb: 3, p: 2 }}>
               <CardContent>
                 <Typography variant="subtitle1" gutterBottom>
-                  Add New Partner
+                  Add New Partner ({activeTab})
                 </Typography>
 
                 <TextField
@@ -210,11 +236,11 @@ const PartnerLogos = () => {
             </Box>
           ) : isError ? (
             <Typography color="error">Failed to load partners</Typography>
-          ) : partners.length === 0 ? (
-            <Typography color="text.secondary">No partners added yet.</Typography>
+          ) : filteredPartners.length === 0 ? (
+            <Typography color="text.secondary">No partners added in this category yet.</Typography>
           ) : (
             <Grid container spacing={2}>
-              {partners.map((p, idx) => (
+              {filteredPartners.map((p, idx) => (
                 <Grid item xs={12} sm={6} md={4} key={p._id || idx}>
                   <Card>
                     {p.imageUrl ? (
@@ -267,6 +293,20 @@ const PartnerLogos = () => {
             onChange={(e) => handleEditFieldChange('description', e.target.value)}
             disabled={editLoading || uploadingEdit}
           />
+
+          <TextField
+            select
+            label="Category"
+            fullWidth
+            SelectProps={{ native: true }}
+            sx={{ mb: 2 }}
+            value={editModel.category}
+            onChange={(e) => handleEditFieldChange('category', e.target.value)}
+            disabled={editLoading || uploadingEdit}
+          >
+            <option value="Corporate">Corporate</option>
+            <option value="Travel Agent">Travel Agent</option>
+          </TextField>
 
           <ImageUpload
             feature={{ image: editModel.image }}

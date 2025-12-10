@@ -266,7 +266,7 @@ const GuestDetailsForm = forwardRef(({ setIsVerified }) => {
               onClick={() => setShowLoginModal(true)}
               className="ml-4 px-5 py-2 rounded-lg bg-primary-green text-white  transition"
             >
-              Login / Verify
+              Login / Sign Up
             </button>
           </div>
 

@@ -106,7 +106,9 @@ const TourPackages = ({ stateName }) => {
                 <div className="flex gap-3">
                   <button
                     className="flex-1 bg-primary-yellow hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded-full transition-colors duration-200"
-                    onClick={() => navigate('/travel-booking-form')}
+                    onClick={() => navigate('/travel-booking-form', {
+                      state: { packageData: pkg }
+                    })}
                     
                   >
                     Enquire Now

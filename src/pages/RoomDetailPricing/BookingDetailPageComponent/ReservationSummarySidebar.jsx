@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { usePricing } from "../../../Context/PricingContext";
 import { useEffect, useState } from "react";
-import { BadgePercent } from "lucide-react";
+import { BadgePercent, ChevronDown, ChevronUp } from "lucide-react";
 import { formatINR } from "../../../utils/formatCurrency";
 
 
@@ -15,14 +15,18 @@ export const ReservationSummarySidebar = ({
   const {
     selectedRooms,
     totalOtherCharges,
+    selectedOtherCharges,
+    totalAddOns,
     finalPrice,
     baseFinalPrice,
     setNights,
     details, // Added to get continental plan details
+    payNowDiscount, // Added to get Pay Now discount amount
+    offerDiscount // Added to get offer code discount amount
   } = usePricing();
 
   const [isSticky, setIsSticky] = useState(false);
-
+  const [isAddOnsExpanded, setIsAddOnsExpanded] = useState(true);
 
   useEffect(() => {
     if (days) {
@@ -32,8 +36,13 @@ export const ReservationSummarySidebar = ({
   }, [days, setNights]);
 
 
-  const discount = baseFinalPrice - finalPrice;
-  const hasDiscount = discount > 0;
+  const numericPayNowDiscount = Number(payNowDiscount) || 0;
+  const numericOfferDiscount = Number(offerDiscount) || 0;
+
+  const hasPayNowDiscount = numericPayNowDiscount > 0;
+  const hasOfferDiscount = numericOfferDiscount > 0;
+  const shouldShowPayNowDiscount = hasPayNowDiscount && !hasOfferDiscount;
+  const shouldShowOfferDiscount = hasOfferDiscount;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,13 +62,13 @@ export const ReservationSummarySidebar = ({
     <div
       className={`md:p-6 p-4 bg-white md:border-2 border border-gray-200 rounded-2xl md:shadow-lg shadow-md w-full ${isSticky ? 'md:w-[384px]' : {}}  md:w-96 mx-auto  font-sans transition-all duration-300 ${isSticky ? 'xl:fixed xl:top-4  ' : 'relative '
         }`}
-   
+
     >
       {/* Header */}
       <div className="bg-primary-green  p-4 -mx-4 md:-mx-6 -mt-4 md:-mt-6 rounded-t-2xl mb-6">
         <h2 className="text-lg md:text-xl font-bold text-white">Reservation Summary</h2>
       </div>
-    
+
 
 
       {/* Price Summary */}
@@ -76,12 +85,12 @@ export const ReservationSummarySidebar = ({
             const guestQty = room?.guestQty || 2;
             const baseAdultOccupancy = hotelDetail?.roomData?.baseAdultOccupancy || 2;
             const extraAdultRate = hotelDetail?.roomData?.extraAdultRate || 0;
-            
+
             // Calculate extra adult charges (eZee API)
             const extraAdults = guestQty > baseAdultOccupancy ? guestQty - baseAdultOccupancy : 0;
             const totalExtraAdultCharge = extraAdults * extraAdultRate;
             const totalContinentalCharge = continentalPrice * guestQty;
-            
+
             return (
               <div key={index} className="space-y-3 pb-4 mb-4 border-b-2 border-dashed border-gray-200 last:border-0">
                 {/* Room Base Price */}
@@ -94,7 +103,7 @@ export const ReservationSummarySidebar = ({
                   </div>
                   <p className="font-bold text-gray-900 text-base">{formatINR(baseRoomPrice * days)}</p>
                 </div>
-                
+
                 {/* Extra Adult Charges (if applicable) - eZee API */}
                 {extraAdults > 0 && extraAdultRate > 0 && (
                   <div className="flex justify-between items-start text-sm bg-orange-50 border-l-4 border-orange-500 p-3 rounded-r-lg">
@@ -107,7 +116,7 @@ export const ReservationSummarySidebar = ({
                     <p className="font-bold text-orange-700">{formatINR(totalExtraAdultCharge * days)}</p>
                   </div>
                 )}
-                
+
                 {/* Continental Breakfast Charges (if selected) */}
                 {room.option === "continental" && continentalPrice > 0 && (
                   <div className="flex justify-between items-start text-sm bg-green-50 border-l-4 border-primary-green p-3 rounded-r-lg">
@@ -125,47 +134,107 @@ export const ReservationSummarySidebar = ({
           })}
         </div>
 
-        <div className="flex justify-between items-center text-sm font-semibold text-gray-700 py-3 px-4 bg-blue-50 rounded-lg border border-blue-200">
+        {/* Add-ons Section */}
+        {selectedOtherCharges.length > 0 && (
+          <div className="mb-5">
+            {/* Add-ons Header - Collapsible */}
+            <button
+              onClick={() => setIsAddOnsExpanded(!isAddOnsExpanded)}
+              className="w-full flex justify-between items-center text-sm font-semibold text-gray-700 py-2 px-3 bg-teal-50 rounded-lg border border-teal-200 hover:bg-teal-100 transition-colors mb-2"
+            >
+              <span className="text-teal-700">Add-ons ({selectedOtherCharges.length})</span>
+              <div className="flex items-center gap-2">
+                <span className="text-teal-700 font-bold">{formatINR(totalAddOns)}</span>
+                {isAddOnsExpanded ? (
+                  <ChevronUp className="w-4 h-4 text-teal-600" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-teal-600" />
+                )}
+              </div>
+            </button>
+
+            {/* Add-ons Details - Collapsible */}
+            {isAddOnsExpanded && (
+              <div className="space-y-3">
+                {selectedOtherCharges.map((addOn, index) => {
+                  const amount = addOn.rate?.amount || 0;
+                  const period = addOn.rate?.period?.toLowerCase();
+                  const isPerDay = period === "per day" || period === "per night";
+                  const addOnTotal = isPerDay ? amount * days : amount;
+
+                  return (
+                    <div key={addOn._id || index} className="flex justify-between items-start text-sm bg-teal-50 border-l-4 border-teal-500 p-3 rounded-r-lg">
+                      <div className="flex-1">
+                        <p className="font-semibold text-teal-700">{addOn.heading}</p>
+                        <p className="text-xs text-teal-600 mt-1">
+                          {formatINR(amount)}
+                          {isPerDay && ` × ${days} ${days === 1 ? "Night" : "Nights"}`}
+                        </p>
+                      </div>
+                      <p className="font-bold text-teal-700">{formatINR(addOnTotal)}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Taxes & Other Charges - Only GST */}
+        {/* <div className="flex justify-between items-center text-sm font-semibold text-gray-700 py-3 px-4 bg-blue-50 rounded-lg border border-blue-200">
           <p className="flex items-center gap-2">
             Taxes & Other Charges
           </p>
           <p className="font-bold text-gray-900">{formatINR(totalOtherCharges)}</p>
-        </div>
+        </div> */}
       </div>
 
       {/* Final Pricing */}
       <div className="pt-4 mt-5 bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-xl space-y-3 border border-gray-200">
-        <div className="flex justify-between items-center text-sm text-gray-700">
-          <span className="font-medium">Base Price</span>
-          <span className="font-semibold text-gray-900">{formatINR(baseFinalPrice)}</span>
-        </div>
-        {hasDiscount && (
-          <div className="flex justify-between items-center text-sm bg-green-50 -mx-4 px-4 py-2">
-               <span className="font-medium">Pay Now Discount</span>
-            <span className="font-bold text-green-600">-{formatINR(discount)}</span>
-          </div>
-        )}
+
         <div className="flex justify-between items-center text-sm text-gray-700">
           <span className="font-medium">Taxes & Fees</span>
           <span className="font-semibold text-gray-900">{formatINR(totalOtherCharges)}</span>
         </div>
+
+        <div className="flex justify-between items-center text-sm text-gray-700">
+          <span className="font-medium">Base Price</span>
+          <span className="font-semibold text-gray-900">{formatINR(baseFinalPrice)}</span>
+        </div>
+        {hasPayNowDiscount && (
+          <div className="flex justify-between items-center text-sm bg-green-50 -mx-4 px-4 py-2">
+            <div className="flex flex-col">
+              <span className="font-medium">Pay Now Discount</span>
+              <span className="text-xs text-green-700">Pay & Book Now applied</span>
+            </div>
+            <span className="font-bold text-green-600">-{formatINR(numericPayNowDiscount)}</span>
+          </div>
+        )}
+
+        {hasOfferDiscount && (
+          <div className="flex justify-between items-center text-sm bg-green-50 -mx-4 px-4 py-2">
+            <div className="flex flex-col">
+              <span className="font-medium">Offer Code Discount</span>
+              <span className="text-xs text-green-700">Exclusive offer applied</span>
+            </div>
+            <span className="font-bold text-green-600">-{formatINR(numericOfferDiscount)}</span>
+          </div>
+        )}
+
         <div className="flex justify-between items-center border-t-2 border-gray-300 pt-3 mt-3">
           <p className="text-base md:text-lg font-bold text-gray-800">Payable Amount</p>
           <p className="text-lg md:text-xl font-bold text-primary-green">{formatINR(finalPrice)}</p>
         </div>
       </div>
 
-      {/* <div className="flex items-center my-3 justify-center text-orange-400 font-semibold text-sm ">
-        <BadgePercent className="mr-2 text-base" />
-        <span>You are saving  by booking directly</span>
-      </div> */}
+
 
       {/* CTA Button */}
       {showButton && (
         <a href="#payment-method" className="hidden md:block w-full">
           <button
             disabled={isPaymentVisible}
-            className={`mt-6 w-full py-4 font-bold text-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] ${isPaymentVisible
+            className={`mt-6 w-full py-2 font-bold text-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] ${isPaymentVisible
               ? "bg-gray-300 cursor-not-allowed shadow-none"
               : "bg-gradient-to-r from-primary-green to-primary-dark-green hover:shadow-xl"
               }`}
@@ -176,6 +245,21 @@ export const ReservationSummarySidebar = ({
             </span>
           </button>
         </a>
+      )}
+
+      {(hasPayNowDiscount || hasOfferDiscount) && (
+        <>
+          <div className="flex items-center justify-center gap-2 text-sm  text-primary-green -mx-4 px-4 py-2.5 ">
+            <BadgePercent className="w-4 h-4" />
+            <span className="font-bold">
+              {hasPayNowDiscount && hasOfferDiscount
+                ? `You are saving ${formatINR(payNowDiscount + offerDiscount)} with both discounts!`
+                : hasPayNowDiscount
+                  ? `You are saving ${formatINR(payNowDiscount)} by booking directly!`
+                  : `You are saving ${formatINR(offerDiscount)} with offer codes!`}
+            </span>
+          </div>
+        </>
       )}
     </div>
 

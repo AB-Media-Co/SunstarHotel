@@ -190,7 +190,7 @@ const LoginModal = ({ closeModal }) => {
                         src={stepImages[step]}
                         alt={
                             step === 1
-                                ? 'Login or Join'
+                                ? 'Login or Sign Up'
                                 : step === 2
                                     ? 'Complete Your Profile'
                                     : 'Verify Email'
@@ -226,7 +226,7 @@ const LoginModal = ({ closeModal }) => {
                         {/* Step 1: Email Input */}
                         {step === 1 && (
                             <>
-                                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Login or Join</h2>
+                                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Login or Sign Up</h2>
                                 <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8">
                                    Track bookings, get rewards & enjoy up to 15% off with Sunstar.
                                 </p>

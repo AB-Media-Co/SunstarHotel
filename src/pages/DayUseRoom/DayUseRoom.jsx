@@ -13,7 +13,7 @@ import Loader from "../../Components/Loader";
 
 const DayUseRoom = () => {
     const { data, isFetching, isLoading } = useGetDayUseContent();
-    console.log(data)
+    // console.log(data)
 
     const { data: metas } = useGetMetas();
     const contactUsMeta = Array.isArray(metas)

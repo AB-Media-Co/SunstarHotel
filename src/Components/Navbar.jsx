@@ -13,7 +13,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import ContactMailIcon from "@mui/icons-material/ContactMail";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AllHotelCard from "./AllHotelCard";
 import { hotels } from "../Data/AboutSectionData";
 import { usePricing } from "../Context/PricingContext";
@@ -42,14 +41,10 @@ const Navbar = () => {
   const [active, setActive] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [openDropdown, setOpenDropdown] = useState(null); // desktop: string | null
   const [mobileOpenDropdown, setMobileOpenDropdown] = useState(null); // mobile: string | null
   const dropdownTimeoutRef = useRef(null);
-
-  const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
 
   const userInfo = localStorage.getItem('user_email');
   const { data: userData } = useGetUserByEmail(userInfo);
@@ -71,20 +66,6 @@ const Navbar = () => {
 
 
   // Dropdown menu items for Corporate Booking
-  const corporateDropdownItems = [
-    { name: "Why Sunstar", route: "/why-sunstar" },
-    { name: "Tour & Travel", route: "/tour&travel" },
-    { name: "Corporate Bookings", route: "/corporate-booking" },
-    { name: "Contact Us", route: "/contact" },
-    { name: "Loyalty Program", route: "/loyalty-program" },
-    { name: "Event And Conference", route: "/eventandconference" },
-    { name: "Travel Agent", route: "/travel-agent" },
-    { name: "Blog & Buzz", route: "/sunstar-blogs" },
-    { name: "Come Shine With Us", route: "/career" },
-    { name: "Day Stays", route: "/dayuseroom" },
-    { name: "Developer And Owners", route: "/developers&owners" },
-    { name: "In the Media", route: "/in-the-media" },
-  ];
 
   const navItems = [
     { name: "Home", icon: <HomeIcon sx={{ fontSize: 20 }} />, route: "/" },
@@ -94,11 +75,6 @@ const Navbar = () => {
       icon: <InfoIcon sx={{ fontSize: 20 }} />,
       hasDropdown: false,
       route: "/why-sunstar"
-      // items: [
-      //   { name: "Why Sunstar", route: "/why-sunstar" },
-      //   { name: "Loyalty Program", route: "/loyalty-program" },
-      //   { name: "Come Shine With Us", route: "/career" },
-      // ],
     },
 
     {
@@ -107,24 +83,22 @@ const Navbar = () => {
       action: openHotelModal,
     },
 
-    // {
-    //   name: "Corporate Booking",
-    //   icon: <BusinessIcon sx={{ fontSize: 20 }} />,
-    //   hasDropdown: false,
-    //   route: "/corporate-booking"
-
-    // },
 
     {
       name: "Day Stays",
       icon: <BusinessIcon sx={{ fontSize: 20 }} />,
       hasDropdown: false,
       route: "/dayuseroom"
-      // items: [
-      //   { name: "Tour & Travel", route: "/tour&travel" },
-      //   { name: "Event And Conference", route: "/eventandconference" },
-      //   { name: "Day Stays", route: "/dayuseroom" },
-      // ],
+    },
+
+    {
+      name: "Services",
+      icon: <BusinessIcon sx={{ fontSize: 20 }} />,
+      hasDropdown: true,
+      items: [
+        { name: "Tour & Travel", route: "/tour&travel" },
+        { name: "Event & Conference", route: "/eventandconference" },
+      ],
     },
 
     {
@@ -132,11 +106,6 @@ const Navbar = () => {
       icon: <ContactMailIcon sx={{ fontSize: 20 }} />,
       hasDropdown: false,
       route: "/contact"
-      // items: [
-      //   { name: "Contact Us", route: "/contact" },
-      //   { name: "Blog & Buzz", route: "/sunstar-blogs" },
-      //   { name: "In the Media", route: "/in-the-media" },
-      // ],
     },
   ];
 
@@ -170,13 +139,17 @@ const Navbar = () => {
     } else if (location.pathname.startsWith("/hotels")) {
       setActive("Hotels");
     } else if (location.pathname === "/why-sunstar") {
-      setActive("Why Sunstar?");
+      setActive("Why Sunstar");
     } else if (location.pathname === "/corporate-booking") {
       setActive("Corporate Booking");
     } else if (location.pathname === "/dayuseroom") {
       setActive("Day Stays");
     } else if (location.pathname === "/contact") {
-      setActive("Contact");
+      setActive("Contact Us");
+    } else if (location.pathname === "/tour&travel") {
+      setActive("Services");
+    } else if (location.pathname === "/eventandconference") {
+      setActive("Services");
     } else {
       const pathName = location.pathname
         .replace("/", "")
@@ -192,7 +165,7 @@ const Navbar = () => {
 
   const closeMobileMenu = () => {
     setIsMenuOpen(false);
-    setIsMobileDropdownOpen(false);
+    // setIsMobileDropdownOpen(false);
   };
 
   useEffect(() => {
@@ -209,8 +182,6 @@ const Navbar = () => {
 
   const handleDropdownItemClick = (route) => {
     navigate(route);
-    setIsDropdownOpen(false);
-    setIsMobileDropdownOpen(false);
     closeMobileMenu();
   };
 

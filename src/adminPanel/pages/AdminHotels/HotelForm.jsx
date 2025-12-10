@@ -94,6 +94,7 @@ const HotelForm = ({ initialData = null }) => {
   const isEditMode = Boolean(initialData);
   const navigate = useNavigate();
   const { amenities } = useUpdatePagesHook();
+  console.log(amenities)
 
   // Helper for initial transport values
   const getInitialTransportValue = (field) => {

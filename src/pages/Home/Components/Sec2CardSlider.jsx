@@ -1,41 +1,103 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import WifiIcon from "@mui/icons-material/Wifi";
 import CommonSwiper from "../../../Components/CommonSlider";
-import { Star, LocationOnSharp, Restaurant, SmokeFreeSharp } from "@mui/icons-material";
+import { LocationOnSharp, Restaurant, SmokeFreeSharp, ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { CctvIcon } from "lucide-react";
 import { useGetHotels } from "../../../ApiHooks/useHotelHook2";
 import { useNavigate } from "react-router-dom";
 import { generateHotelUrl } from "../../../utils/urlHelper";
+import { formatHotelAddress } from "../../../utils/addressFormatter";
 
 /* eslint-disable react/prop-types */
-const LazyBackground = ({ src, className, hovered }) => {
-  const ref = useRef();
-  const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setLoaded(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '50px' } // Start loading 50px before visible
+// Image Carousel Component
+const ImageCarousel = ({ images, cardIndex, hoveredCard }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const isHovered = hoveredCard === cardIndex;
+
+  const carouselImages = images?.imageSections?.carouselImages || images?.images || [];
+
+  if (carouselImages.length === 0) return null;
+
+  const goToPrevious = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? carouselImages.length - 1 : prev - 1
     );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+  };
+
+  const goToNext = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) =>
+      prev === carouselImages.length - 1 ? 0 : prev + 1
+    );
+  };
 
   return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        backgroundImage: loaded ? `url(${src})` : "none",
-        transform: hovered ? 'scale(1.1)' : 'scale(1)',
-        willChange: hovered ? 'transform' : 'auto',
-      }}
-    />
+    <div className="relative w-full h-full">
+      {/* Images with smooth fade transition */}
+      <div className="absolute inset-0 overflow-hidden">
+        {carouselImages.map((img, idx) => (
+          <img
+            key={idx}
+            src={img?.replace('/upload/', '/upload/f_auto,q_auto,w_800/')}
+            alt={`Hotel carousel ${idx + 1}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${idx === currentImageIndex ? 'opacity-100' : 'opacity-0'
+              }`}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+      </div>
+
+      {/* Hover Overlay */}
+      <div
+        className={`absolute inset-0 bg-black transition-opacity duration-700 ease-in-out z-5 ${isHovered ? "opacity-20" : "opacity-0"
+          }`}
+      />
+
+      {/* Navigation Arrows - Show only on hover and if multiple images */}
+      {carouselImages.length > 1 && (
+        <>
+          <button
+            onClick={goToPrevious}
+            className={`absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white text-gray-800 p-1.5 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 ${isHovered ? 'opacity-100' : 'opacity-0'
+              }`}
+          >
+            <ChevronLeft style={{ fontSize: "18px" }} />
+          </button>
+
+          <button
+            onClick={goToNext}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white text-gray-800 p-1.5 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 ${isHovered ? 'opacity-100' : 'opacity-0'
+              }`}
+          >
+            <ChevronRight style={{ fontSize: "18px" }} />
+          </button>
+
+
+
+          {/* Dot Indicators */}
+          {carouselImages.length > 1 && (
+            <div className={`absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 transition-opacity duration-300 z-10`}>
+              {carouselImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentImageIndex(index);
+                  }}
+                  className={`h-1 rounded-full transition-all duration-300 ${currentImageIndex === index
+                    ? 'bg-primary-green w-6'
+                    : 'bg-white/60 w-4 hover:bg-white'
+                    }`}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
   );
 };
 
@@ -62,7 +124,7 @@ export default function SwiperComponent() {
           isLaptop: width > 768 && width <= 1024,
           isDesktop: width > 1024,
         });
-      }, 200); // Increased debounce
+      }, 200);
     };
     window.addEventListener("resize", handleResize, { passive: true });
     return () => {
@@ -74,7 +136,6 @@ export default function SwiperComponent() {
   const navigate = useNavigate();
   const { data: hotels } = useGetHotels();
 
-  // Memoize features array
   const features = useRef([
     { label: "Wifi", icon: WifiIcon },
     { label: "No Smoking", icon: SmokeFreeSharp },
@@ -82,23 +143,20 @@ export default function SwiperComponent() {
     { label: "Restaurant", icon: Restaurant },
   ]).current;
 
-  const renderRatingStars = useCallback((rating) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating - fullStars >= 0.5;
+  const renderTripAdvisorBadge = useCallback((rating) => {
+    const numericRating = Number(rating) || 0;
+    const ratingText = numericRating > 0 ? `${numericRating.toFixed(1)}` : "Guest favorite";
 
     return (
-      <div className="flex items-center">
-        {[...Array(5)].map((_, i) => (
-          <Star
-            key={i}
-            className={`${i < fullStars
-              ? 'text-yellow-400'
-              : (i === fullStars && hasHalfStar)
-                ? 'text-yellow-400 opacity-60'
-                : 'text-gray-300'}`}
-            style={{ fontSize: "16px" }}
-          />
-        ))}
+      <div className="flex items-center gap-2  px-3 py-1 w-fit">
+        <img
+          src="/images/tripadvisor-logo.svg"
+          alt="Tripadvisor rating"
+          className="h-4 w-auto"
+          loading="lazy"
+        />
+        <span className="text-xs font-semibold text-gray-900">{ratingText}</span>
+
       </div>
     );
   }, []);
@@ -112,7 +170,7 @@ export default function SwiperComponent() {
             data-aos="fade-up"
             data-aos-delay={index * 100}
           >
-            {/* Card Image */}
+            {/* Card Image with Carousel */}
             <div
               className={`relative overflow-hidden rounded-t-lg z-10 transition-all duration-300
                 ${screenInfo.isMobile
@@ -125,15 +183,10 @@ export default function SwiperComponent() {
               onMouseLeave={() => setHoveredCard(null)}
               onClick={() => navigate(generateHotelUrl(card?.hotelCode, card?.name))}
             >
-              <LazyBackground
-                src={card.images[0]?.replace('/upload/', '/upload/f_auto,q_auto,w_800/')}
-                hovered={hoveredCard === index}
-                className="absolute inset-0 bg-center bg-cover bg-no-repeat transition-all duration-700 ease-in-out"
-              />
-
-              <div
-                className={`cursor-pointer absolute inset-0 bg-black transition-opacity duration-700 ease-in-out ${hoveredCard === index ? "opacity-20" : "opacity-0"
-                  }`}
+              <ImageCarousel
+                images={card}
+                cardIndex={index}
+                hoveredCard={hoveredCard}
               />
             </div>
 
@@ -146,28 +199,31 @@ export default function SwiperComponent() {
                   : 'p-4 pt-8 h-[180px] gap-2'
               }`}>
 
-              {/* Rating */}
-              <div className={screenInfo.isMobile ? "mt-1 mb-1" : screenInfo.isTablet ? "mb-1" : "mt-1 mb-1"}>
-                {renderRatingStars(card.rating)}
-              </div>
+              <div className="flex justify-between items-center">
 
-              {/* Hotel Name */}
-              <h2
-                // onClick={() => navigate(`hotels/${card?.hotelCode}`, { state: { hotelData: card } })}
-
-                onClick={() => navigate(generateHotelUrl(card?.hotelCode, card?.name))}
-                className={`cursor-pointer hover:text-primary-green font-bold text-start transition-colors duration-300
+                {/* Hotel Name */}
+                <h2
+                  onClick={() => navigate(generateHotelUrl(card?.hotelCode, card?.name))}
+                  className={`cursor-pointer hover:text-primary-green font-bold text-start transition-colors duration-300
                   ${screenInfo.isMobile
-                    ? 'text-mobile/h5/medium md:text-desktop/h5'
-                    : screenInfo.isTablet
-                      ? 'text-lg leading-tight'
-                      : 'text-desktop/h5 xl:text-xl'
-                  }`}
-              >
-                {card.name?.length > (screenInfo.isTablet ? 18 : 20)
-                  ? `${card.name.slice(0, screenInfo.isTablet ? 18 : 20)}...`
-                  : card.name}
-              </h2>
+                      ? 'text-mobile/h5/medium md:text-desktop/h5'
+                      : screenInfo.isTablet
+                        ? 'text-lg leading-tight'
+                        : 'text-desktop/h5 xl:text-xl'
+                    }`}
+                >
+                  {card.name?.length > (screenInfo.isTablet ? 18 : 20)
+                    ? `${card.name.slice(0, screenInfo.isTablet ? 18 : 20)}...`
+                    : card.name}
+                </h2>
+
+                {/* Rating / Tripadvisor */}
+                <div className={screenInfo.isMobile ? "mb-1" : screenInfo.isTablet ? "mb-1" : " mb-1"}>
+                  {renderTripAdvisorBadge(card.rating)}
+                </div>
+
+
+              </div>
 
               {/* Location */}
               <div className={`flex items-end gap-1 text-[#707070] font-semibold
@@ -190,7 +246,7 @@ export default function SwiperComponent() {
                         ? 'max-w-[220px]'
                         : 'max-w-[280px]'
                   }`}>
-                  {card.location?.hotelAddress}
+                  {formatHotelAddress(card.location?.hotelAddress)}
                 </span>
               </div>
 
@@ -218,8 +274,8 @@ export default function SwiperComponent() {
                     ? 'left-[86%] top-[2rem] w-[80px] p-4'
                     : 'left-[90%] top-[2rem] w-[80px] p-4'
               }`}>
-              {features.map((feature, index) => (
-                <div key={index} className="flex flex-col items-center">
+              {features.map((feature, idx) => (
+                <div key={idx} className="flex flex-col items-center">
                   {feature.icon && (
                     <feature.icon
                       className="text-primary-white"
@@ -235,7 +291,7 @@ export default function SwiperComponent() {
                     }`}>
                     {feature.label}
                   </span>
-                  {index !== features.length - 1 && (
+                  {idx !== features.length - 1 && (
                     <hr className={`w-full h-[1px] bg-primary-white
                       ${screenInfo.isTablet ? 'my-1.5' : 'my-2'}`} />
                   )}
@@ -246,9 +302,8 @@ export default function SwiperComponent() {
         )}
       </>
     );
-  }, [screenInfo, hoveredCard, navigate, renderRatingStars, features, hotels?.hotels?.length]);
+  }, [screenInfo, hoveredCard, navigate, renderTripAdvisorBadge, features, hotels?.hotels?.length]);
 
-  // Enhanced slides per view calculation
   const getSlidesPerView = () => {
     if (screenInfo.isMobile) return 1;
     if (screenInfo.isTablet) return 2;
@@ -256,7 +311,6 @@ export default function SwiperComponent() {
     return 3;
   };
 
-  // Enhanced space between calculation
   const getSpaceBetween = () => {
     if (screenInfo.isMobile) return 20;
     if (screenInfo.isTablet) return 20;
@@ -264,7 +318,6 @@ export default function SwiperComponent() {
     return 30;
   };
 
-  // Dynamic swiper height
   const getSwiperHeight = () => {
     if (screenInfo.isMobile) return 'h-[28rem]';
     if (screenInfo.isTablet) return 'h-[27rem]';
@@ -283,7 +336,6 @@ export default function SwiperComponent() {
         swiperh={getSwiperHeight()}
         cssMode={true}
         breakpoints={{
-          // Mobile breakpoints
           320: {
             slidesPerView: 1,
             spaceBetween: 15,
@@ -292,7 +344,6 @@ export default function SwiperComponent() {
             slidesPerView: 2,
             spaceBetween: 20,
           },
-          // Tablet breakpoints (including 1024)
           768: {
             slidesPerView: 2,
             spaceBetween: 20,
@@ -305,7 +356,6 @@ export default function SwiperComponent() {
             slidesPerView: 2,
             spaceBetween: 25,
           },
-          // Laptop breakpoints
           1200: {
             slidesPerView: 2,
             spaceBetween: 25,
@@ -314,7 +364,6 @@ export default function SwiperComponent() {
             slidesPerView: 3,
             spaceBetween: 30,
           },
-          // Large desktop
           1920: {
             slidesPerView: 3,
             spaceBetween: 35,

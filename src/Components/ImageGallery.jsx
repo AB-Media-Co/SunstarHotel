@@ -99,7 +99,7 @@ const ImageGallery = ({ path = "default" }) => {
               padding: "2rem",
             }}
           >
-            <div className="text-start text-white font-bold text-2xl leading-snug">
+            <div className="text-start capitalize text-white font-bold text-2xl leading-snug">
               {item.content}
             </div>
           </div>

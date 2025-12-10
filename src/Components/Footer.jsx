@@ -51,27 +51,27 @@ const Footer = () => {
                         <div className="flex gap-6 justify-center md:justify-start w-full">
                             <a href="https://www.instagram.com/hotel_sunstar_group?igsh=MWxscGl6NHgxdTd2bw=="
                                 className="group">
-                                <InstagramIcon className='border-yellow-500 rounded-lg group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300' 
+                                <InstagramIcon className='border-yellow-500 rounded-lg group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300'
                                     style={{ fontSize: "30px" }} />
                             </a>
                             <a href="https://www.facebook.com/HotelSunstarGroup/"
                                 className="group">
-                                <FacebookIcon className='border-yellow-500 rounded-lg group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300' 
+                                <FacebookIcon className='border-yellow-500 rounded-lg group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300'
                                     style={{ fontSize: "30px" }} />
                             </a>
                             <a href="https://www.youtube.com/@sunstaradmin6584"
                                 className="group">
-                                <YouTubeIcon className='border-yellow-500 rounded-lg group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300' 
+                                <YouTubeIcon className='border-yellow-500 rounded-lg group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300'
                                     style={{ fontSize: "30px" }} />
                             </a>
                             <a href="https://www.linkedin.com/company/hotelsunstargroup/"
                                 className="group">
-                                <LinkedInIcon className='border-yellow-500 rounded-lg group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300' 
+                                <LinkedInIcon className='border-yellow-500 rounded-lg group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300'
                                     style={{ fontSize: "30px" }} />
                             </a>
                             <a href="https://in.pinterest.com/hotel_sunstar_group/"
                                 className="group">
-                                <PinterestIcon className='border-yellow-500 rounded-lg group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300' 
+                                <PinterestIcon className='border-yellow-500 rounded-lg group-hover:bg-primary-yellow group-hover:text-primary-green transition-all duration-300'
                                     style={{ fontSize: "30px" }} />
                             </a>
                         </div>
@@ -81,13 +81,12 @@ const Footer = () => {
                     <div className='flex md:hidden w-full gap-[20px] flex-col justify-between'>
                         <Link to='/why-sunstar' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Why Sunstar</Link>
                         <Link to='/loyalty-program' state={{ tab: 'loyalty' }} className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Loyalty Program</Link>
-                        <Link to='/dayuseroom' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Day Stays</Link>
-                        {/* <Link to='/developers&owners' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Dev & Owners</Link> */}
-                        <Link to='/eventandconference' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Events & Conference</Link>
-                        <Link to='/tour&travel' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Tour & Travel</Link>
-                        <Link to='/travel-agent' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Travel Agents</Link>
-                        {/* <Link to='/in-the-media' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">In the Media</Link> */}
                         <Link to='/career' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Come Shine with Us</Link>
+                        <Link to='/dayuseroom' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Day Stays</Link>
+                        <Link to='/tour&travel' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Tour & Travel</Link>
+                        <Link to='/eventandconference' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Events & Conference</Link>
+                        <Link to='/travel-agent' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Travel Agents</Link>
+
                     </div>
 
                     {/* Navigation Links for Tablet */}
@@ -95,20 +94,20 @@ const Footer = () => {
                         <div className="flex flex-col space-y-3 flex-1">
                             <Link to='/why-sunstar' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Why Sunstar</Link>
                             <Link to='/loyalty-program' state={{ tab: 'loyalty' }} className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Loyalty Program</Link>
+                            <Link to='/career' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Come Shine with Us</Link>
                             <Link to='/dayuseroom' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Day Stays</Link>
-                            <Link to='/contact' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Contact</Link>
                         </div>
                         <div className="flex flex-col space-y-3 flex-1">
-                            <Link to='/eventandconference' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Events & Conference</Link>
                             <Link to='/tour&travel' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Tour & Travel</Link>
-                            <Link to='/travel-agent' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Travel Agents</Link>
+                            <Link to='/eventandconference' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Events & Conference</Link>
                             <Link to='/corporate-booking' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Corporate Booking</Link>
+                            <Link to='/travel-agent' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Travel Agents</Link>
                         </div>
                         <div className="flex flex-col space-y-3 flex-1">
                             {/* <Link to='/developers&owners' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Dev & Owners</Link> */}
                             {/* <Link to='/in-the-media' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">In the Media</Link> */}
                             <Link to='/sunstar-blogs' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Blog & Buzz</Link>
-                            <Link to='/career' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Come Shine with Us</Link>
+                            <Link to='/contact' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Contact</Link>
                         </div>
                     </div>
 
@@ -126,20 +125,20 @@ const Footer = () => {
                         <div className="flex flex-col space-y-3">
                             <Link to='/why-sunstar' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Why Sunstar</Link>
                             <Link to='/loyalty-program' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Loyalty Program</Link>
-                            <Link to='/contact' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Contact</Link>
+                            <Link to='/career' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Come Shine with Us</Link>
                         </div>
                         <div className="flex flex-col space-y-3">
-                            <Link to='/corporate-booking' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Corporate Booking</Link>
                             <Link to='/dayuseroom' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Day Stays</Link>
+                            <Link to='/tour&travel' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Tour & Travel</Link>
                             <Link to='/eventandconference' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Events & Conference</Link>
                         </div>
                         <div className="flex flex-col space-y-3">
+                            <Link to='/corporate-booking' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Corporate Booking</Link>
+                            <Link to='/travel-agent' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Travel Agents</Link>
                             <Link to='/sunstar-blogs' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Blog & Buzz</Link>
-                            <Link to='/career' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Come Shine with Us</Link>
-                            <Link to='/tour&travel' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Tour & Travel</Link>
                         </div>
                         <div className="flex flex-col space-y-3">
-                            <Link to='/travel-agent' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Travel Agents</Link>
+                            <Link to='/contact' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Contact Us</Link>
                             {/* <Link to='/developers&owners' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">Developers & Owners</Link> */}
                             {/* <Link to='/in-the-media' className="cursor-pointer hover:text-primary-yellow transition-all duration-300">In the Media</Link> */}
                         </div>

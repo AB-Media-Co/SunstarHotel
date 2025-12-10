@@ -202,8 +202,8 @@ const useUpdatePagesHook = () => {
 
   // --- What we offer ---
   const whatWeOfferingMutation = useMutation({
-    mutationFn: async (Data) => {
-      const res = await axiosInstance.post(API.OFFERING, Data);
+    mutationFn: async ({ whatWeOffers, page }) => {
+      const res = await axiosInstance.post(API.OFFERING, { whatWeOffers, page });
       return res.data;
     },
     onSuccess: () => {
@@ -321,7 +321,7 @@ const useUpdatePagesHook = () => {
     galleryImages: websiteData?.grid || {},
     shineSection: websiteData?.shineSection || [], // (legacy shine if you still use it)
     heroSectionUpdate: websiteData?.heroSection || [],
-    offeringSection: websiteData?.whatWeOffers || [],
+    offeringSection: websiteData?.whatWeOffers || {},
     whysunstarValue: websiteData?.WhySunstar?.WhySunstarValue || [],
     Testimonials: websiteData?.Testimonials || [],
     CoorporateBooking: websiteData?.CoorporateBooking || [],

@@ -102,10 +102,10 @@ const Testimonials = () => {
 
   const handleSaveChanges = () => {
     const tooLong = editingData.clients.some(c =>
-      c.description.trim().split(/\s+/).length > 50
+      c.description.trim().split(/\s+/).length > 100
     );
     if (tooLong) {
-      toast.error('Each description must be 50 words or fewer.');
+      toast.error('Each description must be 100 words or fewer.');
       return;
     }
     
@@ -199,8 +199,8 @@ const Testimonials = () => {
                   rows={3}
                   value={client.description}
                   onChange={e => handleClientChange(idx, 'description', e.target.value)}
-                  helperText={`${client.description.trim().split(/\s+/).length}/50 words`}
-                  error={client.description.trim().split(/\s+/).length > 50}
+                  helperText={`${client.description.trim().split(/\s+/).length}/100 words`}
+                  error={client.description.trim().split(/\s+/).length > 100}
                 />
                 <Button
                   variant="outlined"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { User, Star, Calendar, Phone, Mail, MapPin, FileText, MessageCircle, Shield, HelpCircle, Edit2, Save, X, Menu, ChevronDown } from 'lucide-react';
+import { User, Star, Calendar, Phone, Mail, MapPin, FileText, MessageCircle, Shield, HelpCircle, Edit2, Save, X, Menu, ChevronDown, LogOut, AlertTriangle } from 'lucide-react';
 import { usePricing } from '../../Context/PricingContext';
 import { useGetUserByEmail, useUpdateUserProfile } from '../../ApiHooks/useUser';
 import Bookings from './Bookings';
@@ -9,6 +9,66 @@ import AgentDashboard from './AgentDashboard';
 import { useGetAgentByEmail } from '../../ApiHooks/useAgentHook';
 import CorporateDashboard from './CorporateDashboard';
 
+// Logout Confirmation Modal Component
+const LogoutModal = ({ isOpen, onClose, onConfirm, isLoggingOut }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <div className="relative bg-white rounded-2xl shadow-2xl w-[90%] max-w-md mx-4 overflow-hidden animate-in fade-in zoom-in duration-200">
+        {/* Header with icon */}
+        <div className="bg-gradient-to-r from-red-50 to-orange-50 p-6 text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <LogOut className="w-8 h-8 text-red-600" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900">Logout Confirmation</h3>
+          <p className="text-gray-600 mt-2 text-sm">
+            Are you sure you want to logout from your account?
+          </p>
+        </div>
+
+        {/* Actions */}
+        <div className="p-6 flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={onClose}
+            disabled={isLoggingOut}
+            className="flex-1 px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={isLoggingOut}
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-medium hover:from-red-600 hover:to-red-700 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 shadow-lg shadow-red-500/25"
+          >
+            {isLoggingOut ? (
+              <>
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Logging out...</span>
+              </>
+            ) : (
+              <>
+                <LogOut className="w-5 h-5" />
+                <span>Yes, Logout</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const UserProfile = () => {
   const location = useLocation();
   const initialTab = location.state?.tab ?? 'profile';
@@ -16,6 +76,10 @@ const UserProfile = () => {
   const [editingField, setEditingField] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Logout states
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { setIsNavColor } = usePricing()
 
@@ -36,7 +100,7 @@ const UserProfile = () => {
     setIsNavColor(true);
 
     return () => {
-      setIsNavColor(false); // ✅ Reset when leaving the page
+      setIsNavColor(false);
     };
   }, [setIsNavColor])
 
@@ -119,6 +183,35 @@ const UserProfile = () => {
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
     setDropdownOpen(false);
+  };
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+
+    // Simulate a small delay for better UX
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Clear localStorage
+    localStorage.clear();
+
+    // Clear sessionStorage
+    sessionStorage.clear();
+
+    // Clear all cookies
+    document.cookie.split(";").forEach((cookie) => {
+      const name = cookie.split("=")[0].trim();
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+    });
+
+    // (Optional) Invalidate cache if using service workers
+    if ('caches' in window) {
+      caches.keys().then((names) => {
+        names.forEach(name => caches.delete(name));
+      });
+    }
+
+    // Redirect to homepage or login
+    window.location.href = '/';
   };
 
   const renderTabContent = () => {
@@ -405,32 +498,16 @@ const UserProfile = () => {
     }
   };
 
-  const handleLogout = () => {
-    // ✅ Clear localStorage
-    localStorage.clear();
-
-    // ✅ Clear sessionStorage
-    sessionStorage.clear();
-
-    // ✅ Clear all cookies
-    document.cookie.split(";").forEach((cookie) => {
-      const name = cookie.split("=")[0].trim();
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
-    });
-
-    // ✅ (Optional) Invalidate cache if using service workers
-    if ('caches' in window) {
-      caches.keys().then((names) => {
-        names.forEach(name => caches.delete(name));
-      });
-    }
-
-    // ✅ Redirect to homepage or login
-    window.location.href = '/';
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Logout Confirmation Modal */}
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        isLoggingOut={isLoggingOut}
+      />
+
       <div className="content mt-28 sm:mt-28 mx-auto px-4 sm:px-6">
         {/* Mobile Dropdown */}
         <div className="lg:hidden mb-4 pt-6 mt-4">
@@ -453,16 +530,29 @@ const UserProfile = () => {
                   <button
                     key={tab.id}
                     onClick={() => handleTabChange(tab.id)}
-                    className={`w-full flex items-center space-x-2 px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg transition-colors ${
-                      activeTab === tab.id
-                        ? 'bg-primary-green text-white hover:bg-primary-green'
-                        : 'text-gray-700'
-                    }`}
+                    className={`w-full flex items-center space-x-2 px-4 py-3 text-left hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg transition-colors ${activeTab === tab.id
+                      ? 'bg-primary-green text-white hover:bg-primary-green'
+                      : 'text-gray-700'
+                      }`}
                   >
                     <tab.icon className="w-5 h-5" />
                     <span>{tab.label}</span>
                   </button>
                 ))}
+
+                {/* Mobile Logout in Dropdown */}
+                <div className="border-t border-gray-200">
+                  <button
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      setShowLogoutModal(true);
+                    }}
+                    className="w-full flex items-center space-x-2 px-4 py-3 text-left text-red-600 hover:bg-red-50 rounded-b-lg transition-colors"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    <span>Logout</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -517,11 +607,10 @@ const UserProfile = () => {
                           setActiveTab(tab.id);
                           setSidebarOpen(false);
                         }}
-                        className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${
-                          activeTab === tab.id
-                            ? 'bg-primary-green text-white'
-                            : 'hover:bg-gray-50 text-gray-700'
-                        }`}
+                        className={`w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors ${activeTab === tab.id
+                          ? 'bg-primary-green text-white'
+                          : 'hover:bg-gray-50 text-gray-700'
+                          }`}
                       >
                         <tab.icon className="w-5 h-5" />
                         <span className={activeTab === tab.id ? 'font-medium' : ''}>{tab.label}</span>
@@ -564,6 +653,19 @@ const UserProfile = () => {
                   Privacy Policy
                 </a>
               </div>
+
+              {/* Enhanced Logout Button */}
+              <div className="py-2">
+                <button
+                  onClick={() => setShowLogoutModal(true)}
+                  className="group w-full flex items-center justify-center gap-3 px-4 py-3 bg-gradient-to-r from-red-50 to-orange-50 hover:from-red-100 hover:to-orange-100 border border-red-200 hover:border-red-300 text-red-600 hover:text-red-700 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md"
+                >
+                  <div className="p-1.5 bg-red-100 group-hover:bg-red-200 rounded-lg transition-colors duration-300">
+                    <LogOut className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium">Logout</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -579,12 +681,6 @@ const UserProfile = () => {
                     <HelpCircle className="w-4 h-4 flex-shrink-0" />
                     <span className="text-sm">Having trouble with your profile? Contact Support</span>
                   </div>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-primary-green hover:bg-primary-green text-white px-6 py-2 rounded-md text-sm font-medium transition-colors self-start sm:self-center"
-                  >
-                    Logout
-                  </button>
                 </div>
               </div>
             )}

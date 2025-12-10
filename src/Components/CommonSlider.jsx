@@ -29,11 +29,13 @@ const CommonSwiper = ({
   allowTouchMove = true,
   centeredSlides = false,
   customNavigation = false, // If user wants to control navigation externally
-  initialSlide = 0
+  initialSlide = 0,
+    autoHeight = false,
 }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const swiperRef = useRef(null);
+  const navigationTimeoutRef = useRef(null);
   const [isFirstSlide, setIsFirstSlide] = useState(true);
   const [isLastSlide, setIsLastSlide] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -84,7 +86,7 @@ const CommonSwiper = ({
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         setViewportWidth(window.innerWidth);
-      }, 200); // Increased debounce for better performance
+      }, 200);
     };
 
     window.addEventListener("resize", handleResize, { passive: true });
@@ -121,18 +123,28 @@ const CommonSwiper = ({
     if (onSlideChange) onSlideChange(swiper);
   }, [isFirstSlide, isLastSlide, currentSlide, onSlideChange]);
 
-  // Navigation handler with improved loop logic
+  // FIXED: Navigation handler with proper debounce and timeout cleanup
   const handleNavigationClick = useCallback((direction) => {
     if (isNavigating || !swiperRef.current) return;
 
     setIsNavigating(true);
+    
+    // Clear any existing timeout
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
     
     if (direction === "prev") {
       swiperRef.current.slidePrev();
     } else if (direction === "next") {
       swiperRef.current.slideNext();
     }
-  }, [isNavigating]);
+
+    // Set a timeout to reset isNavigating - ensures it doesn't get stuck
+    navigationTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+    }, speed + 100); // Add 100ms buffer to the transition speed
+  }, [isNavigating, speed]);
 
   // Set total slides when swiper initializes
   const handleSwiperInit = (swiper) => {
@@ -142,20 +154,45 @@ const CommonSwiper = ({
     setIsLastSlide(swiper.isEnd);
   };
 
-  // Manage transitions
+  // Manage transitions with better cleanup
   useEffect(() => {
     if (swiperRef.current) {
       const swiper = swiperRef.current;
 
-      const handleTransitionStart = () => setIsNavigating(true);
-      const handleTransitionEnd = () => setIsNavigating(false);
+      const handleTransitionStart = () => {
+        setIsNavigating(true);
+      };
+      
+      const handleTransitionEnd = () => {
+        setIsNavigating(false);
+        // Clear any pending timeout
+        if (navigationTimeoutRef.current) {
+          clearTimeout(navigationTimeoutRef.current);
+        }
+      };
+
+      const handleTouchStart = () => {
+        // Clear navigation timeout when user starts dragging
+        if (navigationTimeoutRef.current) {
+          clearTimeout(navigationTimeoutRef.current);
+        }
+        setIsNavigating(true);
+      };
+
+      const handleTouchEnd = () => {
+        setIsNavigating(false);
+      };
 
       swiper.on("transitionStart", handleTransitionStart);
       swiper.on("transitionEnd", handleTransitionEnd);
+      swiper.on("touchStart", handleTouchStart);
+      swiper.on("touchEnd", handleTouchEnd);
 
       return () => {
         swiper.off("transitionStart", handleTransitionStart);
         swiper.off("transitionEnd", handleTransitionEnd);
+        swiper.off("touchStart", handleTouchStart);
+        swiper.off("touchEnd", handleTouchEnd);
       };
     }
   }, []);
@@ -174,6 +211,15 @@ const CommonSwiper = ({
       }
     }
   }, [isMobile, autoplayDelay, enableAutoplay]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Ensure items exist before rendering
   if (!items || items.length === 0) {
@@ -235,6 +281,14 @@ const CommonSwiper = ({
         observer={true}
         observeParents={true}
         resizeObserver={true}
+        resistanceRatio={0.85}
+        touchRatio={1}
+        touchAngle={45}
+        simulateTouch={true}
+        grabCursor={true}
+        threshold={5}
+        edgeSwipeDetection={true}
+        edgeSwipeThreshold={20}
       >
         {items?.map((item, index) => (
           <SwiperSlide className="md:p-2 " key={index}>

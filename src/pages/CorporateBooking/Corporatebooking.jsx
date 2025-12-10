@@ -13,35 +13,12 @@ import ExclusiveBenifits from "./Components/ExclusiveBenifits";
 import TestimonialSection from "../../Components/TestimonialSection"
 import SunstarInfoCards from "../InTheMedia/Component/SunstarInfoCards";
 import ImagesGallery from "../TourAndTravelPaage/TourAndTravelMain/Component/ImagesGallery";
-
-
-const infoCards = [
-  {
-    id: 1,
-    title: "Why Sunstar?",
-    description: "Discover who we are, what we believe in, and the purpose that drives our journey.",
-    buttonText: "Check us out",
-    illustration: "/images/whybloom.svg",
-  },
-  {
-    id: 2,
-    title: "Travel",
-    description: "Explore breathtaking destinations, curated experiences, and memorable stays with us.",
-    buttonText: "Discover trips",
-    illustration: "/images/travel.svg",
-  },
-  {
-    id: 3,
-    title: "Conference & Events",
-    description: "Plan business meets, celebrations, and gatherings with seamless support & venues.",
-    buttonText: "View event spaces",
-    illustration: "/images/conf.svg",
-  },
-];
+import CompnayCards from "../About/Components/CompnayCards";
 
 
 const CorporateBooking = () => {
-  const { CoorporateBooking } = useUpdatePagesHook();
+  const { CoorporateBooking, offeringSection } = useUpdatePagesHook();
+  console.log(offeringSection)
   const { data: metas } = useGetMetas();
   const [openSignup, setOpenSignup] = useState(false); // ⬅️ NEW
 
@@ -91,14 +68,16 @@ const CorporateBooking = () => {
       <ExclusiveBenifits data={CoorporateBooking?.BenefitsSection} />
       {/* <BusinessPlatform features={CoorporateBooking?.BusinessPlatformSection} /> */}
 
-      <Partnerlogos />
+      {/* <CompnayCards data={offeringSection?.corporate} /> */}
+
+      <Partnerlogos category="Corporate" />
 
       <TestimonialSection page="coorporatebooking" />
       {/* <SunstarEnquiryForm /> */}
       <FormData />
       <ImagesGallery path="" />
 
-      <SunstarInfoCards infoCards={infoCards} />
+      <SunstarInfoCards infoCards={offeringSection?.corporate} />
       <FAQSectionWithAPI pageName="corporate-booking" />
 
       {/* Modal */}

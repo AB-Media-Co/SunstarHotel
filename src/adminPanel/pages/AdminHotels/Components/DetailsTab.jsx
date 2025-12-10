@@ -386,18 +386,19 @@ export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAme
       </div>
       <div>
         <label className="block text-gray-700 font-medium mb-1">Rating:</label>
-        <StarRating
-          rating={formData.rating}
-          onChange={newRating =>
-            handleDetailsChange({
-              target: { name: 'rating', value: newRating, type: 'number' }
-            })
-          }
+        <input
+          type="number"
+          name="rating"
+          value={formData.rating}
+          onChange={handleDetailsChange}
+          min="0"
+          max="5"
+          step="0.1"
+          placeholder="Rating (0-5)"
+          className="w-full border rounded-md p-3 focus:ring focus:ring-blue-200"
         />
       </div>
     </div>
-
-
 
     <div className="border-t pt-6">
       <div className="group">
@@ -441,11 +442,10 @@ export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAme
             />
             <small className="text-gray-500">Use commas to separate keywords.</small>
           </div>
-         
+
         </div>
       </div>
     </div>
-
 
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Continental Plan (Breakfast)</h2>
@@ -532,29 +532,6 @@ export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAme
       />
     </div>
 
-
-
-    {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Check In:</label>
-          <TimeSelector
-            initialTime={formData.checkIn}
-            onChange={handleTimeChange}
-            name="checkIn"
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Check Out:</label>
-          <TimeSelector
-            initialTime={formData.checkOut}
-            onChange={handleTimeChange}
-            name="checkOut"
-          />
-        </div>
-      </div> */}
-
-
-
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label className="block text-gray-700 font-medium mb-1">Check In:</label>
@@ -573,8 +550,6 @@ export const DetailsTab = ({ formData, handleDetailsChange, amenities, handleAme
         />
       </div>
     </div>
-
-
 
     <div className="flex items-center">
       <input

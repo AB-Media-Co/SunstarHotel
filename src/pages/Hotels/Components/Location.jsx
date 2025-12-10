@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 
 // eslint-disable-next-line react/prop-types
-const Location = ({ address, hotelData  }) => {
+const Location = ({ address, hotelData }) => {
     // Destructure the passed object
     const {
         hotelAddress,
@@ -106,7 +106,7 @@ const Location = ({ address, hotelData  }) => {
                                                 hotelLoc,
                                                 placeLoc
                                             );
-                                            const travelTime = Math.round(distance / 80);
+                                            const travelTime = Math.round((distance * 1.4) / 500); // Estimate driving time (30km/h + road factor)
                                             const enrichedPlace = { ...place, location: placeLoc, distance, travelTime, place_id: place.place_id || place.name };
                                             resolve(enrichedPlace);
                                         } else {
@@ -209,7 +209,7 @@ const Location = ({ address, hotelData  }) => {
                       <strong>${name}</strong><br/>
                       Distance: ${(place.distance / 1000).toFixed(2)} km<br/>
                       ${place.vicinity || ''}<br/>
-                      Travel Time: ${place.travelTime} min
+                      Drive Time: ${place.travelTime} min
                     </div>`,
                 });
                 marker.addListener('click', () => {
@@ -252,8 +252,8 @@ const Location = ({ address, hotelData  }) => {
         }
     };
 
-    // Simple travel time calculation (distance in meters / 80 gives minutes)
-    const calcTravelTime = (distance) => Math.round(distance / 80);
+    // Estimate driving time (distance * 1.4 for road factor / 500 m/min for 30km/h avg speed)
+    const calcTravelTime = (distance) => Math.round((distance * 1.4) / 500);
 
     // Framer Motion popup animation variants
     const popupVariants = {
@@ -307,7 +307,7 @@ const Location = ({ address, hotelData  }) => {
                                         </p>
                                         {nearestPlace && (
                                             <p className="text-xs text-gray-400">
-                                                ( {travelTime} Min away)
+                                                ( {travelTime} Min Drive)
                                             </p>
                                         )}
                                     </div>
@@ -388,7 +388,7 @@ const Location = ({ address, hotelData  }) => {
                                                     {category}
                                                 </h4>
                                                 <span className="text-xs text-gray-500">
-                                                    {travelTime} Min away
+                                                    {travelTime} Min Drive
                                                 </span>
                                                 <button
                                                     onClick={() => viewOnMap(place)}
@@ -582,7 +582,7 @@ const Location = ({ address, hotelData  }) => {
                                                                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                                         </svg>
-                                                                        <span>{calcTravelTime(place.distance)} min</span>
+                                                                        <span>{calcTravelTime(place.distance)} min drive</span>
                                                                     </div>
                                                                 </div>
 

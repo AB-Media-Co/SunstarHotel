@@ -13,20 +13,20 @@ import { useEffect } from 'react';
 
 const AboutUs = () => {
   // const { data: hotels } = useGetHotels();
-  const { whysunstarValue, Testimonials } = useUpdatePagesHook();
+  const { whysunstarValue, Testimonials, offeringSection } = useUpdatePagesHook();
   const { data: metas } = useGetMetas();
   const whySunstarMeta = Array.isArray(metas)
-  ? metas.find(meta => meta.page === "whysunstar")
-  : null;
-  
+    ? metas.find(meta => meta.page === "whysunstar")
+    : null;
+
   useEffect(() => {
     window.scrollTo(0, 0);
-}, []);
+  }, []);
 
-  return ( 
+  return (
     <div className="font-sans ">
-       <Helmet>
-        <title>{whySunstarMeta?.metaTitle ||  'WhySunstar'}</title>
+      <Helmet>
+        <title>{whySunstarMeta?.metaTitle || 'WhySunstar'}</title>
         <meta name="description" content={whySunstarMeta?.metaDescription || ''} />
         <meta name="keywords" content={whySunstarMeta?.metaKeywords?.join(', ') || ''} />
       </Helmet>
@@ -40,12 +40,12 @@ const AboutUs = () => {
       />
       <ValuesSection />
       <ShineSection />
-      <CompnayCards  />
+      <CompnayCards data={offeringSection?.whySunstar} />
 
 
       <TestimonialSection
         page='whysunstar'
-        
+
       />
 
       {/* <SunstarBrandsSection hotels={hotels?.hotels} /> */}

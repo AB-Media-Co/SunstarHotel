@@ -48,7 +48,7 @@ const amenitiesIconsMap = {
     "steam room": "/images/AmenitiesIcons/steam-room 1.svg",
     "study table (desk & chair)": "/images/AmenitiesIcons/Study Table.svg",
     "swimming pool": "/images/AmenitiesIcons/Swimming Pool.svg",
-    "tea/ coffee kettles": "/images/AmenitiesIcons/Restaurant & Cafe.svg",
+    "tea/ coffee kettles": "/images/AmenitiesIcons/cattle.svg",
     "travel desk": "/images/AmenitiesIcons/Travel Desk.svg",
     "32\" tv": "/images/AmenitiesIcons/tv.svg",
     "wardrobe": "/images/AmenitiesIcons/Wardrobe.svg"

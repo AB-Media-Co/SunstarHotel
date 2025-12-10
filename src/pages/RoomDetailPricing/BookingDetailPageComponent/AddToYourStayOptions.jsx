@@ -94,9 +94,9 @@ const OptionCard = ({ option, isSelected, onToggle }) => {
                   }`}>
                   ₹{option.rate?.amount}
                 </div>
-                {option.rate?.period && (
+                {/* {option.rate?.period && (
                   <div className="text-xs text-gray-500">{option.rate.period}</div>
-                )}
+                )} */}
               </div>
             </div>
 

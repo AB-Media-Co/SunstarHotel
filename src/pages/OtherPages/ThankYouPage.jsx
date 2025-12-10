@@ -63,7 +63,7 @@ const ThankYouPage = () => {
         }
 
         return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
@@ -105,10 +105,10 @@ const ThankYouPage = () => {
         try {
             const date = new Date(dateString);
             const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
-            const formattedDate = date.toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric', 
-                year: 'numeric' 
+            const formattedDate = date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
             });
             return `${dayName}, ${formattedDate}`;
         } catch (e) {
@@ -164,7 +164,7 @@ const ThankYouPage = () => {
 
                 {/* Body */}
                 <div className="px-6 py-8">
-                 
+
                     {/* Booking Summary / Stats */}
                     {user && (
                         <div className="space-y-4 mb-8">
@@ -187,7 +187,7 @@ const ThankYouPage = () => {
                             {/* Hotel & Stay Information with Rooms */}
                             <div className="p-5 rounded-xl border border-teal-200 bg-gradient-to-r from-teal-50 to-white">
                                 <div className="text-xs font-semibold uppercase tracking-wider text-teal-700 mb-3">Your Stay Details</div>
-                                
+
                                 {/* Hotel Name */}
                                 <div className="mb-4">
                                     <div className="text-lg font-bold text-gray-900">
@@ -267,19 +267,19 @@ const ThankYouPage = () => {
                                 <div className="p-4 rounded-xl border border-gray-200 bg-white">
                                     <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Booking ID</div>
                                     <div className="text-base font-bold text-gray-900">
-                                        {bookingResponse?.data?.ReservationNo || 
-                                         bookingResponse?.ReservationNo || 
-                                         bookingResponse?.data?.bookingId || 
-                                         bookingResponse?.bookingId || 
-                                         "Processing"}
+                                        {bookingResponse?.data?.ReservationNo ||
+                                            bookingResponse?.ReservationNo ||
+                                            bookingResponse?.data?.bookingId ||
+                                            bookingResponse?.bookingId ||
+                                            "Processing"}
                                     </div>
                                     <div className="inline-flex items-center gap-1.5 mt-2 text-xs font-medium text-teal-600">
                                         <span className="w-2 h-2 bg-teal-500 rounded-full"></span>
-                                        {bookingResponse?.data?.BookingStatus || 
-                                         bookingResponse?.BookingStatus || 
-                                         bookingResponse?.data?.status || 
-                                         bookingResponse?.status || 
-                                         "Confirmed"}
+                                        {bookingResponse?.data?.BookingStatus ||
+                                            bookingResponse?.BookingStatus ||
+                                            bookingResponse?.data?.status ||
+                                            bookingResponse?.status ||
+                                            "Confirmed"}
                                     </div>
                                 </div>
 
@@ -299,6 +299,55 @@ const ThankYouPage = () => {
                                     )}
                                 </div>
                             </div>
+
+                            {/* Payment Summary */}
+                            {state?.pricing && (
+                                <div className="mt-6 p-5 rounded-xl border border-gray-200 bg-gray-50">
+                                    <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-4 pb-2 border-b border-gray-200">
+                                        Payment Summary
+                                    </div>
+                                    <div className="space-y-3 text-sm">
+                                        <div className="flex justify-between text-gray-600">
+                                            <span>Base Price</span>
+                                            <span>{formatINR(state.pricing.baseFinalPrice - state.pricing.totalOtherCharges - state.pricing.totalAddOns)}</span>
+                                        </div>
+
+                                        {state.pricing.totalAddOns > 0 && (
+                                            <div className="flex justify-between text-gray-600">
+                                                <span>Add-ons</span>
+                                                <span>{formatINR(state.pricing.totalAddOns)}</span>
+                                            </div>
+                                        )}
+
+                                        <div className="flex justify-between text-gray-600">
+                                            <span>Taxes & Fees</span>
+                                            <span>{formatINR(state.pricing.totalOtherCharges)}</span>
+                                        </div>
+
+                                        {state.pricing.payNowDiscount > 0 && (
+                                            <div className="flex justify-between text-green-600">
+                                                <span>Pay Now Discount</span>
+                                                <span>-{formatINR(state.pricing.payNowDiscount)}</span>
+                                            </div>
+                                        )}
+
+                                        {state.pricing.offerDiscount > 0 && (
+                                            <div className="flex justify-between text-green-600">
+                                                <span>Offer Discount</span>
+                                                <span>-{formatINR(state.pricing.offerDiscount)}</span>
+                                            </div>
+                                        )}
+
+                                        <div className="flex justify-between items-center pt-3 border-t border-gray-300 mt-2">
+                                            <span className="font-bold text-gray-900 text-base">Total Payable</span>
+                                            <span className="font-bold text-primary-green text-xl">
+                                                {formatINR(state.pricing.finalPrice)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                         </div>
                     )}
 

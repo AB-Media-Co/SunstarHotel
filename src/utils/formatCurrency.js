@@ -18,14 +18,11 @@ export const formatCurrency = (value) => {
   // Handle invalid numbers
   if (isNaN(num)) return '0';
   
-  // Round to 2 decimal places if needed
-  const roundedNum = Math.round(num * 100) / 100;
+  // Round to nearest integer (no decimals)
+  const roundedNum = Math.round(num);
   
-  // Convert to Indian number format (lakhs, crores)
-  return roundedNum.toLocaleString('en-IN', {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 0
-  });
+  // Convert to Indian number format (lakhs, crores) without decimals
+  return roundedNum.toLocaleString('en-IN');
 };
 
 /**

@@ -7,7 +7,7 @@ import { useGetEventPageBySlug } from '../../ApiHooks/useEventPageHook';
 import Loader from '../../Components/Loader';
 
 const CorporateEventsPage = () => {
-  const { mutate, isLoading } = useEnquiryForm();
+  const { mutate } = useEnquiryForm();
 
   // Fetch dynamic content from API
   const { data: pageContent, isLoading: contentLoading } = useGetEventPageBySlug('corporateevent');
@@ -139,6 +139,9 @@ const CorporateEventsPage = () => {
         heroImage="/images/OtherPageImages/CoorporateEvents.webp"
         heroTitle={heroData.heading || 'Introducing Sunstar Hotels,'}
         heroHighlightedText={heroData.subheading || 'the ideal destination for corporate events'}
+        bannerDescription={heroData.description || "Whether you're planning a corporate conference, wedding, milestone celebration, or an intimate gathering, Hotel Sunstar Group ensures a flawless experience from start to finish."}
+        bannerButtonText="Book Your Event Now"
+        formId="corporate-event-form"
 
         // Intro section
         introText={introText}
@@ -161,14 +164,16 @@ const CorporateEventsPage = () => {
       />
 
 
-      <CommonUseEnquiryForm
-        title="Corporate Event Booking"
-        subtitle="Organize seamless corporate events with our expert assistance."
-        fields={eventFormFields}
-        onSubmit={handleSubmit}
-        buttonLabel="Submit Enquiry"
-        containerClassName=""
-      />
+      <section id="corporate-event-form">
+        <CommonUseEnquiryForm
+          title="Corporate Event Booking"
+          subtitle="Organize seamless corporate events with our expert assistance."
+          fields={eventFormFields}
+          onSubmit={handleSubmit}
+          buttonLabel="Submit Enquiry"
+          containerClassName=""
+        />
+      </section>
     </>
   );
 };

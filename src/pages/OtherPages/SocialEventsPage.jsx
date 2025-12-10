@@ -59,9 +59,6 @@ const SocialEventsPage = () => {
             <h1 className='text-mobile/h3 md:text-desktop/h3  font-bold text-primary-white max-w-[650px]'>
                 {heroData.heading || 'Welcome to the personalised events at'} <span className='text-[#FDD304]'>{heroData.subheading || 'Sunstar Hotels !'}</span>
             </h1>
-            <p className='py-4 text-mobile/body/2 md:text-desktop/body/1 max-w-[600px] text-white'>
-                {heroData.description || 'Whether you are planning a birthday party, anniversary celebration, candle light dinner, baby shower, marriage proposal, or any other special occasion, we are excited to help make your personal event a truly unforgettable experience.'}
-            </p>
         </>
     )
 
@@ -150,6 +147,9 @@ const SocialEventsPage = () => {
                 // Hero section
                 heroImage="/images/OtherPageImages/socialeventhead.webp"
                 anotherText={heroTitle}
+                bannerDescription={heroData.description || 'Whether you are planning a birthday party, anniversary celebration, candle light dinner, baby shower, marriage proposal, or any other special occasion, we are excited to help make your personal event a truly unforgettable experience.'}
+                bannerButtonText="Book Your Event Now"
+                formId="social-event-form"
                 // heroHighlightedText="the ideal destination for corporate events"
                 // Intro section
                 introText={introText}
@@ -170,14 +170,16 @@ const SocialEventsPage = () => {
                 formImage="/images/OtherPageImages/formImg2.webp"
             />
 
-            <CommonUseEnquiryForm
-                title="Host a Social Event"
-                subtitle="Whether it’s a celebration or gathering, we’ll help you plan it right."
-                fields={eventFormFields}
-                onSubmit={handleSubmit}
-                buttonLabel="Submit Enquiry"
-                containerClassName=""
-            />
+            <section id="social-event-form">
+                <CommonUseEnquiryForm
+                    title="Host a Social Event"
+                    subtitle="Whether it's a celebration or gathering, we'll help you plan it right."
+                    fields={eventFormFields}
+                    onSubmit={handleSubmit}
+                    buttonLabel="Submit Enquiry"
+                    containerClassName=""
+                />
+            </section>
         </>
     );
 };

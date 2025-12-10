@@ -126,7 +126,7 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
   // console.log(hotelCode ? `Calendar mounted for hotelCode: ${hotelCode}` : "Calendar mounted without specific hotelCode");
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const nextMonth = useMemo(() => addMonths(currentMonth, 1), [currentMonth]);
-  const { closeHotelModal } = usePricing();
+  const { closeHotelModal, setNights } = usePricing();
 
   const [authkey, setAuthkey] = useState(null);
 
@@ -323,6 +323,11 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
       try {
         localStorage.setItem("checkInDate", startStr);
         localStorage.setItem("checkOutDate", endStr);
+
+        const daysDiff = differenceInCalendarDays(checkOut, checkIn);
+        localStorage.setItem("days", daysDiff);
+        if (setNights) setNights(daysDiff);
+
         // console.log("Dates saved to localStorage");
       } catch (storageErr) {
         console.warn("Failed to save dates to localStorage:", storageErr);
@@ -363,10 +368,10 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
       });
 
       // console.log("Data pre-fetched and cached — navigating to:", generateHotelUrl(code, hotelInfo?.name));
-      
+
       // Navigate first for immediate transition
       navigate(generateHotelUrl(code, hotelInfo?.name));
-      
+
       // Then close modals (happens after navigation starts)
       setOpenCalender(false);
       closeHotelModal();

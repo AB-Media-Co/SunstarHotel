@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import TestimonialSection from '../../Components/TestimonialSection';
-import OtherPagesEnquiryform from '../../Components/OtherPagesEnquiryform';
 import CommonSwiper from '../../Components/CommonSlider';
 import { useGetMetas } from '../../ApiHooks/useMetaHook';
 import { useVenues } from '../../ApiHooks/useVenues';
@@ -21,6 +20,11 @@ const OtherPageLayout = ({
     // Intro section
     introText = '',
     anotherText = '',
+
+    // Banner button section
+    bannerDescription = '',
+    bannerButtonText = '',
+    formId = 'contact',
 
     // Section titles
     sectionMainTitle = '',
@@ -41,6 +45,7 @@ const OtherPageLayout = ({
     // Testimonials and form
     // testimonials = [],
     testimonialBackgroundImage = '',
+    // eslint-disable-next-line no-unused-vars
     formImage = '',
     page = '',
 
@@ -135,13 +140,49 @@ const OtherPageLayout = ({
                     className="w-full h-[80vh] object-center md:h-[100vh] object-cover"
                 />
                 <div className="absolute inset-0 bg-black opacity-60"></div>
-                <div className="absolute inset-0 capitalize content flex flex-col items-start justify-center text-start px-4">
-                    <h1 className="text-mobile/h3 md:text-desktop/h3 font-bold text-primary-white">
-                        {heroTitle} <br />
-                        <span className='text-[#F9BF02]'>{heroHighlightedText}</span>
-                    </h1>
-
-                    {anotherText}
+                <div className="absolute inset-0 capitalize content flex flex-col items-start justify-center text-start px-4 md:px-8 lg:px-12">
+                    {anotherText ? (
+                        <>
+                            {anotherText}
+                            {bannerDescription && (
+                                <p className='py-4 md:py-6 text-mobile/body/2 md:text-desktop/body/1 max-w-[600px] md:max-w-[650px] text-white leading-relaxed'>
+                                    {bannerDescription}
+                                </p>
+                            )}
+                            {bannerButtonText && (
+                                <div className="text-center mt-4 md:mt-8">
+                                    <a 
+                                        href={`#${formId}`} 
+                                        className="bg-yellow-400 hover:bg-yellow-500 text-white px-6 py-3 rounded-md shadow transition duration-300 inline-block"
+                                    >
+                                        {bannerButtonText}
+                                    </a>
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <h1 className="text-mobile/h3 md:text-desktop/h3 font-bold text-primary-white">
+                                {heroTitle} <br />
+                                <span className='text-[#F9BF02]'>{heroHighlightedText}</span>
+                            </h1>
+                            {bannerDescription && (
+                                <p className='py-4 md:py-6 text-mobile/body/2 md:text-desktop/body/1 max-w-[600px] md:max-w-[650px] text-white leading-relaxed'>
+                                    {bannerDescription}
+                                </p>
+                            )}
+                            {bannerButtonText && (
+                                <div className="text-center mt-4 md:mt-8">
+                                    <a 
+                                        href={`#${formId}`} 
+                                        className="bg-yellow-400 hover:bg-yellow-500 text-white px-6 py-3 rounded-md shadow transition duration-300 inline-block"
+                                    >
+                                        {bannerButtonText}
+                                    </a>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
             </header>
 
