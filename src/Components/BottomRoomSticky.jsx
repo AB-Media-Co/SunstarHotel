@@ -46,8 +46,8 @@ const BottomRoomSticky = () => {
                   {formatINR(totalPrice)} <span className="text-gray-500  text-sm font-normal"></span>
                 </span>
               }
-              <h1 className="font-bold text-primary-gray text-xs sm:text-sm md:text-xl">
-                {selectedRooms.length} {selectedRooms.length === 1 ? "Room" : "Rooms"}
+              <h1 className="font-bold text-primary-gray text-xs sm:text-sm ">
+                {selectedRooms.length} {selectedRooms.length === 1 ? "Room" : "Rooms"} &bull; <span className="font-medium text-sm"> {nights} {nights === 1 ? "Night" : "Nights"} </span>
               </h1>
             </div>
 

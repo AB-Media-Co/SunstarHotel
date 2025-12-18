@@ -99,22 +99,22 @@ export const PricingProvider = ({ children }) => {
     }, 0);
     setTotalAddOns(sumAddOns);
 
-    // ✅ Room total (base tariff)
-    const roomTotal = selectedRooms.reduce(
-      (acc, room) => acc + room.price * nights,
-      0
-    );
+    // ✅ Calculate GST based on per-night room price (Per Room Per Night Slab)
+    let calculatedGstAmount = 0;
 
-    // ✅ GST Slab logic
-    let gstRate = 0;
-    if (roomTotal >= 1000 && roomTotal <= 7500) {
-      gstRate = 0.05;
-    } else if (roomTotal > 7500) {
-      gstRate = 0.18;
-    }
+    selectedRooms.forEach((room) => {
+      const perNightPrice = room.price;
+      let rate = 0;
 
-    // ✅ Apply GST on roomTotal only (not on add-ons)
-    const calculatedGstAmount = roomTotal * gstRate;
+      if (perNightPrice >= 1000 && perNightPrice <= 7500) {
+        rate = 0.05; // 5% GST
+      } else if (perNightPrice > 7500) {
+        rate = 0.18; // 18% GST
+      }
+
+      calculatedGstAmount += perNightPrice * nights * rate;
+    });
+
     setGstAmount(calculatedGstAmount);
 
     // ✅ Total other charges = only GST (add-ons are shown separately)
