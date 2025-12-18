@@ -27,7 +27,7 @@ const extractMainLocation = (fullAddress) => {
 const getTodayDate = () => format(new Date(), 'yyyy-MM-dd');
 const getTomorrowDate = () => format(new Date(Date.now() + 86400000), 'yyyy-MM-dd');
 
-const HotelImageCarousel = ({ hotel, availabilityData, isLoadingAvailability, roomsLeft }) => {
+const HotelImageCarousel = ({ hotel }) => {
   // console.log("Hotel:", hotel?.hotelCode, "Availability Data:", availabilityData);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
@@ -186,7 +186,7 @@ const HotelImageCarousel = ({ hotel, availabilityData, isLoadingAvailability, ro
 
 
 // Memoized HotelCard for better performance
-const HotelCard = memo(({ hotel, close: closeParentModal, roomsLeft }) => {
+const HotelCard = memo(({ hotel, close: closeParentModal }) => {
 
   const cardVariants = {
     hidden: { opacity: 0, y: 10 },
@@ -205,22 +205,7 @@ const HotelCard = memo(({ hotel, close: closeParentModal, roomsLeft }) => {
     }
   }, []);
 
-  // Fetch room availability data for today and tomorrow
-  const { data: availabilityData, isLoading: isLoadingAvailability } = useRooms(
-    hotel?.hotelCode,
-    hotel?.authKey,
-    getTodayDate(),
-    getTomorrowDate(),
-    {
-      enabled: Boolean(hotel?.hotelCode && hotel?.authKey),
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 30, // 30 minutes
-      refetchOnWindowFocus: false,
-      // Optimized settings for faster initial load
-      cacheTime: 1000 * 60 * 10, // 10 minutes
-      retry: 1, // Reduce retries to prevent delays
-    }
-  );
+
 
   const visibleAmenities = hotel?.amenities?.slice(0, 3) || [];
   const remainingAmenitiesCount = (hotel?.amenities?.length || 0) - visibleAmenities.length;
@@ -266,7 +251,7 @@ const HotelCard = memo(({ hotel, close: closeParentModal, roomsLeft }) => {
       animate="visible"
     >
 
-      <HotelImageCarousel hotel={hotel} availabilityData={availabilityData} isLoadingAvailability={isLoadingAvailability} roomsLeft={roomsLeft} />
+      <HotelImageCarousel hotel={hotel} />
 
       <div className="p-4 flex flex-col flex-grow justify-between">
         <div>
@@ -346,17 +331,6 @@ const HotelSelectingCards = memo(({ data, close }) => {
   // Filter active hotels once
   const activeHotels = hotels?.hotels?.filter(hotel => hotel?.active) || [];
 
-  // Generate unique random numbers (1-10) for each hotel
-  const uniqueRoomsLeft = useMemo(() => {
-    // Create array [1, 2, ..., 10]
-    const numbers = Array.from({ length: 10 }, (_, i) => i + 1);
-    // Shuffle the array using Fisher-Yates algorithm
-    for (let i = numbers.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
-    }
-    return numbers;
-  }, []); // Empty dependency array ensures it runs once on mount
 
   if (isLoading) {
     return (
@@ -387,7 +361,6 @@ const HotelSelectingCards = memo(({ data, close }) => {
           key={hotel._id || hotel.hotelCode}
           hotel={hotel}
           close={close}
-          roomsLeft={uniqueRoomsLeft[index % uniqueRoomsLeft.length]}
         />
       ))}
     </motion.div>

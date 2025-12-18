@@ -95,3 +95,27 @@ export const getSingleRoomById = async (id) => {
     throw error;
   }
 };
+
+export const useMonthlyRates = (hotelCode, authCode, month, options = {}) => {
+  const enabled =
+    Boolean(hotelCode && authCode && month) && (options.enabled ?? true);
+
+  return useQuery({
+    queryKey: ['monthlyRates', hotelCode, authCode, month],
+    enabled,
+    queryFn: async () => {
+      try {
+        const response = await axiosInstance.get('/api/ezee/monthly-rates', {
+          params: { hotelCode, authCode, month },
+        });
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    staleTime: options.staleTime ?? 1000 * 60 * 30,
+    gcTime: options.gcTime ?? 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
+};

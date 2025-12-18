@@ -19,7 +19,7 @@ import Icon from "./Icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "../services/axiosInstance";
-import { useRooms } from "../ApiHooks/useRoomsHook";
+import { useRooms, useMonthlyRates } from "../ApiHooks/useRoomsHook";
 import { usePricing } from "../Context/PricingContext";
 import { getSingleHotelWithCode } from "../ApiHooks/useHotelHook2";
 import { generateHotelUrl, extractHotelCode } from "../utils/urlHelper";
@@ -37,6 +37,8 @@ const CalendarMonth = React.memo(function CalendarMonth({
   hoverDate,
   onDayClick,
   onDayHover,
+  monthlyRates,
+  isLoading,
 }) {
   const startDate = useMemo(() => startOfWeek(startOfMonth(month)), [month]);
   const totalDays = 42;
@@ -106,10 +108,33 @@ const CalendarMonth = React.memo(function CalendarMonth({
               >
                 {inCurrent && (
                   <div
-                    className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full text-sm md:text-base font-medium ${isRangeStart || isRangeEnd ? "bg-primary-green text-white scale-110 shadow-md z-20" : inRange || isHovered ? "text-primary-green" : ""
+                    className={`flex flex-col items-center justify-center w-full h-full rounded-md text-sm md:text-base font-medium ${isRangeStart || isRangeEnd ? "bg-primary-green text-white scale-110 shadow-md z-20" : inRange || isHovered ? "text-primary-green" : ""
                       }`}
                   >
-                    {format(day, "d")}
+                    <span>{format(day, "d")}</span>
+                    {isLoading ? (
+                      <div className="flex gap-0.5 mt-1">
+                        <div className="w-1 h-1 bg-primary-green rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                        <div className="w-1 h-1 bg-primary-green rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                        <div className="w-1 h-1 bg-primary-green rounded-full animate-bounce"></div>
+                      </div>
+                    ) : monthlyRates && monthlyRates[format(day, "yyyy-MM-dd")] && !isPastDate && (
+                      <div className="flex flex-col items-center leading-none mt-0.5">
+                        <span className={`text-[9px] md:text-[10px] items-center flex font-bold ${isRangeStart || isRangeEnd ? "text-white" : "text-black"}`}>
+                          ₹{Math.round(monthlyRates[format(day, "yyyy-MM-dd")].price)}
+                        </span>
+                        {monthlyRates[format(day, "yyyy-MM-dd")].available > 0 && (
+                          <span className={`text-[8px] mt-[1px] ${isRangeStart || isRangeEnd ? "text-green-100" : "text-green-600"} font-medium`}>
+                            {monthlyRates[format(day, "yyyy-MM-dd")].available} Rooms
+                          </span>
+                        )}
+                        {monthlyRates[format(day, "yyyy-MM-dd")].soldOut && (
+                          <span className={`text-[8px] mt-[1px] ${isRangeStart || isRangeEnd ? "text-red-200" : "text-red-500"}`}>
+                            Sold Out
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -257,7 +282,31 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
     keepPreviousData: true,
     retry: 1,
   });
-  // roomsQuery.data is available if you want to show availability cues.
+
+  // Fetch monthly rates for 3 months
+  const currentMonthStr = format(currentMonth, "yyyy-MM");
+  const nextMonthStr = format(nextMonth, "yyyy-MM");
+  const nextNextMonth = useMemo(() => addMonths(currentMonth, 2), [currentMonth]);
+  const nextNextMonthStr = format(nextNextMonth, "yyyy-MM");
+
+  const { data: currentMonthRates, isLoading: isLoadingCurrent } = useMonthlyRates(effectiveHotelCode, authKey, currentMonthStr, {
+    enabled: Boolean(effectiveHotelCode && authKey),
+  });
+
+  const { data: nextMonthRates, isLoading: isLoadingNext } = useMonthlyRates(effectiveHotelCode, authKey, nextMonthStr, {
+    enabled: Boolean(effectiveHotelCode && authKey),
+  });
+
+  const { data: nextNextMonthRates } = useMonthlyRates(effectiveHotelCode, authKey, nextNextMonthStr, {
+    enabled: Boolean(effectiveHotelCode && authKey),
+  });
+
+  // Combine rates into one object for easier lookup
+  const combinedRates = useMemo(() => ({
+    ...(currentMonthRates?.data || {}),
+    ...(nextMonthRates?.data || {}),
+    ...(nextNextMonthRates?.data || {})
+  }), [currentMonthRates, nextMonthRates, nextNextMonthRates]);
 
   const onDayClick = useCallback(
     (day) => {
@@ -478,6 +527,8 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
               hoverDate={hoverDate}
               onDayClick={onDayClick}
               onDayHover={onDayHover}
+              monthlyRates={combinedRates}
+              isLoading={isLoadingCurrent}
             />
             <CalendarMonth
               month={nextMonth}
@@ -491,6 +542,8 @@ const Calendar = ({ setCheckInDate, setCheckOutDate, setOpenCalender, hotelCode 
               hoverDate={hoverDate}
               onDayClick={onDayClick}
               onDayHover={onDayHover}
+              monthlyRates={combinedRates}
+              isLoading={isLoadingNext}
             />
           </div>
         </div>

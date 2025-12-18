@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   Calendar,
   MapPin,
@@ -93,6 +94,7 @@ const ActionButton = ({ label, icon, secondary, danger, onClick }) => {
 
 export default function MyBookings() {
   const [email, setEmail] = useState("")
+  const navigate = useNavigate()
   const [selectedHotel, setSelectedHotel] = useState(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
@@ -101,18 +103,18 @@ export default function MyBookings() {
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [isCancelling, setIsCancelling] = useState(false);
 
-  const {setIsNavColor} =usePricing()
+  const { setIsNavColor, openHotelModal } = usePricing()
 
   useEffect(() => {
-      setIsNavColor(true);
-    
-      return () => {
-        setIsNavColor(false); // ✅ Reset when leaving the page
-      };
-    }, [setIsNavColor]);
+    setIsNavColor(true);
 
-    useEffect(() => {
-      window.scrollTo(0, 0);
+    return () => {
+      setIsNavColor(false); // ✅ Reset when leaving the page
+    };
+  }, [setIsNavColor]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
 
@@ -306,7 +308,7 @@ export default function MyBookings() {
               >
                 <RefreshCw className="w-5 h-5" /> Refresh
               </button>
-           
+
             </div>
           </div>
 
@@ -563,7 +565,9 @@ export default function MyBookings() {
                   </p>
                 </div>
                 {(!searchTerm && statusFilter === "all") && (
-                  <button className="mt-4 inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 hover:scale-105">
+                  <button
+                    onClick={openHotelModal}
+                    className="mt-4 inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 hover:scale-105">
                     <Calendar className="w-5 h-5 mr-2" />
                     Make a Booking
                   </button>

@@ -182,12 +182,9 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
     <>
       <div
         className={`bg-primary-white rounded-md shadow-lg -mt-6 
-          z-10 flex flex-col items-center gap-3 md:gap-6 border border-gray-200
-          transition-all duration-300 ease-in-out w-full will-change-transform transform
-          ${isItemFixed
-            ? "fixed top-0 right-0 left-0 pt-2 md:pt-4 z-50 opacity-100 translate-y-0"
-            : "relative opacity-100 py-2 md:py-2 -translate-y-2"
-          }
+          z-40 flex flex-col items-center gap-3 md:gap-6 border border-gray-200
+          transition-all duration-300 ease-in-out w-full sticky top-0
+          ${isItemFixed ? "pt-2 md:pt-4" : "py-2 md:py-2"}
           ${isTopSectionHidden
             ? "opacity-0 -translate-y-full scale-95"
             : "opacity-100 translate-y-0 scale-100"
@@ -197,8 +194,7 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
           transitionProperty: "all",
           transitionDuration: "300ms",
           transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-          transformOrigin: "top",
-          willChange: "transform, opacity",
+          willChange: "transform, opacity, padding",
         }}
       >
         <div className="w-full flex py-2 md:py-3 max-w-6xl flex-col items-center px-2 md:px-4">

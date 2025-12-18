@@ -1,10 +1,11 @@
 import axios from 'axios';
 
+const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+// const baseURL = isLocal ? "http://localhost:5000" : "https://sunstarbackend.onrender.com";
+const baseURL = isLocal ? "http://localhost:5000" : "";
+
 const axiosInstance = axios.create({
-  // baseURL: 'http://localhost:5000',
-  // baseURL: 'https://sunstarbackend.onrender.com', 
-  // baseURL: 'https://sunstarhospitality.com', 
-  baseURL: '',
+  baseURL: baseURL,
   // mode: 'no-cors',
   headers: {
     'Content-Type': 'application/json',

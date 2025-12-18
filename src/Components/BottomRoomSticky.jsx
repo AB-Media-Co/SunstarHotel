@@ -30,7 +30,7 @@ const BottomRoomSticky = () => {
 
   return (
     <div
-      className={`w-full z-[999] bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 py-3 fixed safe-bottom ${isVisible ? "wipe-up" : "wipe-down"
+      className={`w-full z-40 bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 py-3 fixed safe-bottom ${isVisible ? "wipe-up" : "wipe-down"
         }`}
       style={{
         paddingBottom: 'env(safe-area-inset-bottom)',

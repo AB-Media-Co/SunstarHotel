@@ -6,9 +6,11 @@ import ImageGallery from '../../Components/ImageGallery'
 import { Helmet } from 'react-helmet'
 import { useGetMetas } from '../../ApiHooks/useMetaHook'
 import { FileText, Star, Building, User, Monitor, Sun, Phone } from 'lucide-react';
+import { usePricing } from '../../Context/PricingContext';
 
 const IntheMediaMain = () => {
     const { data: metas } = useGetMetas();
+    const { openHotelModal } = usePricing();
 
     const inthemedia = Array.isArray(metas)
         ? metas.find(meta => meta.page === "in-the-media")
@@ -55,7 +57,14 @@ const IntheMediaMain = () => {
             <InTheMediaPage />
             <SunstarMediaSection />
 
-            <SunstarInfoCards infoCards={infoCards} />
+            <SunstarInfoCards
+                infoCards={infoCards}
+                onCardClick={(card) => {
+                    if (card?.title === 'Our Hotels' || card?.buttonText === 'View Hotels' || card?.title === 'Developers & Owners') { // Included Developers & Owners just in case
+                        openHotelModal();
+                    }
+                }}
+            />
             <div className='content'>
 
                 <ImageGallery />

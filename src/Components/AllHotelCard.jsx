@@ -40,7 +40,8 @@ const AllHotelCard = ({ isOpen, onClose }) => {
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
-          className="fixed inset-0 bg-primary-green flex justify-center hotelSelection overflow-y-auto items-start z-50"
+          className="fixed inset-0 bg-primary-green flex justify-center hotelSelection overflow-y-auto items-start z-50 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
+          style={{ WebkitOverflowScrolling: 'touch' }}
           variants={overlayVariants}
           initial="hidden"
           animate="visible"
@@ -58,7 +59,7 @@ const AllHotelCard = ({ isOpen, onClose }) => {
               </Suspense>
             </motion.div>
             <motion.div
-              className="flex  items-center px-4 py-2 z-10"
+              className="flex items-center px-4 py-2 z-10"
             // variants={headerVariants}
             >
               <ArrowBackIos

@@ -12,15 +12,15 @@ import SunstarInfoCards from "../InTheMedia/Component/SunstarInfoCards";
 import { FileText, Mic, Building } from "lucide-react";
 import { useGetCareersPage } from "../../ApiHooks/use-Career-Page";
 import ImageGallery from "../../Components/ImageGallery";
-import AllHotelCard from "../../Components/AllHotelCard";
 import useUpdatePagesHook from "../../ApiHooks/useUpdatePagesHook";
 import CompnayCards from "../About/Components/CompnayCards";
+import { usePricing } from "../../Context/PricingContext";
 
 const CareerMain = () => {
   const { data: metas } = useGetMetas();
   const { data: careerPageData } = useGetCareersPage();
   const { offeringSection } = useUpdatePagesHook();
-  const [isHotelOpen, setIsHotelOpen] = useState(false);
+  const { openHotelModal } = usePricing();
 
   const career = Array.isArray(metas)
     ? metas.find((meta) => meta.page === "career")
@@ -28,9 +28,9 @@ const CareerMain = () => {
 
 
   const handleCardClick = (card) => {
-    // Check if this is the "View Hotels" card (id: 3)
-    if (card.id === 3) {
-      setIsHotelOpen(true);
+    // Check if this is the "View Hotels" card (id: 3) or checks title/button
+    if (card.id === 3 || card?.title === 'Our Hotels' || card?.buttonText === 'View Hotels') {
+      openHotelModal();
     }
   };
 
@@ -67,10 +67,7 @@ const CareerMain = () => {
         infoCards={offeringSection?.comeShineWithUs}
         onCardClick={handleCardClick}
       />
-      <AllHotelCard
-        isOpen={isHotelOpen}
-        onClose={() => setIsHotelOpen(false)}
-      />
+
     </div>
   );
 };

@@ -9,21 +9,22 @@ const Loader = ({ fullScreen = true, size = "md" }) => {
   if (!fullScreen) {
     return (
       <div className="flex items-center justify-center p-8">
-        <img 
-          src="/images/Logo/spinner.svg" 
-          alt="Loading" 
+        <img
+          src="/images/Logo/spinner.svg"
+          alt="Loading"
           className={`${sizeClasses[size]} animate-spin`}
         />
       </div>
     );
   }
 
+  // Fixed overlay for full screen loading
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white">
       <div className="text-center">
-        <img 
-          src="/images/Logo/spinner.svg" 
-          alt="Loading" 
+        <img
+          src="/images/Logo/spinner.svg"
+          alt="Loading"
           className={`${sizeClasses[size]} mx-auto animate-spin`}
         />
       </div>

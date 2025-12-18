@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from 'react-router-dom';
 import {
   Calendar,
   MapPin,
@@ -93,27 +94,27 @@ const ActionButton = ({ label, icon, secondary, danger, onClick }) => {
 }
 
 const TabButton = ({ active, onClick, children, count }) => (
- <button
-      onClick={onClick}
-      className={`w-full sm:w-auto relative px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 whitespace-nowrap flex items-center justify-center sm:justify-start gap-1 ${
-        active
-          ? "bg-[#5BBEBC] text-white shadow-lg"
-          : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
+  <button
+    onClick={onClick}
+    className={`w-full sm:w-auto relative px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 whitespace-nowrap flex items-center justify-center sm:justify-start gap-1 ${active
+      ? "bg-[#5BBEBC] text-white shadow-lg"
+      : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
       }`}
-    >
-      {children}
-      {count > 0 && (
-        <span className={`ml-0.5 px-1 py-0.5 rounded-full text-xs font-bold ${
-          active ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"
+  >
+    {children}
+    {count > 0 && (
+      <span className={`ml-0.5 px-1 py-0.5 rounded-full text-xs font-bold ${active ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"
         }`}>
-          {count}
-        </span>
-      )}
-    </button>
+        {count}
+      </span>
+    )}
+  </button>
 )
 
 const Bookings = () => {
+  const { openHotelModal } = usePricing();
   const [email, setEmail] = useState("")
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("upcoming")
   const [showCancelModal, setShowCancelModal] = useState(false)
@@ -262,7 +263,7 @@ const Bookings = () => {
   };
 
   const filteredBookings = getFilteredBookings();
-console.log(filteredBookings,"Filtered Bookings")
+  console.log(filteredBookings, "Filtered Bookings")
   // Get counts for each tab
   const getTabCounts = () => {
     const currentDate = new Date();
@@ -521,7 +522,7 @@ console.log(filteredBookings,"Filtered Bookings")
                       <p className="truncate"><span className="font-medium">Email:</span> {booking.Email}</p>
                       <p><span className="font-medium">Mobile:</span> {booking.Mobile}</p>
                       <p><span className="font-medium">Payment:</span> {booking.TransactionStatus}</p>
-                      <p><span className="font-medium">Payment Type:</span> {booking.hotelInfo?.payAtHotel ==='yes' ? 'Pay at Hotel' : 'Paid Online'}</p>
+                      <p><span className="font-medium">Payment Type:</span> {booking.hotelInfo?.payAtHotel === 'yes' ? 'Pay at Hotel' : 'Paid Online'}</p>
                       {booking.DueAmount > 0 && (
                         <p className="font-semibold text-red-500">
                           Due: {formatCurrency(booking.DueAmount)}
@@ -574,7 +575,9 @@ console.log(filteredBookings,"Filtered Bookings")
                   </p>
                 </div>
                 {(!searchTerm && activeTab === "upcoming") && (
-                  <button className="mt-2 md:mt-4 inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 bg-primary-green text-white rounded-xl font-semibold shadow-lg transition-all duration-200 hover:scale-105 text-sm md:text-base">
+                  <button
+                    onClick={openHotelModal}
+                    className="mt-2 md:mt-4 inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 bg-primary-green text-white rounded-xl font-semibold shadow-lg transition-all duration-200 hover:scale-105 text-sm md:text-base">
                     <Calendar className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                     Make a Booking
                   </button>

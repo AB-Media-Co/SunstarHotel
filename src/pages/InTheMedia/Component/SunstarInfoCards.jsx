@@ -11,6 +11,13 @@ const SunstarInfoCards = ({
   const handleClick = (e, card) => {
     const link = card.link || card.href;
 
+    // Check if it's the hotel modal card
+    if (card.title === 'Our Hotels' || card.buttonText === 'View Hotels' || card.title === 'Developers & Owners') {
+      e.preventDefault();
+      onCardClick(card);
+      return;
+    }
+
     // If no link, prevent default anchor behavior (jumping to top) and call handler
     if (!link) {
       e.preventDefault();

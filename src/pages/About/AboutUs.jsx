@@ -10,10 +10,12 @@ import useUpdatePagesHook from '../../ApiHooks/useUpdatePagesHook';
 import { Helmet } from 'react-helmet';
 import { useGetMetas } from '../../ApiHooks/useMetaHook';
 import { useEffect } from 'react';
+import { usePricing } from '../../Context/PricingContext';
 
 const AboutUs = () => {
   // const { data: hotels } = useGetHotels();
   const { whysunstarValue, Testimonials, offeringSection } = useUpdatePagesHook();
+  const { openHotelModal } = usePricing();
   const { data: metas } = useGetMetas();
   const whySunstarMeta = Array.isArray(metas)
     ? metas.find(meta => meta.page === "whysunstar")
@@ -40,7 +42,14 @@ const AboutUs = () => {
       />
       <ValuesSection />
       <ShineSection />
-      <CompnayCards data={offeringSection?.whySunstar} />
+      <CompnayCards
+        data={offeringSection?.whySunstar}
+        onCardClick={(card) => {
+          if (card?.title === 'Our Hotels' || card?.buttonText === 'View Hotels') {
+            openHotelModal();
+          }
+        }}
+      />
 
 
       <TestimonialSection

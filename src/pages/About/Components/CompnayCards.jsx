@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
 import { useEffect } from "react";
 
-const Card = ({ image, title, description, buttonText }) => {
+const Card = ({ image, title, description, buttonText, onClick }) => {
     return (
         <div className="lg:max-w-[350px] w-full flex flex-col relative animation-on-scroll overflow-hidden shadow-xl border rounded-lg bg-primary-white">
             <img
@@ -23,7 +23,13 @@ const Card = ({ image, title, description, buttonText }) => {
                 </p>
 
                 <div className="mt-4">
-                    <button className="text-primary-green font-bold hover:underline">
+                    <button onClick={(e) => {
+                        // Check if it's the hotel modal card
+                        if (title === 'Our Hotels' || buttonText === 'View Hotels') {
+                            e.preventDefault();
+                        }
+                        onClick && onClick();
+                    }} className="text-primary-green font-bold hover:underline">
                         {buttonText || "Read More"}
                     </button>
                 </div>
@@ -34,7 +40,7 @@ const Card = ({ image, title, description, buttonText }) => {
 };
 
 
-const CompnayCards = ({ data }) => {
+const CompnayCards = ({ data, onCardClick }) => {
     const offerings = data || {};
     const location = useLocation();
 
@@ -52,14 +58,14 @@ const CompnayCards = ({ data }) => {
 
             <div className="flex justify-center lg:justify-between gap-10 hotelSelection flex-col md:flex-row  md:hidden lg:flex">
                 {offerings?.offers?.map((card, index) => (
-                    <Card key={index} image={card.image} title={card.title} description={card.description} buttonText={card.buttonText} />
+                    <Card key={index} image={card.image} title={card.title} description={card.description} buttonText={card.buttonText} onClick={() => onCardClick && onCardClick(card)} />
                 ))}
             </div>
 
             {/* Tablet-only (md to <lg) grid */}
             <div className="hidden md:grid lg:hidden grid-cols-2 gap-8 place-items-center">
                 {offerings?.offers?.map((card, index) => (
-                    <Card key={index} image={card.image} title={card.title} description={card.description} buttonText={card.buttonText} />
+                    <Card key={index} image={card.image} title={card.title} description={card.description} buttonText={card.buttonText} onClick={() => onCardClick && onCardClick(card)} />
                 ))}
             </div>
         </div>

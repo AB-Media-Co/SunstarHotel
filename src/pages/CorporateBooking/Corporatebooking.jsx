@@ -14,12 +14,14 @@ import TestimonialSection from "../../Components/TestimonialSection"
 import SunstarInfoCards from "../InTheMedia/Component/SunstarInfoCards";
 import ImagesGallery from "../TourAndTravelPaage/TourAndTravelMain/Component/ImagesGallery";
 import CompnayCards from "../About/Components/CompnayCards";
+import { usePricing } from "../../Context/PricingContext";
 
 
 const CorporateBooking = () => {
   const { CoorporateBooking, offeringSection } = useUpdatePagesHook();
   console.log(offeringSection)
   const { data: metas } = useGetMetas();
+  const { openHotelModal } = usePricing();
   const [openSignup, setOpenSignup] = useState(false); // ⬅️ NEW
 
   const whySunstarMeta = Array.isArray(metas)
@@ -77,7 +79,14 @@ const CorporateBooking = () => {
       <FormData />
       <ImagesGallery path="" />
 
-      <SunstarInfoCards infoCards={offeringSection?.corporate} />
+      <SunstarInfoCards
+        infoCards={offeringSection?.corporate}
+        onCardClick={(card) => {
+          if (card?.title === 'Our Hotels' || card?.buttonText === 'View Hotels') {
+            openHotelModal();
+          }
+        }}
+      />
       <FAQSectionWithAPI pageName="corporate-booking" />
 
       {/* Modal */}
