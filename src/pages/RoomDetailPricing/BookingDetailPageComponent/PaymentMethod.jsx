@@ -4,6 +4,7 @@ import { usePricing } from "../../../Context/PricingContext";
 import { useGetUserByEmail } from "../../../ApiHooks/useUser";
 import { usePushBooking } from "../../../ApiHooks/pushBookingHook";
 import useUpdatePagesHook from "../../../ApiHooks/useUpdatePagesHook";
+import { useGetAgentByEmail } from "../../../ApiHooks/useAgentHook";
 import {
   CreditCard,
   Building2,
@@ -23,6 +24,7 @@ const DEFAULT_PAYMENT_METHOD = "pay-now";
 export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
   const email = localStorage.getItem("user_email");
   const { data: userData } = useGetUserByEmail(email);
+  const { data: agentData } = useGetAgentByEmail(email);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(DEFAULT_PAYMENT_METHOD);
   const { selectedRooms, someOneElse, guestData, setPaymentMethod, selectedOtherCharges, finalPrice, baseFinalPrice, totalOtherCharges, payNowDiscount, offerDiscount, totalAddOns } = usePricing();
   const pushBooking = usePushBooking();
@@ -94,13 +96,23 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
     // Keep remark too (optional but helpful)
     const remarkText = addOns ? `Add To Your Stay: ${addOns}` : "";
 
+    // Determine Source based on agent data
+    let bookingSource = "";
+    if (agentData && agentData.approved) {
+      if (agentData.role && agentData.role.toLowerCase().includes("corporate")) {
+        bookingSource = "Corporate";
+      } else {
+        bookingSource = "Agent";
+      }
+    }
+
     const BookingData = {
       Room_Details,
       check_in_date: checkIn,
       check_out_date: checkOut,
       Booking_Payment_Mode: selectedPaymentMethod === "pay-at-hotel" ? "0" : "1",
       Email_Address: userData?.data.email,
-      Source_Id: "",
+      Source_Id: "", // Reverted to empty to prevent external API error
       MobileNo: someOneElse ? guestData.phone : userData?.data.phone || "",
       Address: userData?.data.address || "",
       State: userData?.data.state || "",
@@ -111,7 +123,7 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
       Device: "Web",
       Languagekey: "",
       paymenttypeunkid,
-      remark: remarkText, // ✅ mirrors add-ons
+      remark: remarkText,
     };
 
     const payload = {
@@ -119,6 +131,7 @@ export const PaymentMethod = ({ hotelDetail, verified, checkIn, checkOut }) => {
       HotelCode: hotelDetail?.hotelCode,
       APIKey: hotelDetail?.authKey,
       userEmail: userData?.data.email,
+      BookingSource: bookingSource // Send separately for local storage
     };
 
     pushBooking.mutate(payload, {

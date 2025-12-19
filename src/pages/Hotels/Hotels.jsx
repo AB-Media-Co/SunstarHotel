@@ -21,13 +21,13 @@ import {
   format,
 } from "date-fns";
 import RoomsCard from "../../Components/RoomsCard";
-import SwiperComponent from "../Home/Components/Sec2CardSlider";
+
 import HotelTestimonial from "./Components/HotelTestimonial";
 
 const Hotels = () => {
   const { hotelCode: hotelCodeParam } = useParams();
   const { state } = useLocation();
-  
+
   // Extract hotelCode from URL (handles both old and new format)
   const hotelCode = extractHotelCode(hotelCodeParam);
 
@@ -162,16 +162,14 @@ const Hotels = () => {
         />
 
 
-        <div className=" content">
-          <SwiperComponent />
-        </div>
+
 
 
         <div className="relative z-10 content">
           <ImageGallery breakpointColumnsObj={HotelPageImgGallery.breakpointColumnsObj} items={HotelPageImgGallery.items} />
         </div>
-        <CommonFAQSection 
-          faqs={hotelData?.faqs} 
+        <CommonFAQSection
+          faqs={hotelData?.faqs}
           subtitle="You need to come at least once in your life"
           bgColor="bg-white"
         />

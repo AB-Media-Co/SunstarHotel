@@ -30,7 +30,7 @@ const Section1 = ({ section1Data }) => {
       if (sectionRef.current) {
         const sectionBottom = sectionRef.current.offsetTop + sectionRef.current.offsetHeight;
         const scrollPosition = window.scrollY + window.innerHeight;
-        
+
         // Show button when user scrolls past this section
         setShowFloatingBtn(window.scrollY > sectionRef.current.offsetHeight - 100);
       }

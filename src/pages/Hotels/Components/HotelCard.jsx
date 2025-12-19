@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import Icon from "../../../Components/Icons";
 import Calendar from "../../../Components/Calendar";
@@ -90,8 +90,6 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
         setActiveTab(foundIndex);
       }
 
-      // Sticky header toggle
-      setItemFixed(window.scrollY > 600);
     };
 
     const onScroll = () => {
@@ -110,6 +108,22 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
       window.removeEventListener("resize", onScroll);
     };
   }, [activeTab]);
+
+  const sentinelRef = useRef(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setItemFixed(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+      },
+      { threshold: [0] }
+    );
+
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
 
   useEffect(() => {
@@ -180,116 +194,114 @@ function HotelCard({ hotelData, setOpenCalender, openCalender }) {
 
   return (
     <>
+      <div ref={sentinelRef} className="absolute w-full h-[1px] -mt-6 opacity-0 pointer-events-none" />
       <div
         className={`bg-primary-white rounded-md shadow-lg -mt-6 
           z-40 flex flex-col items-center gap-3 md:gap-6 border border-gray-200
-          transition-all duration-300 ease-in-out w-full sticky top-0
-          ${isItemFixed ? "pt-2 md:pt-4" : "py-2 md:py-2"}
+          w-full sticky top-0 py-2
           ${isTopSectionHidden
             ? "opacity-0 -translate-y-full scale-95"
             : "opacity-100 translate-y-0 scale-100"
           } 
         `}
-        style={{
-          transitionProperty: "all",
-          transitionDuration: "300ms",
-          transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-          willChange: "transform, opacity, padding",
-        }}
       >
         <div className="w-full flex py-2 md:py-3 max-w-6xl flex-col items-center px-2 md:px-4">
           {/* Top Section: Dates and Guests - Non-fixed state */}
-          <div className={`gap-2 justify-center ${isItemFixed ? 'hidden' : "flex"} items-center w-full transition-all duration-300`}>
-            <div className="flex flex-col md:flex-row gap-3 md:gap-8 items-center justify-between w-full">
-              <div className="w-full md:w-auto">
-                <div
-                  onClick={() => setOpenCalender(true)}
-                  className="flex flex-row cursor-pointer items-center justify-center border w-full md:w-auto bg-white px-3 py-2 md:px-8 md:py-4 rounded-full gap-2 md:gap-3 shadow-md hover:shadow-lg transition-shadow duration-300"
-                >
-                  <Icon name="calendar" className="w-4 h-4 md:w-6 md:h-6 text-primary-green flex-shrink-0" />
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
-                      {checkIn ? format(new Date(checkIn), "dd MMM, EEE") : "Check in"}
-                    </span>
+          <div className={`transition-all duration-500 ease-in-out overflow-hidden w-full ${isItemFixed ? 'max-h-0 opacity-0' : 'max-h-[500px] opacity-100'}`}>
+            <div className="flex gap-2 justify-center items-center w-full">
+              <div className="flex flex-col md:flex-row gap-3 md:gap-8 items-center justify-between w-full">
+                <div className="w-full md:w-auto">
+                  <div
+                    onClick={() => setOpenCalender(true)}
+                    className="flex flex-row cursor-pointer items-center justify-center border w-full md:w-auto bg-white px-3 py-2 md:px-8 md:py-4 rounded-full gap-2 md:gap-3 shadow-md hover:shadow-lg transition-shadow duration-300"
+                  >
+                    <Icon name="calendar" className="w-4 h-4 md:w-6 md:h-6 text-primary-green flex-shrink-0" />
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
+                        {checkIn ? format(new Date(checkIn), "dd MMM, EEE") : "Check in"}
+                      </span>
+                    </div>
+                    <ArrowRightAlt className="text-yellow-500 flex-shrink-0" sx={{ fontSize: { xs: 16, md: 24 } }} />
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
+                        {checkOut ? format(new Date(checkOut), "dd MMM, EEE") : "Check-out"}
+                      </span>
+                    </div>
+                    {checkIn && checkOut && (
+                      <span className="flex items-center text-gray-700 justify-center text-xs md:text-base rounded-full border border-gray-300 px-2 py-1 whitespace-nowrap">
+                        {calculateNights()}
+                      </span>
+                    )}
                   </div>
-                  <ArrowRightAlt className="text-yellow-500 flex-shrink-0" sx={{ fontSize: { xs: 16, md: 24 } }} />
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
-                      {checkOut ? format(new Date(checkOut), "dd MMM, EEE") : "Check-out"}
-                    </span>
-                  </div>
-                  {checkIn && checkOut && (
-                    <span className="flex items-center text-gray-700 justify-center text-xs md:text-base rounded-full border border-gray-300 px-2 py-1 whitespace-nowrap">
-                      {calculateNights()}
-                    </span>
-                  )}
                 </div>
+
+                <div className="flex w-full">
+
+                  <button
+                    onClick={handleBooking}
+                    className="bg-primary-green text-primary-white text-sm md:text-xl font-medium rounded-xl md:rounded-full py-3 md:py-2 px-6 md:px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full md:w-auto"
+                  >
+                    {selectedRooms?.length > 0 ? "Continue" : "Select Rooms"}
+                  </button>
+                </div>
+
               </div>
-
-              <div className="flex w-full">
-
-                <button
-                  onClick={handleBooking}
-                  className="bg-primary-green text-primary-white text-sm md:text-xl font-medium rounded-xl md:rounded-full py-3 md:py-2 px-6 md:px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full md:w-auto"
-                >
-                  {selectedRooms?.length > 0 ? "Continue" : "Select Rooms"}
-                </button>
-              </div>
-
             </div>
           </div>
 
           {/* Fixed header content */}
-          <div className={`${isItemFixed ? 'flex' : "hidden"} flex-col md:flex-row gap-3 md:gap-8 items-center w-full transition-all duration-300`}>
-            <div className="flex flex-col md:flex-row gap-3 md:gap-8 mt-4 md:mt-0 items-center w-full">
-              <div className="w-full md:w-auto">
-                <div
-                  onClick={() => setOpenCalender(true)}
-                  className="flex cursor-pointer items-center justify-center w-full md:w-[350px] p-2 md:p-3 bg-white border rounded-full shadow-sm gap-2 md:gap-3 transition-shadow duration-300"
-                >
-                  <Icon name="calendar" className="w-4 h-4 md:w-6 md:h-6 text-primary-green flex-shrink-0" />
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
-                      {checkIn ? format(new Date(checkIn), "dd MMM") : "Check in"}
-                    </span>
+          <div className={`transition-all duration-500 ease-in-out overflow-hidden w-full ${isItemFixed ? 'max-h-[200px] opacity-100' : 'max-h-0 opacity-0'}`}>
+            <div className="flex flex-col md:flex-row gap-3 md:gap-8 items-center w-full">
+              <div className="flex flex-col md:flex-row gap-3 md:gap-8 mt-4 md:mt-0 items-center w-full">
+                <div className="w-full md:w-auto">
+                  <div
+                    onClick={() => setOpenCalender(true)}
+                    className="flex cursor-pointer items-center justify-center w-full md:w-[350px] p-2 md:p-3 bg-white border rounded-full shadow-sm gap-2 md:gap-3 transition-shadow duration-300"
+                  >
+                    <Icon name="calendar" className="w-4 h-4 md:w-6 md:h-6 text-primary-green flex-shrink-0" />
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
+                        {checkIn ? format(new Date(checkIn), "dd MMM") : "Check in"}
+                      </span>
+                    </div>
+                    <ArrowRightAlt className="text-yellow-500 flex-shrink-0" sx={{ fontSize: { xs: 16, md: 24 } }} />
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
+                        {checkOut ? format(new Date(checkOut), "dd MMM") : "Check-out"}
+                      </span>
+                    </div>
+                    {checkIn && checkOut && (
+                      <span className="flex items-center text-gray-700 justify-center text-xs md:text-base px-2 py-1 whitespace-nowrap">
+                        {calculateNights()}
+                      </span>
+                    )}
                   </div>
-                  <ArrowRightAlt className="text-yellow-500 flex-shrink-0" sx={{ fontSize: { xs: 16, md: 24 } }} />
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-xs md:text-base text-gray-700 truncate">
-                      {checkOut ? format(new Date(checkOut), "dd MMM") : "Check-out"}
-                    </span>
-                  </div>
-                  {checkIn && checkOut && (
-                    <span className="flex items-center text-gray-700 justify-center text-xs md:text-base px-2 py-1 whitespace-nowrap">
-                      {calculateNights()}
-                    </span>
-                  )}
                 </div>
+
+                <button
+                  onClick={handleBooking}
+                  className="bg-primary-green md:hidden text-primary-white text-sm font-medium rounded-xl py-2 px-6 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full"
+                >
+                  {selectedRooms?.length > 0 ? "Continue" : "Select"}
+                </button>
+
+                {/* Navigation tabs in fixed header - Mobile */}
+                <div className="flex items-center gap-4 w-full md:hidden overflow-x-auto scrollbar-hide px-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                  {tabs2.map((tab, index) => renderTabItem(tab, index, true))}
+                </div>
+
+                {/* Navigation tabs in fixed header - Desktop */}
+                <div className="hidden md:flex justify-between items-center gap-4 w-full ">
+                  {tabs2.map((tab, index) => renderTabItem(tab, index))}
+                </div>
+
+                <button
+                  onClick={handleBooking}
+                  className="bg-primary-green hidden md:block text-primary-white text-xl font-medium rounded-full py-2 px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300"
+                >
+                  {selectedRooms?.length > 0 ? "Continue" : "Select"}
+                </button>
               </div>
-
-              <button
-                onClick={handleBooking}
-                className="bg-primary-green md:hidden text-primary-white text-sm font-medium rounded-xl py-2 px-6 shadow-md hover:bg-opacity-90 transition-colors duration-300 w-full"
-              >
-                {selectedRooms?.length > 0 ? "Continue" : "Select"}
-              </button>
-
-              {/* Navigation tabs in fixed header - Mobile */}
-              <div className="flex items-center gap-4 w-full md:hidden overflow-x-auto scrollbar-hide px-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                {tabs2.map((tab, index) => renderTabItem(tab, index, true))}
-              </div>
-
-              {/* Navigation tabs in fixed header - Desktop */}
-              <div className="hidden md:flex justify-between items-center gap-4 w-full ">
-                {tabs2.map((tab, index) => renderTabItem(tab, index))}
-              </div>
-
-              <button
-                onClick={handleBooking}
-                className="bg-primary-green hidden md:block text-primary-white text-xl font-medium rounded-full py-2 px-10 shadow-md hover:bg-opacity-90 transition-colors duration-300"
-              >
-                {selectedRooms?.length > 0 ? "Continue" : "Select"}
-              </button>
             </div>
           </div>
 

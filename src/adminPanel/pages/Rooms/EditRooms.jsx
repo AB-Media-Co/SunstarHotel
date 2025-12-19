@@ -276,12 +276,13 @@ const RoomInfoTab = ({ formData, isEdit, handleInputChange, handleCheckboxChange
               type="number"
               value={formData.defaultRate}
               onChange={handleInputChange}
-              sx={{ bgcolor: 'background.paper' }}
+              sx={{ bgcolor: 'background.paper', opacity: 0.8 }}
               InputProps={{
                 startAdornment: <PriceChangeIcon color="action" sx={{ mr: 1 }} />,
               }}
               placeholder="Base price per night"
-              required
+              disabled
+              helperText="Auto-calculated (30-40% above Discount Rate)"
             />
           </Grid>
 

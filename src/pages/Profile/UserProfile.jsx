@@ -222,7 +222,7 @@ const UserProfile = () => {
         );
 
       case 'bookings':
-        return <Bookings />;
+        return <Bookings filterType="personal" />;
 
       case 'corporate':
         if (loadingAgent) return <div className="p-4">Loading corporate data...</div>;

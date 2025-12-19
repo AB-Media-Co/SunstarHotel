@@ -12,6 +12,9 @@
   border-radius: 100px;
 }
 
+title {
+  text-transform: capitalize;
+}
 
 .image-container {
   display: inline-block;
@@ -153,6 +156,7 @@
 
 
 }
+
 @media screen and (max-width: 430px) {
   .swiper-slide.swiper-slide-active {
     width: 100% !important;
@@ -225,7 +229,8 @@
 
 
 [id] {
-  scroll-margin-top: 100px; /* apne header ki height ke hisab se adjust karo */
+  scroll-margin-top: 100px;
+  /* apne header ki height ke hisab se adjust karo */
 }
 
 
@@ -374,7 +379,8 @@
 
 .rotating-image,
 .animate-spin-slow {
-  will-change: transform;           /* smoother, no layout thrash */
+  will-change: transform;
+  /* smoother, no layout thrash */
 }
 
 

@@ -22,11 +22,15 @@ import {
   Search,
   Download,
   Share2,
+  Book,
+  Moon,
+  FileText
 } from "lucide-react"
 import { useGetHotels } from "../../ApiHooks/useHotelHook2"
-import { useGetMyBookings } from "../../ApiHooks/pushBookingHook"
+import { useGetMyBookings, useFetchAllBookings } from "../../ApiHooks/pushBookingHook"
 import { useQueries } from '@tanstack/react-query'
 import axiosInstance from '../../services/axiosInstance'
+import { generateInvoice } from '../../utils/generateInvoice'
 import { useCancelBooking } from "../../ApiHooks/useUser"
 import { usePricing } from "../../Context/PricingContext"
 import toast from "react-hot-toast"
@@ -77,6 +81,49 @@ const formatCurrency = (amount) => {
   }).format(amount)
 }
 
+const BookingSummary = ({ bookings }) => {
+  const summary = bookings.reduce((acc, booking) => {
+    if (booking.Status !== "Cancelled" && booking.BookingStatus !== "Cancelled") {
+      acc.totalBookings += 1;
+      acc.totalNights += parseInt(booking.NoOfNights || 0);
+      acc.totalSpend += parseFloat(booking.TotalInclusiveTax || 0);
+    }
+    return acc;
+  }, { totalBookings: 0, totalNights: 0, totalSpend: 0 });
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center space-x-4">
+        <div className="p-3 bg-blue-50 text-blue-600 rounded-full">
+          <Book className="w-6 h-6" />
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">Total Bookings</p>
+          <p className="text-xl font-bold text-gray-900">{summary.totalBookings}</p>
+        </div>
+      </div>
+      <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center space-x-4">
+        <div className="p-3 bg-purple-50 text-purple-600 rounded-full">
+          <Moon className="w-6 h-6" />
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">Total Nights</p>
+          <p className="text-xl font-bold text-gray-900">{summary.totalNights}</p>
+        </div>
+      </div>
+      <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center space-x-4">
+        <div className="p-3 bg-green-50 text-green-600 rounded-full">
+          <CreditCard className="w-6 h-6" />
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">Total Spend</p>
+          <p className="text-xl font-bold text-gray-900">{formatCurrency(summary.totalSpend)}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ActionButton = ({ label, icon, secondary, danger, onClick }) => {
   let baseColor = "bg-[#5BBEBC] text-white hover:bg-[#4BA9A6]";
   if (secondary) baseColor = "bg-gray-100 text-gray-700 hover:bg-gray-200";
@@ -111,7 +158,7 @@ const TabButton = ({ active, onClick, children, count }) => (
   </button>
 )
 
-const Bookings = () => {
+const Bookings = ({ filterType = "all" }) => {
   const { openHotelModal } = usePricing();
   const [email, setEmail] = useState("")
   const navigate = useNavigate()
@@ -126,71 +173,15 @@ const Bookings = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Get hotels data
-  const { data: hotelsData, isLoading: hotelsLoading, error: hotelsError } = useGetHotels()
-  // console.log(hotelsData)
-  const cancelBooking = useCancelBooking();
-
-  // Get bookings data for all hotels
-  const bookingQueries = useQueries({
-    queries: (hotelsData?.hotels || []).map((hotel) => ({
-      queryKey: ['my-bookings', hotel.hotelCode, email],
-      queryFn: async () => {
-        if (!hotel.hotelCode || !email || !hotel.authKey) {
-          return { BookingList: [], hotelInfo: hotel };
-        }
-        try {
-          const response = await axiosInstance.get('/api/seemybookings', {
-            params: {
-              hotelCode: hotel.hotelCode,
-              email,
-              apiKey: hotel.authKey,
-            },
-          });
-          return {
-            ...response.data,
-            hotelInfo: hotel,
-            BookingList: (response.data.BookingList || []).map(booking => ({
-              ...booking,
-              hotelInfo: hotel
-            }))
-          };
-        } catch (error) {
-          console.error(`Failed to fetch bookings for ${hotel.name}:`, error);
-          return { BookingList: [], hotelInfo: hotel };
-        }
-      },
-      enabled: !!hotel.hotelCode && !!email && !!hotel.authKey,
-      staleTime: 30000,
-      refetchOnWindowFocus: false,
-    }))
-  });
-
-  // Combine all bookings from all hotels
-  const allBookings = bookingQueries.reduce((acc, query) => {
-    if (query.data?.BookingList) {
-      acc.push(...query.data.BookingList);
-    }
-    return acc;
-  }, []);
-
-  console.log(allBookings)
-  // Check if any query is loading
-  const bookingsLoading = bookingQueries.some(query => query.isLoading);
-
-  // Check if any query has error
-  const bookingsError = bookingQueries.some(query => query.error);
+  // Get bookings data for all hotels using reused hook
+  const { allBookings, isLoading: bookingsLoading, error: bookingsError, refetch: handleRefresh } = useFetchAllBookings(email);
 
   useEffect(() => {
     // Get email from localStorage
     const storedEmail = localStorage.getItem("user_email")
-    console.log(storedEmail)
+    // console.log(storedEmail)
     setEmail(storedEmail)
-  }, [hotelsData])
-
-  const handleRefresh = () => {
-    bookingQueries.forEach(query => query.refetch())
-  }
+  }, [])
 
   const handleCancelBooking = (booking) => {
     setSelectedBooking(booking)
@@ -225,18 +216,37 @@ const Bookings = () => {
     }
   };
 
-  // Filter bookings based on active tab and search term
+  // Filter bookings based on active tab, search term, AND filterType
   const getFilteredBookings = () => {
     const currentDate = new Date();
 
-    // First filter by search term
-    const searchFiltered = allBookings.filter((booking) => {
+    // 1. Filter by Source (filterType)
+    let sourceFiltered = allBookings;
+    if (filterType === "personal") {
+      sourceFiltered = allBookings.filter(b => {
+        const source = (b.Source || "").toLowerCase();
+        return !source.includes("agent") && !source.includes("corporate");
+      });
+    } else if (filterType === "agent") {
+      sourceFiltered = allBookings.filter(b => {
+        const source = (b.Source || "").toLowerCase();
+        return source.includes("agent");
+      });
+    } else if (filterType === "corporate") {
+      sourceFiltered = allBookings.filter(b => {
+        const source = (b.Source || "").toLowerCase();
+        return source.includes("corporate");
+      });
+    }
+
+    // 2. Filter by Search Term
+    const searchFiltered = sourceFiltered.filter((booking) => {
       return booking.GuestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         booking.ReservationNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
         booking.hotelInfo?.name.toLowerCase().includes(searchTerm.toLowerCase())
     });
 
-    // Then filter by tab
+    // 3. Filter by Tab
     switch (activeTab) {
       case "upcoming":
         return searchFiltered.filter((booking) => {
@@ -257,6 +267,14 @@ const Bookings = () => {
           booking.Status === "Cancelled" || booking.BookingStatus === "Cancelled"
         );
 
+      case "completed":
+        return searchFiltered.filter((booking) => {
+          const departureDate = new Date(booking.DepartureDate);
+          return booking.Status !== "Cancelled" &&
+            booking.BookingStatus !== "Cancelled" &&
+            departureDate < currentDate;
+        });
+
       default:
         return searchFiltered;
     }
@@ -264,34 +282,61 @@ const Bookings = () => {
 
   const filteredBookings = getFilteredBookings();
   console.log(filteredBookings, "Filtered Bookings")
-  // Get counts for each tab
+
+  // Get counts for each tab using the SAME source filter
   const getTabCounts = () => {
     const currentDate = new Date();
 
-    const upcoming = allBookings.filter((booking) => {
+    // Apply source filter first for consistency
+    let sourceFiltered = allBookings;
+    if (filterType === "personal") {
+      sourceFiltered = allBookings.filter(b => {
+        const source = (b.Source || "").toLowerCase();
+        return !source.includes("agent") && !source.includes("corporate");
+      });
+    } else if (filterType === "agent") {
+      sourceFiltered = allBookings.filter(b => {
+        const source = (b.Source || "").toLowerCase();
+        return source.includes("agent");
+      });
+    } else if (filterType === "corporate") {
+      sourceFiltered = allBookings.filter(b => {
+        const source = (b.Source || "").toLowerCase();
+        return source.includes("corporate");
+      });
+    }
+
+    const upcoming = sourceFiltered.filter((booking) => {
       const departureDate = new Date(booking.DepartureDate);
       return booking.Status !== "Cancelled" &&
         booking.BookingStatus !== "Cancelled" &&
         departureDate >= currentDate;
     }).length;
 
-    const confirmed = allBookings.filter((booking) =>
+    const confirmed = sourceFiltered.filter((booking) =>
       booking.BookingStatus === "Confirmed Reservation" &&
       booking.Status !== "Cancelled"
     ).length;
 
-    const cancelled = allBookings.filter((booking) =>
+    const cancelled = sourceFiltered.filter((booking) =>
       booking.Status === "Cancelled" || booking.BookingStatus === "Cancelled"
     ).length;
 
-    return { upcoming, confirmed, cancelled };
+    const completed = sourceFiltered.filter((booking) => {
+      const departureDate = new Date(booking.DepartureDate);
+      return booking.Status !== "Cancelled" &&
+        booking.BookingStatus !== "Cancelled" &&
+        departureDate < currentDate;
+    }).length;
+
+    return { upcoming, confirmed, cancelled, completed };
   };
 
   const tabCounts = getTabCounts();
 
-  if (hotelsLoading) {
+  if (bookingsLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
+      <div className="bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
         <div className="content mx-auto px-4 py-4 md:py-8">
           <div className="space-y-4 md:space-y-8">
             <div className="animate-pulse">
@@ -319,9 +364,9 @@ const Bookings = () => {
     )
   }
 
-  if (hotelsError) {
+  if (bookingsError) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 flex items-center justify-center p-4">
+      <div className="bg-gradient-to-br from-indigo-50 via-white to-cyan-50 flex items-center justify-center p-4">
         <div className="bg-white/80 backdrop-blur-sm border border-red-200 text-red-800 rounded-2xl p-6 md:p-8 flex items-start shadow-2xl max-w-md w-full">
           <AlertCircle className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3 mt-1 text-red-500 flex-shrink-0" />
           <div>
@@ -334,7 +379,7 @@ const Bookings = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="">
       {/* Cancel Booking Modal */}
       {showCancelModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 ">
@@ -384,8 +429,10 @@ const Bookings = () => {
         <div className="mb-6 md:mb-12">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 md:mb-8 gap-4">
             <div>
-              <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1 md:mb-2">My Bookings</h1>
-              <p className="text-sm md:text-lg text-gray-500">Manage and review your hotel reservations</p>
+              <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1 md:mb-2">
+                {filterType === 'agent' ? "Agent Bookings" : filterType === 'corporate' ? "Corporate Bookings" : "My Bookings"}
+              </h1>
+              <p className="text-sm md:text-lg text-gray-500">Manage and review your {filterType === 'personal' ? 'personal' : ''} hotel reservations</p>
             </div>
             <div className="flex gap-2 md:gap-3">
               <button
@@ -397,6 +444,9 @@ const Bookings = () => {
               </button>
             </div>
           </div>
+
+          {/* Summary Dashboard */}
+          {!bookingsLoading && <BookingSummary bookings={filteredBookings} />}
 
           {/* Tabs */}
           {!bookingsLoading && (
@@ -427,6 +477,14 @@ const Bookings = () => {
                   <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4 md:h-4" />
                   <span className=" sm:inline">Cancelled</span>
                   {/* <span className="sm:hidden text-xs">Can</span> */}
+                </TabButton>
+                <TabButton
+                  active={activeTab === "completed"}
+                  onClick={() => setActiveTab("completed")}
+                  count={tabCounts.completed}
+                >
+                  <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4 md:h-4 text-gray-500" />
+                  <span className=" sm:inline">Completed</span>
                 </TabButton>
               </div>
             </div>
@@ -488,7 +546,7 @@ const Bookings = () => {
                 </span>
               </h2>
             </div>
-
+            {/* ... List of bookings ... */}
             <div className="grid gap-4 md:gap-6">
               {filteredBookings.map((booking) => (
                 <div key={booking.ReservationNo} className="bg-white border border-gray-200 rounded-xl shadow-md p-4 md:p-6 hover:shadow-lg transition-all">
@@ -519,6 +577,7 @@ const Bookings = () => {
 
                     {/* Right: Contact & Payment */}
                     <div className="space-y-1 md:space-y-2">
+                      <h4 className="font-semibold text-gray-900 mb-1 border-b pb-1">Payment Details</h4>
                       <p className="truncate"><span className="font-medium">Email:</span> {booking.Email}</p>
                       <p><span className="font-medium">Mobile:</span> {booking.Mobile}</p>
                       <p><span className="font-medium">Payment:</span> {booking.TransactionStatus}</p>
@@ -539,7 +598,13 @@ const Bookings = () => {
                       <span>Folio: {booking.FolioNo}</span>
                     </div>
 
-                    <div className="flex gap-2 md:gap-3 justify-end">
+                    <div className="flex gap-2 md:gap-3 justify-end items-center">
+                      <ActionButton
+                        label="Invoice"
+                        icon={<FileText className="w-3 h-3 md:w-4 md:h-4" />}
+                        secondary
+                        onClick={() => generateInvoice(booking)}
+                      />
                       {booking.Status !== "Cancelled" && booking.BookingStatus !== "Cancelled" && (
                         <ActionButton
                           label="Cancel"
@@ -561,6 +626,7 @@ const Bookings = () => {
                 <div className="p-4 md:p-6 bg-gradient-to-br from-gray-100 to-slate-100 rounded-full">
                   {activeTab === "upcoming" && <Calendar className="w-8 h-8 md:w-12 md:h-12 text-gray-400" />}
                   {activeTab === "confirmed" && <CheckCircle className="w-8 h-8 md:w-12 md:h-12 text-gray-400" />}
+                  {activeTab === "completed" && <CheckCircle className="w-8 h-8 md:w-12 md:h-12 text-gray-400" />}
                   {activeTab === "cancelled" && <XCircle className="w-8 h-8 md:w-12 md:h-12 text-gray-400" />}
                 </div>
                 <div>
@@ -570,7 +636,7 @@ const Bookings = () => {
                   <p className="text-gray-600 text-base md:text-lg max-w-md">
                     {searchTerm
                       ? `No ${activeTab} bookings match your search criteria.`
-                      : `You don't have any ${activeTab} bookings across all hotels yet.`
+                      : `You don't have any ${activeTab} bookings ${filterType !== 'all' ? `in the ${filterType} category` : ''} yet.`
                     }
                   </p>
                 </div>
@@ -586,7 +652,6 @@ const Bookings = () => {
             </div>
           )
         )}
-
       </div>
     </div>
   )
