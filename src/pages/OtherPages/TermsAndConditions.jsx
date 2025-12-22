@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
+import { SeoData } from "../../Data/SeoData";
 
 
 const TermsAndConditions = () => {
@@ -12,6 +13,8 @@ const TermsAndConditions = () => {
                 <title>Terms & Conditions and Cancellation Policy</title>
                 <meta name="description" content="Terms and Conditions for Sunstar Hotel." />
                 <meta name="keywords" content="Sunstar Hotel, Terms, Conditions, Booking, Stay" />
+                <meta property="og:title" content={SeoData.termsAndConditions.title} />
+                <meta property="og:description" content={SeoData.termsAndConditions.description} />
             </Helmet>
             <div className="bg-primary-green mx-auto pt-10">
                 <div className="bg-primary-green w-full h-full text-white">
@@ -165,7 +168,7 @@ const TermsAndConditions = () => {
                                     crm1@sunstarhospitality.com
                                 </a>
                                 📞 <a href="tel:+919891764746" className="text-blue-600 underline">
-                                     +91 98917 64746
+                                    +91 98917 64746
                                 </a>
                             </p>
 

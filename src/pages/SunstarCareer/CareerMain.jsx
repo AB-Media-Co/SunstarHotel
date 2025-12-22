@@ -14,6 +14,7 @@ import { useGetCareersPage } from "../../ApiHooks/use-Career-Page";
 import ImageGallery from "../../Components/ImageGallery";
 import useUpdatePagesHook from "../../ApiHooks/useUpdatePagesHook";
 import CompnayCards from "../About/Components/CompnayCards";
+import { SeoData } from "../../Data/SeoData";
 import { usePricing } from "../../Context/PricingContext";
 
 const CareerMain = () => {
@@ -47,6 +48,8 @@ const CareerMain = () => {
           name="keywords"
           content={career?.metaKeywords?.join(", ") || ""}
         />
+        <meta property="og:title" content={SeoData.career.title} />
+        <meta property="og:description" content={SeoData.career.description} />
       </Helmet>
       <Herosection
         data={careerPageData?.hero}

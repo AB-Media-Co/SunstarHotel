@@ -1,6 +1,7 @@
 import { testimonialData } from '../../Data/AboutSectionData';
 import OtherPageLayout from './OtherPageLayout';
 import { Helmet } from 'react-helmet';
+import { SeoData } from '../../Data/SeoData';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 import { useGetEventPageBySlug } from '../../ApiHooks/useEventPageHook';
@@ -19,15 +20,15 @@ const CorporateEventsPage = () => {
 
   const eventTypes = celebrationTypesData?.types?.length > 0
     ? celebrationTypesData.types.map(type => ({
-        title: type.title || '',
-        image: type.image || '/images/OtherPageImages/Training.jpg'
-      }))
+      title: type.title || '',
+      image: type.image || '/images/OtherPageImages/Training.jpg'
+    }))
     : [
-        { title: 'Training & Development', image: '/images/OtherPageImages/Training.jpg' },
-        { title: 'Conference', image: '/images/OtherPageImages/Conference.jpg' },
-        { title: 'Gala Dinner', image: '/images/OtherPageImages/GalaDinner.jpg' },
-        { title: 'Awards Ceremony', image: '/images/OtherPageImages/AwardCeremony.webp' },
-      ];
+      { title: 'Training & Development', image: '/images/OtherPageImages/Training.jpg' },
+      { title: 'Conference', image: '/images/OtherPageImages/Conference.jpg' },
+      { title: 'Gala Dinner', image: '/images/OtherPageImages/GalaDinner.jpg' },
+      { title: 'Awards Ceremony', image: '/images/OtherPageImages/AwardCeremony.webp' },
+    ];
 
   const whyChooseUsFeatures = [
     { title: 'On Time', icon: '/images/othericons/Ontime.svg' },
@@ -83,7 +84,7 @@ const CorporateEventsPage = () => {
       name: "date",
       placeholder: "Date of event",
       type: "date",
-  },
+    },
     {
       name: "eventType",
       type: "dropdown",
@@ -116,7 +117,7 @@ const CorporateEventsPage = () => {
       date: formData?.date,
       gid: [1303810786],
       submittedAt: new Date().toISOString(),
-    }, callbacks); 
+    }, callbacks);
   };
 
   // Show loading state
@@ -130,6 +131,8 @@ const CorporateEventsPage = () => {
         <title>Corporate Events - Host Professional Events at Hotel Sunstar Group</title>
         <meta name="description" content="Plan your next corporate event at Hotel Sunstar Group. From conferences and training sessions to gala dinners and award ceremonies, we offer state-of-the-art facilities and professional event management." />
         <meta name="keywords" content="corporate events, business meetings, conferences, training sessions, gala dinners, award ceremonies, Hotel Sunstar Group, Delhi corporate venues" />
+        <meta property="og:title" content={SeoData.corporateEvents.title} />
+        <meta property="og:description" content={SeoData.corporateEvents.description} />
       </Helmet>
       <OtherPageLayout
         // Page type for SEO

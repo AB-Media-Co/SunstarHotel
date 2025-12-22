@@ -8,6 +8,7 @@ import TopSellingPackages from "./Component/TopSellingPackages"
 import { useGetMetas } from "../../../ApiHooks/useMetaHook"
 import { Helmet } from "react-helmet"
 import ImageGallery from "../../../Components/ImageGallery"
+import { SeoData } from "../../../Data/SeoData"
 import { useGetTourAndTravel } from "../../../ApiHooks/useTourAndTravel"
 
 const TourAndTravelPage = () => {
@@ -26,6 +27,8 @@ const TourAndTravelPage = () => {
         <title>{TourAndTravel?.metaTitle || 'Tour & Travel - Sunstar Hotels'}</title>
         <meta name="description" content={TourAndTravel?.metaDescription || ''} />
         <meta name="keywords" content={TourAndTravel?.metaKeywords?.join(', ') || ''} />
+        <meta property="og:title" content={SeoData.tourAndTravel.title} />
+        <meta property="og:description" content={SeoData.tourAndTravel.description} />
       </Helmet>
       <HeroSection data={data?.hero} />
       <PopularDestination />

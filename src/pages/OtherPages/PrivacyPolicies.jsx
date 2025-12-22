@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import parse from 'html-react-parser';  // For safely parsing HTML string to React elements
 import { useGetPolicy } from '../../ApiHooks/usePolicies';
+import { SeoData } from '../../Data/SeoData';
 
 
 
@@ -27,6 +28,8 @@ const PrivacyPolicies = () => {
                 <title>Sunstar Hotel Privacy Policy</title>
                 <meta name="description" content="Privacy policies for Sunstar Hotel." />
                 <meta name="keywords" content="Sunstar Hotel, Privacy Policy, Data Protection, Personal Information" />
+                <meta property="og:title" content={SeoData.privacyPolicy.title} />
+                <meta property="og:description" content={SeoData.privacyPolicy.description} />
             </Helmet>
             <div className="bg-primary-green mx-auto pt-10">
                 <div className="bg-primary-green w-full h-full text-white">

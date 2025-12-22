@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet'
 import { useGetMetas } from '../../ApiHooks/useMetaHook';
+import { SeoData } from '../../Data/SeoData';
 import Banner from './Components/Banner';
 import LiveBanner from './Components/LiveBanner';
 import SliderSection from './Components/SliderSection';
@@ -13,12 +14,12 @@ import EnquieryForm from './Components/EnquieryForm';
 const DevelopersOwners = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);
+    }, []);
     const { data: metas } = useGetMetas();
 
     const developersMeta = Array.isArray(metas)
-    ? metas.find(meta => meta.page === "developersowners")
-    : null;
+        ? metas.find(meta => meta.page === "developersowners")
+        : null;
 
     return (
         <div>
@@ -26,6 +27,8 @@ const DevelopersOwners = () => {
                 <title>{developersMeta?.metaTitle || 'Developers & Owners'}</title>
                 <meta name="description" content={developersMeta?.metaDescription || ''} />
                 <meta name="keywords" content={developersMeta?.metaKeywords?.join(', ') || ''} />
+                <meta property="og:title" content={SeoData.developersOwners.title} />
+                <meta property="og:description" content={SeoData.developersOwners.description} />
             </Helmet>
             <Banner />
             <LiveBanner />
@@ -33,8 +36,8 @@ const DevelopersOwners = () => {
             <WhyPartner />
             <HowItWorks />
             <WhatWeDeliver />
-            <TestimonialSection page='developera and owners'/>
-            <EnquieryForm/>
+            <TestimonialSection page='developera and owners' />
+            <EnquieryForm />
 
         </div>
     )

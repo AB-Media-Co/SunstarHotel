@@ -23,6 +23,7 @@ import {
 import RoomsCard from "../../Components/RoomsCard";
 
 import HotelTestimonial from "./Components/HotelTestimonial";
+import { SeoData } from "../../Data/SeoData";
 
 const Hotels = () => {
   const { hotelCode: hotelCodeParam } = useParams();
@@ -98,12 +99,18 @@ const Hotels = () => {
   const rooms = roomsData?.rooms
   // console.log("rooms Data:", rooms);
 
+  const currentOg = SeoData.hotels[hotelCode] || {};
+
   return (
     <div className="bg-gray-100">
       <Helmet>
         <title>{hotelData?.meta?.title || 'Hotels'}</title>
         <meta name="description" content={hotelData?.meta?.description || ''} />
         <meta name="keywords" content={hotelData?.meta?.keywords?.join(', ') || ''} />
+
+        {/* Open Graph Tags */}
+        <meta property="og:title" content={currentOg.title || hotelData?.meta?.title || ''} />
+        <meta property="og:description" content={currentOg.description || hotelData?.meta?.description || ''} />
       </Helmet>
       <Banner
         businessPlatformFeatures={hotelData?.images}

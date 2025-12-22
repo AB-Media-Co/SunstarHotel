@@ -4,6 +4,7 @@ import BannerSection from "../../Components/BannerSection";
 import BusinessPlatform from "./Components/BusinessPlatform";
 import SunstarEnquiryForm from "./Components/SunstarEnquiryForm";
 import { useGetMetas } from "../../ApiHooks/useMetaHook";
+import { SeoData } from "../../Data/SeoData";
 import FormData from "./Components/FormData";
 import { useEffect, useState } from "react";
 import FAQSectionWithAPI from "../../Components/FAQSectionWithAPI";
@@ -42,6 +43,8 @@ const CorporateBooking = () => {
         <title>{whySunstarMeta?.metaTitle || 'CoorporateBooking'}</title>
         <meta name="description" content={whySunstarMeta?.metaDescription || ''} />
         <meta name="keywords" content={whySunstarMeta?.metaKeywords?.join(', ') || ''} />
+        <meta property="og:title" content={SeoData.corporateBooking.title} />
+        <meta property="og:description" content={SeoData.corporateBooking.description} />
       </Helmet>
 
       <BannerSection

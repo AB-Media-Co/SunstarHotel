@@ -10,6 +10,7 @@ import Rooms from "./Component/Rooms";
 import ImageGallery from "../../Components/ImageGallery";
 import { useGetDayUseContent } from "../../ApiHooks/useDayUseRoomHook";
 import Loader from "../../Components/Loader";
+import { SeoData } from "../../Data/SeoData";
 
 const DayUseRoom = () => {
     const { data, isFetching, isLoading } = useGetDayUseContent();
@@ -38,6 +39,8 @@ const DayUseRoom = () => {
                 <title>{contactUsMeta?.metaTitle || 'Day Use Room'}</title>
                 <meta name="description" content={contactUsMeta?.metaDescription || ''} />
                 <meta name="keywords" content={contactUsMeta?.metaKeywords?.join(', ') || ''} />
+                <meta property="og:title" content={SeoData.dayUseRoom.title} />
+                <meta property="og:description" content={SeoData.dayUseRoom.description} />
             </Helmet>
             <Banner hero={heroData} />
             <Description descCard={descCardData} />

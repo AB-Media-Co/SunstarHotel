@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { usePackagesByState,usePackageById } from "../../../../ApiHooks/useTravelPackagesHook"
+import { usePackagesByState, usePackageById } from "../../../../ApiHooks/useTravelPackagesHook"
 import { MapPin, Calendar, Users, Star } from "lucide-react"
 import Loader from "../../../../Components/Loader"
 import { useNavigate } from "react-router-dom"
@@ -15,7 +15,7 @@ const TourPackages = ({ stateName }) => {
   const navigate = useNavigate();
   if (isLoading) {
     return (
-    <Loader/>
+      <Loader />
     )
   }
 
@@ -33,7 +33,7 @@ const TourPackages = ({ stateName }) => {
       <div className="content mx-auto">
         {/* Header */}
         <div className="md:text-center mb-12">
-      
+
           <h1 className="  text-mobile/h3 md:text-desktop/h3    text-white mb-2">{stateName.toUpperCase()} TOUR PACKAGES</h1>
           <p className="text-white/90 text-mobile/body/2 md:text-desktop/body/1 ">Explore India Tour Customize Tour Packages, Lowest</p>
           <p className="text-white/90 text-mobile/body/2 md:text-desktop/body/1 ">Rates, Guaranteed Services</p>
@@ -56,10 +56,10 @@ const TourPackages = ({ stateName }) => {
                 <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2">
                   <img src="/images/TourAndTravel/night.svg" alt="" className="w-4 h-4" />
                   <span>{pkg.duration?.nights || 4}N</span>
-                  <img src="/images/TourAndTravel/day.svg" alt=""  className="w-4 h-4"/>
+                  <img src="/images/TourAndTravel/day.svg" alt="" className="w-4 h-4" />
                   <span>{pkg.duration?.days || 5}D</span>
                 </div>
-                
+
                 {pkg.topselling && (
                   <div className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                     <Star className="w-3 h-3" />
@@ -95,12 +95,16 @@ const TourPackages = ({ stateName }) => {
                 </div>
 
                 {/* Price */}
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <span className="text-gray-500 text-sm">From </span>
-                    <span className="text-2xl font-bold text-primary-green">₹{pkg.price?.toLocaleString()}/-</span>
+                {pkg.price &&
+
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <span className="text-gray-500 text-sm">From </span>
+                      <span className="text-2xl font-bold text-primary-green">₹{pkg.price?.toLocaleString()}/-</span>
+                    </div>
                   </div>
-                </div>
+
+                }
 
                 {/* Action Buttons */}
                 <div className="flex gap-3">
@@ -109,7 +113,7 @@ const TourPackages = ({ stateName }) => {
                     onClick={() => navigate('/travel-booking-form', {
                       state: { packageData: pkg }
                     })}
-                    
+
                   >
                     Enquire Now
                   </button>

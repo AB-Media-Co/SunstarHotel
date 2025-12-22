@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetBlogs } from "../../ApiHooks/useBlogHooks";
 import SearchIcon from '@mui/icons-material/Search';
 import { useGetBlogs2 } from "../../ApiHooks/useBlogs2";
+import { SeoData } from "../../Data/SeoData";
 
 // Function to create URL-friendly slugs
 const createSlug = (title) => {
@@ -146,6 +147,8 @@ const Blogs = () => {
         <title>Sunstar Hotel Blogs</title>
         <meta name="description" content="Blogs for Sunstar Hotel." />
         <meta name="keywords" content="hotel, blogs, sunstar, travel" />
+        <meta property="og:title" content={SeoData.blogs.title} />
+        <meta property="og:description" content={SeoData.blogs.description} />
       </Helmet>
 
       {/* Hero Section */}

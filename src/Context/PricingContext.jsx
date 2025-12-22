@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axiosInstance from "../services/axiosInstance";
 import ConfirmationModal from "./ConfirmationModal";
+import { format } from "date-fns";
 
 const PricingContext = createContext();
 
@@ -68,6 +69,64 @@ export const PricingProvider = ({ children }) => {
   const [isHotelModalOpen, setIsHotelModalOpen] = useState(false);
   const [navColor, setIsNavColor] = useState(false);
   const [dayUseRoom, setDayUseRoom] = useState(false);
+
+  const [availabilityData, setAvailabilityData] = useState({});
+
+  useEffect(() => {
+    const fetchGlobalData = async () => {
+      try {
+        const { data: { hotels } } = await axiosInstance.get('/api/ezee/allhotels');
+        const activeHotels = hotels?.filter(h => h.active) || [];
+
+        const todayStr = format(new Date(), 'yyyy-MM-dd');
+        const tomorrowStr = format(new Date(Date.now() + 86400000), 'yyyy-MM-dd');
+        const currentMonthStr = format(new Date(), 'yyyy-MM');
+
+        const results = {};
+
+        await Promise.all(activeHotels.map(async (hotel) => {
+          if (!hotel.authKey) return;
+
+          try {
+            // Parallel fetch for speed
+            const [roomsRes, ratesRes] = await Promise.all([
+              axiosInstance.get('/api/ezee/syncedRooms', {
+                params: {
+                  hotelCode: hotel.hotelCode,
+                  authCode: hotel.authKey,
+                  fromDate: todayStr,
+                  toDate: tomorrowStr
+                }
+              }).catch(() => ({ data: { data: [] } })), // Fallback empty
+
+              axiosInstance.get('/api/ezee/monthly-rates', {
+                params: {
+                  hotelCode: hotel.hotelCode,
+                  authCode: hotel.authKey,
+                  month: currentMonthStr
+                }
+              }).catch(() => ({ data: { data: {} } }))
+            ]);
+
+            results[hotel.hotelCode] = {
+              rooms: Array.isArray(roomsRes.data) ? roomsRes.data : (roomsRes.data?.data || []),
+              rates: ratesRes.data?.data || ratesRes.data || {}
+            };
+            // console.log(`Fetched for ${hotel.hotelCode}:`, results[hotel.hotelCode]);
+          } catch (err) {
+            console.error(`Failed to fetch for hotel ${hotel.hotelCode}`, err);
+          }
+        }));
+
+        console.log("Availability Data Final:", results);
+        setAvailabilityData(results);
+      } catch (error) {
+        console.error("Global fetch failed:", error);
+      }
+    };
+
+    fetchGlobalData();
+  }, []);
 
 
   // Functions to control the Hotel Modal
@@ -287,16 +346,17 @@ export const PricingProvider = ({ children }) => {
         someOneElse,
         setSomeoneElse,
         guestData, setGuestData,
-        dayUseRoom, setDayUseRoom
+        dayUseRoom, setDayUseRoom,
+        availabilityData
       }}
     >
       {children}
-      <ConfirmationModal
+      < ConfirmationModal
         show={isConfirmationModalOpen}
         onHide={handleCancel}
         onConfirm={handleConfirmCancel}
       />
-    </PricingContext.Provider>
+    </PricingContext.Provider >
   );
 };
 

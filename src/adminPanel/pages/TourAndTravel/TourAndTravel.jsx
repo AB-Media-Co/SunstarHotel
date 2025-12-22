@@ -652,7 +652,9 @@ const TourAndTravel = () => {
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">{pkg.title}</h3>
                   <p className="text-gray-600 text-sm mb-3 line-clamp-2">{pkg.description}</p>
                   <div className="flex justify-between items-center mb-3">
-                    <span className="text-lg font-bold text-blue-600">₹{pkg.price}</span>
+                    {pkg.price &&
+                      <span className="text-lg font-bold text-blue-600">₹{pkg.price}</span>
+                    }
                     <span className="text-sm text-gray-500">
                       {pkg.duration.nights}N/{pkg.duration.days}D
                     </span>

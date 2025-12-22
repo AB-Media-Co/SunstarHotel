@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Helmet } from 'react-helmet';
 import { HomePageSection5cards, section1Data, section2HotelData } from '../../Data/HomePageData';
+import { SeoData } from '../../Data/SeoData';
 import Section1 from './Components/Section1';
 import { useGetMetas } from '../../ApiHooks/useMetaHook';
 import { lazy, Suspense, memo } from 'react';
@@ -37,12 +38,12 @@ const Home = () => {
         <title>{homeMeta?.metaTitle || 'Sunstar Hotels - Affordable Luxury Accommodations in India'}</title>
         <meta name="description" content={homeMeta?.metaDescription || 'Experience affordable luxury at Sunstar Hotels. Book your perfect stay across India with exceptional hospitality and comfort.'} />
         <meta name="keywords" content={homeMeta?.metaKeywords?.join(', ') || 'sunstar hotels, affordable hotels india, budget hotels, hotel booking'} />
-        
+
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={homeMeta?.metaTitle || 'Sunstar Hotels'} />
-        <meta property="og:description" content={homeMeta?.metaDescription || ''} />
-        
+        <meta property="og:title" content={SeoData.home.title} />
+        <meta property="og:description" content={SeoData.home.description} />
+
         {/* ✅ Preload critical resources */}
         <link rel="preload" as="image" href="/images/HomepageImages/Section1Main.avif" fetchpriority="high" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -51,7 +52,7 @@ const Home = () => {
 
       {/* Hero Section - Always visible, no lazy loading */}
       <Section1 section1Data={section1Data} />
-      
+
       {/* Below-the-fold sections with optimized loading */}
       <Suspense fallback={<SectionSkeleton height="300px" />}>
         <Section2Hotel section2HotelData={section2HotelData} />

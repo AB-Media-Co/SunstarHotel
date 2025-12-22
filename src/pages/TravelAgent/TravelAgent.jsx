@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { useGetMetas } from "../../ApiHooks/useMetaHook";
 import Partnerlogos from "../Home/Components/Partnerlogos";
-import ImageGallery from "../../Components/ImageGallery";
+import { SeoData } from "../../Data/SeoData";
 import { useGetTravelAgentPage } from "../../ApiHooks/useTravelAgentPage";
 import FAQSectionWithAPI from "../../Components/FAQSectionWithAPI";
 import useUpdatePagesHook from "../../ApiHooks/useUpdatePagesHook";
@@ -457,6 +457,8 @@ const TravelAgent = () => {
         <title>{travelagent?.metaTitle || 'Tour & Travel - Sunstar Hotels'}</title>
         <meta name="description" content={travelagent?.metaDescription || ''} />
         <meta name="keywords" content={travelagent?.metaKeywords?.join(', ') || ''} />
+        <meta property="og:title" content={SeoData.travelAgent.title} />
+        <meta property="og:description" content={SeoData.travelAgent.description} />
       </Helmet>
 
       <HeroSection

@@ -11,6 +11,7 @@ import { Helmet } from 'react-helmet';
 import { useGetMetas } from '../../ApiHooks/useMetaHook';
 import { useEffect } from 'react';
 import { usePricing } from '../../Context/PricingContext';
+import { SeoData } from '../../Data/SeoData';
 
 const AboutUs = () => {
   // const { data: hotels } = useGetHotels();
@@ -31,6 +32,8 @@ const AboutUs = () => {
         <title>{whySunstarMeta?.metaTitle || 'WhySunstar'}</title>
         <meta name="description" content={whySunstarMeta?.metaDescription || ''} />
         <meta name="keywords" content={whySunstarMeta?.metaKeywords?.join(', ') || ''} />
+        <meta property="og:title" content={SeoData.aboutUs.title} />
+        <meta property="og:description" content={SeoData.aboutUs.description} />
       </Helmet>
       <HeroSection
         title={heroData?.title}

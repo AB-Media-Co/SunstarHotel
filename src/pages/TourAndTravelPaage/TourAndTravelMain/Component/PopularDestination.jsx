@@ -24,10 +24,13 @@ const PopularDestination = () => {
       </div>
       <div className="p-4 py-6 flex gap-2 justify-between items-center">
         <h3 className="text-lg text-start font-semibold text-primary-green">{item.name}</h3>
-        <p className="text-sm">
-          Starting From{" "}
-          <span className="text-primary-green font-bold">₹{item.lowestPrice}/-</span>
-        </p>
+        {item.lowestPrice &&
+          <p className="text-sm">
+            Starting From{" "}
+            <span className="text-primary-green font-bold">₹{item.lowestPrice}/-</span>
+          </p>
+
+        }
       </div>
     </div>
   );

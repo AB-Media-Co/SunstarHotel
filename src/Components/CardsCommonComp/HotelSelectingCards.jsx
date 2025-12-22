@@ -322,15 +322,46 @@ const HotelCard = memo(({ hotel, close: closeParentModal }) => {
 
 HotelCard.displayName = 'HotelCard';
 
+import { usePricing } from "../../Context/PricingContext";
+
 const HotelSelectingCards = memo(({ data, close }) => {
+  console.log(data)
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
   const { data: hotelsFromHook, isLoading } = useGetHotels();
-  const hotels = data || hotelsFromHook;
+  console.log(hotelsFromHook)
+  const { availabilityData } = usePricing();
+  console.log(availabilityData)
 
-  // Filter active hotels once
-  const activeHotels = hotels?.hotels?.filter(hotel => hotel?.active) || [];
+  const hotels = hotelsFromHook || data;
+  console.log(hotels)
 
+  // Filter active hotels based on availability
+  const activeHotels = useMemo(() => {
+    if (!hotels?.hotels) return [];
+
+    return hotels.hotels.filter(hotel => {
+      if (!hotel?.active) return false;
+
+      // If availability data is loaded, check if hotel has rooms
+      if (availabilityData && Object.keys(availabilityData).length > 0) {
+        const hotelData = availabilityData[hotel.hotelCode];
+
+        // Log status for debugging
+        // console.log(`Hotel ${hotel.name}:`, hotelData);
+
+        // TEMPORARILY DISABLED: Show all hotels even if no availability data
+        // if (!hotelData?.rooms?.length) return false;
+
+        return true;
+      }
+
+      // If availability data not yet loaded, show active hotels by default
+      return true;
+    });
+  }, [hotels, availabilityData]);
+
+  console.log("activeHotels", activeHotels);
 
   if (isLoading) {
     return (
@@ -352,10 +383,11 @@ const HotelSelectingCards = memo(({ data, close }) => {
     <motion.div
       ref={ref}
       className="grid grid-cols-1 items-stretch bg-primary-white sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 p-6"
-      initial={{ opacity: 0 }}
-      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+    // initial={{ opacity: 0 }}
+    // animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+    // transition={{ duration: 0.4, ease: "easeOut" }}
     >
+      {activeHotels.length === 0 && <p>No hotels found (activeHotels is empty)</p>}
       {activeHotels.map((hotel, index) => (
         <HotelCard
           key={hotel._id || hotel.hotelCode}

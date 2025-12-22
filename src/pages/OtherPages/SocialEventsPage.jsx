@@ -1,6 +1,7 @@
 import { testimonialData } from '../../Data/AboutSectionData';
 import OtherPageLayout from './OtherPageLayout';
 import { Helmet } from 'react-helmet';
+import { SeoData } from '../../Data/SeoData';
 import CommonUseEnquiryForm from '../../Components/CommonUseEnquiryForm';
 import { useEnquiryForm } from '../../ApiHooks/useEnquiryFormHook';
 import { useGetEventPageBySlug } from '../../ApiHooks/useEventPageHook';
@@ -21,13 +22,13 @@ const SocialEventsPage = () => {
         ? celebrationTypesData.types.map(type => ({
             title: type.title || '',
             image: type.image || '/images/OtherPageImages/Bdy.webp'
-          }))
+        }))
         : [
             { title: 'Birthday Celebrations', image: '/images/OtherPageImages/Bdy.webp' },
             { title: 'Private Dinners', image: '/images/OtherPageImages/Aniv.webp' },
             { title: 'Get Together', image: '/images/OtherPageImages/celeb.webp' },
             { title: 'Baby Shower', image: '/images/OtherPageImages/bbyshower.webp' },
-          ];
+        ];
 
     const whyChooseUsFeatures = [
         { title: 'On Time', icon: '/images/othericons/Ontime.svg' },
@@ -40,7 +41,7 @@ const SocialEventsPage = () => {
         { title: 'Parking', icon: '/images/othericons/valetParking.svg' },
     ];
 
-   
+
 
     const introText = descriptionText || (
         <>
@@ -86,7 +87,7 @@ const SocialEventsPage = () => {
         {
             name: "company",
             placeholder: "Company Name",
-          },
+        },
         {
             name: "date",
             placeholder: "Date of event",
@@ -140,6 +141,8 @@ const SocialEventsPage = () => {
                 <title>Social Events - Celebrate Special Moments at Hotel Sunstar Group</title>
                 <meta name="description" content="Create unforgettable social events at Hotel Sunstar Group. Perfect for birthdays, anniversaries, kitty parties, baby showers, and intimate celebrations with personalized planning and elegant venues." />
                 <meta name="keywords" content="social events, birthday parties, anniversaries, kitty parties, baby showers, Hotel Sunstar Group, Delhi event venues, celebration venues" />
+                <meta property="og:title" content={SeoData.socialEvents.title} />
+                <meta property="og:description" content={SeoData.socialEvents.description} />
             </Helmet>
             <OtherPageLayout
                 // Page type for SEO

@@ -2,9 +2,10 @@ import React, { useEffect } from 'react'
 import LoyaltyProgramlevel from './Components/LoyaltyProgramlevel'
 import HowItWorks from './Components/HowItWorks'
 import LoyaltyProgramHeader from './Components/LoyaltyProgramHeader'
-import { usePricing } from '../../context/PricingContext'
+import { usePricing } from '../../Context/PricingContext'
 import ImageGallery from '../../Components/ImageGallery'
 import { Helmet } from 'react-helmet'
+import { SeoData } from '../../Data/SeoData'
 import { useGetMetas } from '../../ApiHooks/useMetaHook'
 
 const LoyaltyPrograme = () => {
@@ -30,6 +31,8 @@ const LoyaltyPrograme = () => {
         <title>{loayltyprogramm?.metaTitle || 'Tour & Travel - Sunstar Hotels'}</title>
         <meta name="description" content={loayltyprogramm?.metaDescription || ''} />
         <meta name="keywords" content={loayltyprogramm?.metaKeywords?.join(', ') || ''} />
+        <meta property="og:title" content={SeoData.loyaltyProgram.title} />
+        <meta property="og:description" content={SeoData.loyaltyProgram.description} />
       </Helmet>
       <LoyaltyProgramHeader />
       <LoyaltyProgramlevel />

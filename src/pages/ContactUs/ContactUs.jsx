@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet"
 import { useGetHotels } from "../../ApiHooks/useHotelHook2"
 import { useGetMetas } from "../../ApiHooks/useMetaHook"
+import { SeoData } from "../../Data/SeoData"
 import { enquiries, hotels } from "../../Data/ContactUsData"
 import Banner from "./Components/Banner"
 import HotelsInfo from "./Components/HotelsInfo"
@@ -12,8 +13,8 @@ const ContactUs = () => {
     const { data: hotels } = useGetHotels();
     const { data: metas } = useGetMetas();
     const contactUsMeta = Array.isArray(metas)
-    ? metas.find(meta => meta.page === "contactus")
-    : null;
+        ? metas.find(meta => meta.page === "contactus")
+        : null;
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -24,6 +25,8 @@ const ContactUs = () => {
                 <title>{contactUsMeta?.metaTitle || 'Contact Us'}</title>
                 <meta name="description" content={contactUsMeta?.metaDescription || ''} />
                 <meta name="keywords" content={contactUsMeta?.metaKeywords?.join(', ') || ''} />
+                <meta property="og:title" content={SeoData.contactUs.title} />
+                <meta property="og:description" content={SeoData.contactUs.description} />
             </Helmet>
             <Banner />
             <HotelsInfo hotels={hotels} />

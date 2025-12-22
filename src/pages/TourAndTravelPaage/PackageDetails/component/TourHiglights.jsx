@@ -49,16 +49,18 @@ const TourHighlights = ({ packageDetails }) => {
         </div>
 
         <div className="flex w-full justify-between items-end mt-2">
-          <div>
-            <div className="text-primary-green font-bold text-lg md:text-xl">
-              ₹{price}/-
+          {price &&
+            <div>
+              <div className="text-primary-green font-bold text-lg md:text-xl">
+                ₹{price}/-
+              </div>
+              <p className="text-xs text-gray-500">*Per Person on twin sharing</p>
             </div>
-            <p className="text-xs text-gray-500">*Per Person on twin sharing</p>
-          </div>
+          }
 
-          <button onClick={()=>navigate('/travel-booking-form', {
-        state: { packageData: packageDetails }
-      })} className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-5 rounded-full text-sm">
+          <button onClick={() => navigate('/travel-booking-form', {
+            state: { packageData: packageDetails }
+          })} className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-5 rounded-full text-sm">
             Enquire Now
           </button>
         </div>

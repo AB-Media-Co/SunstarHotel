@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet'
 import { useGetMetas } from '../../ApiHooks/useMetaHook'
 import { FileText, Star, Building, User, Monitor, Sun, Phone } from 'lucide-react';
 import { usePricing } from '../../Context/PricingContext';
+import { SeoData } from '../../Data/SeoData';
 
 const IntheMediaMain = () => {
     const { data: metas } = useGetMetas();
@@ -53,6 +54,8 @@ const IntheMediaMain = () => {
                 <title>{inthemedia?.metaTitle || 'Tour & Travel - Sunstar Hotels'}</title>
                 <meta name="description" content={inthemedia?.metaDescription || ''} />
                 <meta name="keywords" content={inthemedia?.metaKeywords?.join(', ') || ''} />
+                <meta property="og:title" content={SeoData.inTheMedia.title} />
+                <meta property="og:description" content={SeoData.inTheMedia.description} />
             </Helmet>
             <InTheMediaPage />
             <SunstarMediaSection />
